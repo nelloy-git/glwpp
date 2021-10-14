@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${default}",
+                "./include",
+                "./3rdparty/glfw/include",
+                "./3rdparty/glad4.6_debug/include",
+                "./3rdparty/glad4.6_release/include"
+            ],
+            "compilerPath": "C:\\MinGW\\mingw64-g++-11.2\\bin\\gcc.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
