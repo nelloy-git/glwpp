@@ -10,34 +10,23 @@ else ()
     set(/usr/bin/gcc-11)
 endif (WIN32)
 
-option(DEBUG_GLAD "Use glad debug." OFF)
-
-
 add_subdirectory(./3rdparty/glfw)
 
+add_compile_definitions(DEBUG)
+add_compile_options(-g -O0)
 
-include_directories(./glfw/include)
 include_directories(./include)
-if (DEBUG_GLAD)
-    include_directories(./glad4.6_debug/include)
-else()
-    include_directories(./glad4.6_release/include)
-endif(DEBUG_GLAD)
-
+include_directories(./3rdparty/glad/include)
+include_directories(./3rdparty/glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
-    # ./glw/Array.cpp
-    # ./glw/Buffer.cpp
-    # ./glw/Program.cpp
-    # ./glw/Shader.cpp
-    # ./glw/Tex2D.cpp
-    
-    ./src/Context/Keyboard.cpp
-    ./src/Context/Mouse.cpp
-    ./src/Context/Timer.cpp
-    ./src/Context/Window.cpp
+    ./3rdparty/glad/src/gl.c
 
-    ./src/Context/glfw/Convert.cpp
+    ./src/ctx/Keyboard.cpp
+    ./src/ctx/Mouse.cpp
+    ./src/ctx/Window.cpp
+    
+    ./src/utils/CmdQueue.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -45,6 +34,20 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 set_property (TARGET ${PROJECT_NAME}
+  PROPERTY
+    # Enable C++20 standard compliance
+    CXX_STANDARD 20
+)
+
+add_executable(${PROJECT_NAME}_test
+    main.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_test
+    glwpp
+)
+
+set_property (TARGET ${PROJECT_NAME}_test
   PROPERTY
     # Enable C++20 standard compliance
     CXX_STANDARD 20
