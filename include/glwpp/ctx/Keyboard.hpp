@@ -6,7 +6,7 @@
 #include "glwpp/enums/KeyMod.hpp"
 #include "glwpp/utils/Event.hpp"
 
-namespace glwpp {
+namespace glwpp::ctx {
 
 class Keyboard {
 public:

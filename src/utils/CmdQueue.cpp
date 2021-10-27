@@ -40,9 +40,19 @@ bool CmdQueue::execute(){
 }
 
 void CmdQueue::wait(){
+    if (!_executing) return;
+
     std::unique_lock<std::mutex> ul(_lock_execution);
     _cv_finish.wait(ul, [&](){return !_executing && _alive;});
 }
+
+bool CmdQueue::waitFor(const std::chrono::duration<double, std::nano> time){
+    if (!_executing) return true;
+
+    std::unique_lock<std::mutex> ul(_lock_execution);
+    return _cv_finish.wait_for(ul, time, [&](){return !_executing && _alive;});
+}
+
 void CmdQueue::_threadFunction(std::optional<Cmd> initializer,
                                std::optional<Cmd> finalizer){
     if (initializer){
@@ -66,8 +76,8 @@ void CmdQueue::_swapQueues(){
 void CmdQueue::_executeQueue(){
     std::unique_lock<std::mutex> ul(_lock_execution);
     _cv_start.wait(ul, [&](){return _executing || !_alive;});
-
     _swapQueues();
+    ul.unlock();
 
     while (_active.size() > 0){
         auto &cmd = _active.front();
@@ -76,6 +86,5 @@ void CmdQueue::_executeQueue(){
     }
 
     _executing = false;
-    ul.unlock();
     _cv_finish.notify_all();
 };

@@ -1,6 +1,6 @@
 #include "glwpp/ctx/Mouse.hpp"
 
-using namespace glwpp;
+using namespace glwpp::ctx;
 
 Mouse::Mouse(){
 }

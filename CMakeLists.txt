@@ -12,7 +12,7 @@ endif (WIN32)
 
 add_subdirectory(./3rdparty/glfw)
 
-add_compile_definitions(DEBUG)
+add_compile_definitions(GLWPP_DEBUG)
 add_compile_options(-g -O0)
 
 include_directories(./include)

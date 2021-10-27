@@ -22,6 +22,7 @@ public:
     bool isExecuting();
     bool execute();
     void wait();
+    bool waitFor(const std::chrono::duration<double, std::nano> time);
 
 protected:
     void _threadFunction(std::optional<Cmd> initializer,

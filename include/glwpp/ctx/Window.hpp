@@ -16,33 +16,32 @@
 
 class GLFWwindow;
 
-namespace glwpp {
+namespace glwpp::ctx {
 
-struct WindowParams {
-    int gl_major_ver;
-    int gl_minor_ver;
 
-    size_t width;
-    size_t height;
-    std::string title;
-};
 
 class Window {
 public:
-    Window(const WindowParams &params);
+    struct Params {
+        int gl_major_ver;
+        int gl_minor_ver;
+
+        size_t width;
+        size_t height;
+        std::string title;
+    };
+
+    Window(const Params &params);
     virtual ~Window();
 
-    void swapBuffers();
-    inline void pushCmd(CmdQueue::Cmd cmd){
-        _cmd_queue.push(cmd);
-    };
-    inline void wait(){
-        _cmd_queue.wait();
-    };
+    inline operator GLFWwindow*(){
+        return _glfw_window;
+    }
 
     Event<const Window&> onClose;
     using onCloseCB = decltype(onClose)::Func;
 
+    CmdQueue gl_context;
     Keyboard keyboard;
     Mouse mouse;
 
@@ -50,10 +49,8 @@ private:
     void _initEvents();
     void _cmdQueueInit();
     void _cmdQueueFinal();
-
-    CmdQueue _cmd_queue;
     GLFWwindow *_glfw_window;
-    WindowParams _params;
+    Params _params;
     
     static std::unordered_map<GLFWwindow*, Window*> _glfw2win;
 };

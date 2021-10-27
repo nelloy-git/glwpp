@@ -7,7 +7,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-using namespace glwpp;
+using namespace glwpp::ctx;
 
 // Statics
 
@@ -15,8 +15,8 @@ std::unordered_map<GLFWwindow*, Window*> Window::_glfw2win;
 
 // Methods
 
-Window::Window(const WindowParams &params) :
-    _cmd_queue([this](){_cmdQueueInit();},
+Window::Window(const Params &params) :
+    gl_context([this](){_cmdQueueInit();},
                [this](){_cmdQueueFinal();}),
     _params(params){
 }
@@ -26,12 +26,12 @@ Window::~Window(){
     glfwDestroyWindow(_glfw_window);
 }
 
-void Window::swapBuffers(){
-    _cmd_queue.push([this](){
-        glfwSwapBuffers(_glfw_window);
-    });
-    _cmd_queue.execute();
-}
+// void Window::swapBuffers(){
+//     _cmd_queue.push([this](){
+//         glfwSwapBuffers(_glfw_window);
+//     });
+//     _cmd_queue.execute();
+// }
 
 void Window::_initEvents(){
 

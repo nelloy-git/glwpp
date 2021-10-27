@@ -1,6 +1,6 @@
 #include "glwpp/ctx/Keyboard.hpp"
 
-using namespace glwpp;
+using namespace glwpp::ctx;
 
 Keyboard::Keyboard(){
 }
