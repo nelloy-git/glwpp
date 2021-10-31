@@ -25,15 +25,18 @@ public:
         Data(_newId()),
         indexed(false),
         _vertices(BufferUsageGL::STATIC),
+        _indices(std::monostate{}),
+        _indices_type(DataTypeGL::_byte),
         _draw_count(vertices.size()),
-        _draw_func(_drawUnindexed),
-        _draw_instanced_func(_drawUnindexedInstaced){
+        _draw_func(&_drawUnindexed),
+        _draw_instanced_func(&_drawUnindexedInstaced){
         _vertices = vertices;
         _vertices.bind();
         V::bindAttributes();
     };
 
-    template<class I>
+    template<class I, 
+             std::enable_if_t<is_same_any<I, GLubyte, GLushort, GLuint>>* = nullptr>
     VertexArray(const std::vector<V> &vertices,
                 const std::vector<I> &indices) :
         Data(_newId()),
@@ -42,8 +45,8 @@ public:
         _indices(std::in_place_type<IndexBuffer<I>>, BufferUsageGL::STATIC),
         _indices_type(_getGlType<I>()),
         _draw_count(indices.size()),
-        _draw_func(_drawIndexed),
-        _draw_instanced_func(_drawIndexedInsctanced){
+        _draw_func(&_drawIndexed),
+        _draw_instanced_func(&_drawIndexedInsctanced){
         _vertices = vertices;
         _vertices.bind();
         std::get<IndexBuffer<I>>(_indices) = indices;
@@ -56,18 +59,19 @@ public:
     }
 
     inline void draw(DrawModeGL mode) const {
-        _draw_func(mode);
+        (this->*_draw_func)(mode);
     }
 
     inline void drawInstanced(DrawModeGL mode, GLsizei count) const {
-        _draw_instanced_func(mode, count);
+        (this->*_draw_instanced_func)(mode, count);
     }
 
     const bool indexed;
 
 private:
     VertexBuffer<V> _vertices;
-    std::variant<IndexBuffer<GLubyte>,
+    std::variant<std::monostate,
+                 IndexBuffer<GLubyte>,
                  IndexBuffer<GLushort>,
                  IndexBuffer<GLuint>> _indices;
     const DataTypeGL _indices_type;

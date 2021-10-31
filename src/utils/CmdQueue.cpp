@@ -1,5 +1,9 @@
 #include "glwpp/utils/CmdQueue.hpp"
 
+#include <iostream>
+
+#include "glwpp/utils/DoubleQueue.hpp"
+
 using namespace glwpp;
 
 CmdQueue::CmdQueue(std::optional<Cmd> initializer,
@@ -16,11 +20,6 @@ CmdQueue::~CmdQueue(){
         _thread.join();
     }
 }
-
-void CmdQueue::push(const Cmd cmd){
-    std::lock_guard<std::mutex> lg(_lock_queue);
-    _queue.push(cmd);
-};
 
 bool CmdQueue::isExecuting(){
     return _executing;
@@ -68,21 +67,16 @@ void CmdQueue::_threadFunction(std::optional<Cmd> initializer,
     }
 }
 
-void CmdQueue::_swapQueues(){
-    std::lock_guard<std::mutex> lg(_lock_queue);
-    std::swap(_queue, _active);
-}
-
 void CmdQueue::_executeQueue(){
     std::unique_lock<std::mutex> ul(_lock_execution);
     _cv_start.wait(ul, [&](){return _executing || !_alive;});
-    _swapQueues();
+    _queue.swap();
     ul.unlock();
 
-    while (_active.size() > 0){
-        auto &cmd = _active.front();
-        cmd();
-        _active.pop();
+    auto cur = _queue.pop();
+    while (cur){
+        cur.value()();
+        cur = _queue.pop();
     }
 
     _executing = false;

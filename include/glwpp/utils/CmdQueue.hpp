@@ -7,6 +7,9 @@
 #include <thread>
 #include <queue>
 
+#include "glwpp/utils/DoubleQueue.hpp"
+// #include "glwpp/utils/Functor.hpp"
+
 namespace glwpp {
 
 class CmdQueue {
@@ -17,7 +20,7 @@ public:
              std::optional<Cmd> finalizer = std::nullopt);
     virtual ~CmdQueue();
 
-    void push(const Cmd cmd);
+    inline void push(const Cmd cmd){_queue.push(cmd);};
 
     bool isExecuting();
     bool execute();
@@ -33,9 +36,7 @@ protected:
     std::atomic<bool> _alive;
     std::thread _thread;
 
-    std::mutex _lock_queue;
-    std::queue<Cmd> _queue;
-    std::queue<Cmd> _active;
+    DoubleQueue<Cmd> _queue;
 
     std::mutex _lock_execution;
     std::atomic<bool> _executing;

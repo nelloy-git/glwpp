@@ -2,16 +2,19 @@
 
 #include <unordered_map>
 
+#include "glwpp/ctx/Context.hpp"
 #include "glwpp/enums/Key.hpp"
 #include "glwpp/enums/KeyMod.hpp"
 #include "glwpp/utils/Event.hpp"
 
-namespace glwpp::ctx {
+namespace glwpp::input {
 
 class Keyboard {
 public:
     Keyboard();
     virtual ~Keyboard();
+
+    void capture(Context &ctx, bool flag);
 
     void press(Key key, KeyModeFlags mods);
     void release(Key key, KeyModeFlags mods);
@@ -19,10 +22,8 @@ public:
     bool isDown(Key key) const;
 
     Event<const Keyboard&, const Key&, const KeyModeFlags&> onPress;
-    using onPressCB = decltype(onPress)::Func;
     
     Event<const Keyboard&, const Key&, const KeyModeFlags&> onRelease;
-    using onReleaseCB = decltype(onRelease)::Func;
 
 private:
     std::unordered_map<Key, bool> _down;

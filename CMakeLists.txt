@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
-project(glwpp VERSION 0.1 LANGUAGES C CXX)
+# if (WIN32)
+#     set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++)
+#     set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc)
+# else ()
+#     # set(/usr/bin/g++-11)
+#     # set(/usr/bin/gcc-11)
+# endif (WIN32)
 
-if (WIN32)
-    set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++.exe)
-    set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc.exe)
-else ()
-    set(/usr/bin/g++-11)
-    set(/usr/bin/gcc-11)
-endif (WIN32)
+project(glwpp VERSION 0.1 LANGUAGES C CXX)
 
 add_subdirectory(./3rdparty/glfw)
 
@@ -22,11 +22,15 @@ include_directories(./3rdparty/glfw/include)
 add_library (${PROJECT_NAME} STATIC
     ./3rdparty/glad/src/gl.c
 
-    ./src/ctx/Keyboard.cpp
-    ./src/ctx/Mouse.cpp
-    ./src/ctx/Window.cpp
+    ./src/ctx/Context.cpp
+    
+    ./src/input/Keyboard.cpp
+    ./src/input/Mouse.cpp
+    ./src/input/System.cpp
     
     ./src/utils/CmdQueue.cpp
+
+    ./src/Window.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -48,6 +52,21 @@ target_link_libraries(${PROJECT_NAME}_test
 )
 
 set_property (TARGET ${PROJECT_NAME}_test
+  PROPERTY
+    # Enable C++20 standard compliance
+    CXX_STANDARD 20
+)
+
+
+add_executable(wrapper_test
+    test/func_wrapper.cpp
+)
+
+target_link_libraries(wrapper_test
+    glwpp
+)
+
+set_property (TARGET wrapper_test
   PROPERTY
     # Enable C++20 standard compliance
     CXX_STANDARD 20

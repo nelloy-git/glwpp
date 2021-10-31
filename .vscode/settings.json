@@ -57,7 +57,8 @@
         "typeinfo": "cpp",
         "any": "cpp",
         "list": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "typeindex": "cpp"
     },
     "cmake.configureOnOpen": false
 }

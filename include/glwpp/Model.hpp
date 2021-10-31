@@ -1,38 +1,51 @@
 #pragma once
 
-#include <any>
 #include <memory>
 
 #include "glwpp/ctx/data/VertexArray.hpp"
-#include "glwpp/ctx/Window.hpp"
+#include "glwpp/WindowData.hpp"
 
 namespace glwpp {
 
-template<class V>
-class Model {
-friend class Renderer;
-
+template<class V, class I = GLubyte>
+class Model : public WindowData {
 public:
-    template<class I>
-    Model(const ctx::Window &window,
-          const std::vector<V> &vertices,
-          const std::vector<I> &indices) :
-        _window(window){
-        window.gl_context.push([&_vert_arr](){
-            _vert_arr = std::make_unique<std::unique_ptr<ctx::VertexArray<V>>>(vertices, indices);
-        });
+    Model(std::weak_ptr<Window> window,
+          std::weak_ptr<std::vector<V>> vertices,
+          std::weak_ptr<std::vector<I>> indices = std::weak_ptr<std::vector<I>>()) :
+        WindowData(window),
+        _vert_ptr(_isValidPtr(vertices) ? vertices.lock() : nullptr),
+        _index_ptr(_isValidPtr(indices) ? indices.lock() : nullptr){
     }
 
-    // inline void draw(DrawModeGL mode){
-    //     _window.gl_context.push([&_vert_arr, &mode](){
-    //         _vert_arr->draw(mode);
-    //     });
-    // }
+protected:
+    virtual bool _initialize(){
+        if (!_vert_ptr){
+            return false;
+        }
+
+        if (_index_ptr)
+            _vert_arr = std::make_shared<ctx::VertexArray<V>>(*_vert_ptr);
+        else
+            _vert_arr = std::make_shared<ctx::VertexArray<V>>(*_vert_ptr, *_index_ptr);
+        
+        _vert_ptr.reset();
+        _index_ptr.reset();
+
+        return true;
+    }
+
+    virtual void _finalize(){
+        _vert_arr.reset();
+    }
 
 private:
-    const ctx::Window &_window;
-    std::unique_ptr<ctx::VertexArray<V>> _vert_arr;
+    // Temporary data
+    std::shared_ptr<std::vector<V>> _vert_ptr;
+    std::shared_ptr<std::vector<I>> _index_ptr;
 
+    // OpenGL data
+    std::shared_ptr<ctx::VertexArray<V>> _vert_arr;
 };
 
 }

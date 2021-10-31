@@ -2,16 +2,19 @@
 
 #include <unordered_map>
 
+#include "glwpp/ctx/Context.hpp"
 #include "glwpp/enums/MouseBtn.hpp"
 #include "glwpp/enums/KeyMod.hpp"
 #include "glwpp/utils/Event.hpp"
 
-namespace glwpp::ctx {
+namespace glwpp::input {
     
 class Mouse {
 public:
     Mouse();
     virtual ~Mouse();
+
+    void capture(Context &ctx, bool flag);
 
     void press(MouseBtn btn, KeyModeFlags modes);
     void release(MouseBtn btn, KeyModeFlags modes);
@@ -19,7 +22,7 @@ public:
     inline double getX(){return _x;};
     inline double getY(){return _y;};
 
-    bool isDown(MouseBtn key) const;
+    bool isDown(MouseBtn btn) const;
 
     Event<const Mouse&, const MouseBtn&, const KeyModeFlags&> onPress;
     Event<const Mouse&, const MouseBtn&, const KeyModeFlags&> onRelease;
