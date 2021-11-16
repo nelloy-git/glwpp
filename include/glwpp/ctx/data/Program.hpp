@@ -12,7 +12,7 @@ class Program : public Data {
 public:
     Program() :
         Data(_newId()),
-        uniform(id){
+        _uniform(id){
     }
 
     virtual ~Program(){
@@ -54,11 +54,10 @@ public:
         return glGetAttribLocation(id, name.c_str());
     };
 
-    inline GLint getUniformLoc(const std::string &name){
-        return glGetUniformLocation(id, name.c_str());
-    };
+    inline Uniform &uniform(){
+        return _uniform;
+    }
 
-    Uniform uniform;
 
 private:
     inline static GLuint _newId(){
@@ -66,6 +65,7 @@ private:
     }
 
     bool _linked = false;
+    Uniform _uniform;
 
 };
 

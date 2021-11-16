@@ -9,6 +9,7 @@
 namespace glwpp::ctx {
 
 class Uniform {
+friend class Program;
 public:
     inline GLint getLoc(const std::string &name){
         return glGetUniformLocation(_prog_id, name.c_str());

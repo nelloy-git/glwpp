@@ -21,24 +21,40 @@ namespace {
     }
 }
 
-SystemCall::SystemCall() {
+SystemCall::SystemCall(){
+    _captures = std::make_shared<CmdWatcher>();
 }
 
 SystemCall::~SystemCall(){
     _links.remove(this);
 }
 
-void SystemCall::capture(Context &ctx, bool flag){
-    ctx.cmd_queue.push([&](){
-        if (flag){
-            auto systems = _links.get(ctx);
-            _links.add(ctx, this);
+bool SystemCall::capture(std::weak_ptr<Context> wctx, bool flag){
+    auto ctx = wctx.lock();
+    if (!ctx) return false;
+
+    // ctx->push(_captures, [this, wctx, flag](){
+    //     auto ctx = wctx.lock();
+    //     if (!ctx) return CmdAct::Stop;
+
+    //     if (flag){
+    //         auto systems = _links.get(ctx->getGlfwWindow());
+    //         _links.add(ctx->getGlfwWindow(), this);
             
-            if (!systems){
-                glfwSetWindowCloseCallback(ctx, _gltfCloseCallback);
-            }
-        } else {
-            _links.remove(this);
-        }
-    });
+    //         if (!systems){
+    //             glfwSetWindowCloseCallback(ctx->getGlfwWindow(), _gltfCloseCallback);
+    //         }
+    //     } else {
+    //         _links.remove(ctx->getGlfwWindow(), this);
+    //     }
+
+    //     return CmdAct::Stop;
+    // });
+
+    // ctx->onDestroy.pushBack(_captures, [](Context& ctx){
+    //     _links.remove(ctx.getGlfwWindow());
+    //     return CmdAct::Stop;
+    // });
+
+    return true;
 }

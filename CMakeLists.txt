@@ -28,7 +28,7 @@ add_library (${PROJECT_NAME} STATIC
     ./src/input/Mouse.cpp
     ./src/input/System.cpp
     
-    ./src/utils/CmdQueue.cpp
+    ./src/utils/CmdThread.cpp
 
     ./src/Window.cpp
 )
@@ -57,17 +57,5 @@ set_property (TARGET ${PROJECT_NAME}_test
     CXX_STANDARD 20
 )
 
-
-add_executable(wrapper_test
-    test/func_wrapper.cpp
-)
-
-target_link_libraries(wrapper_test
-    glwpp
-)
-
-set_property (TARGET wrapper_test
-  PROPERTY
-    # Enable C++20 standard compliance
-    CXX_STANDARD 20
-)
+configure_file(shaders/vertex_2d.vs vertex_2d.vs)
+configure_file(shaders/vertex_2d.fs vertex_2d.fs)

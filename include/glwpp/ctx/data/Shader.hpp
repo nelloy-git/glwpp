@@ -4,6 +4,7 @@
 #include <string>
 
 #include "glwpp/ctx/data/Data.hpp"
+#include "glwpp/enums/gl/ErrorGL.hpp"
 #include "glwpp/enums/gl/ShaderTypeGL.hpp"
 
 namespace glwpp::ctx {

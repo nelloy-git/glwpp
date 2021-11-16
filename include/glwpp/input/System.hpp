@@ -13,9 +13,13 @@ public:
     SystemCall();
     virtual ~SystemCall();
 
-    void capture(Context &ctx, bool flag);
+    bool capture(std::weak_ptr<Context> wctx, bool flag);
 
-    Event<const SystemCall&> onClose;
+    Event<SystemCall&> onClose;
+
+private:
+    std::shared_ptr<CmdWatcher> _captures;
+
 };
 
 }

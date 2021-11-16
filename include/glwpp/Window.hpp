@@ -16,18 +16,28 @@ namespace glwpp {
 
 class Window {
 public:
-    Window(const Context::Params &win_params);
+    struct Params {
+        Params(){};
+        bool with_keyboard = true;
+        bool with_mouse = true;
+        bool with_syscalls = true;
+    };
 
-    Context& context();
-    input::Keyboard& keyboard();
-    input::Mouse& mouse();
-    input::SystemCall& sys_call();
+    Window(const Context::Parameters &ctx_params,
+           const Window::Params &win_params = Params{});
+
+    const Window::Params params;
+
+    std::weak_ptr<Context> getContext();
+    std::weak_ptr<input::Keyboard> getKeyboard();
+    std::weak_ptr<input::Mouse> getMouse();
+    std::weak_ptr<input::SystemCall> getSysCall();
 
 private:
-    std::unique_ptr<Context> _context;
-    std::unique_ptr<input::Keyboard> _keyboard;
-    std::unique_ptr<input::Mouse> _mouse;
-    std::unique_ptr<input::SystemCall> _sys_call;
+    std::shared_ptr<Context> _context;
+    std::shared_ptr<input::Keyboard> _keyboard;
+    std::shared_ptr<input::Mouse> _mouse;
+    std::shared_ptr<input::SystemCall> _sys_call;
 
 };
 

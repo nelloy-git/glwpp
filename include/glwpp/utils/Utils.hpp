@@ -4,10 +4,10 @@
 
 namespace glwpp {
 
-template<template<typename ...> class T, class ... Args>
-inline decltype(auto) make_shared(Args&& ... args){
+template<template<typename ...> class T, class ... OutArgs>
+inline decltype(auto) make_shared(OutArgs&& ... args){
     using Tmp = std::remove_pointer_t<decltype(new T(args...))>;
-    return std::make_shared<Tmp>(std::forward<Args>(args)...);
+    return std::make_shared<Tmp>(std::forward<OutArgs>(args)...);
 };
 
 template < template <typename...> class base,typename derived>

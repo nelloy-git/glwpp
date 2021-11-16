@@ -6,7 +6,8 @@
 #include <thread>
 #include <mutex>
 
-#include "glwpp/utils/CmdQueue.hpp"
+#include "glwpp/utils/CmdLoop.hpp"
+#include "glwpp/utils/Event.hpp"
 
 class GLFWwindow;
 
@@ -14,7 +15,7 @@ namespace glwpp {
 
 class Context {
 public:
-    struct Params {
+    struct Parameters {
         int gl_major_ver;
         int gl_minor_ver;
 
@@ -23,29 +24,30 @@ public:
         std::string title;
     };
 
-    Context(const Params &params);
-    virtual ~Context();
+    Context(const Parameters &params);
+    virtual ~Context(){};
 
-    inline operator GLFWwindow*() const {
-        return _glfw_window;
-    }
-
-    // Event<const Context&> onClose;
-    // using onCloseCB = decltype(onClose)::Func;
-
-    CmdQueue cmd_queue;
-    // Keyboard keyboard;
-    // Mouse mouse;
+    GLFWwindow *getGlfwWindow(){return _glfw_window;}
+    static GLFWwindow *getGlfwWindow(Context& ctx){return ctx.getGlfwWindow();}
+    static Context *getContext(GLFWwindow *win){
+        auto iter = _linked.find(win);
+        return iter == _linked.end() ? nullptr : iter->second;
+    };
     
-    GLFWwindow *_glfw_window;
-
 private:
-    void _initEvents();
-    void _cmdQueueInit();
-    void _cmdQueueFinal();
-    Params _params;
-    
-    static std::unordered_map<GLFWwindow*, Context*> _glfw2win;
+    Cmd<void, CmdLoop&> _init_gl_thread;
+    Cmd<void, CmdLoop&> _final_gl_thread;
+    CmdLoop _loop;
+
+    GLFWwindow *_glfw_window;
+    Parameters _params;
+
+    void _glInit();
+    void _glFinal();
+
+    static std::unordered_map<GLFWwindow*, Context*> _linked;
 };
+
+
 
 }

@@ -21,13 +21,13 @@ public:
     Tuple attributes;
 
     template<size_t N>
-    inline decltype(auto) get(){
+    std::tuple_element_t<N, Tuple> get() const {
         return std::get<N>(attributes);
     }
 
     template<size_t N, class ... T>
-    inline decltype(auto) set(T ... v){
-        return std::get<N>(attributes).set(v...);
+    void set(T ... v){
+        // return std::get<N>(attributes).set(v...);
     }
 
     static void bindAttributes(){

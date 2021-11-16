@@ -44,27 +44,43 @@ namespace {
 }
 
 Mouse::Mouse(){
+    _captures = std::make_shared<CmdWatcher>();
 }
 
 Mouse::~Mouse(){
     _links.remove(this);
 }
 
-void Mouse::capture(Context &ctx, bool flag){
-    ctx.cmd_queue.push([&](){
-        if (flag){
-            auto mouses = _links.get(ctx);
-            _links.add(ctx, this);
+bool Mouse::capture(std::weak_ptr<Context> wctx, bool flag){
+    auto ctx = wctx.lock();
+    if (!ctx) return false;
 
-            if (!mouses){
-                glfwSetCursorEnterCallback(ctx, _glfwMouseEnterCallback);
-                glfwSetCursorPosCallback(ctx, _glfwMouseMoveCallback);
-                glfwSetMouseButtonCallback(ctx, _glfwMouseBtnCallback);
-            }
-        } else {
-            _links.remove(this);
-        }
-    });
+    // ctx->push(_captures, [this, wctx, flag](){
+    //     auto ctx = wctx.lock();
+    //     if (!ctx) return CmdAct::Stop;
+
+    //     if (flag){
+    //         auto mouses = _links.get(ctx->getGlfwWindow());
+    //         _links.add(ctx->getGlfwWindow(), this);
+
+    //         if (!mouses){
+    //             glfwSetCursorEnterCallback(ctx->getGlfwWindow(), _glfwMouseEnterCallback);
+    //             glfwSetCursorPosCallback(ctx->getGlfwWindow(), _glfwMouseMoveCallback);
+    //             glfwSetMouseButtonCallback(ctx->getGlfwWindow(), _glfwMouseBtnCallback);
+    //         }
+    //     } else {
+    //         _links.remove(ctx->getGlfwWindow(), this);
+    //     }
+        
+    //     return CmdAct::Stop;
+    // });
+
+    // ctx->onDestroy.pushBack(_captures, [](Context& ctx){
+    //     _links.remove(ctx.getGlfwWindow());
+    //     return CmdAct::Stop;
+    // });
+
+    return true;
 }
 
 void Mouse::press(MouseBtn btn, KeyModeFlags modes){

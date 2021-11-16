@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <mutex>
-#include <thread>
 
 #include "glwpp/utils/container/Cmd.hpp"
 #include "glwpp/utils/FuncWrapper.hpp"
@@ -12,19 +11,19 @@
 namespace glwpp {
 
 template<class ... Args>
-class Event final {
+class EventBase final {
 public:
-    using CmdRunner = glwpp::CmdRunner<CmdAct, Event&, Args...>;
+    using CmdRunner = glwpp::CmdRunner<CmdAct, EventBase&, Args...>;
     using Deque = std::deque<std::shared_ptr<CmdRunner>>;
 
-    Event() :
+    EventBase() :
         _emiting(false){
         _watcher = std::make_shared<CmdWatcher>();
         _callbacks = std::make_unique<Deque>();
         _swap = std::make_unique<Deque>();
     }
 
-    ~Event(){
+    ~EventBase(){
         wait();
     }
 
@@ -33,7 +32,7 @@ public:
         if (watcher.expired()) return false;
 
         std::lock_guard<std::mutex> lg(_lock_changes);
-        auto wrapped = func_wrap<Event<Args&&...>&, Args&&...>(std::function(cmd));
+        auto wrapped = func_wrap<EventBase<Args&&...>&, Args&&...>(std::function(cmd));
         _back_changes.push_back(std::make_shared<CmdRunner>(watcher, wrapped));
         return true;
     }
@@ -43,7 +42,7 @@ public:
         if (watcher.expired()) return false;
 
         std::lock_guard<std::mutex> lg(_lock_changes);
-        auto wrapped = func_wrap<Event<Args&&...>&, Args&&...>(std::function(cmd));
+        auto wrapped = func_wrap<EventBase<Args&&...>&, Args&&...>(std::function(cmd));
         _front_changes.push_back(std::make_shared<CmdRunner>(watcher, wrapped));
         return true;
     }
@@ -71,7 +70,6 @@ public:
 
         _emiting = false;
         _emiting.notify_one();
-        return true;
     }
 
     void wait(){

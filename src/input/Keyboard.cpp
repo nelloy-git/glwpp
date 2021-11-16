@@ -22,25 +22,41 @@ namespace {
 }
 
 Keyboard::Keyboard() {
+    _captures = std::make_shared<CmdWatcher>();
 }
 
 Keyboard::~Keyboard(){
     _links.remove(this);
 }
 
-void Keyboard::capture(Context &ctx, bool flag){
-    ctx.cmd_queue.push([&](){
-        if (flag){
-            auto keyboards = _links.get(ctx);
-            _links.add(ctx, this);
+bool Keyboard::capture(std::weak_ptr<Context> wctx, bool flag){
+    auto ctx = wctx.lock();
+    if (!ctx) return false;
 
-            if (!keyboards){
-                glfwSetKeyCallback(ctx, _gltfKeyCallback);
-            }
-        } else {
-            _links.remove(this);
-        }
-    });
+    // ctx->push(_captures, [this, wctx, flag](){
+    //     auto ctx = wctx.lock();
+    //     if (!ctx) return CmdAct::Stop;
+
+    //     if (flag){
+    //         auto keyboards = _links.get(ctx->getGlfwWindow());
+    //         _links.add(ctx->getGlfwWindow(), this);
+
+    //         if (!keyboards){
+    //             glfwSetKeyCallback(ctx->getGlfwWindow(), _gltfKeyCallback);
+    //         }
+    //     } else {
+    //         _links.remove(ctx->getGlfwWindow(), this);
+    //     }
+
+    //     return CmdAct::Stop;
+    // });
+
+    // ctx->onDestroy.pushBack(_captures, [](Context& ctx){
+    //     _links.remove(ctx.getGlfwWindow());
+    //     return CmdAct::Stop;
+    // });
+
+    return true;
 }
 
 void Keyboard::press(Key key, KeyModeFlags mods){

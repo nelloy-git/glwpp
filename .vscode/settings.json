@@ -58,7 +58,10 @@
         "any": "cpp",
         "list": "cpp",
         "variant": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp",
+        "unordered_set": "cpp"
     },
     "cmake.configureOnOpen": false
 }

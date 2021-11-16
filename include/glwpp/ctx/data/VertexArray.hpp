@@ -30,6 +30,7 @@ public:
         _draw_count(vertices.size()),
         _draw_func(&_drawUnindexed),
         _draw_instanced_func(&_drawUnindexedInstaced){
+        glBindVertexArray(id);
         _vertices = vertices;
         _vertices.bind();
         V::bindAttributes();
@@ -47,6 +48,7 @@ public:
         _draw_count(indices.size()),
         _draw_func(&_drawIndexed),
         _draw_instanced_func(&_drawIndexedInsctanced){
+        glBindVertexArray(id);
         _vertices = vertices;
         _vertices.bind();
         std::get<IndexBuffer<I>>(_indices) = indices;

@@ -14,7 +14,7 @@ public:
     Mouse();
     virtual ~Mouse();
 
-    void capture(Context &ctx, bool flag);
+    bool capture(std::weak_ptr<Context> wctx, bool flag);
 
     void press(MouseBtn btn, KeyModeFlags modes);
     void release(MouseBtn btn, KeyModeFlags modes);
@@ -31,6 +31,8 @@ public:
     Event<const Mouse&> onLeave;
 
 private:
+    std::shared_ptr<CmdWatcher> _captures;
+
     double _x;
     double _y;
     std::unordered_map<MouseBtn, bool> _down;
