@@ -6,7 +6,8 @@
                 "${default}",
                 "./include",
                 "./3rdparty/glfw/include",
-                "./3rdparty/glad/include"
+                "./3rdparty/glad/include",
+                "./3rdparty/googletest/googletest/include"
             ],
             "compilerPath": "C:\\MinGW\\mingw64-g++-11.2\\bin\\gcc.exe",
             "cStandard": "gnu17",

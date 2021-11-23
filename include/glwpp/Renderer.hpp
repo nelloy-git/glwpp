@@ -10,8 +10,12 @@ namespace glwpp {
 
 template<class V>
 class Renderer {
-
 public:
+    struct Code {
+        std::weak_ptr<std::string> vertex_shader;
+        std::weak_ptr<std::string> fragment_shader;
+    };
+
     Renderer(std::weak_ptr<Context> wctx,
              std::weak_ptr<std::string> wcode_vshader,
              std::weak_ptr<std::string> wcode_fshader = std::weak_ptr<std::string>()){
@@ -43,7 +47,7 @@ private:
     ctx::ContextData<ctx::Program> _program;
 
     static std::unique_ptr<ctx::Program> _initialize(std::shared_ptr<std::string> code_vshader,
-                                              std::shared_ptr<std::string> code_fshader){
+                                                     std::shared_ptr<std::string> code_fshader){
         auto prog = std::make_unique<ctx::Program>();
 
         if (code_vshader){

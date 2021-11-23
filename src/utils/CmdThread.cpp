@@ -6,7 +6,7 @@ CmdThread::CmdThread(Cmd<void, CmdThread&> &init,
                      Cmd<void, CmdThread&> &final) :
     _alive(true),
     _empty(true),
-    _thread(_threadFunction, this, init, final){
+    _thread(&CmdThread::_threadFunction, this, init, final){
 }
 
 CmdThread::~CmdThread(){

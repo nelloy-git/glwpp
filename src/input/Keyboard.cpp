@@ -13,16 +13,16 @@ namespace {
 
         for (auto kb : *links){
             if (action == GLFW_PRESS){
-                kb->press(static_cast<glwpp::Key>(key), mode);
+                kb->press(static_cast<Key>(key), mode);
             } else if (action == GLFW_RELEASE){
-                kb->release(static_cast<glwpp::Key>(key), mode);
+                kb->release(static_cast<Key>(key), mode);
             }
         }
     }
 }
 
 Keyboard::Keyboard() {
-    _captures = std::make_shared<CmdWatcher>();
+    _watcher = make_sptr<Watcher>();
 }
 
 Keyboard::~Keyboard(){
@@ -33,42 +33,50 @@ bool Keyboard::capture(std::weak_ptr<Context> wctx, bool flag){
     auto ctx = wctx.lock();
     if (!ctx) return false;
 
-    // ctx->push(_captures, [this, wctx, flag](){
-    //     auto ctx = wctx.lock();
-    //     if (!ctx) return CmdAct::Stop;
+    ctx->onLoopStart().push_back(_watcher, [this, wctx, flag](){
+        auto ctx = wctx.lock();
+        if (!ctx) return EventAction::Stop;
 
-    //     if (flag){
-    //         auto keyboards = _links.get(ctx->getGlfwWindow());
-    //         _links.add(ctx->getGlfwWindow(), this);
+        if (flag){
+            auto keyboards = _links.get(ctx->getGlfwWindow());
+            _links.add(ctx->getGlfwWindow(), this);
 
-    //         if (!keyboards){
-    //             glfwSetKeyCallback(ctx->getGlfwWindow(), _gltfKeyCallback);
-    //         }
-    //     } else {
-    //         _links.remove(ctx->getGlfwWindow(), this);
-    //     }
+            if (!keyboards){
+                glfwSetKeyCallback(ctx->getGlfwWindow(), _gltfKeyCallback);
+            }
+        } else {
+            _links.remove(ctx->getGlfwWindow(), this);
+        }
 
-    //     return CmdAct::Stop;
-    // });
+        return EventAction::Stop;
+    });
 
-    // ctx->onDestroy.pushBack(_captures, [](Context& ctx){
-    //     _links.remove(ctx.getGlfwWindow());
-    //     return CmdAct::Stop;
-    // });
+    ctx->onDestroy().push_back(_watcher, [](Context& ctx){
+        _links.remove(ctx.getGlfwWindow());
+        return EventAction::Stop;
+    });
 
     return true;
 }
 
 void Keyboard::press(Key key, KeyModeFlags mods){
     _down[key] = true;
-    onPress.emit(*this, key, mods);
+    _onPress.emit(true, *this, key, mods);
 }
 
 void Keyboard::release(Key key, KeyModeFlags mods){
     _down.erase(key);
-    onRelease.emit(*this, key, mods);
+    _onRelease.emit(true, *this, key, mods);
 }
 
-bool Keyboard::isDown(Key key) const {
+bool Keyboard::is_down(Key key) const {
     return _down.find(key) != _down.end();
+}
+
+glwpp::WEvent<const Keyboard&, const Key&, const KeyModeFlags&> Keyboard::onPress(){
+    return _onPress;
+}
+
+glwpp::WEvent<const Keyboard&, const Key&, const KeyModeFlags&> Keyboard::onRelease(){
+    return _onRelease;
 }

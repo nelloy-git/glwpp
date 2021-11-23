@@ -7,7 +7,7 @@
 #include <mutex>
 
 #include "glwpp/utils/CmdLoop.hpp"
-#include "glwpp/utils/Event.hpp"
+#include "glwpp/utils/event/Event.hpp"
 
 class GLFWwindow;
 
@@ -25,7 +25,7 @@ public:
     };
 
     Context(const Parameters &params);
-    virtual ~Context(){};
+    virtual ~Context();
 
     GLFWwindow *getGlfwWindow(){return _glfw_window;}
     static GLFWwindow *getGlfwWindow(Context& ctx){return ctx.getGlfwWindow();}
@@ -33,11 +33,22 @@ public:
         auto iter = _linked.find(win);
         return iter == _linked.end() ? nullptr : iter->second;
     };
+
+    WEvent<Context&> onLoopStart();
+    WEvent<Context&> onLoopRun();
+    WEvent<Context&> onLoopEnd();
+    WEvent<Context&> onDestroy();
     
 private:
-    Cmd<void, CmdLoop&> _init_gl_thread;
-    Cmd<void, CmdLoop&> _final_gl_thread;
+    std::function<void(CmdLoop&)> _init_gl_thread;
+    std::function<void(CmdLoop&)> _final_gl_thread;
+
     CmdLoop _loop;
+    sptr<Watcher> _watcher;
+    SEvent<Context&> _onLoopStart;
+    SEvent<Context&> _onLoopRun;
+    SEvent<Context&> _onLoopEnd;
+    SEvent<Context&> _onDestroy;
 
     GLFWwindow *_glfw_window;
     Parameters _params;

@@ -8,55 +8,42 @@ template<class ... Args>
 class SEvent final {
 public:
     SEvent(){
-        _event = std::make_shared<EventBase<Args...>>();
-        _watcher = std::make_shared<CmdWatcher>();
+        _event = make_sptr<Event<Args...>>();
     };
 
     operator WEvent<Args...>(){
-        return WEvent<Args...>(_event, _watcher);
+        return WEvent<Args...>(_event);
     };
 
     template<class F>
-    inline bool pushBack(std::weak_ptr<CmdWatcher> watcher, F cmd){
+    inline bool push_back(wptr<Watcher> watcher, F cmd){
         return _event->pushBack(watcher, cmd);
     }
 
     template<class F>
-    inline bool pushFront(std::weak_ptr<CmdWatcher> watcher, F cmd){
+    inline bool push_front(wptr<Watcher> watcher, F cmd){
         return _event->pushFront(watcher, cmd);
     }
 
-    template<class ... Other>
-    inline bool captureBack(const WEvent<Other...> &other, bool once){
-        auto event = _event.lock();
-        if (!event) return false;
-
-        auto other_event = other._event.lock();
-        if (!other_event) return false;
-
-        return other_event->pushBack(_watcher, once ? _capture_once : _capture_repeatly);
+    inline bool emit(bool wait, Args&&... args){
+        return _event->emit(wait, std::forward<Args>(args)...);
     }
 
-    template<class ... Other>
-    inline bool captureFront(const WEvent<Other...> &other, bool once){
-        auto other_event = other._event.lock();
-        if (!other_event) return false;
-
-        return other_event->pushFront(_watcher, once ? _capture_once : _capture_repeatly);
+    inline size_t size(){
+        return _event->size();
     }
 
 private:
-    std::shared_ptr<EventBase<Args...>> _event;
-    std::shared_ptr<CmdWatcher> _watcher;
+    sptr<Event<Args...>> _event;
 
-    std::function<CmdAct(Args&&...)> _capture_once = [this](Args&&... args){
-        emit(std::forward<Args>(args)...);
-        return CmdAct::Stop;
+    std::function<EventAction(Args&&...)> _capture_once = [this](Args&&... args){
+        _event->emit(true, std::forward<Args>(args)...);
+        return EventAction::Stop;
     };
     
-    std::function<CmdAct(Args&&...)> _capture_repeatly = [this](Args&&... args){
-        emit(std::forward<Args>(args)...);
-        return CmdAct::Repeat;
+    std::function<EventAction(Args&&...)> _capture_repeatly = [this](Args&&... args){
+        _event->emit(true, std::forward<Args>(args)...);
+        return EventAction::Continue;
     };
 };
 

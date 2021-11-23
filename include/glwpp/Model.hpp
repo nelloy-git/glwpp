@@ -6,28 +6,25 @@
 namespace glwpp {
 
 template<class V, class I = GLubyte>
-class Model {
-template<class T>
-friend class Renderer;
+class Model : public ctx::ContextData<ctx::VertexArray<V>> {
 
 public:
     Model(std::weak_ptr<Context> wctx,
           std::weak_ptr<std::vector<V>> vertices,
-          std::weak_ptr<std::vector<I>> indices = std::weak_ptr<std::vector<I>>()){
+          std::weak_ptr<std::vector<I>> indices = std::weak_ptr<std::vector<I>>()) :
+        ctx::ContextData<ctx::VertexArray<V>>(wctx){
 
-        auto &vert = *vertices.lock();
-        if (indices.expired()){
-            _vert_arr.init(wctx, vert);
+        auto p_vert = vertices.lock();
+        auto p_ind = indices.lock();
+
+        if (!p_vert) return;
+
+        if (!p_ind){
+            ctx::ContextData<ctx::VertexArray<V>>::_initSimply(*p_vert);
         } else {
-            auto &ind = *indices.lock();
-            _vert_arr.init(wctx, vert, ind);
+            ctx::ContextData<ctx::VertexArray<V>>::_initSimply(*p_vert, *p_ind);
         }
     }
-
-private:
-    // OpenGL data
-    ctx::ContextData<ctx::VertexArray<V>> _vert_arr;
-
 };
 
 }

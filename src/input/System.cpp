@@ -16,13 +16,13 @@ namespace {
         if (!links) return;
 
         for (auto system : *links){
-            system->onClose.emit(*system);
+            system->close();
         }
     }
 }
 
 SystemCall::SystemCall(){
-    _captures = std::make_shared<CmdWatcher>();
+    _watcher = std::make_shared<Watcher>();
 }
 
 SystemCall::~SystemCall(){
@@ -33,28 +33,36 @@ bool SystemCall::capture(std::weak_ptr<Context> wctx, bool flag){
     auto ctx = wctx.lock();
     if (!ctx) return false;
 
-    // ctx->push(_captures, [this, wctx, flag](){
-    //     auto ctx = wctx.lock();
-    //     if (!ctx) return CmdAct::Stop;
+    ctx->onLoopStart().push_back(_watcher, [this, wctx, flag](){
+        auto ctx = wctx.lock();
+        if (!ctx) return EventAction::Stop;
 
-    //     if (flag){
-    //         auto systems = _links.get(ctx->getGlfwWindow());
-    //         _links.add(ctx->getGlfwWindow(), this);
+        if (flag){
+            auto systems = _links.get(ctx->getGlfwWindow());
+            _links.add(ctx->getGlfwWindow(), this);
             
-    //         if (!systems){
-    //             glfwSetWindowCloseCallback(ctx->getGlfwWindow(), _gltfCloseCallback);
-    //         }
-    //     } else {
-    //         _links.remove(ctx->getGlfwWindow(), this);
-    //     }
+            if (!systems){
+                glfwSetWindowCloseCallback(ctx->getGlfwWindow(), _gltfCloseCallback);
+            }
+        } else {
+            _links.remove(ctx->getGlfwWindow(), this);
+        }
 
-    //     return CmdAct::Stop;
-    // });
+        return EventAction::Stop;
+    });
 
-    // ctx->onDestroy.pushBack(_captures, [](Context& ctx){
-    //     _links.remove(ctx.getGlfwWindow());
-    //     return CmdAct::Stop;
-    // });
+    ctx->onDestroy().push_back(_watcher, [](Context& ctx){
+        _links.remove(ctx.getGlfwWindow());
+        return EventAction::Stop;
+    });
 
     return true;
+}
+
+void SystemCall::close(){
+    _onClose.emit(true, *this);
+}
+
+glwpp::WEvent<SystemCall&> SystemCall::onClose(){
+    return _onClose;
 }

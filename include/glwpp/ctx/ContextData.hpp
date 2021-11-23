@@ -9,115 +9,119 @@ namespace glwpp::ctx {
 template<class T>
 class ContextData {
 public:
-
-    template<class ... OutArgs>
-    bool init(std::weak_ptr<Context> wctx, OutArgs&& ... args){
-        auto ctx = wctx.lock();
-        if (!ctx) return false;
-        _wctx = wctx;
-
-        auto queue = ctx->getCmdQueue().lock();
-        if (!queue) return false;
-
-        auto cmd_init = Context::CmdQueue::newCmd([this, &args...](CmdThread&){
-            data = std::make_unique<T>(std::forward<OutArgs>(args)...);
-        });
-        queue->pushOnceWait(cmd_init);
-
-        _cmd_destroy = ctx->onDestroy.pushBackFunc([this](Context&){
-            data.reset();
-        });
-        return true;
-    };
-
-    template<class ... OutArgs>
-    bool initFunc(std::weak_ptr<Context> wctx,
-                  std::function<std::unique_ptr<T>(OutArgs...)> init_func,
-                  OutArgs ... args){
-        
-        auto ctx = wctx.lock();
-        if (!ctx) return false;
-        _wctx = wctx;
-
-        auto queue = ctx->getCmdQueue().lock();
-        if (!queue) return false;
-
-        auto cmd_init = CmdThread::newCmd([this, init_func, &args...](CmdThread&){
-            data = init_func(args...);
-        });
-        queue->pushOnceWait(cmd_init);
-
-        _cmd_destroy = ctx->onDestroy.pushBackFunc([this](Context&){
-            data.reset();
-        });
-        return true;
+    template<class ... Args>
+    ContextData(std::weak_ptr<Context> ctx) :
+        _initing(false),
+        _ctx(ctx){
+        _watcher = std::make_shared<CmdWatcher>();
     }
 
     virtual ~ContextData(){
-        _cmd_destroy.reset();
-
-        auto ctx = _wctx.lock();
+        auto ctx = _ctx.lock();
         if (!ctx) return;
 
-        auto queue = ctx->getCmdQueue().lock();
-        if (!queue) return;
-        
-        auto cmd = CmdThread::newCmd([this](CmdThread&){
-            data.reset();
+        _watcher.reset();
+
+        auto destr_watcher = std::make_shared<CmdWatcher>();
+        ctx->onLoopEnd().pushBack(destr_watcher, [this](){
+            _data.reset();
+            return CmdAct::Stop;
         });
-        queue->pushOnceWait(cmd);
+        destr_watcher->waitOne();
+    }
+
+    // Blocking function
+    template<class R, class ... Args>
+    std::optional<R> execute(const std::function<R(std::weak_ptr<T>, Args&&...)> &func, Args&& ... args){
+        if (!isValid()) return std::nullopt;
+
+        auto ctx = _ctx.lock();
+        if (!ctx) return std::nullopt;
+
+        std::optional<R> res;
+        
+        auto result_watcher = std::make_shared<CmdWatcher>();
+        std::weak_ptr<T> wdata = _data;
+        ctx->onLoopRun().pushBack(result_watcher, [wdata, &res, func, &args...](){
+            res = func(wdata, std::forward<Args>(args)...);
+            return CmdAct::Stop;
+        });
+        result_watcher->waitOne();
+
+        return res;
+    }
+    
+    // Nonblocking function
+    template<class ... Args>
+    bool execute(const std::function<void(std::weak_ptr<T>, Args&&...)> &func, Args&& ... args){
+        if (!isValid()) return false;
+
+        auto ctx = _ctx.lock();
+        if (!ctx) return false;
+
+        std::weak_ptr<T> wdata = _data;
+        ctx->onLoopRun().pushBack(_watcher, [wdata, func, &args...](){
+            func(wdata, std::forward<Args>(args)...);
+            return CmdAct::Stop;
+        });
+        return true;
+    }
+
+    bool isValid(){
+        return _data != nullptr;
     }
 
     std::weak_ptr<Context> getContext(){
-        return _wctx;
+        return _ctx;
     }
 
-    template<class C, class R, class ... OutArgs>
-    bool executeIgnoreResult(R (C::*method)(OutArgs...), OutArgs ... args){
-        static_assert(std::is_invocable_v<decltype(method), T*, OutArgs...>);
+    std::weak_ptr<T> getData(){
+        return _data;
+    }
 
-        if (!data) return false;
+protected:
+    // Blocking function
+    template<class ... Args>
+    bool _initSimply(Args&& ... args){
+        return _init(std::make_shared<T, Args...>, std::forward<Args>(args)...);
+    };
 
-        auto ctx = _wctx.lock();
+    // Blocking function
+    template<class ... Args>
+    bool _init(std::function<std::shared_ptr<T>(Args&&...)> initializer,
+              Args&& ... args){
+        if (_initing || isValid()) return false;
+        _initing = true;
+
+        auto ctx = _ctx.lock();
         if (!ctx) return false;
 
-        auto queue = ctx->getCmdQueue().lock();
-        if (!queue) return false;
-
-        auto cmd = Context::CmdQueue::newCmd([this, method, args...](CmdThread&){
-            (data.get()->*method)(args...);
+        auto construct_watcher = std::make_shared<CmdWatcher>();
+        ctx->onLoopStart().pushBack(construct_watcher, [this, initializer, &args...](){
+            _data = initializer(std::forward<Args>(args)...);
+            return CmdAct::Stop;
         });
-        queue->pushOnceWait(cmd);
+        construct_watcher->waitOne();
 
-        return true;
-    }
+        if (!_data){
+            _initing = false;
+            return false;
+        }
 
-    template<class C, class R, class ... OutArgs>
-    bool executeIgnoreResult(R (C::*method)(OutArgs...) const, OutArgs ... args){
-        static_assert(std::is_invocable_v<decltype(method), T*, OutArgs...>);
-
-        if (!data) return false;
-
-        auto ctx = _wctx.lock();
-        if (!ctx) return false;
-
-        auto queue = ctx->getCmdQueue().lock();
-        if (!queue) return false;
-
-        auto cmd = Context::CmdQueue::newCmd([this, method, args...](CmdThread&){
-            (data.get()->*method)(args...);
+        ctx->onDestroy().pushBack(_watcher, [this](){
+            _data.reset();
+            return CmdAct::Stop;
         });
-        queue->pushOnceWait(cmd);
 
+        _initing = false;
         return true;
-    }
-
-    std::unique_ptr<T> data;
+    };
 
 private:
-    std::weak_ptr<Context> _wctx;
-    decltype(Context::onDestroy)::Cmd _cmd_destroy;
-
+    std::atomic<bool> _initing;
+    std::shared_ptr<CmdWatcher> _watcher;
+    std::shared_ptr<T> _data;
+    std::weak_ptr<Context> _ctx;
 };
 
 }

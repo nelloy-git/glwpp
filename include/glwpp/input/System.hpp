@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glwpp/utils/Event.hpp"
+#include "glwpp/utils/event/SEvent.hpp"
 
 namespace glwpp {
     class Context;
@@ -15,11 +15,14 @@ public:
 
     bool capture(std::weak_ptr<Context> wctx, bool flag);
 
-    Event<SystemCall&> onClose;
+    void close();
+
+    WEvent<SystemCall&> onClose();
 
 private:
-    std::shared_ptr<CmdWatcher> _captures;
+    sptr<Watcher> _watcher;
 
+    SEvent<SystemCall&> _onClose;
 };
 
 }

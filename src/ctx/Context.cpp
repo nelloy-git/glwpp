@@ -7,6 +7,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
+#include <iostream>
 using namespace glwpp;
 
 Context::Context(const Parameters &params) :
@@ -14,9 +15,32 @@ Context::Context(const Parameters &params) :
     _init_gl_thread([this](CmdLoop&){_glInit();}),
     _final_gl_thread([this](CmdLoop&){_glFinal();}),
     _loop(_init_gl_thread, _final_gl_thread){
+    _watcher = make_sptr<Watcher>();
+
+    // Links CmdLoop and Context events
+    auto done = _loop.onLoopStart().push_back(_watcher, [this](){
+        _onLoopStart.emit(true, *this);
+        return EventAction::Continue;
+    });
+    std::cout << done << std::endl;
+    std::cout << _loop.onLoopStart().size() << std::endl;
+
+    _loop.onLoopRun().push_back(_watcher, [this](){
+        _onLoopRun.emit(true, *this);
+        return EventAction::Continue;
+    });
+    _loop.onLoopEnd().push_back(_watcher, [this](){
+        _onLoopEnd.emit(true, *this);
+        return EventAction::Continue;
+    });
+}
+
+Context::~Context(){
 }
 
 void Context::_glInit(){
+    std::cout << "Starting OpenGL init" << std::endl;
+
     if (glfwInit() == GL_FALSE){
         throw std::runtime_error("Failed to initialize GLFW.");
     }
@@ -38,5 +62,22 @@ void Context::_glInit(){
 }
 
 void Context::_glFinal(){
+    _onDestroy.emit(true, *this);
     glfwDestroyWindow(_glfw_window);
+}
+
+WEvent<Context&> Context::onLoopStart(){
+    return _onLoopStart;
+}
+
+WEvent<Context&> Context::onLoopRun(){
+    return _onLoopRun;
+}
+
+WEvent<Context&> Context::onLoopEnd(){
+    return _onLoopEnd;
+}
+
+WEvent<Context&> Context::onDestroy(){
+    return _onDestroy;
 }

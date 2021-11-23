@@ -14,10 +14,6 @@
 
 #include "glwpp/utils/File.hpp"
 
-// #include "glwpp/ctx/Context.hpp"
-
-// #include "glwpp/utils/CmdQueue.hpp"
-
 // #include "glwpp/Model.hpp"
 // #include "glwpp/Renderer.hpp"
 
@@ -36,19 +32,20 @@ int main(int argc, char **argv){
         .height = 480,
         .title = "Noname"
     });
-    auto watcher = std::make_shared<glwpp::CmdWatcher>();
+    auto watcher = glwpp::make_sptr<glwpp::Watcher>();
     bool running = true;
 
-    auto &close_event = win->getSysCall().lock()->onClose;
-    close_event.pushBack(watcher, [&running](){
+    auto close_event = win->getSysCall().lock()->onClose();
+    close_event.push_back(watcher, [&running](){
         running = false;
         std::cout << "Closed" << std::endl;
-        return glwpp::CmdAct::Stop;
+        return glwpp::EventAction::Stop;
     });
 
-    win->getKeyboard().lock()->onPress.pushBack(watcher, [](const glwpp::Key& key){
+    win->getKeyboard().lock()->onPress().push_back(watcher, [win](const glwpp::input::Key& key){
         std::cout << "Pressed: " << static_cast<char>(key) << std::endl;
-        return glwpp::CmdAct::Repeat;
+        win->getKeyboard().lock()->capture(win->getContext(), false);
+        return glwpp::EventAction::Continue;
     });
 
 
@@ -75,7 +72,7 @@ int main(int argc, char **argv){
         glClear(GL_COLOR_BUFFER_BIT);
 
         // std::cout << "Clear" << std::endl;
-        return glwpp::CmdAct::Repeat;
+        return glwpp::EventAction::Continue;
     };
     
     auto finish_draw = [&](glwpp::Context &ctx){
@@ -83,17 +80,17 @@ int main(int argc, char **argv){
         glfwPollEvents();
 
         // std::cout << "Swap" << std::endl;
-        return glwpp::CmdAct::Repeat;
+        return glwpp::EventAction::Continue;
     };
 
-    // win->getContext().lock()->push(watcher, start_draw);
-    // win->getContext().lock()->push(watcher, finish_draw);
+    win->getContext().lock()->onLoopStart().push_back(watcher, start_draw);
+    win->getContext().lock()->onLoopEnd().push_front(watcher, finish_draw);
     // auto sec = std::chrono::seconds(1);
 
 
 
     while (running){
-        watcher->waitAll();
+        watcher->wait_for_idle();
 
         // win->getContext().lock()->getCmdThread().lock()->push(start_draw);
         // renderer.draw(model);

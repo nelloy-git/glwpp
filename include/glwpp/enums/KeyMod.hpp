@@ -3,7 +3,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-namespace glwpp {
+namespace glwpp::input {
 
 enum class KeyMode {
     SHIFT = GLFW_MOD_SHIFT,

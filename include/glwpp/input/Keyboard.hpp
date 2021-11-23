@@ -5,7 +5,7 @@
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/enums/Key.hpp"
 #include "glwpp/enums/KeyMod.hpp"
-#include "glwpp/utils/Event.hpp"
+#include "glwpp/utils/event/SEvent.hpp"
 
 namespace glwpp::input {
 
@@ -19,13 +19,15 @@ public:
     void press(Key key, KeyModeFlags mods);
     void release(Key key, KeyModeFlags mods);
 
-    bool isDown(Key key) const;
+    bool is_down(Key key) const;
 
-    Event<const Keyboard&, const Key&, const KeyModeFlags&> onPress;
-    Event<const Keyboard&, const Key&, const KeyModeFlags&> onRelease;
+    WEvent<const Keyboard&, const Key&, const KeyModeFlags&> onPress();
+    WEvent<const Keyboard&, const Key&, const KeyModeFlags&> onRelease();
 
 private:
-    std::shared_ptr<CmdWatcher> _captures;
+    sptr<Watcher> _watcher;
+    SEvent<const Keyboard&, const Key&, const KeyModeFlags&> _onPress;
+    SEvent<const Keyboard&, const Key&, const KeyModeFlags&> _onRelease;
     
     std::unordered_map<Key, bool> _down;
 };

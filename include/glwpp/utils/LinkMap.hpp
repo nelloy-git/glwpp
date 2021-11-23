@@ -79,13 +79,13 @@ public:
     void remove(T1 *t1, T2 *t2){
         auto t1_iter = _T1_T2.find(t1);
         if (t1_iter != _T1_T2.end()){
-            auto t1_list = t1_iter->second;
+            auto &t1_list = t1_iter->second;
             t1_list.erase(std::remove(t1_list.begin(), t1_list.end(), t2), t1_list.end());
         };
 
         auto t2_iter = _T2_T1.find(t2);
         if (t2_iter != _T2_T1.end()){
-            auto t2_list = t2_iter->second;
+            auto &t2_list = t2_iter->second;
             t2_list.erase(std::remove(t2_list.begin(), t2_list.end(), t1), t2_list.end());
         };
     }
