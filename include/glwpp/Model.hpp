@@ -5,25 +5,32 @@
 
 namespace glwpp {
 
-template<class V, class I = GLubyte>
+template<class V>
 class Model : public ctx::ContextData<ctx::VertexArray<V>> {
 
 public:
     Model(std::weak_ptr<Context> wctx,
+          std::weak_ptr<std::vector<V>> vertices) :
+        ctx::ContextData<ctx::VertexArray<V>>(wctx, _init, vertices.lock(), nullptr){
+    }
+
+    template<class I>
+    Model(std::weak_ptr<Context> wctx,
           std::weak_ptr<std::vector<V>> vertices,
-          std::weak_ptr<std::vector<I>> indices = std::weak_ptr<std::vector<I>>()) :
-        ctx::ContextData<ctx::VertexArray<V>>(wctx){
+          std::weak_ptr<std::vector<I>> indices) :
+        ctx::ContextData<ctx::VertexArray<V>>(wctx, _init, vertices.lock(), indices.lock()){
+    }
 
-        auto p_vert = vertices.lock();
-        auto p_ind = indices.lock();
+private:
+    template<class I = GLubyte>
+    static sptr<ctx::VertexArray<V>> _init(sptr<std::vector<V>> vert,
+                                           sptr<std::vector<I>> ind){
+        if (!vert) return nullptr;
 
-        if (!p_vert) return;
-
-        if (!p_ind){
-            ctx::ContextData<ctx::VertexArray<V>>::_initSimply(*p_vert);
-        } else {
-            ctx::ContextData<ctx::VertexArray<V>>::_initSimply(*p_vert, *p_ind);
-        }
+        if (!ind) 
+            return make_sptr<ctx::VertexArray<V>>(*vert);
+        else
+            return make_sptr<ctx::VertexArray<V>>(*vert, *ind);
     }
 };
 

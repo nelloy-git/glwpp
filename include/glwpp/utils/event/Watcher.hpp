@@ -91,6 +91,12 @@ public:
         return true;
     }
 
+    inline bool wait_for_users_change() const {
+        if (!_alive) return false;
+        _uses.wait(_uses);
+        return true;
+    }
+
 private:
     std::atomic<bool> _alive;
     std::atomic<size_t> _uses;

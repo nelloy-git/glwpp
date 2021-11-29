@@ -8,11 +8,15 @@ namespace glwpp {
 
 class CmdLoop final {
 public:
-    CmdLoop(const std::function<void(CmdLoop&)> &init,
-            const std::function<void(CmdLoop&)> &final);
+    CmdLoop(std::function<void(CmdLoop&)> init = [](CmdLoop&){},
+            std::function<void(CmdLoop&)> final = [](CmdLoop&){});
     ~CmdLoop();
 
-    // TODO priority map
+    void start();
+    void stop();
+    bool isRunning();
+    void waitRun();
+
     WEvent<CmdLoop&> onLoopStart();
     WEvent<CmdLoop&> onLoopRun();
     WEvent<CmdLoop&> onLoopEnd();
@@ -25,6 +29,9 @@ private:
     SEvent<CmdLoop&> _onDestroy;
 
     std::atomic<bool> _alive;
+    std::atomic<bool> _stopped;
+    std::mutex _running;
+    std::atomic<size_t> _runs;
     std::thread _thread;
     void _loop(std::function<void(CmdLoop&)> init,
                std::function<void(CmdLoop&)> final);

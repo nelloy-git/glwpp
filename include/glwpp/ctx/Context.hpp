@@ -27,12 +27,8 @@ public:
     Context(const Parameters &params);
     virtual ~Context();
 
-    GLFWwindow *getGlfwWindow(){return _glfw_window;}
-    static GLFWwindow *getGlfwWindow(Context& ctx){return ctx.getGlfwWindow();}
-    static Context *getContext(GLFWwindow *win){
-        auto iter = _linked.find(win);
-        return iter == _linked.end() ? nullptr : iter->second;
-    };
+    bool startUpdate();
+    void waitUpdate();
 
     WEvent<Context&> onLoopStart();
     WEvent<Context&> onLoopRun();
@@ -40,9 +36,6 @@ public:
     WEvent<Context&> onDestroy();
     
 private:
-    std::function<void(CmdLoop&)> _init_gl_thread;
-    std::function<void(CmdLoop&)> _final_gl_thread;
-
     CmdLoop _loop;
     sptr<Watcher> _watcher;
     SEvent<Context&> _onLoopStart;
@@ -55,8 +48,6 @@ private:
 
     void _glInit();
     void _glFinal();
-
-    static std::unordered_map<GLFWwindow*, Context*> _linked;
 };
 
 

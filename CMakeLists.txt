@@ -36,6 +36,8 @@ add_library (${PROJECT_NAME} STATIC
     ./src/utils/CmdLoop.cpp
 
     ./src/Window.cpp
+    
+    src/ctx/glfw/Window.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

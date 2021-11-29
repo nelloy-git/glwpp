@@ -10,11 +10,13 @@
 #include <iostream>
 using namespace glwpp;
 
+namespace {
+    std::unordered_map<GLFWwindow*, Context*> _linked;
+}
+
 Context::Context(const Parameters &params) :
     _params(params),
-    _init_gl_thread([this](CmdLoop&){_glInit();}),
-    _final_gl_thread([this](CmdLoop&){_glFinal();}),
-    _loop(_init_gl_thread, _final_gl_thread){
+    _loop([this](CmdLoop&){_glInit();}, [this](CmdLoop&){_glFinal();}){
     _watcher = make_sptr<Watcher>();
 
     // Links CmdLoop and Context events
@@ -38,6 +40,22 @@ Context::Context(const Parameters &params) :
 Context::~Context(){
 }
 
+bool Context::startUpdate(){
+    if (_loop.isRunning()) return false;
+
+    _loop.onLoopEnd().push_back(_watcher, [](CmdLoop &loop){
+        loop.stop();
+        return EventAction::Stop;
+    });
+    _loop.start();
+    return true;
+}
+
+void Context::waitUpdate(){
+    if (!_loop.isRunning()) return;
+    _loop.waitRun();
+}
+
 void Context::_glInit(){
     std::cout << "Starting OpenGL init" << std::endl;
 
@@ -51,6 +69,7 @@ void Context::_glInit(){
                                     _params.height,
                                     _params.title.c_str(),
                                     NULL, NULL);
+    _linked[_glfw_window] = this;
 
     glfwMakeContextCurrent(_glfw_window);
     auto ver = gladLoadGL(glfwGetProcAddress);

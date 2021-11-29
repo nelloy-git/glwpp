@@ -14,7 +14,8 @@
 
 #include "glwpp/utils/File.hpp"
 
-// #include "glwpp/Model.hpp"
+// #include "glwpp/ctx/ContextData.hpp"
+#include "glwpp/Model.hpp"
 // #include "glwpp/Renderer.hpp"
 
 // #include "glwpp/ctx/data/Uniform.hpp"
@@ -24,29 +25,29 @@
 
 
 int main(int argc, char **argv){
-    auto win = std::make_shared<glwpp::Window>(glwpp::Context::Parameters{
-        .gl_major_ver = 4,
-        .gl_minor_ver = 6,
+    // auto win = std::make_shared<glwpp::Window>(glwpp::Context::Parameters{
+    //     .gl_major_ver = 4,
+    //     .gl_minor_ver = 6,
 
-        .width = 640,
-        .height = 480,
-        .title = "Noname"
-    });
-    auto watcher = glwpp::make_sptr<glwpp::Watcher>();
-    bool running = true;
+    //     .width = 640,
+    //     .height = 480,
+    //     .title = "Noname"
+    // });
+    // auto watcher = glwpp::make_sptr<glwpp::Watcher>();
+    // bool running = true;
 
-    auto close_event = win->getSysCall().lock()->onClose();
-    close_event.push_back(watcher, [&running](){
-        running = false;
-        std::cout << "Closed" << std::endl;
-        return glwpp::EventAction::Stop;
-    });
+    // auto close_event = win->getSysCall().lock()->onClose();
+    // close_event.push_back(watcher, [&running](){
+    //     running = false;
+    //     std::cout << "Closed" << std::endl;
+    //     return glwpp::EventAction::Stop;
+    // });
 
-    win->getKeyboard().lock()->onPress().push_back(watcher, [win](const glwpp::input::Key& key){
-        std::cout << "Pressed: " << static_cast<char>(key) << std::endl;
-        win->getKeyboard().lock()->capture(win->getContext(), false);
-        return glwpp::EventAction::Continue;
-    });
+    // win->getKeyboard().lock()->onPress().push_back(watcher, [win](const glwpp::input::Key& key){
+    //     std::cout << "Pressed: " << static_cast<char>(key) << std::endl;
+    //     win->getKeyboard().lock()->capture(win->getContext(), false);
+    //     return glwpp::EventAction::Continue;
+    // });
 
 
     // using PosMeta = glwpp::ctx::AttributeMeta<glwpp::DataTypeGL::_float, 2, false>;
@@ -66,36 +67,36 @@ int main(int argc, char **argv){
     // renderer.use();
 
 
-    float color[4] = {0, 0.5, 0, 0};
-    auto start_draw = [&](glwpp::Context&){
-        glClearColor(color[0], color[1], color[2], color[3]);
-        glClear(GL_COLOR_BUFFER_BIT);
+    // float color[4] = {0, 0.5, 0, 0};
+    // auto start_draw = [&](glwpp::Context&){
+    //     glClearColor(color[0], color[1], color[2], color[3]);
+    //     glClear(GL_COLOR_BUFFER_BIT);
 
         // std::cout << "Clear" << std::endl;
-        return glwpp::EventAction::Continue;
-    };
+    //     return glwpp::EventAction::Continue;
+    // };
     
-    auto finish_draw = [&](glwpp::Context &ctx){
-        glfwSwapBuffers(ctx.getGlfwWindow());
-        glfwPollEvents();
+    // auto finish_draw = [&](glwpp::Context &ctx){
+    //     glfwSwapBuffers(ctx.getGlfwWindow());
+    //     glfwPollEvents();
 
         // std::cout << "Swap" << std::endl;
-        return glwpp::EventAction::Continue;
-    };
+    //     return glwpp::EventAction::Continue;
+    // };
 
-    win->getContext().lock()->onLoopStart().push_back(watcher, start_draw);
-    win->getContext().lock()->onLoopEnd().push_front(watcher, finish_draw);
+    // win->getContext().lock()->onLoopStart().push_back(watcher, start_draw);
+    // win->getContext().lock()->onLoopEnd().push_front(watcher, finish_draw);
     // auto sec = std::chrono::seconds(1);
 
-
-
-    while (running){
-        watcher->wait_for_idle();
+    // auto ctx = win->getContext().lock();
+    // while (running){
+    //     ctx->update();
+    //     ctx->waitUpdate();
 
         // win->getContext().lock()->getCmdThread().lock()->push(start_draw);
         // renderer.draw(model);
         // win->getContext().lock()->getCmdThread().lock()->push(finish_draw);
-    }
+    // }
 }
 
 
