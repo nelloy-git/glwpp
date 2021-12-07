@@ -1,4 +1,4 @@
-#include "glwpp/ctx/glfw/Window.hpp"
+#include "glwpp/glfw/Window.hpp"
 
 #include <stdexcept>
 
@@ -6,10 +6,10 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "glwpp/ctx/glfw/enums/Action.hpp"
-#include "glwpp/ctx/glfw/enums/Button.hpp"
-#include "glwpp/ctx/glfw/enums/Key.hpp"
-#include "glwpp/ctx/glfw/enums/KeyMod.hpp"
+#include "glwpp/glfw/enums/Action.hpp"
+#include "glwpp/glfw/enums/Button.hpp"
+#include "glwpp/glfw/enums/Key.hpp"
+#include "glwpp/glfw/enums/Mod.hpp"
 
 using namespace glwpp::glfw;
 
@@ -200,12 +200,12 @@ void Window::setCursorEnterCallback(const std::function<void(Window&, bool)> &ca
     _cursor_enter_cb = callback;
 }
 
-void Window::setCursorButtonCallback(const std::function<void(Window&, Button, Action, KeyModFlags)> &callback){
+void Window::setCursorButtonCallback(const std::function<void(Window&, Button, Action, ModFlags)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int button, int action, int mods){
         auto win = _getWin(glfw_win);
         win->_cursor_btn_cb(*win, static_cast<Button>(button),
                                   static_cast<Action>(action),
-                                  KeyModFlags(mods));
+                                  ModFlags(mods));
     };
 
     if (callback && !_cursor_btn_cb){
@@ -218,26 +218,27 @@ void Window::setCursorScrollCallback(const std::function<void(Window&, double, d
     _bindGlfwCallback<&Window::_cursor_scroll_cb>(&glfwSetScrollCallback, callback);
 }
 
-void Window::setKeyCallback(const std::function<void(Window&, Key, int, Action, KeyModFlags)> &callback){
-    static auto cb = [](GLFWwindow *glfw_win, int key, int scancode, int action, int mods){
-        auto win = _getWin(glfw_win);
-        win->_key_cb(*win, static_cast<Key>(key),
-                           scancode,
-                           static_cast<Action>(action),
-                           static_cast<KeyModFlags>(mods));
-    };
+void Window::setKeyCallback(const std::function<void(Window&, Key, int, Action, ModFlags)> &callback){
+    _bindGlfwCallback<&Window::_key_cb>(&glfwSetKeyCallback, callback);
+    // static auto cb = [](GLFWwindow *glfw_win, int key, int scancode, int action, int mods){
+    //     auto win = _getWin(glfw_win);
+    //     win->_key_cb(*win, static_cast<Key>(key),
+    //                        scancode,
+    //                        static_cast<Action>(action),
+    //                        static_cast<KeyModFlags>(mods));
+    // };
 
-    if (callback && !_key_cb){
-        glfwSetKeyCallback(_glfw_win, cb);
-    }
-    _key_cb = callback;
+    // if (callback && !_key_cb){
+    //     glfwSetKeyCallback(_glfw_win, cb);
+    // }
+    // _key_cb = callback;
 }
 
-void Window::setCharCallback(const std::function<void(Window&, unsigned int, KeyModFlags)> &callback){
+void Window::setCharCallback(const std::function<void(Window&, unsigned int, ModFlags)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, unsigned int codepoint, int mods){
         auto win = _getWin(glfw_win);
         win->_char_cb(*win, codepoint,
-                            static_cast<KeyModFlags>(mods));
+                            static_cast<ModFlags>(mods));
     };
 
     if (callback && !_char_cb){
@@ -246,12 +247,15 @@ void Window::setCharCallback(const std::function<void(Window&, unsigned int, Key
     _char_cb = callback;
 }
 
-template<auto member, class ... Args>
-void Window::_bindGlfwCallback(Window::GlfwCallbackSetter<Args...> setter,
-                               const std::function<void(Window&, Args...)> &callback){
-    static auto cb = [](GLFWwindow *glfw_win, Args... args){
+template<auto member, class ... ArgsGlfw, class ... ArgsCb>
+void Window::_bindGlfwCallback(Window::GlfwCallbackSetter<ArgsGlfw...> setter,
+                               const std::function<void(Window&, ArgsCb...)> &callback){
+
+    using 
+
+    static auto cb = [](GLFWwindow *glfw_win, ArgsGlfw... args){
         auto win = _getWin(glfw_win);
-        (win->*member)(*win, std::forward<Args>(args)...);
+        (win->*member)(*win, ArgsCb(args)...);
     };
 
     if (callback && !(this->*member)){

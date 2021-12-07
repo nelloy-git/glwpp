@@ -1,0 +1,135 @@
+#include "glwpp/glfw/enums/Key.hpp"
+
+#define GLFW_INCLUDE_NONE
+#include "glfw/glfw3.h"
+
+using namespace glwpp;
+
+glfw::Key glfw::toKey(int glfw_key){
+    switch (glfw_key){
+    /* Printable keys */
+        case GLFW_KEY_SPACE: glfw::Key::Space;
+        case GLFW_KEY_APOSTROPHE: glfw::Key::Apostrophe;
+        case GLFW_KEY_COMMA: glfw::Key::Comma;
+        case GLFW_KEY_MINUS: glfw::Key::Minus;
+        case GLFW_KEY_PERIOD: glfw::Key::Period;
+        case GLFW_KEY_SLASH: glfw::Key::Slash;
+        case GLFW_KEY_0: glfw::Key::_0;
+        case GLFW_KEY_1: glfw::Key::_1;
+        case GLFW_KEY_2: glfw::Key::_2;
+        case GLFW_KEY_3: glfw::Key::_3;
+        case GLFW_KEY_4: glfw::Key::_4;
+        case GLFW_KEY_5: glfw::Key::_5;
+        case GLFW_KEY_6: glfw::Key::_6;
+        case GLFW_KEY_7: glfw::Key::_7;
+        case GLFW_KEY_8: glfw::Key::_8;
+        case GLFW_KEY_9: glfw::Key::_9;
+        case GLFW_KEY_SEMICOLON: glfw::Key::Semicolon;
+        case GLFW_KEY_EQUAL: glfw::Key::Equal;
+        case GLFW_KEY_A: glfw::Key::A;
+        case GLFW_KEY_B: glfw::Key::B;
+        case GLFW_KEY_C: glfw::Key::C;
+        case GLFW_KEY_D: glfw::Key::D;
+        case GLFW_KEY_E: glfw::Key::E;
+        case GLFW_KEY_F: glfw::Key::F;
+        case GLFW_KEY_G: glfw::Key::G;
+        case GLFW_KEY_H: glfw::Key::H;
+        case GLFW_KEY_I: glfw::Key::I;
+        case GLFW_KEY_J: glfw::Key::J;
+        case GLFW_KEY_K: glfw::Key::K;
+        case GLFW_KEY_L: glfw::Key::L;
+        case GLFW_KEY_M: glfw::Key::M;
+        case GLFW_KEY_N: glfw::Key::N;
+        case GLFW_KEY_O: glfw::Key::O;
+        case GLFW_KEY_P: glfw::Key::P;
+        case GLFW_KEY_Q: glfw::Key::Q;
+        case GLFW_KEY_R: glfw::Key::R;
+        case GLFW_KEY_S: glfw::Key::S;
+        case GLFW_KEY_T: glfw::Key::T;
+        case GLFW_KEY_U: glfw::Key::U;
+        case GLFW_KEY_V: glfw::Key::V;
+        case GLFW_KEY_W: glfw::Key::W;
+        case GLFW_KEY_X: glfw::Key::X;
+        case GLFW_KEY_Y: glfw::Key::Y;
+        case GLFW_KEY_Z: glfw::Key::Z;
+        case GLFW_KEY_LEFT_BRACKET: glfw::Key::LeftBracket;
+        case GLFW_KEY_BACKSLASH: glfw::Key::Backslash;
+        case GLFW_KEY_RIGHT_BRACKET: glfw::Key::RightBracket;
+        case GLFW_KEY_GRAVE_ACCENT: glfw::Key::GraveAccent;
+        case GLFW_KEY_WORLD_1: glfw::Key::World_1;
+        case GLFW_KEY_WORLD_2: glfw::Key::World_2;
+
+    /* Function keys */
+        case GLFW_KEY_ESCAPE: glfw::Key::Escape;
+        case GLFW_KEY_ENTER: glfw::Key::Enter;
+        case GLFW_KEY_TAB: glfw::Key::Tab;
+        case GLFW_KEY_BACKSPACE: glfw::Key::Backspace;
+        case GLFW_KEY_INSERT: glfw::Key::Insert;
+        case GLFW_KEY_DELETE: glfw::Key::Delete;
+        case GLFW_KEY_RIGHT: glfw::Key::Right;
+        case GLFW_KEY_LEFT: glfw::Key::Left;
+        case GLFW_KEY_DOWN: glfw::Key::Down;
+        case GLFW_KEY_UP: glfw::Key::Up;
+        case GLFW_KEY_PAGE_UP: glfw::Key::PageUp;
+        case GLFW_KEY_PAGE_DOWN: glfw::Key::PageDown;
+        case GLFW_KEY_HOME: glfw::Key::Home;
+        case GLFW_KEY_END: glfw::Key::End;
+        case GLFW_KEY_CAPS_LOCK: glfw::Key::CapsLock;
+        case GLFW_KEY_SCROLL_LOCK: glfw::Key::ScrollLock;
+        case GLFW_KEY_NUM_LOCK: glfw::Key::NumLock;
+        case GLFW_KEY_PRINT_SCREEN: glfw::Key::PrintScreen;
+        case GLFW_KEY_PAUSE: glfw::Key::Pause;
+        case GLFW_KEY_F1: glfw::Key::F1;
+        case GLFW_KEY_F2: glfw::Key::F2;
+        case GLFW_KEY_F3: glfw::Key::F3;
+        case GLFW_KEY_F4: glfw::Key::F4;
+        case GLFW_KEY_F5: glfw::Key::F5;
+        case GLFW_KEY_F6: glfw::Key::F6;
+        case GLFW_KEY_F7: glfw::Key::F7;
+        case GLFW_KEY_F8: glfw::Key::F8;
+        case GLFW_KEY_F9: glfw::Key::F9;
+        case GLFW_KEY_F10: glfw::Key::F10;
+        case GLFW_KEY_F11: glfw::Key::F11;
+        case GLFW_KEY_F12: glfw::Key::F12;
+        case GLFW_KEY_F13: glfw::Key::F13;
+        case GLFW_KEY_F14: glfw::Key::F14;
+        case GLFW_KEY_F15: glfw::Key::F15;
+        case GLFW_KEY_F16: glfw::Key::F16;
+        case GLFW_KEY_F17: glfw::Key::F17;
+        case GLFW_KEY_F18: glfw::Key::F18;
+        case GLFW_KEY_F19: glfw::Key::F19;
+        case GLFW_KEY_F20: glfw::Key::F20;
+        case GLFW_KEY_F21: glfw::Key::F21;
+        case GLFW_KEY_F22: glfw::Key::F22;
+        case GLFW_KEY_F23: glfw::Key::F23;
+        case GLFW_KEY_F24: glfw::Key::F24;
+        case GLFW_KEY_F25: glfw::Key::F25;
+        case GLFW_KEY_KP_0: glfw::Key::KP_0;
+        case GLFW_KEY_KP_1: glfw::Key::KP_1;
+        case GLFW_KEY_KP_2: glfw::Key::KP_2;
+        case GLFW_KEY_KP_3: glfw::Key::KP_3;
+        case GLFW_KEY_KP_4: glfw::Key::KP_4;
+        case GLFW_KEY_KP_5: glfw::Key::KP_5;
+        case GLFW_KEY_KP_6: glfw::Key::KP_6;
+        case GLFW_KEY_KP_7: glfw::Key::KP_7;
+        case GLFW_KEY_KP_8: glfw::Key::KP_8;
+        case GLFW_KEY_KP_9: glfw::Key::KP_9;
+        case GLFW_KEY_KP_DECIMAL: glfw::Key::KP_Decimal;
+        case GLFW_KEY_KP_DIVIDE: glfw::Key::KP_Divide;
+        case GLFW_KEY_KP_MULTIPLY: glfw::Key::KP_Multiply;
+        case GLFW_KEY_KP_SUBTRACT: glfw::Key::KP_Subsract;
+        case GLFW_KEY_KP_ADD: glfw::Key::KP_Add;
+        case GLFW_KEY_KP_ENTER: glfw::Key::KP_Enter;
+        case GLFW_KEY_KP_EQUAL: glfw::Key::KP_Equal;
+        case GLFW_KEY_LEFT_SHIFT: glfw::Key::LeftShift;
+        case GLFW_KEY_LEFT_CONTROL: glfw::Key::LeftControl;
+        case GLFW_KEY_LEFT_ALT: glfw::Key::LeftAlt;
+        case GLFW_KEY_LEFT_SUPER: glfw::Key::LeftSuper;
+        case GLFW_KEY_RIGHT_SHIFT: glfw::Key::RightShift;
+        case GLFW_KEY_RIGHT_CONTROL: glfw::Key::RightControl;
+        case GLFW_KEY_RIGHT_ALT: glfw::Key::RightAlt;
+        case GLFW_KEY_RIGHT_SUPER: glfw::Key::RightSuper;
+        case GLFW_KEY_MENU: glfw::Key::Menu;
+        default: return glfw::Key::Unknown;
+    }
+}

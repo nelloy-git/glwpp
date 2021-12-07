@@ -11,7 +11,7 @@ namespace glwpp::glfw {
 
 enum class Action;
 enum class Key;
-struct KeyModFlags;
+struct ModFlags;
 enum class Button;
 
 class Window {
@@ -76,11 +76,11 @@ public:
     void setCursorFocusCallback(const std::function<void(Window&, bool)> &callback);
     void setCursorPosCallback(const std::function<void(Window&, double, double)> &callback);
     void setCursorEnterCallback(const std::function<void(Window&, bool)> &callback);
-    void setCursorButtonCallback(const std::function<void(Window&, Button, Action, KeyModFlags)> &callback);
+    void setCursorButtonCallback(const std::function<void(Window&, Button, Action, ModFlags)> &callback);
     void setCursorScrollCallback(const std::function<void(Window&, double, double)> &callback);
 
-    void setKeyCallback(const std::function<void(Window&, Key, int, Action, KeyModFlags)> &callback);
-    void setCharCallback(const std::function<void(Window&, unsigned int, KeyModFlags)> &callback);
+    void setKeyCallback(const std::function<void(Window&, Key, int, Action, ModFlags)> &callback);
+    void setCharCallback(const std::function<void(Window&, unsigned int, ModFlags)> &callback);
 
     // void setCursor() // TODO
 
@@ -105,10 +105,10 @@ private:
     std::function<void(Window&, double, double)> _cursor_pos_cb;
     std::function<void(Window&, bool)> _cursor_enter_cb;
     std::function<void(Window&, double, double)> _cursor_scroll_cb;
-    std::function<void(Window&, Button, Action, KeyModFlags)> _cursor_btn_cb; 
+    std::function<void(Window&, Button, Action, ModFlags)> _cursor_btn_cb; 
 
-    std::function<void(Window&, Key, int, Action, KeyModFlags)> _key_cb;
-    std::function<void(Window&, unsigned int, KeyModFlags)> _char_cb;
+    std::function<void(Window&, Key, int, Action, ModFlags)> _key_cb;
+    std::function<void(Window&, unsigned int, ModFlags)> _char_cb;
 
     template <class ... Args>
     using GlfwCallback = void (*)(GLFWwindow*, Args...);
@@ -116,9 +116,9 @@ private:
     template <class ... Args>
     using GlfwCallbackSetter = GlfwCallback<Args...> (*)(GLFWwindow*, GlfwCallback<Args...>);
 
-    template<auto member, class ... Args>
-    void _bindGlfwCallback(GlfwCallbackSetter<Args...> setter,
-                           const std::function<void(Window&, Args...)> &callback);
+template<auto member, class ... ArgsGlfw, class ... ArgsCb>
+    void _bindGlfwCallback(GlfwCallbackSetter<ArgsGlfw...> setter,
+                           const std::function<void(Window&, ArgsCb...)> &callback);
 };
 
 }

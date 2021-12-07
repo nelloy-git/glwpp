@@ -4,15 +4,13 @@
             "name": "Win32",
             "includePath": [
                 "${default}",
-                "./include",
-                "./3rdparty/glfw/include",
-                "./3rdparty/glad/include",
-                "./3rdparty/googletest/googletest/include"
+                "include",
+                "3rdparty/glfw/include",
+                "3rdparty/glad/include",
+                "3rdparty/googletest/googletest/include"
             ],
-            "compilerPath": "C:\\MinGW\\mingw64-g++-11.2\\bin\\gcc.exe",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++20",
-            "intelliSenseMode": "windows-gcc-x64"
+            "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",
+            // "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

@@ -17,27 +17,26 @@ add_subdirectory(./3rdparty/googletest)
 add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
-add_compile_options(-g -O0)
+# add_compile_options(-g -O0)
 
 include_directories(./include)
 include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
 
 add_library (${PROJECT_NAME} STATIC
-    ./3rdparty/glad/src/gl.c
+    # ./3rdparty/glad/src/gl.c
 
-    ./src/ctx/Context.cpp
+    # ./src/ctx/Context.cpp
     
-    ./src/input/Keyboard.cpp
-    ./src/input/Mouse.cpp
-    ./src/input/System.cpp
-    
-    # ./src/utils/CmdThread.cpp
-    ./src/utils/CmdLoop.cpp
+    # ./src/utils/CmdLoop.cpp
 
-    ./src/Window.cpp
+    # ./src/Window.cpp
     
-    src/ctx/glfw/Window.cpp
+    src/glfw/enums/Action.cpp
+    src/glfw/enums/Button.cpp
+    src/glfw/enums/Key.cpp
+    src/glfw/enums/Mod.cpp
+    src/glfw/Window.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
