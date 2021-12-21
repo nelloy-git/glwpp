@@ -3,30 +3,28 @@
 #define GLFW_INCLUDE_NONE
 #include "glfw/glfw3.h"
 
-using namespace glwpp;
-
-glfw::ModFlags::ModFlags(int glfw_mods) :
-    flags(glfw_mods){
-}
-
 namespace {
-    int toGlfw(glfw::Mod mod){
+    int toGlfw(glwpp::Mod mod){
         switch (mod){
-            case glfw::Mod::Shift: return GLFW_MOD_SHIFT;
-            case glfw::Mod::Control: return GLFW_MOD_CONTROL;
-            case glfw::Mod::Alt: return GLFW_MOD_ALT;
-            case glfw::Mod::Super: return GLFW_MOD_SUPER;
-            case glfw::Mod::CapsLock: return GLFW_MOD_CAPS_LOCK;
-            case glfw::Mod::NumLock: return GLFW_MOD_NUM_LOCK;
+            case glwpp::Mod::Shift: return GLFW_MOD_SHIFT;
+            case glwpp::Mod::Control: return GLFW_MOD_CONTROL;
+            case glwpp::Mod::Alt: return GLFW_MOD_ALT;
+            case glwpp::Mod::Super: return GLFW_MOD_SUPER;
+            case glwpp::Mod::CapsLock: return GLFW_MOD_CAPS_LOCK;
+            case glwpp::Mod::NumLock: return GLFW_MOD_NUM_LOCK;
             default: return 0;
         }
     }
 };
 
-bool glfw::ModFlags::isMod(glfw::Mod mod){
+glwpp::ModFlags::ModFlags(int glfw_mods) :
+    flags(glfw_mods){
+}
+
+bool glwpp::ModFlags::isMod(glwpp::Mod mod){
     return flags & toGlfw(mod);
 }
 
-glfw::ModFlags toModFlags(int glfw_mods){
-    return glfw::ModFlags(glfw_mods);
+glwpp::ModFlags glwpp::toModFlags(int glfw_mods){
+    return glwpp::ModFlags(glfw_mods);
 }

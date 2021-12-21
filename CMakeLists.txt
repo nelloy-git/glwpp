@@ -22,11 +22,12 @@ add_compile_definitions(GLWPP_DEBUG)
 include_directories(./include)
 include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
+include_directories(./3rdparty/thread_pool)
 
 add_library (${PROJECT_NAME} STATIC
-    # ./3rdparty/glad/src/gl.c
+    ./3rdparty/glad/src/gl.c
 
-    # ./src/ctx/Context.cpp
+    ./src/ctx/Context.cpp
     
     # ./src/utils/CmdLoop.cpp
 

@@ -3,13 +3,11 @@
 #define GLFW_INCLUDE_NONE
 #include "glfw/glfw3.h"
 
-using namespace glwpp;
-
-glfw::Action glfw::toAction(int glfw_action){
+glwpp::Action glwpp::toAction(int glfw_action){
     switch (glfw_action){
-        case GLFW_PRESS: return glfw::Action::Press;
-        case GLFW_RELEASE: return glfw::Action::Release;
-        case GLFW_REPEAT: return glfw::Action::Repeat;
-        default: return glfw::Action::Unknown;
+        case GLFW_PRESS: return glwpp::Action::Press;
+        case GLFW_RELEASE: return glwpp::Action::Release;
+        case GLFW_REPEAT: return glwpp::Action::Repeat;
+        default: return glwpp::Action::Unknown;
     }
 }

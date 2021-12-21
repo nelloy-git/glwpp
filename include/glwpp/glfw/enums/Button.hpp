@@ -1,6 +1,6 @@
 #pragma once
 
-namespace glwpp::glfw {
+namespace glwpp {
 
 enum class Button {
     Left,

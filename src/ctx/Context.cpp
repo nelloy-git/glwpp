@@ -10,93 +10,80 @@
 #include <iostream>
 using namespace glwpp;
 
-namespace {
-    std::unordered_map<GLFWwindow*, Context*> _linked;
-}
-
 Context::Context(const Parameters &params) :
+    _gl_thread(std::make_shared<thread_pool>(1)),
     _params(params),
-    _loop([this](CmdLoop&){_glInit();}, [this](CmdLoop&){_glFinal();}){
-    _watcher = make_sptr<Watcher>();
+    _valid(true),
+    _last_start(std::chrono::steady_clock::now()),
+    onFrame(_gl_thread),
+    onDetsroy(_gl_thread){
 
-    // Links CmdLoop and Context events
-    auto done = _loop.onLoopStart().push_back(_watcher, [this](){
-        _onLoopStart.emit(true, *this);
-        return EventAction::Continue;
+    auto future = _gl_thread->submit([this](){
+        _initGlfwWindow();
     });
-    std::cout << done << std::endl;
-    std::cout << _loop.onLoopStart().size() << std::endl;
-
-    _loop.onLoopRun().push_back(_watcher, [this](){
-        _onLoopRun.emit(true, *this);
-        return EventAction::Continue;
-    });
-    _loop.onLoopEnd().push_back(_watcher, [this](){
-        _onLoopEnd.emit(true, *this);
-        return EventAction::Continue;
-    });
+    _gl_thread->wait_for_tasks();
+    _gl_thread->paused = true;
 }
 
 Context::~Context(){
+    _valid = false;
+    wait();
 }
 
-bool Context::startUpdate(){
-    if (_loop.isRunning()) return false;
+bool Context::start(){
+    static std::function<void(std::chrono::microseconds)> event = [this](std::chrono::microseconds dt){
+        onFrame.emit(this, dt);
+    };
 
-    _loop.onLoopEnd().push_back(_watcher, [](CmdLoop &loop){
-        loop.stop();
-        return EventAction::Stop;
-    });
-    _loop.start();
+    if (!_valid || !_gl_thread->paused){
+        return false;
+    }
+
+    auto now = std::chrono::steady_clock::now();
+    auto dt = std::chrono::duration_cast<std::chrono::microseconds>(now - _last_start);
+    _last_start = now;
+
+    _gl_thread->submit(event, dt);
+    _gl_thread->paused = false;
     return true;
 }
 
-void Context::waitUpdate(){
-    if (!_loop.isRunning()) return;
-    _loop.waitRun();
+void Context::wait(){
+    _gl_thread->wait_for_tasks();
 }
 
-void Context::_glInit(){
-    std::cout << "Starting OpenGL init" << std::endl;
+void Context::_initGlfwWindow(){
+    std::vector<std::pair<int, int>> hints = {
+        {GLFW_VERSION_MAJOR, _params.gl_major_ver},
+        {GLFW_VERSION_MINOR, _params.gl_minor_ver},
+    };
 
-    if (glfwInit() == GL_FALSE){
-        throw std::runtime_error("Failed to initialize GLFW.");
-    }
+    _glfw_window = std::make_unique<glfw::Window>(
+        _params.width, _params.height, _params.title.c_str(), hints
+    );
+    
+    _bindGlfwCallback<&glfw::Window::setMoveCallback>(onWinMove);
+    _bindGlfwCallback<&glfw::Window::setResizeCallback>(onWinResize);
+    _bindGlfwCallback<&glfw::Window::setCloseCallback>(onWinClose);
+    _bindGlfwCallback<&glfw::Window::setRefreshCallback>(onWinRefresh);
+    _bindGlfwCallback<&glfw::Window::setIconifyCallback>(onWinIconify);
+    _bindGlfwCallback<&glfw::Window::setMaximizeCallback>(onWinMaximize);
+    _bindGlfwCallback<&glfw::Window::setScaleCallback>(onWinScale);
+    _bindGlfwCallback<&glfw::Window::setFramebufferResizeCallback>(onFramebufferResize);
 
-    glfwWindowHint(GLFW_VERSION_MAJOR, _params.gl_major_ver);
-    glfwWindowHint(GLFW_VERSION_MINOR, _params.gl_minor_ver);
-    _glfw_window = glfwCreateWindow(_params.width,
-                                    _params.height,
-                                    _params.title.c_str(),
-                                    NULL, NULL);
-    _linked[_glfw_window] = this;
-
-    glfwMakeContextCurrent(_glfw_window);
-    auto ver = gladLoadGL(glfwGetProcAddress);
-    if (ver == 0){
-        throw std::runtime_error("Failed to initialize OpenGL context.");
-    }
-
-    std::cout << "OpenGL inited. Thread: " << std::this_thread::get_id() << std::endl;
+    _bindGlfwCallback<&glfw::Window::setCursorFocusCallback>(onCursorFocus);
+    _bindGlfwCallback<&glfw::Window::setCursorMoveCallback>(onCursorMove);
+    _bindGlfwCallback<&glfw::Window::setCursorEnterCallback>(onCursorEnter);
+    _bindGlfwCallback<&glfw::Window::setCursorButtonCallback>(onCursorButton);
+    _bindGlfwCallback<&glfw::Window::setCursorScrollCallback>(onCursorScroll);
+    _bindGlfwCallback<&glfw::Window::setKeyCallback>(onKey);
+    _bindGlfwCallback<&glfw::Window::setCharCallback>(onChar);
 }
 
-void Context::_glFinal(){
-    _onDestroy.emit(true, *this);
-    glfwDestroyWindow(_glfw_window);
-}
-
-WEvent<Context&> Context::onLoopStart(){
-    return _onLoopStart;
-}
-
-WEvent<Context&> Context::onLoopRun(){
-    return _onLoopRun;
-}
-
-WEvent<Context&> Context::onLoopEnd(){
-    return _onLoopEnd;
-}
-
-WEvent<Context&> Context::onDestroy(){
-    return _onDestroy;
-}
+// template<auto setter, class ... Args>
+// void _bindGlfwCallback(Event<Context*, Args...> &event){
+//     std::function<void(glfw::Window*, Args...)> func = [this, &event](glfw::Window*, Args... args){
+//         event.emit(this, args...);
+//     };
+//     (this->_glfw_window->*setter)(func);
+// }

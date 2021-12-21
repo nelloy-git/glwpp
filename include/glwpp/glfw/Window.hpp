@@ -5,23 +5,23 @@
 #include <utility>
 #include <vector>
 
+#include "glwpp/glfw/enums/Action.hpp"
+#include "glwpp/glfw/enums/Button.hpp"
+#include "glwpp/glfw/enums/Key.hpp"
+#include "glwpp/glfw/enums/Mod.hpp"
+
 struct GLFWwindow;
 
 namespace glwpp::glfw {
-
-enum class Action;
-enum class Key;
-struct ModFlags;
-enum class Button;
 
 class Window {
 public:
     Window(int width, int height, const char *title,
            const std::vector<std::pair<int, int>> &hints);
-    Window(Window&) = delete;
-    Window(Window&&) = delete;
-    Window(const Window&) = delete;
-    Window(const Window&&) = delete;
+    Window(Window*) = delete;
+    Window(Window*&) = delete;
+    Window(const Window*) = delete;
+    Window(const Window*&) = delete;
     virtual ~Window();
 
     void iconify();
@@ -64,23 +64,23 @@ public:
 
     // Callbacks
 
-    void setPosCallback(const std::function<void(Window&, int x, int y)> &callback);
-    void setSizeCallback(const std::function<void(Window&, int, int)> &callback);
-    void setCloseCallback(const std::function<void(Window&)> &callback);
-    void setRefreshCallback(const std::function<void(Window&)> &callback);
-    void setIconifyCallback(const std::function<void(Window&, bool)> &callback);
-    void setMaximizeCallback(const std::function<void(Window&, bool)> &callback);
-    void setFramebufferResizeCallback(const std::function<void(Window&, int, int)> &callback);
-    void setScaleCallback(const std::function<void(Window&, float, float)> &callback);
+    void setMoveCallback(const std::function<void(Window*, int x, int y)> &callback);
+    void setResizeCallback(const std::function<void(Window*, int, int)> &callback);
+    void setCloseCallback(const std::function<void(Window*)> &callback);
+    void setRefreshCallback(const std::function<void(Window*)> &callback);
+    void setIconifyCallback(const std::function<void(Window*, bool)> &callback);
+    void setMaximizeCallback(const std::function<void(Window*, bool)> &callback);
+    void setFramebufferResizeCallback(const std::function<void(Window*, int, int)> &callback);
+    void setScaleCallback(const std::function<void(Window*, float, float)> &callback);
 
-    void setCursorFocusCallback(const std::function<void(Window&, bool)> &callback);
-    void setCursorPosCallback(const std::function<void(Window&, double, double)> &callback);
-    void setCursorEnterCallback(const std::function<void(Window&, bool)> &callback);
-    void setCursorButtonCallback(const std::function<void(Window&, Button, Action, ModFlags)> &callback);
-    void setCursorScrollCallback(const std::function<void(Window&, double, double)> &callback);
+    void setCursorFocusCallback(const std::function<void(Window*, bool)> &callback);
+    void setCursorMoveCallback(const std::function<void(Window*, double, double)> &callback);
+    void setCursorEnterCallback(const std::function<void(Window*, bool)> &callback);
+    void setCursorButtonCallback(const std::function<void(Window*, Button, Action, ModFlags)> &callback);
+    void setCursorScrollCallback(const std::function<void(Window*, double, double)> &callback);
 
-    void setKeyCallback(const std::function<void(Window&, Key, int, Action, ModFlags)> &callback);
-    void setCharCallback(const std::function<void(Window&, unsigned int, ModFlags)> &callback);
+    void setKeyCallback(const std::function<void(Window*, Key, int, Action, ModFlags)> &callback);
+    void setCharCallback(const std::function<void(Window*, unsigned int, ModFlags)> &callback);
 
     // void setCursor() // TODO
 
@@ -92,23 +92,23 @@ public:
 private:
     GLFWwindow *_glfw_win;
 
-    std::function<void(Window&, int, int)> _pos_cb;
-    std::function<void(Window&, int, int)> _size_cb;
-    std::function<void(Window&)> _close_cb;
-    std::function<void(Window&)> _refresh_cb;
-    std::function<void(Window&, bool)> _iconified_cb;
-    std::function<void(Window&, bool)> _maximized_cb;
-    std::function<void(Window&, int, int)> _frame_size_cb;
-    std::function<void(Window&, float, float)> _scale_cb;
+    std::function<void(Window*, int, int)> _pos_cb;
+    std::function<void(Window*, int, int)> _size_cb;
+    std::function<void(Window*)> _close_cb;
+    std::function<void(Window*)> _refresh_cb;
+    std::function<void(Window*, bool)> _iconified_cb;
+    std::function<void(Window*, bool)> _maximized_cb;
+    std::function<void(Window*, int, int)> _frame_size_cb;
+    std::function<void(Window*, float, float)> _scale_cb;
 
-    std::function<void(Window&, bool)> _cursor_focus_cb;
-    std::function<void(Window&, double, double)> _cursor_pos_cb;
-    std::function<void(Window&, bool)> _cursor_enter_cb;
-    std::function<void(Window&, double, double)> _cursor_scroll_cb;
-    std::function<void(Window&, Button, Action, ModFlags)> _cursor_btn_cb; 
+    std::function<void(Window*, bool)> _cursor_focus_cb;
+    std::function<void(Window*, double, double)> _cursor_pos_cb;
+    std::function<void(Window*, bool)> _cursor_enter_cb;
+    std::function<void(Window*, double, double)> _cursor_scroll_cb;
+    std::function<void(Window*, Button, Action, ModFlags)> _cursor_btn_cb; 
 
-    std::function<void(Window&, Key, int, Action, ModFlags)> _key_cb;
-    std::function<void(Window&, unsigned int, ModFlags)> _char_cb;
+    std::function<void(Window*, Key, int, Action, ModFlags)> _key_cb;
+    std::function<void(Window*, unsigned int, ModFlags)> _char_cb;
 
     template <class ... Args>
     using GlfwCallback = void (*)(GLFWwindow*, Args...);
@@ -116,9 +116,9 @@ private:
     template <class ... Args>
     using GlfwCallbackSetter = GlfwCallback<Args...> (*)(GLFWwindow*, GlfwCallback<Args...>);
 
-template<auto member, class ... ArgsGlfw, class ... ArgsCb>
-    void _bindGlfwCallback(GlfwCallbackSetter<ArgsGlfw...> setter,
-                           const std::function<void(Window&, ArgsCb...)> &callback);
+template<auto member, class ... Args>
+    void _bindGlfwCallback(GlfwCallbackSetter<Args...> setter,
+                           const std::function<void(Window*, Args...)> &callback);
 };
 
 }

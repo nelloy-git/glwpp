@@ -1,9 +1,5 @@
 #include "glwpp/Window.hpp"
 
-#include "glwpp/input/Keyboard.hpp"
-#include "glwpp/input/Mouse.hpp"
-#include "glwpp/input/System.hpp"
-
 using namespace glwpp;
 
 Window::Window(const Context::Parameters &ctx_params,

@@ -4,18 +4,16 @@
 #include <chrono>
 
 #include "glad/gl.h"
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
 
-#include "glwpp/Window.hpp"
-#include "glwpp/input/Keyboard.hpp"
-#include "glwpp/input/Mouse.hpp"
-#include "glwpp/input/System.hpp"
+// #include "glwpp/Window.hpp"
+// #include "glwpp/input/Keyboard.hpp"
+// #include "glwpp/input/Mouse.hpp"
+// #include "glwpp/input/System.hpp"
 
 #include "glwpp/utils/File.hpp"
 
-// #include "glwpp/ctx/ContextData.hpp"
-#include "glwpp/Model.hpp"
+#include "glwpp/ctx/Context.hpp"
+// #include "glwpp/Model.hpp"
 // #include "glwpp/Renderer.hpp"
 
 // #include "glwpp/ctx/data/Uniform.hpp"
@@ -25,14 +23,34 @@
 
 
 int main(int argc, char **argv){
-    // auto win = std::make_shared<glwpp::Window>(glwpp::Context::Parameters{
-    //     .gl_major_ver = 4,
-    //     .gl_minor_ver = 6,
+    glwpp::Context::Parameters ctx_params;
+    ctx_params.gl_major_ver = 4;
+    ctx_params.gl_minor_ver = 6;
+    ctx_params.width = 640;
+    ctx_params.height = 480;
+    ctx_params.title = "Noname";
 
-    //     .width = 640,
-    //     .height = 480,
-    //     .title = "Noname"
-    // });
+    auto win = std::make_shared<glwpp::Context>(ctx_params);
+
+    
+
+    // win->onFrame.pushBack()
+
+
+    while (true){};
+
+
+
+
+
+
+
+
+
+
+
+
+
     // auto watcher = glwpp::make_sptr<glwpp::Watcher>();
     // bool running = true;
 

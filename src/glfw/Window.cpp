@@ -6,11 +6,6 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "glwpp/glfw/enums/Action.hpp"
-#include "glwpp/glfw/enums/Button.hpp"
-#include "glwpp/glfw/enums/Key.hpp"
-#include "glwpp/glfw/enums/Mod.hpp"
-
 using namespace glwpp::glfw;
 
 namespace
@@ -44,6 +39,7 @@ Window::Window(int width, int height, const char *title,
 
 Window::~Window(){
     glfwDestroyWindow(_glfw_win);
+    delete _glfw_win;
 }
 
 void Window::iconify(){
@@ -124,26 +120,26 @@ void Window::setClipboardString(const std::string &string){
     glfwSetClipboardString(_glfw_win, string.c_str());
 }
 
-void Window::setPosCallback(const std::function<void(Window&, int, int)> &callback){
+void Window::setMoveCallback(const std::function<void(Window*, int, int)> &callback){
     _bindGlfwCallback<&Window::_pos_cb>(&glfwSetWindowPosCallback, callback);
 }
 
-void Window::setSizeCallback(const std::function<void(Window&, int, int)> &callback){
+void Window::setResizeCallback(const std::function<void(Window*, int, int)> &callback){
     _bindGlfwCallback<&Window::_size_cb>(&glfwSetWindowSizeCallback, callback);
 }
 
-void Window::setCloseCallback(const std::function<void(Window&)> &callback){
+void Window::setCloseCallback(const std::function<void(Window*)> &callback){
     _bindGlfwCallback<&Window::_close_cb>(&glfwSetWindowCloseCallback, callback);
 }
 
-void Window::setRefreshCallback(const std::function<void(Window&)> &callback){
+void Window::setRefreshCallback(const std::function<void(Window*)> &callback){
     _bindGlfwCallback<&Window::_refresh_cb>(&glfwSetWindowRefreshCallback, callback);
 }
 
-void Window::setIconifyCallback(const std::function<void(Window&, bool)> &callback){
+void Window::setIconifyCallback(const std::function<void(Window*, bool)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int iconified){
         auto win = _getWin(glfw_win);
-        win->_iconified_cb(*win, iconified == GLFW_TRUE);
+        win->_iconified_cb(win, iconified == GLFW_TRUE);
     };
 
     if (callback && !_iconified_cb){
@@ -152,10 +148,10 @@ void Window::setIconifyCallback(const std::function<void(Window&, bool)> &callba
     _iconified_cb = callback;
 }
 
-void Window::setMaximizeCallback(const std::function<void(Window&, bool)> &callback){
+void Window::setMaximizeCallback(const std::function<void(Window*, bool)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int maximazed){
         auto win = _getWin(glfw_win);
-        win->_maximized_cb(*win, maximazed == GLFW_TRUE);
+        win->_maximized_cb(win, maximazed == GLFW_TRUE);
     };
 
     if (callback && !_maximized_cb){
@@ -164,18 +160,18 @@ void Window::setMaximizeCallback(const std::function<void(Window&, bool)> &callb
     _maximized_cb = callback;
 }
 
-void Window::setFramebufferResizeCallback(const std::function<void(Window&, int, int)> &callback){
+void Window::setFramebufferResizeCallback(const std::function<void(Window*, int, int)> &callback){
     _bindGlfwCallback<&Window::_frame_size_cb>(&glfwSetFramebufferSizeCallback, callback);
 }
 
-void Window::setScaleCallback(const std::function<void(Window&, float, float)> &callback){
+void Window::setScaleCallback(const std::function<void(Window*, float, float)> &callback){
     _bindGlfwCallback<&Window::_scale_cb>(&glfwSetWindowContentScaleCallback, callback);
 }
 
-void Window::setCursorFocusCallback(const std::function<void(Window&, bool)> &callback){
+void Window::setCursorFocusCallback(const std::function<void(Window*, bool)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int focused){
         auto win = _getWin(glfw_win);
-        win->_cursor_focus_cb(*win, focused == GLFW_TRUE);
+        win->_cursor_focus_cb(win, focused == GLFW_TRUE);
     };
 
     if (callback && !_cursor_focus_cb){
@@ -184,14 +180,14 @@ void Window::setCursorFocusCallback(const std::function<void(Window&, bool)> &ca
     _cursor_focus_cb = callback;
 }
 
-void Window::setCursorPosCallback(const std::function<void(Window&, double, double)> &callback){
+void Window::setCursorMoveCallback(const std::function<void(Window*, double, double)> &callback){
     _bindGlfwCallback<&Window::_cursor_pos_cb>(&glfwSetCursorPosCallback, callback);
 }
 
-void Window::setCursorEnterCallback(const std::function<void(Window&, bool)> &callback){
+void Window::setCursorEnterCallback(const std::function<void(Window*, bool)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int entered){
         auto win = _getWin(glfw_win);
-        win->_cursor_enter_cb(*win, entered == GLFW_TRUE);
+        win->_cursor_enter_cb(win, entered == GLFW_TRUE);
     };
 
     if (callback && !_cursor_enter_cb){
@@ -200,12 +196,12 @@ void Window::setCursorEnterCallback(const std::function<void(Window&, bool)> &ca
     _cursor_enter_cb = callback;
 }
 
-void Window::setCursorButtonCallback(const std::function<void(Window&, Button, Action, ModFlags)> &callback){
+void Window::setCursorButtonCallback(const std::function<void(Window*, Button, Action, ModFlags)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, int button, int action, int mods){
         auto win = _getWin(glfw_win);
-        win->_cursor_btn_cb(*win, static_cast<Button>(button),
-                                  static_cast<Action>(action),
-                                  ModFlags(mods));
+        win->_cursor_btn_cb(win, toButton(button),
+                                 toAction(action),
+                                 toModFlags(mods));
     };
 
     if (callback && !_cursor_btn_cb){
@@ -214,31 +210,30 @@ void Window::setCursorButtonCallback(const std::function<void(Window&, Button, A
     _cursor_btn_cb = callback;
 }
 
-void Window::setCursorScrollCallback(const std::function<void(Window&, double, double)> &callback){
+void Window::setCursorScrollCallback(const std::function<void(Window*, double, double)> &callback){
     _bindGlfwCallback<&Window::_cursor_scroll_cb>(&glfwSetScrollCallback, callback);
 }
 
-void Window::setKeyCallback(const std::function<void(Window&, Key, int, Action, ModFlags)> &callback){
-    _bindGlfwCallback<&Window::_key_cb>(&glfwSetKeyCallback, callback);
-    // static auto cb = [](GLFWwindow *glfw_win, int key, int scancode, int action, int mods){
-    //     auto win = _getWin(glfw_win);
-    //     win->_key_cb(*win, static_cast<Key>(key),
-    //                        scancode,
-    //                        static_cast<Action>(action),
-    //                        static_cast<KeyModFlags>(mods));
-    // };
+void Window::setKeyCallback(const std::function<void(Window*, Key, int, Action, ModFlags)> &callback){
+    static auto cb = [](GLFWwindow *glfw_win, int key, int scancode, int action, int mods){
+        auto win = _getWin(glfw_win);
+        win->_key_cb(win, toKey(key),
+                          scancode,
+                          toAction(action),
+                          toModFlags(mods));
+    };
 
-    // if (callback && !_key_cb){
-    //     glfwSetKeyCallback(_glfw_win, cb);
-    // }
-    // _key_cb = callback;
+    if (callback && !_key_cb){
+        glfwSetKeyCallback(_glfw_win, cb);
+    }
+    _key_cb = callback;
 }
 
-void Window::setCharCallback(const std::function<void(Window&, unsigned int, ModFlags)> &callback){
+void Window::setCharCallback(const std::function<void(Window*, unsigned int, ModFlags)> &callback){
     static auto cb = [](GLFWwindow *glfw_win, unsigned int codepoint, int mods){
         auto win = _getWin(glfw_win);
-        win->_char_cb(*win, codepoint,
-                            static_cast<ModFlags>(mods));
+        win->_char_cb(win, codepoint,
+                           toModFlags(mods));
     };
 
     if (callback && !_char_cb){
@@ -247,15 +242,12 @@ void Window::setCharCallback(const std::function<void(Window&, unsigned int, Mod
     _char_cb = callback;
 }
 
-template<auto member, class ... ArgsGlfw, class ... ArgsCb>
-void Window::_bindGlfwCallback(Window::GlfwCallbackSetter<ArgsGlfw...> setter,
-                               const std::function<void(Window&, ArgsCb...)> &callback){
-
-    using 
-
-    static auto cb = [](GLFWwindow *glfw_win, ArgsGlfw... args){
+template<auto member, class ... Args>
+void Window::_bindGlfwCallback(Window::GlfwCallbackSetter<Args...> setter,
+                               const std::function<void(Window*, Args...)> &callback){
+    static auto cb = [](GLFWwindow *glfw_win, Args... args){
         auto win = _getWin(glfw_win);
-        (win->*member)(*win, ArgsCb(args)...);
+        (win->*member)(win, std::forward<Args>(args)...);
     };
 
     if (callback && !(this->*member)){

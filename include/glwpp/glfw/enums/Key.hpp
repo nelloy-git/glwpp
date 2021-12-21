@@ -1,6 +1,6 @@
 #pragma once
 
-namespace glwpp::glfw {
+namespace glwpp {
 
 enum class Key {
     /* Printable keys */

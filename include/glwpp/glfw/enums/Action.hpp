@@ -1,6 +1,6 @@
 #pragma once
 
-namespace glwpp::glfw {
+namespace glwpp {
 
 enum class Action {
     Release,
@@ -11,4 +11,4 @@ enum class Action {
 
 Action toAction(int glfw_action);
     
-} // namespace glwpp::glfw
+} // namespace glwpp

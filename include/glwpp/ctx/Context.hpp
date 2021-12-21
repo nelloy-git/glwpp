@@ -1,53 +1,69 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
 #include <atomic>
-#include <thread>
-#include <mutex>
+#include <functional>
+#include <string>
 
-#include "glwpp/utils/CmdLoop.hpp"
+#include "glwpp/glfw/Window.hpp"
 #include "glwpp/utils/event/Event.hpp"
-
-class GLFWwindow;
 
 namespace glwpp {
 
 class Context {
+    sptr<thread_pool> _gl_thread;
 public:
     struct Parameters {
         int gl_major_ver;
         int gl_minor_ver;
 
-        size_t width;
-        size_t height;
+        int width;
+        int height;
         std::string title;
     };
 
     Context(const Parameters &params);
     virtual ~Context();
 
-    bool startUpdate();
-    void waitUpdate();
+    bool start();
+    void wait();
 
-    WEvent<Context&> onLoopStart();
-    WEvent<Context&> onLoopRun();
-    WEvent<Context&> onLoopEnd();
-    WEvent<Context&> onDestroy();
+    Event<Context*, std::chrono::microseconds> onFrame;
+
+    Event<Context*, int, int> onWinMove;
+    Event<Context*, int, int> onWinResize;
+    Event<Context*> onWinClose;
+    Event<Context*> onWinRefresh;
+    Event<Context*, bool> onWinIconify;
+    Event<Context*, bool> onWinMaximize;
+    Event<Context*, float, float> onWinScale;
+    Event<Context*, int, int> onFramebufferResize;
+
+    Event<Context*, bool> onCursorFocus;
+    Event<Context*, bool> onCursorEnter;
+    Event<Context*, double, double> onCursorMove;
+    Event<Context*, Button, Action, ModFlags> onCursorButton;
+    Event<Context*, double, double> onCursorScroll;
+
+    Event<Context*, Key, int, Action, ModFlags> onKey;
+    Event<Context*, unsigned int, ModFlags> onChar;
+
+    Event<Context*> onDetsroy;
     
 private:
-    CmdLoop _loop;
-    sptr<Watcher> _watcher;
-    SEvent<Context&> _onLoopStart;
-    SEvent<Context&> _onLoopRun;
-    SEvent<Context&> _onLoopEnd;
-    SEvent<Context&> _onDestroy;
-
-    GLFWwindow *_glfw_window;
     Parameters _params;
+    uptr<glfw::Window> _glfw_window;
+    std::atomic<bool> _valid;
+    std::chrono::steady_clock::time_point _last_start;
 
-    void _glInit();
-    void _glFinal();
+    void _initGlfwWindow();
+
+    template<auto setter, class ... Args>
+    void _bindGlfwCallback(Event<Context*, Args...> &event){
+        std::function<void(glfw::Window*, Args...)> func = [this, &event](glfw::Window*, Args... args){
+            event.emit(this, args...);
+        };
+        (this->_glfw_window.get()->*setter)(func);
+    };
 };
 
 

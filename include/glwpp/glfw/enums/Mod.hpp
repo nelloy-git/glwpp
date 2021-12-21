@@ -1,6 +1,6 @@
 #pragma once
 
-namespace glwpp::glfw {
+namespace glwpp {
 
 enum class Mod {
     Shift,
@@ -17,7 +17,7 @@ struct ModFlags {
     bool isMod(Mod mod);
 
 private:
-    int flags = 0;
+    int flags;
 };
 
 ModFlags toModFlags(int glfw_mods);
