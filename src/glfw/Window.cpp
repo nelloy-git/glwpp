@@ -1,8 +1,7 @@
 #include "glwpp/glfw/Window.hpp"
 
 #include <stdexcept>
-
-#include <glad/gl.h>
+#include "glwpp/gl/api/gl_46.hpp"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
@@ -17,11 +16,14 @@ inline Window *_getWin(GLFWwindow *glfw_win){
     
 } // namespace
 
+size_t Window::_glfw_inited = 0;
+
 Window::Window(int width, int height, const char *title,
                const std::vector<std::pair<int, int>> &hints){
-    if (glfwInit() == GL_FALSE){
+    if (_glfw_inited == 0 && !glfwInit()){
         throw std::runtime_error("Failed to initialize GLFW.");
     }
+    ++_glfw_inited;
 
     for (auto &hint : hints){
         glfwWindowHint(hint.first, hint.second);
@@ -31,7 +33,7 @@ Window::Window(int width, int height, const char *title,
     glfwSetWindowUserPointer(_glfw_win, this);
     glfwMakeContextCurrent(_glfw_win);
     
-    auto ver = gladLoadGL(glfwGetProcAddress);
+    auto ver = gl::LoadGl_46(glfwGetProcAddress);
     if (ver == 0){
         throw std::runtime_error("Failed to initialize OpenGL context.");
     }
@@ -39,7 +41,10 @@ Window::Window(int width, int height, const char *title,
 
 Window::~Window(){
     glfwDestroyWindow(_glfw_win);
-    delete _glfw_win;
+    --_glfw_inited;
+    if (_glfw_inited == 0){
+        glfwTerminate();
+    }
 }
 
 void Window::iconify(){

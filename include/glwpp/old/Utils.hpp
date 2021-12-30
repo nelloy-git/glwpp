@@ -3,7 +3,7 @@
 #include "glad/gl.h"
 // #include "magic_enum.hpp"
 
-#include "glw/Types.hpp"
+// #include "glw/Types.hpp"
 
 namespace glw {
 

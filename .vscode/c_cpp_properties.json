@@ -8,7 +8,8 @@
                 "3rdparty/glfw/include",
                 "3rdparty/glad/include",
                 "3rdparty/googletest/googletest/include",
-                "3rdparty/thread_pool"
+                "3rdparty/thread_pool",
+                "3rdparty/VLD/include"
             ],
             "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",
             // "configurationProvider": "ms-vscode.cmake-tools"

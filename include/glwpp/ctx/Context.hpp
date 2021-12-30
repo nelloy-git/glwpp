@@ -28,6 +28,7 @@ public:
     void wait();
 
     Event<Context*, std::chrono::microseconds> onFrame;
+    Event<Context*> onDetsroy;
 
     Event<Context*, int, int> onWinMove;
     Event<Context*, int, int> onWinResize;
@@ -47,7 +48,6 @@ public:
     Event<Context*, Key, int, Action, ModFlags> onKey;
     Event<Context*, unsigned int, ModFlags> onChar;
 
-    Event<Context*> onDetsroy;
     
 private:
     Parameters _params;

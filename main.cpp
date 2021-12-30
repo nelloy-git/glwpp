@@ -1,9 +1,11 @@
+#include <vld.h>
+
 #include <iostream>
 #include <memory>
 // #include <unistd.h>
 #include <chrono>
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 // #include "glwpp/Window.hpp"
 // #include "glwpp/input/Keyboard.hpp"
@@ -20,6 +22,9 @@
 
 // template<class V>
 // using Model = glwpp::ctx::VertexArray<V>;
+#include "glwpp/gl/api/gl_46.hpp"
+#include "glwpp/gl/enums/BufferType.hpp"
+#include "glwpp/gl/oop/Buffer.hpp"
 
 
 int main(int argc, char **argv){
@@ -34,14 +39,36 @@ int main(int argc, char **argv){
 
     
 
-    // win->onFrame.pushBack()
+    auto w = win->onFrame.push([&win](){
+        // glwpp::gl::Buffer<int> buf({1, 2, 3, 4, 5});
+        // std::cout << "Frame" << std::endl;
+    });
+
+    // auto w = win->onKey.push([&win](glwpp::Key key, int, glwpp::Action act){
+    //     if (act == glwpp::Action::Release){
+    //         std::cout << int(key) << std::endl;
+    //     }
+        
+    //     if (key == glwpp::Key::Escape){
+    //         win.reset();
+    //     }
+    // });
+
+    auto w1 = win->onKey.push([&win](glwpp::Key key){
+        std::cout << char(key) << std::endl;
+        if (key == glwpp::Key::Escape){
+            win.reset();
+        }
+    });
+
+    while (win){
+        win->start();
+        win->wait();
+        win.reset();
+    };
 
 
-    while (true){};
-
-
-
-
+    // auto a = new int();
 
 
 

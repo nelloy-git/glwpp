@@ -1,0 +1,93 @@
+#pragma once
+#include "glwpp/gl/api/gl_21.hpp"
+
+namespace glwpp::gl {
+
+bool LoadGl_30(LoadFunc func);
+ 
+extern void (*BeginConditionalRender)(GLuint id, GLenum mode);
+extern void (*BeginTransformFeedback)(GLenum primitiveMode);
+extern void (*BindBufferBase)(GLenum target, GLuint index, GLuint buffer);
+extern void (*BindBufferRange)(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size);
+extern void (*BindFragDataLocation)(GLuint program, GLuint color, const GLchar * name);
+extern void (*BindFramebuffer)(GLenum target, GLuint framebuffer);
+extern void (*BindRenderbuffer)(GLenum target, GLuint renderbuffer);
+extern void (*BindVertexArray)(GLuint array);
+extern void (*BlitFramebuffer)(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
+extern GLenum (*CheckFramebufferStatus)(GLenum target);
+extern void (*ClampColor)(GLenum target, GLenum clamp);
+extern void (*ClearBufferfi)(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
+extern void (*ClearBufferfv)(GLenum buffer, GLint drawbuffer, const GLfloat * value);
+extern void (*ClearBufferiv)(GLenum buffer, GLint drawbuffer, const GLint * value);
+extern void (*ClearBufferuiv)(GLenum buffer, GLint drawbuffer, const GLuint * value);
+extern void (*ColorMaski)(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
+extern void (*DeleteFramebuffers)(GLsizei n, const GLuint * framebuffers);
+extern void (*DeleteRenderbuffers)(GLsizei n, const GLuint * renderbuffers);
+extern void (*DeleteVertexArrays)(GLsizei n, const GLuint * arrays);
+extern void (*Disablei)(GLenum target, GLuint index);
+extern void (*Enablei)(GLenum target, GLuint index);
+extern void (*EndConditionalRender)();
+extern void (*EndTransformFeedback)();
+extern void (*FlushMappedBufferRange)(GLenum target, GLintptr offset, GLsizeiptr length);
+extern void (*FramebufferRenderbuffer)(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+extern void (*FramebufferTexture1D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+extern void (*FramebufferTexture2D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+extern void (*FramebufferTexture3D)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
+extern void (*FramebufferTextureLayer)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer);
+extern void (*GenFramebuffers)(GLsizei n, GLuint * framebuffers);
+extern void (*GenRenderbuffers)(GLsizei n, GLuint * renderbuffers);
+extern void (*GenVertexArrays)(GLsizei n, GLuint * arrays);
+extern void (*GenerateMipmap)(GLenum target);
+extern void (*GetBooleani_v)(GLenum target, GLuint index, GLboolean * data);
+extern GLint (*GetFragDataLocation)(GLuint program, const GLchar * name);
+extern void (*GetFramebufferAttachmentParameteriv)(GLenum target, GLenum attachment, GLenum pname, GLint * params);
+extern void (*GetIntegeri_v)(GLenum target, GLuint index, GLint * data);
+extern void (*GetRenderbufferParameteriv)(GLenum target, GLenum pname, GLint * params);
+extern const GLubyte *(*GetStringi)(GLenum name, GLuint index);
+extern void (*GetTexParameterIiv)(GLenum target, GLenum pname, GLint * params);
+extern void (*GetTexParameterIuiv)(GLenum target, GLenum pname, GLuint * params);
+extern void (*GetTransformFeedbackVarying)(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLsizei * size, GLenum * type, GLchar * name);
+extern void (*GetUniformuiv)(GLuint program, GLint location, GLuint * params);
+extern void (*GetVertexAttribIiv)(GLuint index, GLenum pname, GLint * params);
+extern void (*GetVertexAttribIuiv)(GLuint index, GLenum pname, GLuint * params);
+extern GLboolean (*IsEnabledi)(GLenum target, GLuint index);
+extern GLboolean (*IsFramebuffer)(GLuint framebuffer);
+extern GLboolean (*IsRenderbuffer)(GLuint renderbuffer);
+extern GLboolean (*IsVertexArray)(GLuint array);
+extern void *(*MapBufferRange)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+extern void (*RenderbufferStorage)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+extern void (*RenderbufferStorageMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+extern void (*TexParameterIiv)(GLenum target, GLenum pname, const GLint * params);
+extern void (*TexParameterIuiv)(GLenum target, GLenum pname, const GLuint * params);
+extern void (*TransformFeedbackVaryings)(GLuint program, GLsizei count, const GLchar *const* varyings, GLenum bufferMode);
+extern void (*Uniform1ui)(GLint location, GLuint v0);
+extern void (*Uniform1uiv)(GLint location, GLsizei count, const GLuint * value);
+extern void (*Uniform2ui)(GLint location, GLuint v0, GLuint v1);
+extern void (*Uniform2uiv)(GLint location, GLsizei count, const GLuint * value);
+extern void (*Uniform3ui)(GLint location, GLuint v0, GLuint v1, GLuint v2);
+extern void (*Uniform3uiv)(GLint location, GLsizei count, const GLuint * value);
+extern void (*Uniform4ui)(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
+extern void (*Uniform4uiv)(GLint location, GLsizei count, const GLuint * value);
+extern void (*VertexAttribI1i)(GLuint index, GLint x);
+extern void (*VertexAttribI1iv)(GLuint index, const GLint * v);
+extern void (*VertexAttribI1ui)(GLuint index, GLuint x);
+extern void (*VertexAttribI1uiv)(GLuint index, const GLuint * v);
+extern void (*VertexAttribI2i)(GLuint index, GLint x, GLint y);
+extern void (*VertexAttribI2iv)(GLuint index, const GLint * v);
+extern void (*VertexAttribI2ui)(GLuint index, GLuint x, GLuint y);
+extern void (*VertexAttribI2uiv)(GLuint index, const GLuint * v);
+extern void (*VertexAttribI3i)(GLuint index, GLint x, GLint y, GLint z);
+extern void (*VertexAttribI3iv)(GLuint index, const GLint * v);
+extern void (*VertexAttribI3ui)(GLuint index, GLuint x, GLuint y, GLuint z);
+extern void (*VertexAttribI3uiv)(GLuint index, const GLuint * v);
+extern void (*VertexAttribI4bv)(GLuint index, const GLbyte * v);
+extern void (*VertexAttribI4i)(GLuint index, GLint x, GLint y, GLint z, GLint w);
+extern void (*VertexAttribI4iv)(GLuint index, const GLint * v);
+extern void (*VertexAttribI4sv)(GLuint index, const GLshort * v);
+extern void (*VertexAttribI4ubv)(GLuint index, const GLubyte * v);
+extern void (*VertexAttribI4ui)(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);
+extern void (*VertexAttribI4uiv)(GLuint index, const GLuint * v);
+extern void (*VertexAttribI4usv)(GLuint index, const GLushort * v);
+extern void (*VertexAttribIPointer)(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer);
+
+}

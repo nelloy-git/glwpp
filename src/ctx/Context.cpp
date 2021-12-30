@@ -26,13 +26,22 @@ Context::Context(const Parameters &params) :
 }
 
 Context::~Context(){
+    static std::function<void()> event = [this](){
+        onDetsroy.emit(this);
+    };
+
     _valid = false;
-    wait();
+    _gl_thread->paused = false;
+    _gl_thread->wait_for_tasks();
+    _gl_thread->submit(event);
+    _gl_thread->wait_for_tasks();
 }
 
 bool Context::start(){
     static std::function<void(std::chrono::microseconds)> event = [this](std::chrono::microseconds dt){
+        glfwPollEvents();
         onFrame.emit(this, dt);
+        _gl_thread->paused = true;
     };
 
     if (!_valid || !_gl_thread->paused){

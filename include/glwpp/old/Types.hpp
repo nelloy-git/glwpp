@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 namespace glw {
 

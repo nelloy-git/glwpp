@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 #include "glw/Attribute.hpp"
 #include "glw/Utils.hpp"

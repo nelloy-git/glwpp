@@ -1,0 +1,97 @@
+#pragma once
+#include "glwpp/gl/api/gl_40.hpp"
+
+namespace glwpp::gl {
+
+bool LoadGl_41(LoadFunc func);
+
+extern void (*ActiveShaderProgram)(GLuint pipeline, GLuint program);
+extern void (*BindProgramPipeline)(GLuint pipeline);
+extern void (*ClearDepthf)(GLfloat d);
+extern GLuint (*CreateShaderProgramv)(GLenum type, GLsizei count, const GLchar *const* strings);
+extern void (*DeleteProgramPipelines)(GLsizei n, const GLuint * pipelines);
+extern void (*DepthRangeArrayv)(GLuint first, GLsizei count, const GLdouble * v);
+extern void (*DepthRangeIndexed)(GLuint index, GLdouble n, GLdouble f);
+extern void (*DepthRangef)(GLfloat n, GLfloat f);
+extern void (*GenProgramPipelines)(GLsizei n, GLuint * pipelines);
+extern void (*GetDoublei_v)(GLenum target, GLuint index, GLdouble * data);
+extern void (*GetFloati_v)(GLenum target, GLuint index, GLfloat * data);
+extern void (*GetProgramBinary)(GLuint program, GLsizei bufSize, GLsizei * length, GLenum * binaryFormat, void * binary);
+extern void (*GetProgramPipelineInfoLog)(GLuint pipeline, GLsizei bufSize, GLsizei * length, GLchar * infoLog);
+extern void (*GetProgramPipelineiv)(GLuint pipeline, GLenum pname, GLint * params);
+extern void (*GetShaderPrecisionFormat)(GLenum shadertype, GLenum precisiontype, GLint * range, GLint * precision);
+extern void (*GetVertexAttribLdv)(GLuint index, GLenum pname, GLdouble * params);
+extern GLboolean (*IsProgramPipeline)(GLuint pipeline);
+extern void (*ProgramBinary)(GLuint program, GLenum binaryFormat, const void * binary, GLsizei length);
+extern void (*ProgramParameteri)(GLuint program, GLenum pname, GLint value);
+extern void (*ProgramUniform1d)(GLuint program, GLint location, GLdouble v0);
+extern void (*ProgramUniform1dv)(GLuint program, GLint location, GLsizei count, const GLdouble * value);
+extern void (*ProgramUniform1f)(GLuint program, GLint location, GLfloat v0);
+extern void (*ProgramUniform1fv)(GLuint program, GLint location, GLsizei count, const GLfloat * value);
+extern void (*ProgramUniform1i)(GLuint program, GLint location, GLint v0);
+extern void (*ProgramUniform1iv)(GLuint program, GLint location, GLsizei count, const GLint * value);
+extern void (*ProgramUniform1ui)(GLuint program, GLint location, GLuint v0);
+extern void (*ProgramUniform1uiv)(GLuint program, GLint location, GLsizei count, const GLuint * value);
+extern void (*ProgramUniform2d)(GLuint program, GLint location, GLdouble v0, GLdouble v1);
+extern void (*ProgramUniform2dv)(GLuint program, GLint location, GLsizei count, const GLdouble * value);
+extern void (*ProgramUniform2f)(GLuint program, GLint location, GLfloat v0, GLfloat v1);
+extern void (*ProgramUniform2fv)(GLuint program, GLint location, GLsizei count, const GLfloat * value);
+extern void (*ProgramUniform2i)(GLuint program, GLint location, GLint v0, GLint v1);
+extern void (*ProgramUniform2iv)(GLuint program, GLint location, GLsizei count, const GLint * value);
+extern void (*ProgramUniform2ui)(GLuint program, GLint location, GLuint v0, GLuint v1);
+extern void (*ProgramUniform2uiv)(GLuint program, GLint location, GLsizei count, const GLuint * value);
+extern void (*ProgramUniform3d)(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2);
+extern void (*ProgramUniform3dv)(GLuint program, GLint location, GLsizei count, const GLdouble * value);
+extern void (*ProgramUniform3f)(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+extern void (*ProgramUniform3fv)(GLuint program, GLint location, GLsizei count, const GLfloat * value);
+extern void (*ProgramUniform3i)(GLuint program, GLint location, GLint v0, GLint v1, GLint v2);
+extern void (*ProgramUniform3iv)(GLuint program, GLint location, GLsizei count, const GLint * value);
+extern void (*ProgramUniform3ui)(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2);
+extern void (*ProgramUniform3uiv)(GLuint program, GLint location, GLsizei count, const GLuint * value);
+extern void (*ProgramUniform4d)(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3);
+extern void (*ProgramUniform4dv)(GLuint program, GLint location, GLsizei count, const GLdouble * value);
+extern void (*ProgramUniform4f)(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+extern void (*ProgramUniform4fv)(GLuint program, GLint location, GLsizei count, const GLfloat * value);
+extern void (*ProgramUniform4i)(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3);
+extern void (*ProgramUniform4iv)(GLuint program, GLint location, GLsizei count, const GLint * value);
+extern void (*ProgramUniform4ui)(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
+extern void (*ProgramUniform4uiv)(GLuint program, GLint location, GLsizei count, const GLuint * value);
+extern void (*ProgramUniformMatrix2dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix2fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix2x3dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix2x3fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix2x4dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix2x4fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix3dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix3fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix3x2dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix3x2fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix3x4dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix3x4fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix4dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix4fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix4x2dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix4x2fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ProgramUniformMatrix4x3dv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value);
+extern void (*ProgramUniformMatrix4x3fv)(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern void (*ReleaseShaderCompiler)();
+extern void (*ScissorArrayv)(GLuint first, GLsizei count, const GLint * v);
+extern void (*ScissorIndexed)(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height);
+extern void (*ScissorIndexedv)(GLuint index, const GLint * v);
+extern void (*ShaderBinary)(GLsizei count, const GLuint * shaders, GLenum binaryFormat, const void * binary, GLsizei length);
+extern void (*UseProgramStages)(GLuint pipeline, GLbitfield stages, GLuint program);
+extern void (*ValidateProgramPipeline)(GLuint pipeline);
+extern void (*VertexAttribL1d)(GLuint index, GLdouble x);
+extern void (*VertexAttribL1dv)(GLuint index, const GLdouble * v);
+extern void (*VertexAttribL2d)(GLuint index, GLdouble x, GLdouble y);
+extern void (*VertexAttribL2dv)(GLuint index, const GLdouble * v);
+extern void (*VertexAttribL3d)(GLuint index, GLdouble x, GLdouble y, GLdouble z);
+extern void (*VertexAttribL3dv)(GLuint index, const GLdouble * v);
+extern void (*VertexAttribL4d)(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
+extern void (*VertexAttribL4dv)(GLuint index, const GLdouble * v);
+extern void (*VertexAttribLPointer)(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer);
+extern void (*ViewportArrayv)(GLuint first, GLsizei count, const GLfloat * v);
+extern void (*ViewportIndexedf)(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h);
+extern void (*ViewportIndexedfv)(GLuint index, const GLfloat * v);
+
+}

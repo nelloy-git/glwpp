@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 #include "glwpp/utils/Utils.hpp"
 

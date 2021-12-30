@@ -126,5 +126,4 @@ static std::function<R(ArgsOut...)> func_wrap(const std::function<R(ArgsIn...)> 
     }
 }
 
-
 }

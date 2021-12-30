@@ -116,7 +116,8 @@ private:
     template <class ... Args>
     using GlfwCallbackSetter = GlfwCallback<Args...> (*)(GLFWwindow*, GlfwCallback<Args...>);
 
-template<auto member, class ... Args>
+    static size_t _glfw_inited;
+    template<auto member, class ... Args>
     void _bindGlfwCallback(GlfwCallbackSetter<Args...> setter,
                            const std::function<void(Window*, Args...)> &callback);
 };
