@@ -4,7 +4,7 @@
 
 namespace glwpp::gl {
 
-enum class BufferType : GLenum {
+enum class BufferType : Enum {
     Array = 0x8892,             // Vertex attributes
     AtomicCounter = 0x92C0,     // Atomic counter storage
     CopyRead = 0x8F36,          // Buffer copy source

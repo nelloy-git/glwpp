@@ -12,7 +12,7 @@ namespace glwpp::gl {
 // Copy - The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.
 // Draw - The data store contents are modified by the application, and used as the source for GL drawing and image specification commands.
 // Read - The data store contents are modified by reading data from the GL, and used to return that data when queried by the application.
-enum class BufferUsage : GLenum {
+enum class BufferUsage : Enum {
     DynamicCopy = 0x88EA,
     DynamicDraw = 0x88E8,
     DynamicRead = 0x88E9,

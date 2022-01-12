@@ -4,12 +4,12 @@
 
 using namespace glwpp;
 
-void (*gl::UniformMatrix2x3fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
-void (*gl::UniformMatrix2x4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
-void (*gl::UniformMatrix3x2fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
-void (*gl::UniformMatrix3x4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
-void (*gl::UniformMatrix4x2fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
-void (*gl::UniformMatrix4x3fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value) = nullptr;
+void (*gl::UniformMatrix2x3fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
+void (*gl::UniformMatrix2x4fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
+void (*gl::UniformMatrix3x2fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
+void (*gl::UniformMatrix3x4fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
+void (*gl::UniformMatrix4x2fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
+void (*gl::UniformMatrix4x3fv)(Int location, Sizei count, Bool transpose, const Float * value) = nullptr;
 
 bool gl::LoadGl_21(LoadFunc func){
     if (!LoadGl_20(func)){

@@ -60,7 +60,12 @@ add_library (${PROJECT_NAME} STATIC
     src/glfw/enums/Mod.cpp
     src/glfw/Window.cpp
 
-    src/gl/oop/RawBuffer.cpp
+    src/gl/oop/Buffer.cpp
+    src/gl/oop/Program.cpp
+    src/gl/oop/Shader.cpp
+    src/gl/oop/VertexArray.cpp
+
+    src/utils/event/EventStatus.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

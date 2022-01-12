@@ -4,18 +4,18 @@
 
 using namespace glwpp;
 
-void (*gl::BindImageTexture)(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format) = nullptr;
-void (*gl::DrawArraysInstancedBaseInstance)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance) = nullptr;
-void (*gl::DrawElementsInstancedBaseInstance)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLuint baseinstance) = nullptr;
-void (*gl::DrawElementsInstancedBaseVertexBaseInstance)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance) = nullptr;
-void (*gl::DrawTransformFeedbackInstanced)(GLenum mode, GLuint id, GLsizei instancecount) = nullptr;
-void (*gl::DrawTransformFeedbackStreamInstanced)(GLenum mode, GLuint id, GLuint stream, GLsizei instancecount) = nullptr;
-void (*gl::GetActiveAtomicCounterBufferiv)(GLuint program, GLuint bufferIndex, GLenum pname, GLint * params) = nullptr;
-void (*gl::GetInternalformativ)(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint * params) = nullptr;
-void (*gl::MemoryBarrier)(GLbitfield barriers) = nullptr;
-void (*gl::TexStorage1D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width) = nullptr;
-void (*gl::TexStorage2D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height) = nullptr;
-void (*gl::TexStorage3D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth) = nullptr;
+void (*gl::BindImageTexture)(UInt unit, UInt texture, Int level, Bool layered, Int layer, Enum access, Enum format) = nullptr;
+void (*gl::DrawArraysInstancedBaseInstance)(Enum mode, Int first, Sizei count, Sizei instancecount, UInt baseinstance) = nullptr;
+void (*gl::DrawElementsInstancedBaseInstance)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount, UInt baseinstance) = nullptr;
+void (*gl::DrawElementsInstancedBaseVertexBaseInstance)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount, Int basevertex, UInt baseinstance) = nullptr;
+void (*gl::DrawTransformFeedbackInstanced)(Enum mode, UInt id, Sizei instancecount) = nullptr;
+void (*gl::DrawTransformFeedbackStreamInstanced)(Enum mode, UInt id, UInt stream, Sizei instancecount) = nullptr;
+void (*gl::GetActiveAtomicCounterBufferiv)(UInt program, UInt bufferIndex, Enum pname, Int * params) = nullptr;
+void (*gl::GetInternalformativ)(Enum target, Enum internalformat, Enum pname, Sizei count, Int * params) = nullptr;
+void (*gl::MemoryBarrier)(BitField barriers) = nullptr;
+void (*gl::TexStorage1D)(Enum target, Sizei levels, Enum internalformat, Sizei width) = nullptr;
+void (*gl::TexStorage2D)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height) = nullptr;
+void (*gl::TexStorage3D)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height, Sizei depth) = nullptr;
 
 bool gl::LoadGl_42(LoadFunc func){
     if (!LoadGl_41(func)){

@@ -5,9 +5,9 @@ namespace glwpp::gl {
 
 bool LoadGl_46(LoadFunc func);
 
-extern void (*MultiDrawArraysIndirectCount)(GLenum mode, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride);
-extern void (*MultiDrawElementsIndirectCount)(GLenum mode, GLenum type, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride);
-extern void (*PolygonOffsetClamp)(GLfloat factor, GLfloat units, GLfloat clamp);
-extern void (*SpecializeShader)(GLuint shader, const GLchar * pEntryPoint, GLuint numSpecializationConstants, const GLuint * pConstantIndex, const GLuint * pConstantValue);
+extern void (*MultiDrawArraysIndirectCount)(Enum mode, const void * indirect, IntPtr drawcount, Sizei maxdrawcount, Sizei stride);
+extern void (*MultiDrawElementsIndirectCount)(Enum mode, Enum type, const void * indirect, IntPtr drawcount, Sizei maxdrawcount, Sizei stride);
+extern void (*PolygonOffsetClamp)(Float factor, Float units, Float clamp);
+extern void (*SpecializeShader)(UInt shader, const Char * pEntryPoint, UInt numSpecializationConstants, const UInt * pConstantIndex, const UInt * pConstantValue);
 
 }

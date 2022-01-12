@@ -6,14 +6,14 @@
 namespace glwpp::ctx {
 
 
-template<class ... A>
+template<class ... Attribs>
 class Vertex {
-    static_assert(var_and<is_base_of_template<Attribute, A>::value...>);
-    static_assert(sizeof...(A) <= 16);
-    static_assert((sizeof(A) + ...) <= 16 * 4 * sizeof(float));
+    static_assert(var_and<is_base_of_template<Attribute, Attribs>::value...>);
+    static_assert(sizeof...(Attribs) <= 16);
+    static_assert((sizeof(Attribs) + ...) <= 16 * 4 * sizeof(float));
 
 public:
-    using Tuple = std::tuple<A...>;
+    using Tuple = std::tuple<Attribs...>;
 
     template<size_t N>
     using Attribute = typename std::tuple_element_t<N, Tuple>;
@@ -34,12 +34,11 @@ public:
         GLuint loc = 0;
         size_t offset = 0;
         ([&](){
-            A::Meta::enable(loc, sizeof(Vertex), offset);
+            Attribs::Meta::enable(loc, sizeof(Vertex), offset);
             loc++;
-            offset += sizeof(A);
+            offset += sizeof(Attribs);
         }(), ...);
     }
-
 };
 
 }

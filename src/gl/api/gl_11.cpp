@@ -4,20 +4,20 @@
 
 using namespace glwpp;
    
-void (*gl::BindTexture)(GLenum target, GLuint texture) = nullptr;
-void (*gl::CopyTexImage1D)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border) = nullptr;
-void (*gl::CopyTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border) = nullptr;
-void (*gl::CopyTexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width) = nullptr;
-void (*gl::CopyTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height) = nullptr;
-void (*gl::DeleteTextures)(GLsizei n, const GLuint *textures) = nullptr;
-void (*gl::DrawArrays)(GLenum mode, GLint first, GLsizei count) = nullptr;
-void (*gl::DrawElements)(GLenum mode, GLsizei count, GLenum type, const void *indices) = nullptr;
-void (*gl::GenTextures)(GLsizei n, GLuint *textures) = nullptr;
-void (*gl::GetPointerv)(GLenum pname, void **params) = nullptr;
-GLboolean (*gl::IsTexture)(GLuint texture) = nullptr;
-void (*gl::PolygonOffset)(GLfloat factor, GLfloat units) = nullptr;
-void (*gl::TexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void *pixels) = nullptr;
-void (*gl::TexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels) = nullptr;
+void (*gl::BindTexture)(Enum target, UInt texture) = nullptr;
+void (*gl::CopyTexImage1D)(Enum target, Int level, Enum internalformat, Int x, Int y, Sizei width, Int border) = nullptr;
+void (*gl::CopyTexImage2D)(Enum target, Int level, Enum internalformat, Int x, Int y, Sizei width, Sizei height, Int border) = nullptr;
+void (*gl::CopyTexSubImage1D)(Enum target, Int level, Int xoffset, Int x, Int y, Sizei width) = nullptr;
+void (*gl::CopyTexSubImage2D)(Enum target, Int level, Int xoffset, Int yoffset, Int x, Int y, Sizei width, Sizei height) = nullptr;
+void (*gl::DeleteTextures)(Sizei n, const UInt *textures) = nullptr;
+void (*gl::DrawArrays)(Enum mode, Int first, Sizei count) = nullptr;
+void (*gl::DrawElements)(Enum mode, Sizei count, Enum type, const void *indices) = nullptr;
+void (*gl::GenTextures)(Sizei n, UInt *textures) = nullptr;
+void (*gl::GetPointerv)(Enum pname, void **params) = nullptr;
+GLboolean (*gl::IsTexture)(UInt texture) = nullptr;
+void (*gl::PolygonOffset)(Float factor, Float units) = nullptr;
+void (*gl::TexSubImage1D)(Enum target, Int level, Int xoffset, Sizei width, Enum format, Enum type, const void *pixels) = nullptr;
+void (*gl::TexSubImage2D)(Enum target, Int level, Int xoffset, Int yoffset, Sizei width, Sizei height, Enum format, Enum type, const void *pixels) = nullptr;
 
 bool gl::LoadGl_11(LoadFunc func){
     if (!gl::LoadGl_10(func)){

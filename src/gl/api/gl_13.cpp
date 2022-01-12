@@ -4,15 +4,15 @@
 
 using namespace glwpp;
 
-void (*gl::ActiveTexture)(GLenum texture) = nullptr;
-void (*gl::CompressedTexImage1D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::CompressedTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::CompressedTexImage3D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::CompressedTexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::CompressedTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::CompressedTexSubImage3D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data) = nullptr;
-void (*gl::GetCompressedTexImage)(GLenum target, GLint level, void * img) = nullptr;
-void (*gl::SampleCoverage)(GLfloat value, GLboolean invert) = nullptr;
+void (*gl::ActiveTexture)(Enum texture) = nullptr;
+void (*gl::CompressedTexImage1D)(Enum target, Int level, Enum internalformat, Sizei width, Int border, Sizei imageSize, const void * data) = nullptr;
+void (*gl::CompressedTexImage2D)(Enum target, Int level, Enum internalformat, Sizei width, Sizei height, Int border, Sizei imageSize, const void * data) = nullptr;
+void (*gl::CompressedTexImage3D)(Enum target, Int level, Enum internalformat, Sizei width, Sizei height, Sizei depth, Int border, Sizei imageSize, const void * data) = nullptr;
+void (*gl::CompressedTexSubImage1D)(Enum target, Int level, Int xoffset, Sizei width, Enum format, Sizei imageSize, const void * data) = nullptr;
+void (*gl::CompressedTexSubImage2D)(Enum target, Int level, Int xoffset, Int yoffset, Sizei width, Sizei height, Enum format, Sizei imageSize, const void * data) = nullptr;
+void (*gl::CompressedTexSubImage3D)(Enum target, Int level, Int xoffset, Int yoffset, Int zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Sizei imageSize, const void * data) = nullptr;
+void (*gl::GetCompressedTexImage)(Enum target, Int level, void * img) = nullptr;
+void (*gl::SampleCoverage)(Float value, Bool invert) = nullptr;
 
 bool gl::LoadGl_13(LoadFunc func){
     if (!LoadGl_12(func)){

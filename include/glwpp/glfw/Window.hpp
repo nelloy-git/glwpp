@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <functional>
 #include <string>
 #include <utility>
@@ -116,7 +117,7 @@ private:
     template <class ... Args>
     using GlfwCallbackSetter = GlfwCallback<Args...> (*)(GLFWwindow*, GlfwCallback<Args...>);
 
-    static size_t _glfw_inited;
+    static std::atomic<size_t> _glfw_inited;
     template<auto member, class ... Args>
     void _bindGlfwCallback(GlfwCallbackSetter<Args...> setter,
                            const std::function<void(Window*, Args...)> &callback);

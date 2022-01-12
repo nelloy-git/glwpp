@@ -4,34 +4,34 @@
 
 using namespace glwpp;
 
-void (*gl::BindFragDataLocationIndexed)(GLuint program, GLuint colorNumber, GLuint index, const GLchar * name) = nullptr;
-void (*gl::BindSampler)(GLuint unit, GLuint sampler) = nullptr;
-void (*gl::DeleteSamplers)(GLsizei count, const GLuint * samplers) = nullptr;
-void (*gl::GenSamplers)(GLsizei count, GLuint * sampler) = nullptr;
-GLint (*gl::GetFragDataIndex)(GLuint program, const GLchar * name) = nullptr;
-void (*gl::GetQueryObjecti64v)(GLuint id, GLenum pname, GLint64 * params) = nullptr;
-void (*gl::GetQueryObjectui64v)(GLuint id, GLenum pname, GLuint64 * params) = nullptr;
-void (*gl::GetSamplerParameterIiv)(GLuint sampler, GLenum pname, GLint * params) = nullptr;
-void (*gl::GetSamplerParameterIuiv)(GLuint sampler, GLenum pname, GLuint * params) = nullptr;
-void (*gl::GetSamplerParameterfv)(GLuint sampler, GLenum pname, GLfloat * params) = nullptr;
-void (*gl::GetSamplerParameteriv)(GLuint sampler, GLenum pname, GLint * params) = nullptr;
-GLboolean (*gl::IsSampler)(GLuint sampler) = nullptr;
-void (*gl::QueryCounter)(GLuint id, GLenum target) = nullptr;
-void (*gl::SamplerParameterIiv)(GLuint sampler, GLenum pname, const GLint * param) = nullptr;
-void (*gl::SamplerParameterIuiv)(GLuint sampler, GLenum pname, const GLuint * param) = nullptr;
-void (*gl::SamplerParameterf)(GLuint sampler, GLenum pname, GLfloat param) = nullptr;
-void (*gl::SamplerParameterfv)(GLuint sampler, GLenum pname, const GLfloat * param) = nullptr;
-void (*gl::SamplerParameteri)(GLuint sampler, GLenum pname, GLint param) = nullptr;
-void (*gl::SamplerParameteriv)(GLuint sampler, GLenum pname, const GLint * param) = nullptr;
-void (*gl::VertexAttribDivisor)(GLuint index, GLuint divisor) = nullptr;
-void (*gl::VertexAttribP1ui)(GLuint index, GLenum type, GLboolean normalized, GLuint value) = nullptr;
-void (*gl::VertexAttribP1uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) = nullptr;
-void (*gl::VertexAttribP2ui)(GLuint index, GLenum type, GLboolean normalized, GLuint value) = nullptr;
-void (*gl::VertexAttribP2uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) = nullptr;
-void (*gl::VertexAttribP3ui)(GLuint index, GLenum type, GLboolean normalized, GLuint value) = nullptr;
-void (*gl::VertexAttribP3uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) = nullptr;
-void (*gl::VertexAttribP4ui)(GLuint index, GLenum type, GLboolean normalized, GLuint value) = nullptr;
-void (*gl::VertexAttribP4uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint * value) = nullptr;
+void (*gl::BindFragDataLocationIndexed)(UInt program, UInt colorNumber, UInt index, const Char * name) = nullptr;
+void (*gl::BindSampler)(UInt unit, UInt sampler) = nullptr;
+void (*gl::DeleteSamplers)(Sizei count, const UInt * samplers) = nullptr;
+void (*gl::GenSamplers)(Sizei count, UInt * sampler) = nullptr;
+GLint (*gl::GetFragDataIndex)(UInt program, const Char * name) = nullptr;
+void (*gl::GetQueryObjecti64v)(UInt id, Enum pname, GLint64 * params) = nullptr;
+void (*gl::GetQueryObjectui64v)(UInt id, Enum pname, GLuint64 * params) = nullptr;
+void (*gl::GetSamplerParameterIiv)(UInt sampler, Enum pname, Int * params) = nullptr;
+void (*gl::GetSamplerParameterIuiv)(UInt sampler, Enum pname, UInt * params) = nullptr;
+void (*gl::GetSamplerParameterfv)(UInt sampler, Enum pname, Float * params) = nullptr;
+void (*gl::GetSamplerParameteriv)(UInt sampler, Enum pname, Int * params) = nullptr;
+GLboolean (*gl::IsSampler)(UInt sampler) = nullptr;
+void (*gl::QueryCounter)(UInt id, Enum target) = nullptr;
+void (*gl::SamplerParameterIiv)(UInt sampler, Enum pname, const Int * param) = nullptr;
+void (*gl::SamplerParameterIuiv)(UInt sampler, Enum pname, const UInt * param) = nullptr;
+void (*gl::SamplerParameterf)(UInt sampler, Enum pname, Float param) = nullptr;
+void (*gl::SamplerParameterfv)(UInt sampler, Enum pname, const Float * param) = nullptr;
+void (*gl::SamplerParameteri)(UInt sampler, Enum pname, Int param) = nullptr;
+void (*gl::SamplerParameteriv)(UInt sampler, Enum pname, const Int * param) = nullptr;
+void (*gl::VertexAttribDivisor)(UInt index, UInt divisor) = nullptr;
+void (*gl::VertexAttribP1ui)(UInt index, Enum type, Bool normalized, UInt value) = nullptr;
+void (*gl::VertexAttribP1uiv)(UInt index, Enum type, Bool normalized, const UInt * value) = nullptr;
+void (*gl::VertexAttribP2ui)(UInt index, Enum type, Bool normalized, UInt value) = nullptr;
+void (*gl::VertexAttribP2uiv)(UInt index, Enum type, Bool normalized, const UInt * value) = nullptr;
+void (*gl::VertexAttribP3ui)(UInt index, Enum type, Bool normalized, UInt value) = nullptr;
+void (*gl::VertexAttribP3uiv)(UInt index, Enum type, Bool normalized, const UInt * value) = nullptr;
+void (*gl::VertexAttribP4ui)(UInt index, Enum type, Bool normalized, UInt value) = nullptr;
+void (*gl::VertexAttribP4uiv)(UInt index, Enum type, Bool normalized, const UInt * value) = nullptr;
 
 bool gl::LoadGl_33(LoadFunc func){
     if (!LoadGl_32(func)){

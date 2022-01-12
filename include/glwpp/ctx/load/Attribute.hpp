@@ -89,7 +89,7 @@ public:
                | ws << 31 | (((uint32_t)(w + (ws << 1)) & 1) << 30)};
     }
 
-
+    
     // template<DataTypeGL::_ Meta::Type, bool N = Meta::Norm,
     //          std::enable_if_t<(T == DataTypeGL::_nt_2_10_10_10 && N)>* = nullptr>
     // inline void set(float x, float y, float z, float w){

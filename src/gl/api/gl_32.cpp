@@ -4,25 +4,25 @@
 
 using namespace glwpp;
 
-GLenum (*gl::ClientWaitSync)(gl::GLsync sync, GLbitfield flags, GLuint64 timeout) = nullptr;
+GLenum (*gl::ClientWaitSync)(gl::GLsync sync, BitField flags, GLuint64 timeout) = nullptr;
 void (*gl::DeleteSync)(GLsync sync) = nullptr;
-void (*gl::DrawElementsBaseVertex)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLint basevertex) = nullptr;
-void (*gl::DrawElementsInstancedBaseVertex)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex) = nullptr;
-void (*gl::DrawRangeElementsBaseVertex)(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, GLint basevertex) = nullptr;
-GLsync (*gl::FenceSync)(GLenum condition, GLbitfield flags) = nullptr;
-void (*gl::FramebufferTexture)(GLenum target, GLenum attachment, GLuint texture, GLint level) = nullptr;
-void (*gl::GetBufferParameteri64v)(GLenum target, GLenum pname, GLint64 * params) = nullptr;
-void (*gl::GetInteger64i_v)(GLenum target, GLuint index, GLint64 * data) = nullptr;
-void (*gl::GetInteger64v)(GLenum pname, GLint64 * data) = nullptr;
-void (*gl::GetMultisamplefv)(GLenum pname, GLuint index, GLfloat * val) = nullptr;
-void (*gl::GetSynciv)(GLsync sync, GLenum pname, GLsizei count, GLsizei * length, GLint * values) = nullptr;
+void (*gl::DrawElementsBaseVertex)(Enum mode, Sizei count, Enum type, const void * indices, Int basevertex) = nullptr;
+void (*gl::DrawElementsInstancedBaseVertex)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount, Int basevertex) = nullptr;
+void (*gl::DrawRangeElementsBaseVertex)(Enum mode, UInt start, UInt end, Sizei count, Enum type, const void * indices, Int basevertex) = nullptr;
+GLsync (*gl::FenceSync)(Enum condition, BitField flags) = nullptr;
+void (*gl::FramebufferTexture)(Enum target, Enum attachment, UInt texture, Int level) = nullptr;
+void (*gl::GetBufferParameteri64v)(Enum target, Enum pname, GLint64 * params) = nullptr;
+void (*gl::GetInteger64i_v)(Enum target, UInt index, GLint64 * data) = nullptr;
+void (*gl::GetInteger64v)(Enum pname, GLint64 * data) = nullptr;
+void (*gl::GetMultisamplefv)(Enum pname, UInt index, Float * val) = nullptr;
+void (*gl::GetSynciv)(GLsync sync, Enum pname, Sizei count, Sizei * length, Int * values) = nullptr;
 GLboolean (*gl::IsSync)(GLsync sync) = nullptr;
-void (*gl::MultiDrawElementsBaseVertex)(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const GLint * basevertex) = nullptr;
-void (*gl::ProvokingVertex)(GLenum mode) = nullptr;
-void (*gl::SampleMaski)(GLuint maskNumber, GLbitfield mask) = nullptr;
-void (*gl::TexImage2DMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations) = nullptr;
-void (*gl::TexImage3DMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations) = nullptr;
-void (*gl::WaitSync)(GLsync sync, GLbitfield flags, GLuint64 timeout) = nullptr;
+void (*gl::MultiDrawElementsBaseVertex)(Enum mode, const Sizei * count, Enum type, const void *const* indices, Sizei drawcount, const Int * basevertex) = nullptr;
+void (*gl::ProvokingVertex)(Enum mode) = nullptr;
+void (*gl::SampleMaski)(UInt maskNumber, BitField mask) = nullptr;
+void (*gl::TexImage2DMultisample)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height, Bool fixedsamplelocations) = nullptr;
+void (*gl::TexImage3DMultisample)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height, Sizei depth, Bool fixedsamplelocations) = nullptr;
+void (*gl::WaitSync)(GLsync sync, BitField flags, GLuint64 timeout) = nullptr;
 
 bool gl::LoadGl_32(LoadFunc func){
     if (!LoadGl_31(func)){

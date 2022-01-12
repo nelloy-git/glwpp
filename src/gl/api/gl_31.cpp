@@ -4,18 +4,18 @@
 
 using namespace glwpp;
 
-void (*gl::CopyBufferSubData)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size) = nullptr;
-void (*gl::DrawArraysInstanced)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount) = nullptr;
-void (*gl::DrawElementsInstanced)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount) = nullptr;
-void (*gl::GetActiveUniformBlockName)(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformBlockName) = nullptr;
-void (*gl::GetActiveUniformBlockiv)(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint * params) = nullptr;
-void (*gl::GetActiveUniformName)(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformName) = nullptr;
-void (*gl::GetActiveUniformsiv)(GLuint program, GLsizei uniformCount, const GLuint * uniformIndices, GLenum pname, GLint * params) = nullptr;
-GLuint (*gl::GetUniformBlockIndex)(GLuint program, const GLchar * uniformBlockName) = nullptr;
-void (*gl::GetUniformIndices)(GLuint program, GLsizei uniformCount, const GLchar *const* uniformNames, GLuint * uniformIndices) = nullptr;
-void (*gl::PrimitiveRestartIndex)(GLuint index) = nullptr;
-void (*gl::TexBuffer)(GLenum target, GLenum internalformat, GLuint buffer) = nullptr;
-void (*gl::UniformBlockBinding)(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding) = nullptr;
+void (*gl::CopyBufferSubData)(Enum readTarget, Enum writeTarget, IntPtr readOffset, IntPtr writeOffset, SizeiPtr size) = nullptr;
+void (*gl::DrawArraysInstanced)(Enum mode, Int first, Sizei count, Sizei instancecount) = nullptr;
+void (*gl::DrawElementsInstanced)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount) = nullptr;
+void (*gl::GetActiveUniformBlockName)(UInt program, UInt uniformBlockIndex, Sizei bufSize, Sizei * length, Char * uniformBlockName) = nullptr;
+void (*gl::GetActiveUniformBlockiv)(UInt program, UInt uniformBlockIndex, Enum pname, Int * params) = nullptr;
+void (*gl::GetActiveUniformName)(UInt program, UInt uniformIndex, Sizei bufSize, Sizei * length, Char * uniformName) = nullptr;
+void (*gl::GetActiveUniformsiv)(UInt program, Sizei uniformCount, const UInt * uniformIndices, Enum pname, Int * params) = nullptr;
+GLuint (*gl::GetUniformBlockIndex)(UInt program, const Char * uniformBlockName) = nullptr;
+void (*gl::GetUniformIndices)(UInt program, Sizei uniformCount, const Char *const* uniformNames, UInt * uniformIndices) = nullptr;
+void (*gl::PrimitiveRestartIndex)(UInt index) = nullptr;
+void (*gl::TexBuffer)(Enum target, Enum internalformat, UInt buffer) = nullptr;
+void (*gl::UniformBlockBinding)(UInt program, UInt uniformBlockIndex, UInt uniformBlockBinding) = nullptr;
 
 bool gl::LoadGl_31(LoadFunc func){
     if (!LoadGl_30(func)){

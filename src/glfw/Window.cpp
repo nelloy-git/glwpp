@@ -16,7 +16,7 @@ inline Window *_getWin(GLFWwindow *glfw_win){
     
 } // namespace
 
-size_t Window::_glfw_inited = 0;
+std::atomic<size_t> Window::_glfw_inited = 0;
 
 Window::Window(int width, int height, const char *title,
                const std::vector<std::pair<int, int>> &hints){

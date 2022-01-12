@@ -5,17 +5,17 @@ namespace glwpp::gl {
 
 bool LoadGl_42(LoadFunc func);
 
-extern void (*BindImageTexture)(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format);
-extern void (*DrawArraysInstancedBaseInstance)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance);
-extern void (*DrawElementsInstancedBaseInstance)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLuint baseinstance);
-extern void (*DrawElementsInstancedBaseVertexBaseInstance)(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance);
-extern void (*DrawTransformFeedbackInstanced)(GLenum mode, GLuint id, GLsizei instancecount);
-extern void (*DrawTransformFeedbackStreamInstanced)(GLenum mode, GLuint id, GLuint stream, GLsizei instancecount);
-extern void (*GetActiveAtomicCounterBufferiv)(GLuint program, GLuint bufferIndex, GLenum pname, GLint * params);
-extern void (*GetInternalformativ)(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint * params);
-extern void (*MemoryBarrier)(GLbitfield barriers);
-extern void (*TexStorage1D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);
-extern void (*TexStorage2D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
-extern void (*TexStorage3D)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+extern void (*BindImageTexture)(UInt unit, UInt texture, Int level, Bool layered, Int layer, Enum access, Enum format);
+extern void (*DrawArraysInstancedBaseInstance)(Enum mode, Int first, Sizei count, Sizei instancecount, UInt baseinstance);
+extern void (*DrawElementsInstancedBaseInstance)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount, UInt baseinstance);
+extern void (*DrawElementsInstancedBaseVertexBaseInstance)(Enum mode, Sizei count, Enum type, const void * indices, Sizei instancecount, Int basevertex, UInt baseinstance);
+extern void (*DrawTransformFeedbackInstanced)(Enum mode, UInt id, Sizei instancecount);
+extern void (*DrawTransformFeedbackStreamInstanced)(Enum mode, UInt id, UInt stream, Sizei instancecount);
+extern void (*GetActiveAtomicCounterBufferiv)(UInt program, UInt bufferIndex, Enum pname, Int * params);
+extern void (*GetInternalformativ)(Enum target, Enum internalformat, Enum pname, Sizei count, Int * params);
+extern void (*MemoryBarrier)(BitField barriers);
+extern void (*TexStorage1D)(Enum target, Sizei levels, Enum internalformat, Sizei width);
+extern void (*TexStorage2D)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height);
+extern void (*TexStorage3D)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height, Sizei depth);
 
 }

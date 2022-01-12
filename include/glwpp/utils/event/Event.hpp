@@ -1,23 +1,31 @@
 #pragma once
 
-#include <list>
+#include <deque>
 #include <functional>
 #include <mutex>
 
 #include "glwpp/utils/FuncWrapper.hpp"
-#include "glwpp/utils/container/CounterList.hpp"
+#include "glwpp/utils/event/EventStatus.hpp"
 #include "glwpp/utils/event/EventThreadPool.hpp"
 
 namespace glwpp {
 
 template<class ... Args>
 class Event final {
-public:
-    using Callback = std::function<void(Args...)>;
 
+    template <typename T>
+    struct Signature;
+
+    template <typename R, typename... Args>
+    struct Signature<std::function<R(Args...)>> {
+        using type = R(Args...);
+    };
+    
+public:
     Event(sptr<thread_pool> th_pool = EventThreadPool::get()) :
         _pool(th_pool){
-        _undone = make_sptr<std::atomic<size_t>>(0);
+        _todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
+        _checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
     }
     Event(Event&) = delete;
     Event(Event&&) = delete;
@@ -25,111 +33,83 @@ public:
     Event(const Event&&) = delete;
 
     ~Event(){
-        while (*_undone != 0){
-            _undone->wait(1);
-        }
-    }
+        auto todo_list = _todo_list;
+        auto checker_list = _checker_list;
 
-    void insertPtr(int i, wptr<Callback> wcb, int emits = -1){
-        std::lock_guard lg(_lock);
-        _list.insert(i, wcb, emits);
-    }
+        _todo_list.reset();
+        _checker_list.reset();
 
-    void pushPtr(wptr<Callback> wcb, int emits = -1){
-        std::lock_guard lg(_lock);
-        _list.insert(_list.size(), wcb, emits);
+        _pool->push_task([todo_list, checker_list](){});
     }
 
     template<class F>
-    sptr<Callback> push(const F& callback, int emits = -1){
-        auto cb = func_wrap<Args...>(std::function(callback));
-        auto watcher = make_sptr<Callback>(cb);
-        pushPtr(watcher, emits);
-        return watcher;
+    auto push(const F& callback){
+        using S = Signature<decltype(std::function{callback})>;
+        return _push(callback, S{});
     }
 
-    void changeEmits(int i, int emits){
-        std::lock_guard lg(_lock);
-        _list.changeCounter(i, emits);
-    }
+    EventStatus emit(const Args&... args){
+        auto todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
+        auto checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
 
-    void changeEmits(wptr<Callback> wcb, int emits){
-        std::lock_guard lg(_lock);
-        
-        for (auto iter = _list->begin(); iter != _list->end(); ++iter){
-            if (!wcb.owner_before(iter->first) && !iter->first.owner_before(wcb)){
-                iter->second = emits;
-            }
-        }
-    }
-
-    void remove(int i){
-        std::lock_guard lg(_lock);
-        _list.remove(i);
-    }
-
-    void clear(){
-        std::lock_guard lg(_lock);
-        _list.clear();
-    }
-
-    template<class Cond>
-    void clear(const Cond &remove_condition){
-        std::lock_guard lg(_lock);
-        _list.clear(remove_condition);
-    }
-
-    std::vector<std::future<bool>> emit(const Args&... args){
-        sptr<CounterList<wptr<Callback>>> slist;
         {
             std::lock_guard lg(_lock);
-            _list.reduceAll(_isExpired);
-            slist = make_sptr<CounterList<wptr<Callback>>>(_list);
-            *_undone = *_undone + slist->size();
+            todo_list.swap(_todo_list);
+            checker_list.swap(_checker_list);
         }
-        
-        std::vector<std::future<bool>> results;
-        for (auto iter = slist->begin(); iter != slist->end(); ++iter){
-            results.push_back(_pool->submit(_execute, iter->first, _undone, args...));
-        }
-        return results;
-    }
 
-    size_t undone(){
-        return *_undone;
+        while (!todo_list->empty()){
+            _pool->push_task(todo_list->front(), args...);
+            todo_list->pop_front();
+        }
+
+        return EventStatus(checker_list);
     }
 
 private:
     sptr<thread_pool> _pool;
 
     std::mutex _lock;
-    CounterList<wptr<Callback>> _list;
-    sptr<std::atomic<size_t>> _undone;
-
-    static bool _isExpired(const std::pair<wptr<Callback>, int> &pair){
-        return pair.first.expired() || pair.second == 0;
-    };
-
-    static bool _execute(wptr<Callback> wcb,
-                         sptr<std::atomic<size_t>> undone,
-                         Args ... args){
-        auto cb = wcb.lock();
-
-        bool is_valid = cb ? true : false;
-        if (is_valid){
-            try {
-                (*cb)(args...);
-            } catch (...){
-                --(*undone);
-                undone->notify_all();
-                throw;
-            }
-        }
-        --(*undone);
-        undone->notify_all();
-        return is_valid;
+    sptr<std::deque<std::function<void(Args...)>>> _todo_list;
+    sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>> _checker_list;
+    
+    template<class R>
+    std::function<bool(const std::chrono::microseconds&)> _getChecker(const std::shared_future<R> &future){
+        return [future](const std::chrono::microseconds &time){
+            return future.wait_for(time) == std::future_status::ready;
+        };
     };
     
+
+    template<class F, class R, class ... FArgs, class FR = std::conditional_t<(std::is_void_v<R>), bool, R>>
+    std::shared_future<FR> _push(const F& callback, Signature<std::function<R(FArgs...)>> signature){
+        auto promise = make_sptr<std::promise<FR>>();
+        std::shared_future<FR> future = promise->get_future();
+
+        auto cb = [promise, func = func_wrap<Args...>(std::function(callback))](const Args&... args){
+            try {
+                if constexpr (std::is_same_v<R, void>){
+                    func(args...);
+                    promise->set_value(true);
+                } else {
+                    promise->set_value(func(args...));
+                }
+                
+            } catch (...) {
+                try {
+                    promise->set_exception(std::current_exception());
+                } catch (...) {
+                }
+            }
+        };
+        auto checker = _getChecker(future);
+
+        std::lock_guard lg(_lock);
+        _todo_list->push_back(cb);
+        _checker_list->push_back(checker);
+        
+        return future;
+    }
 };
 
 }

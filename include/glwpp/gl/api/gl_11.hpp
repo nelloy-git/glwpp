@@ -5,19 +5,19 @@ namespace glwpp::gl {
 
 bool LoadGl_11(LoadFunc func);
     
-extern void (*BindTexture)(GLenum target, GLuint texture);
-extern void (*CopyTexImage1D)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border);
-extern void (*CopyTexImage2D)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border);
-extern void (*CopyTexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);
-extern void (*CopyTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);
-extern void (*DeleteTextures)(GLsizei n, const GLuint *textures);
-extern void (*DrawArrays)(GLenum mode, GLint first, GLsizei count);
-extern void (*DrawElements)(GLenum mode, GLsizei count, GLenum type, const void *indices);
-extern void (*GenTextures)(GLsizei n, GLuint *textures);
-extern void (*GetPointerv)(GLenum pname, void **params);
-extern GLboolean (*IsTexture)(GLuint texture);
-extern void (*PolygonOffset)(GLfloat factor, GLfloat units);
-extern void (*TexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void *pixels);
-extern void (*TexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
+extern void (*BindTexture)(Enum target, UInt texture);
+extern void (*CopyTexImage1D)(Enum target, Int level, Enum internalformat, Int x, Int y, Sizei width, Int border);
+extern void (*CopyTexImage2D)(Enum target, Int level, Enum internalformat, Int x, Int y, Sizei width, Sizei height, Int border);
+extern void (*CopyTexSubImage1D)(Enum target, Int level, Int xoffset, Int x, Int y, Sizei width);
+extern void (*CopyTexSubImage2D)(Enum target, Int level, Int xoffset, Int yoffset, Int x, Int y, Sizei width, Sizei height);
+extern void (*DeleteTextures)(Sizei n, const UInt *textures);
+extern void (*DrawArrays)(Enum mode, Int first, Sizei count);
+extern void (*DrawElements)(Enum mode, Sizei count, Enum type, const void *indices);
+extern void (*GenTextures)(Sizei n, UInt *textures);
+extern void (*GetPointerv)(Enum pname, void **params);
+extern Bool (*IsTexture)(UInt texture);
+extern void (*PolygonOffset)(Float factor, Float units);
+extern void (*TexSubImage1D)(Enum target, Int level, Int xoffset, Sizei width, Enum format, Enum type, const void *pixels);
+extern void (*TexSubImage2D)(Enum target, Int level, Int xoffset, Int yoffset, Sizei width, Sizei height, Enum format, Enum type, const void *pixels);
 
 }

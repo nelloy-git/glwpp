@@ -26,6 +26,8 @@
 #include "glwpp/gl/enums/BufferType.hpp"
 #include "glwpp/gl/oop/Buffer.hpp"
 
+// #include "glwpp/gl/vertex/VertexAttribData.hpp"
+
 
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
@@ -33,16 +35,18 @@ int main(int argc, char **argv){
     ctx_params.gl_minor_ver = 6;
     ctx_params.width = 640;
     ctx_params.height = 480;
+    ctx_params.fps = 10;
     ctx_params.title = "Noname";
 
     auto win = std::make_shared<glwpp::Context>(ctx_params);
 
-    
+    // auto w = win->onRun.push([&win](){
+    //     std::cout << "Frame" << std::endl;
+    // });
 
-    auto w = win->onFrame.push([&win](){
-        // glwpp::gl::Buffer<int> buf({1, 2, 3, 4, 5});
-        // std::cout << "Frame" << std::endl;
-    });
+    // auto fut = win->onRun.push([](){
+    //     return 1;
+    // });
 
     // auto w = win->onKey.push([&win](glwpp::Key key, int, glwpp::Action act){
     //     if (act == glwpp::Action::Release){
@@ -54,27 +58,51 @@ int main(int argc, char **argv){
     //     }
     // });
 
-    auto w1 = win->onKey.push([&win](glwpp::Key key){
-        std::cout << char(key) << std::endl;
-        if (key == glwpp::Key::Escape){
-            win.reset();
-        }
-    });
+    // constexpr glwpp::gl::VertexAttrib attrib(glwpp::gl::DataType::Float, 3, false);
+    // constexpr glwpp::gl::VertexAttribData<attrib> data{};
 
-    while (win){
+    // using Pos = glwpp::gl::VertexAttrib<glwpp::gl::DataType::Float, 3, false>;
+    // Pos attr;
+    // attr.set(1.2, 3.2, 12);
+
+    // using Vert = glwpp::gl::Vertex<Pos>;
+    // Vert v;
+    // v.set<0>(2.1, 3, 1);
+    // Vert::bindAttributes();
+
+    std::atomic<bool> runnig = true;
+
+    std::function<void(glwpp::Context *win, glwpp::Key)> print_func;
+    print_func = [&print_func, &runnig](glwpp::Context *win, glwpp::Key key){
+        std::cout << "Key: " << char(key) << std::endl;
+        if (key == glwpp::Key::Escape){
+            runnig = false;
+        }
+        win->onKey.push(print_func);
+    };
+    win->onKey.push(print_func);
+    
+    std::function<void(glwpp::Context*, std::chrono::microseconds)> frame_timer_func;
+    frame_timer_func = [&frame_timer_func](glwpp::Context* win, std::chrono::microseconds time){
+        std::cout << "Time(ns): " << time.count() << std::endl;
+        win->onRun.push(frame_timer_func);
+    };
+    win->onRun.push(frame_timer_func);
+
+    glwpp::Buffer buffer(win);
+    auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
+
+    while (runnig){
         win->start();
         win->wait();
-        win.reset();
+
+        // if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
+        //     std::cout << "Is not ready" << std::endl;
+        // } else {
+        //     auto is_done = is_done_future.get();
+        //     std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
+        // }
     };
-
-
-    // auto a = new int();
-
-
-
-
-
-
 
 
 

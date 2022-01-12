@@ -18,6 +18,7 @@ public:
 
         int width;
         int height;
+        int fps;
         std::string title;
     };
 
@@ -27,9 +28,11 @@ public:
     bool start();
     void wait();
 
-    Event<Context*, std::chrono::microseconds> onFrame;
+    // Context thread
+    Event<Context*, std::chrono::microseconds> onRun;
     Event<Context*> onDetsroy;
 
+    // Any thread
     Event<Context*, int, int> onWinMove;
     Event<Context*, int, int> onWinResize;
     Event<Context*> onWinClose;

@@ -10,7 +10,7 @@ inline decltype(auto) make_shared(OutArgs&& ... args){
     return std::make_shared<Tmp>(std::forward<OutArgs>(args)...);
 };
 
-template < template <typename...> class base,typename derived>
+template <template<typename...> class base, class derived>
 struct is_base_of_template_impl
 {
     template<typename... Ts>
@@ -20,7 +20,7 @@ struct is_base_of_template_impl
 };
 
 template < template <typename...> class base, typename derived>
-using is_base_of_template = typename is_base_of_template_impl<base,derived>::type;
+using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
 template<bool... b> constexpr bool var_and = (b && ...);
 template<class T, class... Any> constexpr bool is_same_any = (std::is_same_v<T, Any> || ...);

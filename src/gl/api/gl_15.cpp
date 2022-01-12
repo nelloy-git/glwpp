@@ -4,25 +4,25 @@
 
 using namespace glwpp;
 
-void (*gl::BeginQuery)(GLenum target, GLuint id) = nullptr;
-void (*gl::BindBuffer)(GLenum target, GLuint buffer) = nullptr;
-void (*gl::BufferData)(GLenum target, GLsizeiptr size, const void * data, GLenum usage) = nullptr;
-void (*gl::BufferSubData)(GLenum target, GLintptr offset, GLsizeiptr size, const void * data) = nullptr;
-void (*gl::DeleteBuffers)(GLsizei n, const GLuint * buffers) = nullptr;
-void (*gl::DeleteQueries)(GLsizei n, const GLuint * ids) = nullptr;
-void (*gl::EndQuery)(GLenum target) = nullptr;
-void (*gl::GenBuffers)(GLsizei n, GLuint * buffers) = nullptr;
-void (*gl::GenQueries)(GLsizei n, GLuint * ids) = nullptr;
-void (*gl::GetBufferParameteriv)(GLenum target, GLenum pname, GLint * params) = nullptr;
-void (*gl::GetBufferPointerv)(GLenum target, GLenum pname, void ** params) = nullptr;
-void (*gl::GetBufferSubData)(GLenum target, GLintptr offset, GLsizeiptr size, void * data) = nullptr;
-void (*gl::GetQueryObjectiv)(GLuint id, GLenum pname, GLint * params) = nullptr;
-void (*gl::GetQueryObjectuiv)(GLuint id, GLenum pname, GLuint * params) = nullptr;
-void (*gl::GetQueryiv)(GLenum target, GLenum pname, GLint * params) = nullptr;
-GLboolean (*gl::IsBuffer)(GLuint buffer) = nullptr;
-GLboolean (*gl::IsQuery)(GLuint id) = nullptr;
-void* (*gl::MapBuffer)(GLenum target, GLenum access) = nullptr;
-GLboolean (*gl::UnmapBuffer)(GLenum target) = nullptr;
+void (*gl::BeginQuery)(Enum target, UInt id) = nullptr;
+void (*gl::BindBuffer)(Enum target, UInt buffer) = nullptr;
+void (*gl::BufferData)(Enum target, SizeiPtr size, const void * data, Enum usage) = nullptr;
+void (*gl::BufferSubData)(Enum target, IntPtr offset, SizeiPtr size, const void * data) = nullptr;
+void (*gl::DeleteBuffers)(Sizei n, const UInt * buffers) = nullptr;
+void (*gl::DeleteQueries)(Sizei n, const UInt * ids) = nullptr;
+void (*gl::EndQuery)(Enum target) = nullptr;
+void (*gl::GenBuffers)(Sizei n, UInt * buffers) = nullptr;
+void (*gl::GenQueries)(Sizei n, UInt * ids) = nullptr;
+void (*gl::GetBufferParameteriv)(Enum target, Enum pname, Int * params) = nullptr;
+void (*gl::GetBufferPointerv)(Enum target, Enum pname, void ** params) = nullptr;
+void (*gl::GetBufferSubData)(Enum target, IntPtr offset, SizeiPtr size, void * data) = nullptr;
+void (*gl::GetQueryObjectiv)(UInt id, Enum pname, Int * params) = nullptr;
+void (*gl::GetQueryObjectuiv)(UInt id, Enum pname, UInt * params) = nullptr;
+void (*gl::GetQueryiv)(Enum target, Enum pname, Int * params) = nullptr;
+GLboolean (*gl::IsBuffer)(UInt buffer) = nullptr;
+GLboolean (*gl::IsQuery)(UInt id) = nullptr;
+void* (*gl::MapBuffer)(Enum target, Enum access) = nullptr;
+GLboolean (*gl::UnmapBuffer)(Enum target) = nullptr;
 
 bool gl::LoadGl_15(LoadFunc func){
     if (!LoadGl_14(func)){
