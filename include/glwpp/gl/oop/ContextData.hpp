@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <iostream>
 
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/gl/api/types.hpp"

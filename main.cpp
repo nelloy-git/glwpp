@@ -35,7 +35,7 @@ int main(int argc, char **argv){
     ctx_params.gl_minor_ver = 6;
     ctx_params.width = 640;
     ctx_params.height = 480;
-    ctx_params.fps = 10;
+    ctx_params.fps = 60;
     ctx_params.title = "Noname";
 
     auto win = std::make_shared<glwpp::Context>(ctx_params);
@@ -84,7 +84,17 @@ int main(int argc, char **argv){
     
     std::function<void(glwpp::Context*, std::chrono::microseconds)> frame_timer_func;
     frame_timer_func = [&frame_timer_func](glwpp::Context* win, std::chrono::microseconds time){
-        std::cout << "Time(ns): " << time.count() << std::endl;
+        static int total_time = 0;
+        static int counter = 0;
+
+        total_time += time.count();
+        ++counter;
+
+        if (total_time > 1000000){
+            std::cout << "Time(us): " << (double)total_time / counter << std::endl;
+            total_time = 0;
+            counter = 0;
+        }
         win->onRun.push(frame_timer_func);
     };
     win->onRun.push(frame_timer_func);
@@ -96,12 +106,16 @@ int main(int argc, char **argv){
         win->start();
         win->wait();
 
-        // if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
-        //     std::cout << "Is not ready" << std::endl;
-        // } else {
-        //     auto is_done = is_done_future.get();
-        //     std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
-        // }
+        static bool shown = false;
+        if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
+            std::cout << "Is not ready" << std::endl;
+        } else {
+            if (!shown){
+                auto is_done = is_done_future.get();
+                std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
+                shown = true;
+            }
+        }
     };
 
 

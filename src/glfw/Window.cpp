@@ -32,6 +32,7 @@ Window::Window(int width, int height, const char *title,
     _glfw_win = glfwCreateWindow(width, height, title, NULL, NULL);
     glfwSetWindowUserPointer(_glfw_win, this);
     glfwMakeContextCurrent(_glfw_win);
+    glfwSwapInterval(0);
     
     auto ver = gl::LoadGl_46(glfwGetProcAddress);
     if (ver == 0){

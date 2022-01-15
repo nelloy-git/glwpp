@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <deque>
 #include <functional>
 #include <mutex>
@@ -23,7 +24,8 @@ class Event final {
     
 public:
     Event(sptr<thread_pool> th_pool = EventThreadPool::get()) :
-        _pool(th_pool){
+        _pool(th_pool),
+        _valid(true){
         _todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
         _checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
     }
@@ -33,6 +35,8 @@ public:
     Event(const Event&&) = delete;
 
     ~Event(){
+        _valid = false;
+        std::lock_guard lg(_lock);
         auto todo_list = _todo_list;
         auto checker_list = _checker_list;
 
@@ -49,14 +53,14 @@ public:
     }
 
     EventStatus emit(const Args&... args){
+        std::lock_guard lg(_lock);
+        if (!_valid) return EventStatus(false);
+
         auto todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
         auto checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
 
-        {
-            std::lock_guard lg(_lock);
-            todo_list.swap(_todo_list);
-            checker_list.swap(_checker_list);
-        }
+        todo_list.swap(_todo_list);
+        checker_list.swap(_checker_list);
 
         while (!todo_list->empty()){
             _pool->push_task(todo_list->front(), args...);
@@ -66,9 +70,14 @@ public:
         return EventStatus(checker_list);
     }
 
+    size_t size(){
+        return _todo_list->size();
+    }
+
 private:
     sptr<thread_pool> _pool;
 
+    std::atomic<bool> _valid;
     std::mutex _lock;
     sptr<std::deque<std::function<void(Args...)>>> _todo_list;
     sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>> _checker_list;
@@ -82,7 +91,7 @@ private:
     
 
     template<class F, class R, class ... FArgs, class FR = std::conditional_t<(std::is_void_v<R>), bool, R>>
-    std::shared_future<FR> _push(const F& callback, Signature<std::function<R(FArgs...)>> signature){
+    inline std::shared_future<FR> _push(const F& callback, Signature<std::function<R(FArgs...)>> signature){
         auto promise = make_sptr<std::promise<FR>>();
         std::shared_future<FR> future = promise->get_future();
 

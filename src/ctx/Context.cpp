@@ -21,8 +21,9 @@ Context::Context(const Parameters &params) :
     _gl_thread->submit([this](){
         _initGlfwWindow();
     });
-    _gl_thread->paused = true;
+    _gl_thread->paused = false;
     _gl_thread->wait_for_tasks();
+    _gl_thread->paused = true;
 }
 
 Context::~Context(){
@@ -39,10 +40,9 @@ Context::~Context(){
 
 bool Context::start(){
     static std::function<void(std::chrono::microseconds)> event = [this](std::chrono::microseconds dt){
-        _gl_thread->paused = true;
         glfwPollEvents();
-        onRun.emit(this, dt);
         _glfw_window->swapBuffers();
+        _gl_thread->paused = true;
     };
 
     if (!_valid || !_gl_thread->paused){
@@ -53,6 +53,7 @@ bool Context::start(){
     auto dt = std::chrono::duration_cast<std::chrono::microseconds>(now - _last_start);
     _last_start = now;
 
+    onRun.emit(this, dt);
     _gl_thread->submit(event, dt);
     _gl_thread->paused = false;
     return true;
@@ -66,13 +67,12 @@ void Context::_initGlfwWindow(){
     std::vector<std::pair<int, int>> hints = {
         {GLFW_VERSION_MAJOR, _params.gl_major_ver},
         {GLFW_VERSION_MINOR, _params.gl_minor_ver},
-        {GLFW_REFRESH_RATE,  _params.fps},
+        // {GLFW_REFRESH_RATE,  _params.fps},
     };
 
     _glfw_window = std::make_unique<glfw::Window>(
         _params.width, _params.height, _params.title.c_str(), hints
     );
-    glfwSwapInterval(0);
     
     _bindGlfwCallback<&glfw::Window::setMoveCallback>(onWinMove);
     _bindGlfwCallback<&glfw::Window::setResizeCallback>(onWinResize);
