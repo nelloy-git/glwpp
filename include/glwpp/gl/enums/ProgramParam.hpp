@@ -4,7 +4,7 @@
 
 namespace glwpp::gl {
 
-enum class ProgramParamInt : Enum {
+enum class ProgramParam : Enum {
     DeleteStatus = 0x8B80,              // GL_DELETE_STATUS params returns GL_TRUE if program is currently flagged for deletion, and GL_FALSE otherwise.
     LinkStatus = 0x8B82,                // GL_LINK_STATUS params returns GL_TRUE if the last link operation on program was successful, and GL_FALSE otherwise.
     ValidateStatus = 0x8B83,            // GL_VALIDATE_STATUS params returns GL_TRUE or if the last validation operation on program was successful, and GL_FALSE otherwise.

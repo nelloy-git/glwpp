@@ -25,6 +25,7 @@
 #include "glwpp/gl/api/gl_46.hpp"
 #include "glwpp/gl/enums/BufferType.hpp"
 #include "glwpp/gl/oop/Buffer.hpp"
+#include "glwpp/gl/oop/Texture.hpp"
 
 // #include "glwpp/gl/vertex/VertexAttribData.hpp"
 
@@ -99,23 +100,23 @@ int main(int argc, char **argv){
     };
     win->onRun.push(frame_timer_func);
 
-    glwpp::Buffer buffer(win);
-    auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
+    // glwpp::Buffer buffer(win);
+    // auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
 
     while (runnig){
         win->start();
         win->wait();
 
-        static bool shown = false;
-        if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
-            std::cout << "Is not ready" << std::endl;
-        } else {
-            if (!shown){
-                auto is_done = is_done_future.get();
-                std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
-                shown = true;
-            }
-        }
+        // static bool shown = false;
+        // if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
+        //     std::cout << "Is not ready" << std::endl;
+        // } else {
+        //     if (!shown){
+        //         auto is_done = is_done_future.get();
+        //         std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
+        //         shown = true;
+        //     }
+        // }
     };
 
 

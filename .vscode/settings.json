@@ -89,7 +89,14 @@
         "xloctime": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "regex": "cpp",
+        "*.idl": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "stack": "cpp"
     },
     "cmake.configureOnOpen": false
 }

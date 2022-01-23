@@ -1,99 +1,140 @@
 #include "glwpp/gl/oop/Program.hpp"
 
+#include "glad/gl.h"
+
 #include <unordered_map>
 
 using namespace glwpp;
 
 namespace {
     static std::mutex id2prog_lock;
-    static std::unordered_map<gl::UInt, Program*> id2prog;
+    static std::unordered_map<Context*, std::unordered_map<gl::UInt, Program*>> id2prog;
 
-    static gl::UInt CreateProgram(){
-        return gl::CreateProgram();
-    }
-    static void DeleteProgram(gl::UInt *id){
-        gl::DeleteProgram(*id);
-        delete id;
-    }
-    static Program* GetActiveProgram(){
-        static gl::Enum GL_CURRENT_PROGRAM = 0x8B8D;
-
-        gl::Int prog_id;
-        gl::GetIntegerv(GL_CURRENT_PROGRAM, &prog_id);
+    static void setMapProg (wptr<Context> ctx, gl::UInt id, Program *prog){
+        Context* raw_ctx = ctx.lock().get();
 
         std::lock_guard lg(id2prog_lock);
-        auto iter = id2prog.find(prog_id);
-        if (iter != id2prog.end()){
-            return iter->second;
+        auto map_iter = id2prog.find(raw_ctx);
+        if (map_iter == id2prog.end()){
+            auto [tmp_iter, success] = id2prog.insert({raw_ctx, {}});
+            map_iter = tmp_iter;
         }
-        return nullptr;
+        map_iter->second[id] = prog;
     }
-    static gl::Int GetParamInt(const sptr<gl::UInt> id, gl::ProgramParamInt param){
-        gl::Int val;
-        gl::GetProgramiv(*id, static_cast<gl::Enum>(param), &val);
-        return val;
-    }
-    static void AttachShader(const sptr<gl::UInt> prog_id, const sptr<gl::UInt> shad_id){
-        gl::AttachShader(*prog_id, *shad_id);
-    }
-    static bool Link(const sptr<gl::UInt> id){
-        gl::LinkProgram(*id);
-        return GetParamInt(id, gl::ProgramParamInt::LinkStatus);
-    }
-    static void Use(const sptr<gl::UInt> id){
-        gl::UseProgram(*id);
-    }
-    static std::string GetInfoLog(const sptr<gl::UInt> id){
-        gl::Int length = GetParamInt(id, gl::ProgramParamInt::InfoLogLength);
 
-        std::string msg(length, '\0');
-        gl::GetProgramInfoLog(*id, length, &length, msg.data());
-        return msg;
+    static void delMapProg(wptr<Context> ctx, gl::UInt id, Program* prog){
+        Context* raw_ctx = ctx.lock().get();
+
+        std::lock_guard lg(id2prog_lock);
+        auto map_iter = id2prog.find(raw_ctx);
+        if (map_iter == id2prog.end()){
+            auto [tmp_iter, success] = id2prog.insert({raw_ctx, {}});
+            map_iter = tmp_iter;
+        }
+        auto id_iter = map_iter->second.find(id);
+        if (id_iter == map_iter->second.end()){
+            return;
+        }
+        if (id_iter->second != prog){
+            return;
+        }
+        map_iter->second.erase(id_iter);
     }
-    static gl::Int GetAttribLoc(const sptr<gl::UInt> id, const std::string *name){
-        return gl::GetAttribLocation(*id, name->c_str());
+
+    static Program* getMapProg(wptr<Context> ctx, gl::UInt id){
+        Context* raw_ctx = ctx.lock().get();
+        auto map_iter = id2prog.find(raw_ctx);
+        if (map_iter == id2prog.end()){
+            return nullptr;
+        }
+        auto id_iter = map_iter->second.find(id);
+        if (id_iter == map_iter->second.end()){
+            return nullptr;
+        }
+        return id_iter->second;
+    }
+    
+    static void GetActiveProgram(wptr<Context> ctx, sptr<Program*> dst){
+        gl::Int prog_id;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &prog_id);
+        *dst = getMapProg(ctx, prog_id);
+    }
+
+    static gl::UInt CreateProgram(wptr<Context> ctx, Program* prog){
+        gl::UInt id = glCreateProgram();
+        setMapProg(ctx, id, prog);
+        return id;
+    }
+    static void DeleteProgram(gl::UInt *id, wptr<Context> ctx, Program* prog){
+        glDeleteProgram(*id);
+        delMapProg(ctx, *id, prog);
+        delete id;
+    }
+    static auto getDeteler(wptr<Context> ctx, Program* prog){
+        return [ctx, prog](gl::UInt *id){
+            DeleteProgram(id, ctx, prog);
+        };
     }
 }
 
 Program::Program(wptr<Context> ctx) :
-    ContextData(ctx, &CreateProgram, &DeleteProgram){
-    std::lock_guard lg(id2prog_lock);
-    id2prog[id()] = this;
+    ContextData(ctx, &CreateProgram, getDeteler(ctx, this), ctx, this){
 }
 
 Program::Program(const Program &&other) :
     ContextData(std::move(other)){
-    std::lock_guard lg(id2prog_lock);
-    id2prog[id()] = this;
+    setMapProg(ctx(), id(), this);
 }
 
 Program::~Program(){
 }
 
-std::shared_future<Program*> Program::getActive(wptr<Context> ctx){
-    return _execute(ctx, &GetActiveProgram);
+std::shared_future<bool> Program::getActive(wptr<Context> ctx, sptr<Program*> dst){
+    if constexpr (AUTOCLEAR) _clear(ctx, dst);
+    return _lockCtx(ctx)->onRun.push([ctx, dst](){
+        GetActiveProgram(ctx, dst);
+    });
 }
 
-std::shared_future<bool> Program::attach(const Shader &shader){
-    return _execute(&AttachShader, idPtr(), shader.idPtr());
+std::shared_future<bool> Program::getParam_iv(sptr<gl::ProgramParam> param, sptr<gl::Int> dst) const {
+    if constexpr (AUTOCLEAR) _clear(param, dst);
+    return _lockCtx()->onRun.push([id = idPtr(), param, dst](){
+        glGetProgramiv(*id, static_cast<gl::Enum>(*param), dst.get());
+    });
+}
+
+std::shared_future<bool> Program::getInfoLog(sptr<std::string> dst) const {
+    if constexpr (AUTOCLEAR) _clear(dst);
+    return _lockCtx()->onRun.push([id = idPtr(), dst](){
+        gl::Int length;
+        glGetProgramiv(*id, GL_LINK_STATUS, &length);
+        dst->resize(length);
+        glGetProgramInfoLog(*id, length, &length, dst->data());
+    });
+}
+
+std::shared_future<bool> Program::attach(sptr<const Shader> shader){
+    if constexpr (AUTOCLEAR) _clear(shader);
+    return _lockCtx()->onRun.push([id = idPtr(), shader_id = shader->idPtr()](){
+        glAttachShader(*id, *shader_id);
+    });
 }
 
 std::shared_future<bool> Program::link(){
-    return _execute(&Link, idPtr());
+    return _lockCtx()->onRun.push([id = idPtr()](){
+        glLinkProgram(*id);
+    });
 }
 
-std::shared_future<bool> Program::use() const {
-    return _execute(&Use, idPtr());
+std::shared_future<bool> Program::setActive() const {
+    return _lockCtx()->onRun.push([id = idPtr()](){
+        glUseProgram(*id);
+    });
 }
 
-std::shared_future<gl::Int> Program::getParamInt(gl::ProgramParamInt param) const {
-    return _execute(&GetParamInt, idPtr(), param);
-}
-
-std::shared_future<std::string> Program::getInfoLog() const {
-    return _execute(&GetInfoLog, idPtr());
-}
-
-std::shared_future<gl::Int> Program::getAttribLoc(const std::string *attrib) const {
-    return _execute(&GetAttribLoc, idPtr(), attrib);
+std::shared_future<bool> Program::getAttribLoc(sptr<const std::string> attrib, sptr<gl::Int> dst) const {
+    if constexpr (AUTOCLEAR) _clear(attrib, dst);
+    return _lockCtx()->onRun.push([id = idPtr(), attrib, dst](){
+        *dst = glGetAttribLocation(*id, attrib->c_str());
+    });
 }

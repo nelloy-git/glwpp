@@ -44,6 +44,9 @@ bool Context::start(){
         _glfw_window->swapBuffers();
         _gl_thread->paused = true;
     };
+    static std::function<void()> clear = [this](){
+        onRunEnd.emit(this);
+    };
 
     if (!_valid || !_gl_thread->paused){
         return false;
@@ -54,6 +57,7 @@ bool Context::start(){
     _last_start = now;
 
     onRun.emit(this, dt);
+    _gl_thread->submit(clear);
     _gl_thread->submit(event, dt);
     _gl_thread->paused = false;
     return true;

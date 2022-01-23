@@ -28,11 +28,12 @@ public:
     bool start();
     void wait();
 
-    // Context thread
+    // gl thread
     Event<Context*, std::chrono::microseconds> onRun;
     Event<Context*> onDetsroy;
 
-    // Any thread
+    // Non-gl thread
+    Event<Context*> onRunEnd;
     Event<Context*, int, int> onWinMove;
     Event<Context*, int, int> onWinResize;
     Event<Context*> onWinClose;

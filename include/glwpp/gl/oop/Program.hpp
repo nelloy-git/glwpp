@@ -9,20 +9,24 @@ namespace glwpp {
 
 class Program : public ContextData {
 public:
+    static constexpr bool AUTOCLEAR = true;
+
     Program(wptr<Context> ctx);
     Program(const Program&) = delete;
     Program(const Program&&);
     virtual ~Program(); 
 
-    static std::shared_future<Program*> getActive(wptr<Context> ctx);
+    static std::shared_future<bool> getActive(wptr<Context> ctx, sptr<Program*> dst);
 
-    std::shared_future<bool> attach(const Shader &shader);
+    std::shared_future<bool> getParam_iv(sptr<gl::ProgramParam> param, sptr<gl::Int> dst) const;
+    std::shared_future<bool> getInfoLog(sptr<std::string> dst) const;
+
+    std::shared_future<bool> attach(sptr<const Shader> shader);
     std::shared_future<bool> link();
-    std::shared_future<bool> use() const;
-
-    std::shared_future<gl::Int> getParamInt(gl::ProgramParamInt param) const;
-    std::shared_future<std::string> getInfoLog() const;
-    std::shared_future<gl::Int> getAttribLoc(const std::string *attrib) const;
+    std::shared_future<bool> setActive() const;
+    
+    std::shared_future<bool> getAttribLoc(sptr<const std::string> attrib, sptr<gl::Int> dst) const;
+    
 };
 
 }

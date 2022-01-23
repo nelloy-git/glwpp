@@ -4,7 +4,7 @@
 
 namespace glwpp::gl {
 
-enum class VertexArrayAttribParamInt : Enum {
+enum class VertexArrayAttribParam : Enum {
     Enabled = 0x8622,        // GL_VERTEX_ATTRIB_ARRAY_ENABLED: param returns a value that is non-zero (true) if the vertex attribute array for index is enabled and 0 (false) if it is disabled. The initial value is GL_FALSE.
     Size = 0x8623,           // GL_VERTEX_ATTRIB_ARRAY_SIZE: param returns a single value, the size of the vertex attribute array for index. The size is the number of values for each element of the vertex attribute array, and it will be 1, 2, 3 or 4. The initial value is 4.
     Stride = 0x8624,         // GL_VERTEX_ATTRIB_ARRAY_STRIDE: param returns a single value, the array stride for (number of bytes between successive elements in) the vertex attribute array for index. A value of 0 indicates the array elements are stored sequentially in memory. The initial value is 0.

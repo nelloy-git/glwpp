@@ -4,7 +4,7 @@
 
 namespace glwpp::gl {
 
-enum class BufferParamInt : Enum {
+enum class BufferParam : Enum {
     MapAccess = 0x88BB, // GL_BUFFER_ACCESS params returns the access policy set while mapping the buffer object (the value of the access parameter enum passed to glMapBuffer). If the buffer was mapped with glMapBufferRange, the access policy is determined by translating the bits in that access parameter to one of the supported enums for glMapBuffer as described in the OpenGL Specification.
     MapAccessRange = 0x911F, // GL_BUFFER_ACCESS_FLAGS params returns the access policy set while mapping the buffer object (the value of the access parameter bitfield passed to glMapBufferRange). If the buffer was mapped with glMapBuffer, the access policy is determined by translating the enums in that access parameter to the corresponding bits for glMapBufferRange as described in the OpenGL Specification. The initial value is zero.
     Immutable = 0x821F, // GL_BUFFER_IMMUTABLE_STORAGE params returns a boolean flag indicating whether the buffer object is immutable. The initial value is GL_FALSE.

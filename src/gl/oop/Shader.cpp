@@ -1,32 +1,16 @@
 #include "glwpp/gl/oop/Shader.hpp"
 
+#include "glad/gl.h"
+
 using namespace glwpp;
 
 namespace {
     static gl::UInt CreateShader(gl::ShaderType type){
-        return gl::CreateShader(static_cast<gl::Enum>(type));
+        return glCreateShader(static_cast<gl::Enum>(type));
     }
     static void DeleteShader(gl::UInt *id){
-        gl::DeleteShader(*id);
+        glDeleteShader(*id);
         delete id;
-    }
-    static gl::Int GetParamInt(const sptr<gl::UInt> id, gl::ShaderParamInt param){
-        gl::Int val;
-        gl::GetShaderiv(*id, static_cast<gl::Enum>(param), &val);
-        return val;
-    }
-    static bool Compile(const sptr<gl::UInt> id, const std::string *code){
-        auto c_code = code->c_str();
-        gl::ShaderSource(*id, 1, &c_code, nullptr);
-        gl::CompileShader(*id);
-        return GetParamInt(id, gl::ShaderParamInt::CompileStatus);
-    }
-    static std::string GetLogInfo(const sptr<gl::UInt> id){
-        gl::Int length = GetParamInt(id, gl::ShaderParamInt::InfoLogLength);
-
-        std::string msg(length, '\0');
-        gl::GetShaderInfoLog(*id, length, &length, msg.data());
-        return msg;
     }
 }
 
@@ -41,14 +25,28 @@ Shader::Shader(const Shader &&other) :
 Shader::~Shader(){
 }
 
-std::shared_future<bool> Shader::compile(const std::string *code){
-    return _execute(&Compile, idPtr(), code);
+std::shared_future<bool> Shader::getParam_iv(sptr<gl::ShaderParamInt> param, sptr<gl::Int> dst) const {
+    if constexpr (AUTOCLEAR) _clear(param, dst);
+    return _lockCtx()->onRun.push([id = idPtr(), param, dst](){
+        glGetShaderiv(*id, static_cast<gl::Enum>(*param), dst.get());
+    });
 }
 
-std::shared_future<gl::Int> Shader::getParamInt(gl::ShaderParamInt param) const {
-    return _execute(&GetParamInt, idPtr(), param);
+std::shared_future<bool> Shader::getLogInfo(sptr<std::string> dst) const {
+    if constexpr (AUTOCLEAR) _clear(dst);
+    return _lockCtx()->onRun.push([id = idPtr(), dst](){
+        gl::Int length;
+        glGetShaderiv(*id, GL_COMPILE_STATUS, &length);
+        dst->resize(length);
+        glGetShaderInfoLog(*id, length, &length, dst->data());
+    });
 }
 
-std::shared_future<std::string> Shader::getLogInfo() const {
-    return _execute(&GetLogInfo, idPtr());
+std::shared_future<bool> Shader::compile(sptr<const std::string> code){
+    if constexpr (AUTOCLEAR) _clear(code);
+    return _lockCtx()->onRun.push([id = idPtr(), code](){
+        auto c_code = code->c_str();
+        glShaderSource(*id, 1, &c_code, nullptr);
+        glCompileShader(*id);
+    });
 }

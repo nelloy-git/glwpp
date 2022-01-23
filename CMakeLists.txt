@@ -12,6 +12,7 @@ project(glwpp VERSION 0.1 LANGUAGES C CXX)
 
 enable_testing()
 
+add_subdirectory(./3rdparty/assimp)
 add_subdirectory(./3rdparty/glfw)
 add_subdirectory(./3rdparty/googletest)
 add_subdirectory(./test)
@@ -20,6 +21,7 @@ add_compile_definitions(GLWPP_DEBUG)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /D_DEBUG")
 
 include_directories(./include)
+include_directories(./3rdparty/assimp/include)
 include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
 include_directories(./3rdparty/thread_pool)
@@ -30,9 +32,6 @@ add_library (${PROJECT_NAME} STATIC
 
     ./src/ctx/Context.cpp
     
-    # ./src/utils/CmdLoop.cpp
-
-    # ./src/Window.cpp
     src/gl/api/gl_10.cpp
     src/gl/api/gl_11.cpp
     src/gl/api/gl_12.cpp
@@ -63,6 +62,7 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/oop/Buffer.cpp
     src/gl/oop/Program.cpp
     src/gl/oop/Shader.cpp
+    src/gl/oop/Texture.cpp
     src/gl/oop/VertexArray.cpp
 
     src/utils/event/EventStatus.cpp
@@ -71,6 +71,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME}
     glfw
+    assimp
 )
 
 set_property (TARGET ${PROJECT_NAME}
