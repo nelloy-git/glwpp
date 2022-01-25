@@ -2,7 +2,6 @@
 
 #include "glwpp/gl/oop/ContextData.hpp"
 
-#include "glwpp/gl/enums/BufferBindTarget.hpp"
 #include "glwpp/gl/enums/BufferMapAccess.hpp"
 #include "glwpp/gl/enums/BufferMapRangeAccess.hpp"
 #include "glwpp/gl/enums/BufferParam.hpp"
@@ -36,6 +35,7 @@ public:
     std::shared_future<bool> mapRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size, sptr<gl::BitField> access, sptr<void*> dst);
     std::shared_future<bool> mapFlushRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size);
     std::shared_future<bool> unmap();
+
 };
 
 }

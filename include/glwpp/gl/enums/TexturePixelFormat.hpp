@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class TexturePixelFormat : Enum {
+enum class TexturePixelFormat : gl::Enum {
     RED = 0x1903, // GL_RED
     RG = 0x8227, // GL_RG
     RGB = 0x1907, // GL_RGB

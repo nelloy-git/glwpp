@@ -1,8 +1,10 @@
 #pragma once
 
+#include "glwpp/gl/types.hpp"
+
 namespace glwpp::gl {
 
-enum class DataType {
+enum class DataType : gl::Enum {
     Byte,               // GL_BYTE
     UByte,              // GL_UNSIGNED_BYTE
     Short,              // GL_SHORT

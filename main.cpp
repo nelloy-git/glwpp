@@ -22,7 +22,6 @@
 
 // template<class V>
 // using Model = glwpp::ctx::VertexArray<V>;
-#include "glwpp/gl/api/gl_46.hpp"
 #include "glwpp/gl/enums/BufferType.hpp"
 #include "glwpp/gl/oop/Buffer.hpp"
 #include "glwpp/gl/oop/Texture.hpp"
@@ -100,8 +99,8 @@ int main(int argc, char **argv){
     };
     win->onRun.push(frame_timer_func);
 
-    // glwpp::Buffer buffer(win);
-    // auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
+    glwpp::Buffer buffer(win);
+    auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
 
     while (runnig){
         win->start();

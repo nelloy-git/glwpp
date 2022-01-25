@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class TextureParam : Enum {
+enum class TextureParam : gl::Enum {
     DepthStencilMode = 0x90EA, // GL_DEPTH_STENCIL_TEXTURE_MODE Returns the single-value depth stencil texture mode, a symbolic constant. The initial value is GL_DEPTH_COMPONENT.
     MagFilter = 0x2800, // GL_TEXTURE_MAG_FILTER Returns the single-valued texture magnification filter, a symbolic constant. The initial value is GL_LINEAR.
     MinFilter = 0x2801, // GL_TEXTURE_MIN_FILTER Returns the single-valued texture minification filter, a symbolic constant. The initial value is GL_NEAREST_MIPMAP_LINEAR.
@@ -36,7 +36,7 @@ enum class TextureParam : Enum {
     Target = 0x1006, // GL_TEXTURE_TARGET Returns the effective target of the texture object. For glGetTex*Parameter functions, this is the target parameter. For glGetTextureParameter*, it is the target to which the texture was initially bound when it was created, or the value of the target parameter to the call to glCreateTextures which created the texture.
 };
 
-enum class TextureLevelParam : Enum {
+enum class TextureLevelParam : gl::Enum {
     Width = 0x1000,                 // GL_TEXTURE_WIDTH params returns a single value, the width of the texture image. The initial value is 0.
     Height = 0x1001,                // GL_TEXTURE_HEIGHT params returns a single value, the height of the texture image. The initial value is 0.
     Depth = 0x8071,                 // GL_TEXTURE_DEPTH params returns a single value, the depth of the texture image. The initial value is 0.

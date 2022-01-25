@@ -1,7 +1,7 @@
 #include "glwpp/glfw/Window.hpp"
 
 #include <stdexcept>
-#include "glwpp/gl/api/gl_46.hpp"
+#include "glad/gl.h"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
@@ -34,7 +34,7 @@ Window::Window(int width, int height, const char *title,
     glfwMakeContextCurrent(_glfw_win);
     glfwSwapInterval(0);
     
-    auto ver = gl::LoadGl_46(glfwGetProcAddress);
+    auto ver = gladLoadGL(glfwGetProcAddress);
     if (ver == 0){
         throw std::runtime_error("Failed to initialize OpenGL context.");
     }

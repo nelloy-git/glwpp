@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class DrawMode : Enum {
+enum class DrawMode : gl::Enum {
     Points = 0x0000,                // GL_POINTS
     LineStrip = 0x0003,             // GL_LINE_STRIP
     LineLoop = 0x0002,              // GL_LINE_LOOP

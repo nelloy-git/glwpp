@@ -44,6 +44,4 @@ using GLdebugProc = void (*)(Enum source, Enum type, UInt id, Enum severity, Siz
 using ApiProc = void (*)(void);
 using LoadFunc = ApiProc (*)(const char *name);
 
-bool LoadGl_glad(LoadFunc func);
-
 }

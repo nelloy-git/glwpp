@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 

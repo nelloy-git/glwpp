@@ -32,27 +32,6 @@ add_library (${PROJECT_NAME} STATIC
 
     ./src/ctx/Context.cpp
     
-    src/gl/api/gl_10.cpp
-    src/gl/api/gl_11.cpp
-    src/gl/api/gl_12.cpp
-    src/gl/api/gl_13.cpp
-    src/gl/api/gl_14.cpp
-    src/gl/api/gl_15.cpp
-    src/gl/api/gl_20.cpp
-    src/gl/api/gl_21.cpp
-    src/gl/api/gl_30.cpp
-    src/gl/api/gl_31.cpp
-    src/gl/api/gl_32.cpp
-    src/gl/api/gl_33.cpp
-    src/gl/api/gl_40.cpp
-    src/gl/api/gl_41.cpp
-    src/gl/api/gl_42.cpp
-    src/gl/api/gl_43.cpp
-    src/gl/api/gl_44.cpp
-    src/gl/api/gl_45.cpp
-    src/gl/api/gl_46.cpp
-    src/gl/api/types.cpp
-    
     src/glfw/enums/Action.cpp
     src/glfw/enums/Button.cpp
     src/glfw/enums/Key.cpp

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class TextureFormat : Enum {
+enum class TextureFormat : gl::Enum {
                          // Format      Base Type 	Components 	Norm 	0 	1 	2 	3
     R8 = 0x8229,         // GL_R8 	    ubyte 	    1 	        YES 	R 	0 	0 	1
     R16 = 0x822A,        // GL_R16 	    ushort 	    1 	        YES 	R 	0 	0 	1

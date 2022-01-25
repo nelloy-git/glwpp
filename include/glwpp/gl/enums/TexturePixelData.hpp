@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class TexturePixelData : Enum {
+enum class TexturePixelData : gl::Enum {
     UByte = 0x1401, // GL_UNSIGNED_BYTE
     Byte = 0x1400, // GL_BYTE
     UShort = 0x1403, // GL_UNSIGNED_SHORT

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class ShaderType : Enum {
+enum class ShaderType : gl::Enum {
     Compute = 0x91B9, // GL_COMPUTE_SHADER,
     Vertex = 0x8B31, // GL_VERTEX_SHADER,
     TessControl = 0x8E88, // GL_TESS_CONTROL_SHADER,

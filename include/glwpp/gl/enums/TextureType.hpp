@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class TextureType : Enum {
+enum class TextureType : gl::Enum {
     Normal1D = 0x0DE0, // GL_TEXTURE_1D,
     Normal2D = 0x0DE1, // GL_TEXTURE_2D,
     Normal3D = 0x806F, // GL_TEXTURE_3D,

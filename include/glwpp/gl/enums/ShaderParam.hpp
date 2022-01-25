@@ -1,10 +1,10 @@
 #pragma once
 
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 
 namespace glwpp::gl {
 
-enum class ShaderParamInt : Enum {
+enum class ShaderParamInt : gl::Enum {
     Type = 0x8B4F,           // params returns GL_VERTEX_SHADER if shader is a vertex shader object, and GL_FRAGMENT_SHADER if shader is a fragment shader object.
     DeleteStatus = 0x8B80,   // params returns GL_TRUE if shader is currently flagged for deletion, and GL_FALSE otherwise.
     CompileStatus = 0x8B81,  // For implementations that support a shader compiler, params returns GL_TRUE if the last compile operation on shader was successful, and GL_FALSE otherwise.

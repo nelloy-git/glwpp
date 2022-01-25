@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "glwpp/ctx/Context.hpp"
-#include "glwpp/gl/api/types.hpp"
+#include "glwpp/gl/types.hpp"
 #include "glwpp/utils/Ptr.hpp"
 
 namespace glwpp {
