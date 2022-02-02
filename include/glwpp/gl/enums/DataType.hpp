@@ -5,19 +5,14 @@
 namespace glwpp::gl {
 
 enum class DataType : gl::Enum {
-    Byte,               // GL_BYTE
-    UByte,              // GL_UNSIGNED_BYTE
-    Short,              // GL_SHORT
-    UShort,             // GL_UNSIGNED_SHORT
-    Int,                // GL_INT
-    UInt,               // GL_UNSIGNED_INT
-    // HFloat,             // GL_HALF_FLOAT Unimplemented
-    Float,              // GL_FLOAT
-    Double,             // GL_DOUBLE
-    // Fixed,              // GL_FIXED
-    Int_2_10_10_10,     // GL_INT_2_10_10_10_REV
-    UInt_2_10_10_10,    // GL_UNSIGNED_INT_2_10_10_10_REV
-    UInt_10_11_11       // GL_UNSIGNED_INT_10F_11F_11F_RE
+    Byte = 0x1400,               // GL_BYTE
+    UByte = 0x1401,              // GL_UNSIGNED_BYTE
+    Short = 0x1402,              // GL_SHORT
+    UShort = 0x1403,             // GL_UNSIGNED_SHORT
+    Int = 0x1404,                // GL_INT
+    UInt = 0x1405,               // GL_UNSIGNED_INT
+    Float = 0x1406,              // GL_FLOAT
+    Double = 0x140A,             // GL_DOUBLE
 };
 
 template<DataType T>
@@ -36,21 +31,9 @@ template<>
 struct RawVertexAttribType<DataType::Int> {using type = int;};
 template<>
 struct RawVertexAttribType<DataType::UInt> {using type = unsigned int;};
-// Unimplemented
-// template<>
-// struct RawVertexAttribType<VertexAttribType::HFloat> {using type = short float;};
 template<>
 struct RawVertexAttribType<DataType::Float> {using type = float;};
 template<>
 struct RawVertexAttribType<DataType::Double> {using type = double;};
-// Unimplemented
-// template<>
-// struct RawVertexAttribType<VertexAttribType::Fixed> {using type = fixed;};
-template<>
-struct RawVertexAttribType<DataType::Int_2_10_10_10> {using type = unsigned int;};
-template<>
-struct RawVertexAttribType<DataType::UInt_2_10_10_10> {using type = unsigned int;};
-template<>
-struct RawVertexAttribType<DataType::UInt_10_11_11> {using type = unsigned int;};
 
 }

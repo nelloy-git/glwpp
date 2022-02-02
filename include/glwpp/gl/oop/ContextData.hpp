@@ -24,14 +24,16 @@ public:
     virtual ~ContextData(){
         auto id = _id;
         _id.reset();
-        _lockCtx()->onRun.push([id = _id](){});
+        _lockCtx()->onRun.push([id](){});
     };
 
     gl::UInt id() const {return *_id;}
-    sptr<const gl::UInt> idPtr() const {return _id;}
     wptr<Context> ctx() const {return _ctx;}
 
 protected:
+    // Do not save ptr outside of gl context. 
+    sptr<const gl::UInt> _idPtr() const {return _id;}
+
     static sptr<Context> _lockCtx(wptr<Context> ctx){
         auto locked_ctx = ctx.lock();
         if (!locked_ctx){
@@ -68,4 +70,4 @@ private:
     }
 };
 
-}
+} // namespace glwpp

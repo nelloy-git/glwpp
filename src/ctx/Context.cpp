@@ -56,8 +56,8 @@ bool Context::start(){
     auto dt = std::chrono::duration_cast<std::chrono::microseconds>(now - _last_start);
     _last_start = now;
 
-    onRun.emit(this, dt);
     _gl_thread->submit(clear);
+    onRun.emit(this, dt);
     _gl_thread->submit(event, dt);
     _gl_thread->paused = false;
     return true;

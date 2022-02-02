@@ -11,31 +11,31 @@ namespace glwpp {
 
 class VertexArray : public ContextData {
 public:
-    static constexpr bool AUTOCLEAR = true;
+    static constexpr bool DEBUG = true;
 
     VertexArray(wptr<Context> ctx);
     VertexArray(const VertexArray&) = delete;
     VertexArray(const VertexArray&&);
     virtual ~VertexArray();
     
-    std::shared_future<bool> getAttribParam_i64v(sptr<gl::UInt> index,
-                                                 sptr<gl::VertexArrayAttribParam> param,
-                                                 sptr<gl::Int64> dst);
-    std::shared_future<bool> getAttribParam_iv(sptr<gl::UInt> index,
-                                               sptr<gl::VertexArrayAttribParam> param,
-                                               sptr<gl::Int> dst);
+    std::shared_future<bool> getAttribParam_i64v(Vop<const gl::UInt> index,
+                                                 Vop<const gl::VertexArrayAttribParam> param,
+                                                 Ptr<gl::Int64> dst);
+    std::shared_future<bool> getAttribParam_iv(Vop<const gl::UInt> index,
+                                               Vop<const gl::VertexArrayAttribParam> param,
+                                               Ptr<gl::Int> dst);
 
-    std::shared_future<bool> enableAttrib(sptr<gl::UInt> index);
-    std::shared_future<bool> disableAttrib(sptr<gl::UInt> index);
-    std::shared_future<bool> setAttribBinding(sptr<gl::UInt> index, sptr<gl::UInt> binding_index);
-    std::shared_future<bool> setAttribFormat(sptr<gl::UInt> index, sptr<gl::Int> size,
-                                             sptr<gl::DataType> type, sptr<gl::Bool> normalized,
-                                             sptr<gl::UInt> relative_offset);
-    std::shared_future<bool> setBindingDivisor(sptr<gl::UInt> binding_index, sptr<gl::UInt> divisor);
+    std::shared_future<bool> enableAttrib(Vop<const gl::UInt> index);
+    std::shared_future<bool> disableAttrib(Vop<const gl::UInt> index);
+    std::shared_future<bool> setAttribBinding(Vop<const gl::UInt> index, Vop<const gl::UInt> binding_index);
+    std::shared_future<bool> setAttribFormat(Vop<const gl::UInt> index, Vop<const gl::Int> size,
+                                             Vop<const gl::DataType> type, Vop<const gl::Bool> normalized,
+                                             Vop<const gl::UInt> relative_offset);
+    std::shared_future<bool> setBindingDivisor(Vop<const gl::UInt> binding_index, Vop<const gl::UInt> divisor);
 
-    std::shared_future<bool> setElementBuffer(sptr<Buffer> buffer);
-    std::shared_future<bool> setVertexBuffer(sptr<gl::UInt> binding_index, sptr<Buffer> buffer,
-                                             sptr<gl::IntPtr> offset, sptr<gl::IntPtr> stride);
+    std::shared_future<bool> setElementBuffer(Ptr<const Buffer> buffer);
+    std::shared_future<bool> setVertexBuffer(Vop<const gl::UInt> binding_index, Ptr<const Buffer> buffer,
+                                             Vop<const gl::IntPtr> offset, Vop<const gl::IntPtr> stride);
 };
     
-} // namespace glwpp::gl
+} // namespace glwpp

@@ -54,7 +54,7 @@ namespace {
         return id_iter->second;
     }
     
-    static void GetActiveProgram(wptr<Context> ctx, sptr<Program*> dst){
+    static void GetActiveProgram(wptr<Context> ctx, Program** dst){
         gl::Int prog_id;
         glGetIntegerv(GL_CURRENT_PROGRAM, &prog_id);
         *dst = getMapProg(ctx, prog_id);
@@ -89,52 +89,93 @@ Program::Program(const Program &&other) :
 Program::~Program(){
 }
 
-std::shared_future<bool> Program::getActive(wptr<Context> ctx, sptr<Program*> dst){
-    if constexpr (AUTOCLEAR) _clear(ctx, dst);
+std::shared_future<bool> Program::getActive(wptr<Context> ctx, Ptr<Program*> dst){
     return _lockCtx(ctx)->onRun.push([ctx, dst](){
-        GetActiveProgram(ctx, dst);
+        auto p_dst = getPtrValue(dst);
+        GetActiveProgram(ctx, p_dst);
     });
 }
 
-std::shared_future<bool> Program::getParam_iv(sptr<gl::ProgramParam> param, sptr<gl::Int> dst) const {
-    if constexpr (AUTOCLEAR) _clear(param, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), param, dst](){
-        glGetProgramiv(*id, static_cast<gl::Enum>(*param), dst.get());
+std::shared_future<bool> Program::getParam_iv(Vop<const gl::ProgramParam> param, Ptr<gl::Int> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), param, dst](){
+        auto &v_param = getVopRef(param);
+        auto p_dst = getPtrValue(dst);
+
+        glGetProgramiv(*id, static_cast<gl::Enum>(v_param), p_dst);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Program::getInfoLog(sptr<std::string> dst) const {
-    if constexpr (AUTOCLEAR) _clear(dst);
-    return _lockCtx()->onRun.push([id = idPtr(), dst](){
-        gl::Int length;
-        glGetProgramiv(*id, GL_LINK_STATUS, &length);
-        dst->resize(length);
-        glGetProgramInfoLog(*id, length, &length, dst->data());
+std::shared_future<bool> Program::getInfoLog(Ptr<std::string> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), dst](){
+        auto p_dst = getPtrValue(dst);
+
+        gl::Int success;
+        glGetProgramiv(*id, GL_LINK_STATUS, &success);
+        if (success == GL_FALSE){
+            gl::Int length;
+            glGetProgramiv(*id, GL_INFO_LOG_LENGTH, &length);
+            p_dst->resize(length);
+            glGetProgramInfoLog(*id, length, &length, p_dst->data());
+        }
+
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Program::attach(sptr<const Shader> shader){
-    if constexpr (AUTOCLEAR) _clear(shader);
-    return _lockCtx()->onRun.push([id = idPtr(), shader_id = shader->idPtr()](){
-        glAttachShader(*id, *shader_id);
+std::shared_future<bool> Program::attach(Ptr<const Shader> shader){
+    return _lockCtx()->onRun.push([id = _idPtr(), shader](){
+        auto p_shader = getPtrValue(shader);
+        glAttachShader(*id, p_shader->id());
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
 std::shared_future<bool> Program::link(){
-    return _lockCtx()->onRun.push([id = idPtr()](){
+    return _lockCtx()->onRun.push([id = _idPtr()](){
         glLinkProgram(*id);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
 std::shared_future<bool> Program::setActive() const {
-    return _lockCtx()->onRun.push([id = idPtr()](){
+    return _lockCtx()->onRun.push([id = _idPtr()](){
+        std::cout << "Prog " << *id << std::endl;
         glUseProgram(*id);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Program::getAttribLoc(sptr<const std::string> attrib, sptr<gl::Int> dst) const {
-    if constexpr (AUTOCLEAR) _clear(attrib, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), attrib, dst](){
-        *dst = glGetAttribLocation(*id, attrib->c_str());
+std::shared_future<bool> Program::getAttribLoc(Vop<const std::string> attrib, Ptr<gl::Int> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), attrib, dst](){
+        auto &v_attrib = getVopRef(attrib);
+        auto p_dst = getPtrValue(dst);
+
+        *p_dst = glGetAttribLocation(*id, v_attrib.c_str());
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }

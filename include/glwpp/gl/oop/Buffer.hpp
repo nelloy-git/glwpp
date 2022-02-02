@@ -12,30 +12,36 @@
 namespace glwpp {
 
 class Buffer : public ContextData {
+    friend class Texture;
+    friend class VertexArray;
 public:
-    static constexpr bool AUTOCLEAR = true;
-
+    static constexpr bool DEBUG = true;
+    
     Buffer(wptr<Context> ctx);
     Buffer(const Buffer&) = delete;
     Buffer(const Buffer&&);
     virtual ~Buffer();
 
-    std::shared_future<bool> data(sptr<gl::SizeiPtr> size, sptr<const void> data, sptr<gl::BufferUsage> usage);
-    std::shared_future<bool> storage(sptr<gl::SizeiPtr> size, sptr<const void> data, sptr<gl::BitField> flags);
+    using Data = void*;
+    std::shared_future<bool> data(Vop<const gl::SizeiPtr> size, Vop<const Data> data, Vop<const gl::BufferUsage> usage);
+    std::shared_future<bool> storage(Vop<const gl::SizeiPtr> size, Vop<const Data> data, Vop<const gl::BitField> flags);
 
-    std::shared_future<bool> getParam_i64v(sptr<gl::BufferParam> param, sptr<gl::Int64> dst) const;
-    std::shared_future<bool> getParam_iv(sptr<gl::BufferParam> param, sptr<gl::Int> dst) const;
+    std::shared_future<bool> getParam_i64v(Vop<const gl::BufferParam> param, Ptr<gl::Int64> dst) const;
+    std::shared_future<bool> getParam_iv(Vop<const gl::BufferParam> param, Ptr<gl::Int> dst) const;
 
-    std::shared_future<bool> setSubData(sptr<gl::SizeiPtr> size, sptr<gl::IntPtr> offset, sptr<const void> data);
-    std::shared_future<bool> getSubData(sptr<gl::SizeiPtr> size, sptr<gl::IntPtr> offset, sptr<void> dst) const;
-    std::shared_future<bool> copySubData(sptr<Buffer> dst, sptr<gl::IntPtr> read_offset, sptr<gl::IntPtr> write_offset, sptr<gl::SizeiPtr> size) const;
+    std::shared_future<bool> setSubData(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size, Vop<const Data> data);
+    std::shared_future<bool> getSubData(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size, Vop<Data> dst) const;
+    std::shared_future<bool> copySubData(Ptr<Buffer> dst, Vop<const gl::IntPtr> read_offset,
+                                         Vop<const gl::IntPtr> write_offset, Vop<const gl::SizeiPtr> size) const;
 
-    std::shared_future<bool> getMapPointer(sptr<void*> dst) const;
-    std::shared_future<bool> map(sptr<gl::BufferMapAccess> access, sptr<void*> dst);
-    std::shared_future<bool> mapRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size, sptr<gl::BitField> access, sptr<void*> dst);
-    std::shared_future<bool> mapFlushRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size);
+    using MapPtr = void*;
+    std::shared_future<bool> getMapPointer(Ptr<MapPtr> dst) const;
+    std::shared_future<bool> map(Vop<const gl::BufferMapAccess> access, Ptr<MapPtr> dst);
+    std::shared_future<bool> mapRange(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size,
+                                      Vop<const gl::BitField> access, Ptr<MapPtr> dst);
+    std::shared_future<bool> mapFlushRange(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size);
     std::shared_future<bool> unmap();
 
 };
 
-}
+} // namespace glwpp

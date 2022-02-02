@@ -4,6 +4,7 @@
 #include <memory>
 // #include <unistd.h>
 #include <chrono>
+#include <filesystem>
 
 // #include "glad/gl.h"
 
@@ -22,68 +23,38 @@
 
 // template<class V>
 // using Model = glwpp::ctx::VertexArray<V>;
-#include "glwpp/gl/enums/BufferType.hpp"
 #include "glwpp/gl/oop/Buffer.hpp"
+#include "glwpp/gl/oop/Program.hpp"
+#include "glwpp/gl/oop/Shader.hpp"
 #include "glwpp/gl/oop/Texture.hpp"
+#include "glwpp/gl/oop/VertexArray.hpp"
 
-// #include "glwpp/gl/vertex/VertexAttribData.hpp"
+#include "glad/gl.h"
 
+std::string loadTextFile(const std::string path){
+    std::ifstream t(path);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    return buffer.str();
+}
 
-int main(int argc, char **argv){
-    glwpp::Context::Parameters ctx_params;
-    ctx_params.gl_major_ver = 4;
-    ctx_params.gl_minor_ver = 6;
-    ctx_params.width = 640;
-    ctx_params.height = 480;
-    ctx_params.fps = 60;
-    ctx_params.title = "Noname";
+void pushKeyPrinter(std::shared_ptr<glwpp::Context> win, std::atomic<bool> *running){
+    static std::function<void(glwpp::Context*, glwpp::Key)> print_func;
 
-    auto win = std::make_shared<glwpp::Context>(ctx_params);
-
-    // auto w = win->onRun.push([&win](){
-    //     std::cout << "Frame" << std::endl;
-    // });
-
-    // auto fut = win->onRun.push([](){
-    //     return 1;
-    // });
-
-    // auto w = win->onKey.push([&win](glwpp::Key key, int, glwpp::Action act){
-    //     if (act == glwpp::Action::Release){
-    //         std::cout << int(key) << std::endl;
-    //     }
-        
-    //     if (key == glwpp::Key::Escape){
-    //         win.reset();
-    //     }
-    // });
-
-    // constexpr glwpp::gl::VertexAttrib attrib(glwpp::gl::DataType::Float, 3, false);
-    // constexpr glwpp::gl::VertexAttribData<attrib> data{};
-
-    // using Pos = glwpp::gl::VertexAttrib<glwpp::gl::DataType::Float, 3, false>;
-    // Pos attr;
-    // attr.set(1.2, 3.2, 12);
-
-    // using Vert = glwpp::gl::Vertex<Pos>;
-    // Vert v;
-    // v.set<0>(2.1, 3, 1);
-    // Vert::bindAttributes();
-
-    std::atomic<bool> runnig = true;
-
-    std::function<void(glwpp::Context *win, glwpp::Key)> print_func;
-    print_func = [&print_func, &runnig](glwpp::Context *win, glwpp::Key key){
+    print_func = [func = &print_func, running](glwpp::Context *win, glwpp::Key key){
         std::cout << "Key: " << char(key) << std::endl;
         if (key == glwpp::Key::Escape){
-            runnig = false;
+            *running = false;
         }
-        win->onKey.push(print_func);
+        win->onKey.push(*func);
     };
     win->onKey.push(print_func);
-    
-    std::function<void(glwpp::Context*, std::chrono::microseconds)> frame_timer_func;
-    frame_timer_func = [&frame_timer_func](glwpp::Context* win, std::chrono::microseconds time){
+}
+
+void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
+    static std::function<void(glwpp::Context*, std::chrono::microseconds)> frame_timer_func;
+
+    frame_timer_func = [func = &frame_timer_func](glwpp::Context* win, std::chrono::microseconds time){
         static int total_time = 0;
         static int counter = 0;
 
@@ -95,30 +66,112 @@ int main(int argc, char **argv){
             total_time = 0;
             counter = 0;
         }
-        win->onRun.push(frame_timer_func);
+        win->onRun.push(*func);
     };
     win->onRun.push(frame_timer_func);
+}
 
-    glwpp::Buffer buffer(win);
-    auto is_done_future = buffer.data(nullptr, 1024, glwpp::gl::BufferUsage::StaticDraw);
+int main(int argc, char **argv){
+    glwpp::Context::Parameters ctx_params;
+    ctx_params.gl_major_ver = 4;
+    ctx_params.gl_minor_ver = 5;
+    ctx_params.width = 640;
+    ctx_params.height = 480;
+    ctx_params.fps = 60;
+    ctx_params.title = "Noname";
 
-    while (runnig){
+    std::atomic<bool> running = true;
+    auto win = std::make_shared<glwpp::Context>(ctx_params);
+    pushKeyPrinter(win, &running);
+    pushTimePrinter(win);
+
+    auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
+    v_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.vs"));
+    std::string v_shader_log;
+    v_shader.getInfoLog(&v_shader_log);
+
+    auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
+    f_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.fs"));
+    std::string f_shader_log;
+    f_shader.getInfoLog(&f_shader_log);
+
+    auto prog = glwpp::Program(win);
+    prog.attach(&v_shader);
+    prog.attach(&f_shader);
+    prog.link();
+    prog.setActive();
+    std::string prog_log;
+    prog.getInfoLog(&prog_log);
+
+    float rect_vert[] = {
+         0.5f,  0.5f,  // top right
+         0.5f, -0.5f,  // bottom right
+        -0.5f, -0.5f,  // bottom left
+        -0.5f,  0.5f   // top left 
+    };
+    unsigned int rect_elem[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    glwpp::Buffer elements(win);
+    elements.data((glwpp::gl::SizeiPtr)sizeof(rect_elem), rect_elem, glwpp::gl::BufferUsage::DynamicDraw);
+    glwpp::Buffer vertices(win);
+    vertices.data((glwpp::gl::SizeiPtr)sizeof(rect_vert), rect_vert, glwpp::gl::BufferUsage::DynamicDraw);
+
+    glwpp::VertexArray vao(win);
+    glwpp::gl::UInt index = 0;
+    glwpp::gl::UInt relative_offset = 0;
+    vao.enableAttrib(index);
+    vao.setAttribBinding(index, index);
+    vao.setAttribFormat(index, 2, glwpp::gl::DataType::Float, false, relative_offset);
+    vao.setElementBuffer(&elements);
+    vao.setVertexBuffer(index, &vertices, 0, (glwpp::gl::UInt)(2 * sizeof(float)));
+
+    std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
+    draw = [&vao, &draw](glwpp::Context* win, std::chrono::microseconds time){
+        // glVertexAttribLPointer()
+        glBindVertexArray(vao.id());
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        win->onRun.push(draw);
+    };
+    auto is_done_future = win->onRun.push(draw);
+
+//       glVertexAttrib*Format(index, size, type, {normalized,} 0);
+//   glVertexAttribBinding(index, index);
+
+//   GLuint buffer;
+//   glGetIntegerv(GL_ARRAY_BUFFER_BINDING, buffer);
+//   if(buffer == 0)
+//     glErrorOut(GL_INVALID_OPERATION); //Give an error.
+
+//   if(stride == 0)
+//     stride = CalcStride(size, type);
+
+//   GLintptr offset = reinterpret_cast<GLintptr>(pointer);
+//   glBindVertexBuffer(index, buffer, offset, stride);
+
+    while (running){
         win->start();
         win->wait();
 
-        // static bool shown = false;
-        // if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
-        //     std::cout << "Is not ready" << std::endl;
-        // } else {
-        //     if (!shown){
-        //         auto is_done = is_done_future.get();
-        //         std::cout << "Allocated buffer: " << (is_done ? "true" : "false") << std::endl;
-        //         shown = true;
-        //     }
-        // }
+        static bool shown = false;
+        if (is_done_future.wait_for(std::chrono::seconds(0)) != std::future_status::ready){
+            std::cout << "Is not ready" << std::endl;
+        } else {
+            if (!shown){
+                auto is_done = is_done_future.get();
+                std::cout << "Here" << std::endl;
+                std::cout << "v_shader_log:\n" << v_shader_log.c_str() << std::endl;
+                std::cout << "f_shader_log:\n" << f_shader_log.c_str() << std::endl;
+                std::cout << "prog_log:\n" << prog_log.c_str() << std::endl;
+                
+                shown = true;
+            }
+        }
     };
-
-
 
     // auto watcher = glwpp::make_sptr<glwpp::Watcher>();
     // bool running = true;

@@ -7,7 +7,7 @@ using namespace glwpp;
 namespace {
     static gl::UInt GenBufferId(){
         gl::UInt id;
-        glGenBuffers(1, &id);
+        glCreateBuffers(1, &id);
         return id;
     };
     static void DeleteBufferId(gl::UInt* id){
@@ -27,85 +27,176 @@ Buffer::Buffer(const Buffer&& other) :
 Buffer::~Buffer(){
 }
 
-std::shared_future<bool> Buffer::data(sptr<gl::SizeiPtr> size, sptr<const void> data, sptr<gl::BufferUsage> usage){
-    if constexpr (AUTOCLEAR) _clear(size, data, usage);
-    return _lockCtx()->onRun.push([id = idPtr(), size, data, usage](){
-        glBufferData(*id, *size, data.get(), static_cast<gl::Enum>(*usage));
+std::shared_future<bool> Buffer::data(Vop<const gl::SizeiPtr> size, Vop<const Data> data, Vop<const gl::BufferUsage> usage){
+    return _lockCtx()->onRun.push([id = _idPtr(), size, data, usage](){
+        auto &v_size = getVopRef(size);
+        auto &v_data = getVopRef(data);
+        auto &v_usage = getVopRef(usage);
+
+        glNamedBufferData(*id, v_size, v_data, static_cast<gl::Enum>(v_usage));
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::storage(sptr<gl::SizeiPtr> size, sptr<const void> data, sptr<gl::BitField> flags){
-    if constexpr (AUTOCLEAR) _clear(size, data, flags);
-    return _lockCtx()->onRun.push([id = idPtr(), size, data, flags](){
-        glBufferStorage(*id, *size, data.get(), *flags);
+std::shared_future<bool> Buffer::storage(Vop<const gl::SizeiPtr> size, Vop<const Data> data, Vop<const gl::BitField> flags){
+    return _lockCtx()->onRun.push([id = _idPtr(), size, data, flags](){
+        auto &v_size = getVopRef(size);
+        auto &v_data = getVopRef(data);
+        auto &v_flags = getVopRef(flags);
+
+        glNamedBufferStorage(*id, v_size, v_data, v_flags);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::getParam_i64v(sptr<gl::BufferParam> param, sptr<gl::Int64> dst) const {
-    if constexpr (AUTOCLEAR) _clear(param, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), param, dst](){
-        glGetNamedBufferParameteri64v(*id, static_cast<gl::Enum>(*param), dst.get());
+std::shared_future<bool> Buffer::getParam_i64v(Vop<const gl::BufferParam> param, Ptr<gl::Int64> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), param, dst](){
+        auto &v_param = getVopRef(param);
+        auto p_dst = getPtrValue(dst);
+
+        glGetNamedBufferParameteri64v(*id, static_cast<gl::Enum>(v_param), p_dst);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::getParam_iv(sptr<gl::BufferParam> param, sptr<gl::Int> dst) const {
-    if constexpr (AUTOCLEAR) _clear(param, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), param, dst](){
-        glGetNamedBufferParameteriv(*id, static_cast<gl::Enum>(*param), dst.get());
+std::shared_future<bool> Buffer::getParam_iv(Vop<const gl::BufferParam> param, Ptr<gl::Int> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), param, dst](){
+        auto &v_param = getVopRef(param);
+        auto p_dst = getPtrValue(dst);
+
+        glGetNamedBufferParameteriv(*id, static_cast<gl::Enum>(v_param), p_dst);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::setSubData(sptr<gl::SizeiPtr> size, sptr<gl::IntPtr> offset, sptr<const void> data){
-    if constexpr (AUTOCLEAR) _clear(size, offset, data);
-    return _lockCtx()->onRun.push([id = idPtr(), size, offset, data](){
-        glNamedBufferSubData(*id, *size, *offset, data.get());
+std::shared_future<bool> Buffer::setSubData(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size, Vop<const Data> data){
+    return _lockCtx()->onRun.push([id = _idPtr(), offset, size, data](){
+        auto &v_offset = getVopRef(offset);
+        auto &v_size = getVopRef(size);
+        auto &v_data = getVopRef(data);
+        
+        glNamedBufferSubData(*id, v_offset, v_size, v_data);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::getSubData(sptr<gl::SizeiPtr> size, sptr<gl::IntPtr> offset, sptr<void> dst) const {
-    if constexpr (AUTOCLEAR) _clear(size, offset, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), size, offset, dst](){
-        glGetNamedBufferSubData(*id, *size, *offset, dst.get());
+std::shared_future<bool> Buffer::getSubData(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size, Vop<Data> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), offset, size, dst](){
+        auto &v_offset = getVopRef(offset);
+        auto &v_size = getVopRef(size);
+        auto v_dst = getVopValue(dst);
+        
+        glGetNamedBufferSubData(*id, v_offset, v_size, v_dst);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::copySubData(sptr<Buffer> dst, sptr<gl::IntPtr> read_offset, sptr<gl::IntPtr> write_offset, sptr<gl::SizeiPtr> size) const {
-    if constexpr (AUTOCLEAR) _clear(dst, read_offset, write_offset, size);
-    return _lockCtx()->onRun.push([id = idPtr(), dst_id = dst->idPtr(), read_offset, write_offset, size](){
-        glCopyNamedBufferSubData(*id, *dst_id, *read_offset, *write_offset, *size);
+std::shared_future<bool> Buffer::copySubData(Ptr<Buffer> dst, Vop<const gl::IntPtr> read_offset,
+                                             Vop<const gl::IntPtr> write_offset, Vop<const gl::SizeiPtr> size) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), dst, read_offset, write_offset, size](){
+        auto p_dst = getPtrValue(dst);
+        auto &v_read_offset = getVopRef(read_offset);
+        auto &v_write_offset = getVopRef(write_offset);
+        auto &v_size = getVopRef(size);
+
+        glCopyNamedBufferSubData(*id, p_dst->id(), v_read_offset, v_write_offset, v_size);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::getMapPointer(sptr<void*> dst) const {
-    if constexpr (AUTOCLEAR) _clear(dst);
-    return _lockCtx()->onRun.push([id = idPtr(), dst](){
-        glGetNamedBufferPointerv(*id, GL_BUFFER_MAP_POINTER, dst.get());
+std::shared_future<bool> Buffer::getMapPointer(Ptr<MapPtr> dst) const {
+    return _lockCtx()->onRun.push([id = _idPtr(), dst](){
+        auto p_dst = getPtrValue(dst); 
+
+        glGetNamedBufferPointerv(*id, GL_BUFFER_MAP_POINTER, p_dst);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::map(sptr<gl::BufferMapAccess> access, sptr<void*> dst){
-    if constexpr (AUTOCLEAR) _clear(access, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), access, dst](){
-        *dst = glMapNamedBuffer(*id, static_cast<gl::Enum>(*access));
+std::shared_future<bool> Buffer::map(Vop<const gl::BufferMapAccess> access, Ptr<MapPtr> dst){
+    return _lockCtx()->onRun.push([id = _idPtr(), access, dst](){
+        auto &v_access = getVopRef(access);
+        auto p_dst = getPtrValue(dst);
+
+        *p_dst = glMapNamedBuffer(*id, static_cast<gl::Enum>(v_access));
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::mapRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size, sptr<gl::BitField> access, sptr<void*> dst){
-    if constexpr (AUTOCLEAR) _clear(offset, size, access, dst);
-    return _lockCtx()->onRun.push([id = idPtr(), offset, size, access, dst](){
-        *dst = glMapNamedBufferRange(*id, *offset, *size, *access);
+std::shared_future<bool> Buffer::mapRange(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size,
+                                          Vop<const gl::BitField> access, Ptr<MapPtr> dst){
+    return _lockCtx()->onRun.push([id = _idPtr(), offset, size, access, dst](){
+        auto &v_offset = getVopRef(offset);
+        auto &v_size = getVopRef(size);
+        auto &v_access = getVopRef(access);
+        auto p_dst = getPtrValue(dst);
+
+        *p_dst = glMapNamedBufferRange(*id, v_offset, v_size, v_access);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
-std::shared_future<bool> Buffer::mapFlushRange(sptr<gl::IntPtr> offset, sptr<gl::SizeiPtr> size){
-    if constexpr (AUTOCLEAR) _clear(offset, size);
-    return _lockCtx()->onRun.push([id = idPtr(), offset, size](){
-        glFlushMappedBufferRange(*id, *offset, *size);
+std::shared_future<bool> Buffer::mapFlushRange(Vop<const gl::IntPtr> offset, Vop<const gl::SizeiPtr> size){
+    return _lockCtx()->onRun.push([id = _idPtr(), offset, size](){
+        auto &v_offset = getVopRef(offset);
+        auto &v_size = getVopRef(size);
+
+        glFlushMappedBufferRange(*id, v_offset, v_size);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
 
 std::shared_future<bool> Buffer::unmap(){
-    return _lockCtx()->onRun.push([id = idPtr()](){
+    return _lockCtx()->onRun.push([id = _idPtr()](){
         glUnmapNamedBuffer(*id);
+        if constexpr (DEBUG){
+            if (auto err = glGetError()){
+                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
+            }
+        }
     });
 }
