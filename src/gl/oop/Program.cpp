@@ -1,181 +1,72 @@
 #include "glwpp/gl/oop/Program.hpp"
 
-#include "glad/gl.h"
-
-#include <unordered_map>
+#include "glwpp/gl/object/CtxProgram.hpp"
 
 using namespace glwpp;
+using namespace glwpp::gl;
 
-namespace {
-    static std::mutex id2prog_lock;
-    static std::unordered_map<Context*, std::unordered_map<gl::UInt, Program*>> id2prog;
-
-    static void setMapProg (wptr<Context> ctx, gl::UInt id, Program *prog){
-        Context* raw_ctx = ctx.lock().get();
-
-        std::lock_guard lg(id2prog_lock);
-        auto map_iter = id2prog.find(raw_ctx);
-        if (map_iter == id2prog.end()){
-            auto [tmp_iter, success] = id2prog.insert({raw_ctx, {}});
-            map_iter = tmp_iter;
-        }
-        map_iter->second[id] = prog;
-    }
-
-    static void delMapProg(wptr<Context> ctx, gl::UInt id, Program* prog){
-        Context* raw_ctx = ctx.lock().get();
-
-        std::lock_guard lg(id2prog_lock);
-        auto map_iter = id2prog.find(raw_ctx);
-        if (map_iter == id2prog.end()){
-            auto [tmp_iter, success] = id2prog.insert({raw_ctx, {}});
-            map_iter = tmp_iter;
-        }
-        auto id_iter = map_iter->second.find(id);
-        if (id_iter == map_iter->second.end()){
-            return;
-        }
-        if (id_iter->second != prog){
-            return;
-        }
-        map_iter->second.erase(id_iter);
-    }
-
-    static Program* getMapProg(wptr<Context> ctx, gl::UInt id){
-        Context* raw_ctx = ctx.lock().get();
-        auto map_iter = id2prog.find(raw_ctx);
-        if (map_iter == id2prog.end()){
-            return nullptr;
-        }
-        auto id_iter = map_iter->second.find(id);
-        if (id_iter == map_iter->second.end()){
-            return nullptr;
-        }
-        return id_iter->second;
-    }
-    
-    static void GetActiveProgram(wptr<Context> ctx, Program** dst){
-        gl::Int prog_id;
-        glGetIntegerv(GL_CURRENT_PROGRAM, &prog_id);
-        *dst = getMapProg(ctx, prog_id);
-    }
-
-    static gl::UInt CreateProgram(wptr<Context> ctx, Program* prog){
-        gl::UInt id = glCreateProgram();
-        setMapProg(ctx, id, prog);
-        return id;
-    }
-    static void DeleteProgram(gl::UInt *id, wptr<Context> ctx, Program* prog){
-        glDeleteProgram(*id);
-        delMapProg(ctx, *id, prog);
-        delete id;
-    }
-    static auto getDeteler(wptr<Context> ctx, Program* prog){
-        return [ctx, prog](gl::UInt *id){
-            DeleteProgram(id, ctx, prog);
-        };
-    }
+Program::Program(wptr<Context> ctx, const SrcLoc& loc) :
+    Object(ctx, &make_sptr<gl::CtxProgram, const SrcLoc&>, Vop<SrcLoc>(loc)){
 }
 
-Program::Program(wptr<Context> ctx) :
-    ContextData(ctx, &CreateProgram, getDeteler(ctx, this), ctx, this){
+std::shared_future<bool> Program::isLinked(Ptr<bool> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::isLinked>(dst, loc);
 }
 
-Program::Program(const Program &&other) :
-    ContextData(std::move(other)){
-    setMapProg(ctx(), id(), this);
+std::shared_future<bool> Program::isValidated(Ptr<bool> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::isValidated>(dst, loc);
 }
 
-Program::~Program(){
+std::shared_future<bool> Program::getAttachedShadersCount(Ptr<gl::Int> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getAttachedShadersCount>(dst, loc);
 }
 
-std::shared_future<bool> Program::getActive(wptr<Context> ctx, Ptr<Program*> dst){
-    return _lockCtx(ctx)->onRun.push([ctx, dst](){
-        auto p_dst = getPtrValue(dst);
-        GetActiveProgram(ctx, p_dst);
-    });
+std::shared_future<bool> Program::getActiveAttributesCount(Ptr<gl::Int> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getActiveAttributesCount>(dst, loc);
 }
 
-std::shared_future<bool> Program::getParam_iv(Vop<const gl::ProgramParam> param, Ptr<gl::Int> dst) const {
-    return _lockCtx()->onRun.push([id = _idPtr(), param, dst](){
-        auto &v_param = getVopRef(param);
-        auto p_dst = getPtrValue(dst);
-
-        glGetProgramiv(*id, static_cast<gl::Enum>(v_param), p_dst);
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getActiveAttributeMaxNameLength(Ptr<gl::Int> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getActiveAttributeMaxNameLength>(dst, loc);
 }
 
-std::shared_future<bool> Program::getInfoLog(Ptr<std::string> dst) const {
-    return _lockCtx()->onRun.push([id = _idPtr(), dst](){
-        auto p_dst = getPtrValue(dst);
-
-        gl::Int success;
-        glGetProgramiv(*id, GL_LINK_STATUS, &success);
-        if (success == GL_FALSE){
-            gl::Int length;
-            glGetProgramiv(*id, GL_INFO_LOG_LENGTH, &length);
-            p_dst->resize(length);
-            glGetProgramInfoLog(*id, length, &length, p_dst->data());
-        }
-
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getActiveUniformsCount(Ptr<gl::Int> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getActiveUniformsCount>(dst, loc);
 }
 
-std::shared_future<bool> Program::attach(Ptr<const Shader> shader){
-    return _lockCtx()->onRun.push([id = _idPtr(), shader](){
-        auto p_shader = getPtrValue(shader);
-        glAttachShader(*id, p_shader->id());
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getActiveUniformMaxNameLength(Ptr<gl::Int> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getActiveUniformMaxNameLength>(dst, loc);
 }
 
-std::shared_future<bool> Program::link(){
-    return _lockCtx()->onRun.push([id = _idPtr()](){
-        glLinkProgram(*id);
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getInfoLog(Ptr<std::string> dst, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getInfoLog>(dst, loc);
 }
 
-std::shared_future<bool> Program::setActive() const {
-    return _lockCtx()->onRun.push([id = _idPtr()](){
-        std::cout << "Prog " << *id << std::endl;
-        glUseProgram(*id);
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getAttributeLocation(Ptr<gl::Int> dst, const Vop<std::string> name, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getAttributeLocation>(dst, name, loc);
 }
 
-std::shared_future<bool> Program::getAttribLoc(Vop<const std::string> attrib, Ptr<gl::Int> dst) const {
-    return _lockCtx()->onRun.push([id = _idPtr(), attrib, dst](){
-        auto &v_attrib = getVopRef(attrib);
-        auto p_dst = getPtrValue(dst);
-
-        *p_dst = glGetAttribLocation(*id, v_attrib.c_str());
-        if constexpr (DEBUG){
-            if (auto err = glGetError()){
-                std::cout << __FUNCTION__ << " Err: " << err << std::endl;
-            }
-        }
-    });
+std::shared_future<bool> Program::getUniformLocation(Ptr<gl::Int> dst, const Vop<std::string> name, const SrcLoc& loc) const {
+    return _getFromMethod<CtxProgram, &CtxProgram::getUniformLocation>(dst, name, loc);
 }
+
+std::shared_future<bool> Program::attach(const Vop<Shader> shader, const SrcLoc& loc){
+    static auto func = [](sptr<CtxProgram>* gl, const sptr<const CtxShader>* shader, const SrcLoc& loc){
+        auto raw_prog = gl->get();
+        auto raw_shader = shader->get();
+        raw_prog->attach(*raw_shader, loc);
+    };
+    return _execute(func, _getPtr<CtxProgram>(), getVopRef(shader)._getPtr<CtxShader>(), loc);
+}
+
+std::shared_future<bool> Program::link(const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::link>(loc);
+}
+
+std::shared_future<bool> Program::validate(const SrcLoc& loc) const {
+    return _callMethod<CtxProgram, &CtxProgram::validate>(loc);
+}
+
+std::shared_future<bool> Program::use(const SrcLoc& loc) const {
+    return _callMethod<CtxProgram, &CtxProgram::use>(loc);
+}
+

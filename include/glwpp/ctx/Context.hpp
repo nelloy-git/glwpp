@@ -27,6 +27,7 @@ public:
 
     bool start();
     void wait();
+    std::thread::id getThreadId() const;
 
     // gl thread
     Event<Context*, std::chrono::microseconds> onRun;
@@ -57,6 +58,7 @@ private:
     Parameters _params;
     uptr<glfw::Window> _glfw_window;
     std::atomic<bool> _valid;
+    std::thread::id _thread_id;
     std::chrono::steady_clock::time_point _last_start;
 
     void _initGlfwWindow();

@@ -67,7 +67,13 @@ void Context::wait(){
     _gl_thread->wait_for_tasks();
 }
 
+std::thread::id Context::getThreadId() const {
+    return _thread_id;
+}
+
 void Context::_initGlfwWindow(){
+    _thread_id = std::this_thread::get_id();
+
     std::vector<std::pair<int, int>> hints = {
         {GLFW_VERSION_MAJOR, _params.gl_major_ver},
         {GLFW_VERSION_MINOR, _params.gl_minor_ver},

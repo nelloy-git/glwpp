@@ -97,7 +97,8 @@
         "hash_map": "cpp",
         "hash_set": "cpp",
         "stack": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "execution": "cpp"
     },
     "cmake.configureOnOpen": false
 }

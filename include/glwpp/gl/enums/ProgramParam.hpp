@@ -13,7 +13,7 @@ enum class ProgramParam : gl::Enum {
     ActiveAttributes = 0x8B89,          // GL_ACTIVE_ATTRIBUTES params returns the number of active attribute variables for program.
     ActiveAttributeMaxLength = 0x8B8A,  // GL_ACTIVE_ATTRIBUTE_MAX_LENGTH params returns the length of the longest active attribute name for program, including the null termination character (i.e., the size of the character buffer required to store the longest attribute name). If no active attributes exist, 0 is returned.
     ActiveUniforms = 0x8B86,            // GL_ACTIVE_UNIFORMS params returns the number of active uniform variables for program.
-    ActiveUniformMaxLenfth = 0x8B87,    // GL_ACTIVE_UNIFORM_MAX_LENGTH params returns the length of the longest active uniform variable name for program, including the null termination character (i.e., the size of the character buffer required to store the longest uniform variable name). If no active uniform variables exist, 0 is returned.
+    ActiveUniformMaxLength = 0x8B87,    // GL_ACTIVE_UNIFORM_MAX_LENGTH params returns the length of the longest active uniform variable name for program, including the null termination character (i.e., the size of the character buffer required to store the longest uniform variable name). If no active uniform variables exist, 0 is returned.
 };
 
 }

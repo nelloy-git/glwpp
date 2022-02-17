@@ -15,6 +15,7 @@ enable_testing()
 add_subdirectory(./3rdparty/assimp)
 add_subdirectory(./3rdparty/glfw)
 add_subdirectory(./3rdparty/googletest)
+add_subdirectory(./3rdparty/freetype)
 add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
@@ -26,11 +27,13 @@ include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
 include_directories(./3rdparty/thread_pool)
 include_directories(./3rdparty/VLD/include)
+include_directories(./3rdparty/freetype/include)
 
 add_library (${PROJECT_NAME} STATIC
     ./3rdparty/glad/src/gl.c
 
     ./src/ctx/Context.cpp
+    ./src/ctx/FreeType/Font.cpp
     
     src/glfw/enums/Action.cpp
     src/glfw/enums/Button.cpp
@@ -38,6 +41,14 @@ add_library (${PROJECT_NAME} STATIC
     src/glfw/enums/Mod.cpp
     src/glfw/Window.cpp
 
+    src/gl/object/CtxObject.cpp
+    src/gl/object/CtxBuffer.cpp
+    src/gl/object/CtxProgram.cpp
+    src/gl/object/CtxShader.cpp
+    src/gl/object/CtxTexture.cpp
+    src/gl/object/CtxVertexArray.cpp
+
+    src/gl/oop/Object.cpp
     src/gl/oop/Buffer.cpp
     src/gl/oop/Program.cpp
     src/gl/oop/Shader.cpp
@@ -51,6 +62,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_link_libraries(${PROJECT_NAME}
     glfw
     assimp
+    freetype
 )
 
 set_property (TARGET ${PROJECT_NAME}
