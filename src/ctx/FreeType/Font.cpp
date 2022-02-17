@@ -84,11 +84,21 @@ void Font::_initTexture(){
     unsigned int sum_width = 0;
     unsigned int max_height = 0;
 
+    char_code = (size_t)('A');
     auto count = 0;
-    while (count < 5 && index != 0) {
+    while (count < 4 && index != 0) {
         count++;
         if (FT_Load_Char(_ft_face.get(), char_code, FT_LOAD_RENDER))
             throw std::runtime_error("Can not load FreeType char.");
+
+        unsigned char* p = _ft_face->glyph->bitmap.buffer;
+        for (int i = 0; i < _ft_face->glyph->bitmap.rows; ++i){
+            for (int j = 0; j < _ft_face->glyph->bitmap.width; ++j){
+                std::cout << (*p < 128 ? " " : "X");
+                ++p;
+            }
+            std::cout << std::endl;
+        }
 
         auto glyph = make_sptr<Glyph>();
         glyph->x = static_cast<int>(x);
@@ -120,7 +130,7 @@ void Font::_initTexture(){
 }
 
 void Font::_loadTexture(){
-    // FT_Render_Mode(FT_RENDER_MODE_SDF);
+    FT_Render_Mode(FT_RENDER_MODE_SDF);
 
     for (auto& p : _glyphs){
         if (FT_Load_Char(_ft_face.get(), p.first, FT_LOAD_RENDER))
@@ -130,6 +140,6 @@ void Font::_loadTexture(){
         auto bitmap = createTmpData(_ft_face->glyph->bitmap.buffer, glyph->width * glyph->height);
 
         _tex->setSubImage2D(0, glyph->x, glyph->y, glyph->width, glyph->height,
-                            gl::TexturePixelFormat::RED, gl::TexturePixelData::Byte, bitmap);
+                            gl::TexturePixelFormat::RED, gl::TexturePixelData::UByte, bitmap);
     }
 }

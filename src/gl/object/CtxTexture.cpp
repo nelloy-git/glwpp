@@ -117,6 +117,7 @@ void CtxTexture::setSubImage2D(const Int& level,
                                const Sizei& w, const Sizei& h,
                                const TexturePixelFormat& fmt, const TexturePixelData& type,
                                const Data data, const SrcLoc& loc){
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTextureSubImage2D(getId(), level, x, y, w, h, static_cast<Enum>(fmt), static_cast<Enum>(type), data);
     CtxObject::printDebug(loc);
 }

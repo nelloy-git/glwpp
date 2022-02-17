@@ -100,10 +100,10 @@ void loadProgram(std::shared_ptr<glwpp::Context> win){
 }
 
 static float rect_vert[] = {
-     0.5f,  0.5f, 1.0f, 1.0f,  // top right
-     0.5f, -0.5f, 1.0f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f, 1.0f   // top left 
+     0.5f,  0.5f, 1.0f, 0.0f,  // top right
+     0.5f, -0.5f, 1.0f, 1.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f, 1.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f, 0.0f   // top left 
 };
 static unsigned int rect_elem[] = {
     0, 1, 3,
@@ -151,7 +151,7 @@ int main(int argc, char **argv){
 
 
     auto vao = loadRect(win);
-    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 50);
+    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 30);
 
     glwpp::gl::UInt tex_unit = 0;
     font.getTex()->setUnit(tex_unit);
