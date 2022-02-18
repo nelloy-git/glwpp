@@ -58,7 +58,7 @@ void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
     win->onRun.push(frame_timer_func);
 }
 
-void loadProgram(std::shared_ptr<glwpp::Context> win){
+glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
     auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
     v_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.vs"));
     win->onRun.push([v_shader](){
@@ -97,20 +97,22 @@ void loadProgram(std::shared_ptr<glwpp::Context> win){
         }
     });
     prog.use();
+
+    return prog;
 }
 
-static float rect_vert[] = {
-     0.5f,  0.5f, 1.0f, 0.0f,  // top right
-     0.5f, -0.5f, 1.0f, 1.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, 1.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f, 0.0f   // top left 
-};
-static unsigned int rect_elem[] = {
-    0, 1, 3,
-    1, 2, 3
-};
-
 glwpp::VertexArray loadRect(std::shared_ptr<glwpp::Context> win){
+    static float rect_vert[] = {
+        0.5f,  0.5f, 1.0f, 1.0f,  // top right
+        0.5f, -0.5f, 1.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f, 1.0f   // top left 
+    };
+    static unsigned int rect_elem[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
     static glwpp::Buffer elements(win);
     elements.data((glwpp::gl::SizeiPtr)sizeof(rect_elem), rect_elem, glwpp::gl::BufferUsage::DynamicDraw);
     static glwpp::Buffer vertices(win);
@@ -134,6 +136,62 @@ glwpp::VertexArray loadRect(std::shared_ptr<glwpp::Context> win){
     return vao;
 }
 
+struct Glyph {
+    Glyph(const glwpp::wptr<glwpp::Context>& ctx) :
+        elems(ctx),
+        verts(ctx),
+        vao(ctx){
+    }
+    glwpp::Buffer elems;
+    glwpp::Buffer verts;
+    glwpp::VertexArray vao;
+};
+
+Glyph loadGlyph(glwpp::wptr<glwpp::Context> ctx, const glwpp::Font& font, size_t code){
+    Glyph glyph(ctx);
+    auto glyph_data = font.getGlyphInfo(code);
+
+    float w = (float)glyph_data->width / glyph_data->height;
+    float verts[] = {
+        w, 1, glyph_data->tex_x2, glyph_data->tex_y2,
+        w, 0, glyph_data->tex_x2, glyph_data->tex_y1,
+        0, 0, glyph_data->tex_x1, glyph_data->tex_y1,
+        0, 1, glyph_data->tex_x1, glyph_data->tex_y2,
+    };
+    auto v = glwpp::createTmpData(verts, sizeof(verts));
+
+    unsigned int elems[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+    auto e = glwpp::createTmpData(elems, sizeof(elems));
+    
+    glyph.elems.data((glwpp::gl::SizeiPtr)sizeof(elems), e, glwpp::gl::BufferUsage::DynamicDraw);
+    glyph.verts.data((glwpp::gl::SizeiPtr)sizeof(verts), v, glwpp::gl::BufferUsage::DynamicDraw);
+
+    glwpp::gl::UInt index = 0;
+    glwpp::gl::UInt relative_offset = 0;
+    glwpp::gl::UInt relative_offset_1 = 2 * sizeof(float);
+    glyph.vao.enableAttrib(index);
+    glyph.vao.setAttribBinding(index, index);
+    glyph.vao.setAttribFormat(index, 2, glwpp::gl::DataType::Float, false, relative_offset);
+    
+    glyph.vao.enableAttrib(index + 1);
+    glyph.vao.setAttribBinding(index + 1, index);
+    glyph.vao.setAttribFormat(index + 1, 2, glwpp::gl::DataType::Float, false, relative_offset_1);
+
+    glyph.vao.setElementBuffer(glyph.elems);
+    glyph.vao.setVertexBuffer(index, glyph.verts, 0, (glwpp::gl::Sizei)(4 * sizeof(float)));
+
+    return glyph;
+};
+
+void setProgUniform1F(glwpp::Program& prog, const std::string& name, const float& val){
+    auto loc = glwpp::make_sptr<glwpp::gl::Int>();
+    prog.getUniformLocation(loc, name);
+    prog.setUniform1F(loc, val);
+}
+
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
     ctx_params.gl_major_ver = 4;
@@ -147,35 +205,23 @@ int main(int argc, char **argv){
     auto win = std::make_shared<glwpp::Context>(ctx_params);
     pushKeyPrinter(win, &running);
     pushTimePrinter(win);
-    loadProgram(win);
+    auto prog = loadProgram(win);
 
+    // auto vao = loadRect(win);
+    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 100);
+    auto glyph = loadGlyph(win, font, (size_t)'G');
+    font.getTex()->setUnit((unsigned int)0);
 
-    auto vao = loadRect(win);
-    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 30);
-
-    glwpp::gl::UInt tex_unit = 0;
-    font.getTex()->setUnit(tex_unit);
-    std::cout << font.getTexWidth() << "x" << font.getTexHeight() << std::endl;
-
-    // glwpp::Buffer elements(win);
-    // elements.data((glwpp::gl::SizeiPtr)sizeof(rect_elem), rect_elem, glwpp::gl::BufferUsage::DynamicDraw);
-    // glwpp::Buffer vertices(win);
-    // vertices.data((glwpp::gl::SizeiPtr)sizeof(rect_vert), rect_vert, glwpp::gl::BufferUsage::DynamicDraw);
-
-    // glwpp::VertexArray vao(win);
-    // glwpp::gl::UInt index = 0;
-    // glwpp::gl::UInt relative_offset = 0;
-    // vao.enableAttrib(index);
-    // vao.setAttribBinding(index, index);
-    // vao.setAttribFormat(index, 2, glwpp::gl::DataType::Float, false, relative_offset);
-    // vao.setElementBuffer(elements);
-    // vao.setVertexBuffer(index, vertices, 0, (glwpp::gl::Sizei)(2 * sizeof(float)));
+    setProgUniform1F(prog, "offset_x", 0);
+    setProgUniform1F(prog, "offset_y", 0);
+    setProgUniform1F(prog, "scale_x", 0.25);
+    setProgUniform1F(prog, "scale_y", 0.25);
 
     std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
-    draw = [vao, &draw](glwpp::Context* win, std::chrono::microseconds time){
+    draw = [glyph, &draw](glwpp::Context* win, std::chrono::microseconds time){
         // glVertexAttribLPointer()
         glwpp::gl::UInt id;
-        vao.getId(&id);
+        glyph.vao.getId(&id);
 
         glBindVertexArray(id);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

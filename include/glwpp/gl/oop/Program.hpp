@@ -27,6 +27,21 @@ public:
     std::shared_future<bool> link(const SrcLoc& loc = SrcLoc::current());
     std::shared_future<bool> validate(const SrcLoc& loc = SrcLoc::current()) const;
     std::shared_future<bool> use(const SrcLoc& loc = SrcLoc::current()) const;
+
+    std::shared_future<bool> setUniform1F(const Vop<gl::Int> &unif_loc,
+                                          const Vop<gl::Float>& val0,
+                                          const SrcLoc& loc = SrcLoc::current());
+    std::shared_future<bool> setUniform2F(const Vop<gl::Int> &unif_loc,
+                                          const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                          const SrcLoc& loc = SrcLoc::current());
+    std::shared_future<bool> setUniform3F(const Vop<gl::Int> &unif_loc,
+                                          const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                          const Vop<gl::Float>& val2,
+                                          const SrcLoc& loc = SrcLoc::current());
+    std::shared_future<bool> setUniform4F(const Vop<gl::Int> &unif_loc,
+                                          const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                          const Vop<gl::Float>& val2, const Vop<gl::Float>& val3,
+                                          const SrcLoc& loc = SrcLoc::current());
 };
 
 } // namespace glwpp

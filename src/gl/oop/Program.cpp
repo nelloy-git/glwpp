@@ -70,3 +70,28 @@ std::shared_future<bool> Program::use(const SrcLoc& loc) const {
     return _callMethod<CtxProgram, &CtxProgram::use>(loc);
 }
 
+std::shared_future<bool> Program::setUniform1F(const Vop<gl::Int> &unif_loc,
+                                        const Vop<gl::Float>& val0,
+                                        const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::setUniform1F>(unif_loc, val0, loc);
+}
+
+std::shared_future<bool> Program::setUniform2F(const Vop<gl::Int> &unif_loc,
+                                        const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                        const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::setUniform2F>(unif_loc, val0, val1, loc);
+}
+
+std::shared_future<bool> Program::setUniform3F(const Vop<gl::Int> &unif_loc,
+                                        const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                        const Vop<gl::Float>& val2,
+                                        const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::setUniform3F>(unif_loc, val0, val1, val2, loc);
+}
+
+std::shared_future<bool> Program::setUniform4F(const Vop<gl::Int> &unif_loc,
+                                        const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+                                        const Vop<gl::Float>& val2, const Vop<gl::Float>& val3,
+                                        const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::setUniform4F>(unif_loc, val0, val1, val2, val3, loc);
+}

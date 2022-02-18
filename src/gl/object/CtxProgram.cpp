@@ -72,18 +72,6 @@ std::string CtxProgram::getInfoLog(const SrcLoc& loc) const {
     return log;
 }
 
-Int CtxProgram::getAttributeLocation(const std::string &name, const SrcLoc& loc) const {
-    auto res = glGetAttribLocation(getId(), name.c_str());
-    printDebug(loc);
-    return res;
-}
-
-Int CtxProgram::getUniformLocation(const std::string &name, const SrcLoc& loc) const {
-    auto res = glGetUniformLocation(getId(), name.c_str());
-    printDebug(loc);
-    return res;
-}
-
 void CtxProgram::attach(const CtxShader& shader, const SrcLoc& loc){
     glAttachShader(getId(), shader.getId());
     printDebug(loc);
@@ -101,5 +89,37 @@ void CtxProgram::validate(const SrcLoc& loc) const {
 
 void CtxProgram::use(const SrcLoc& loc) const {
     glUseProgram(getId());
+    printDebug(loc);
+}
+
+Int CtxProgram::getAttributeLocation(const std::string &name, const SrcLoc& loc) const {
+    auto res = glGetAttribLocation(getId(), name.c_str());
+    printDebug(loc);
+    return res;
+}
+
+Int CtxProgram::getUniformLocation(const std::string &name, const SrcLoc& loc) const {
+    auto res = glGetUniformLocation(getId(), name.c_str());
+    printDebug(loc);
+    return res;
+}
+
+void CtxProgram::setUniform1F(const Int& unif_loc, const float& val0, const SrcLoc& loc){
+    glProgramUniform1f(getId(), unif_loc, val0);
+    printDebug(loc);
+}
+
+void CtxProgram::setUniform2F(const Int& unif_loc, const float& val0, const float& val1, const SrcLoc& loc){
+    glProgramUniform2f(getId(), unif_loc, val0, val1);
+    printDebug(loc);
+}
+
+void CtxProgram::setUniform3F(const Int& unif_loc, const float& val0, const float& val1, const float& val2, const SrcLoc& loc){
+    glProgramUniform3f(getId(), unif_loc, val0, val1, val2);
+    printDebug(loc);
+}
+
+void CtxProgram::setUniform4F(const Int& unif_loc, const float& val0, const float& val1, const float& val2, const float& val3, const SrcLoc& loc){
+    glProgramUniform4f(getId(), unif_loc, val0, val1, val2, val3);
     printDebug(loc);
 }

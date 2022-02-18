@@ -63,7 +63,7 @@ int Font::getTexHeight() const {
 }
 
 
-sptr<const Glyph> Font::getGlyph(const size_t& code) const {
+sptr<const GlyphInfo> Font::getGlyphInfo(const size_t& code) const {
     auto iter = _glyphs.find(code);
     if (iter == _glyphs.end()){
         return nullptr;
@@ -84,23 +84,11 @@ void Font::_initTexture(){
     unsigned int sum_width = 0;
     unsigned int max_height = 0;
 
-    char_code = (size_t)('A');
-    auto count = 0;
-    while (count < 4 && index != 0) {
-        count++;
+    while (index != 0) {
         if (FT_Load_Char(_ft_face.get(), char_code, FT_LOAD_RENDER))
             throw std::runtime_error("Can not load FreeType char.");
 
-        unsigned char* p = _ft_face->glyph->bitmap.buffer;
-        for (int i = 0; i < _ft_face->glyph->bitmap.rows; ++i){
-            for (int j = 0; j < _ft_face->glyph->bitmap.width; ++j){
-                std::cout << (*p < 128 ? " " : "X");
-                ++p;
-            }
-            std::cout << std::endl;
-        }
-
-        auto glyph = make_sptr<Glyph>();
+        auto glyph = make_sptr<GlyphInfo>();
         glyph->x = static_cast<int>(x);
         glyph->y = static_cast<int>(y);
         glyph->width = static_cast<int>(_ft_face->glyph->bitmap.width);
@@ -137,7 +125,20 @@ void Font::_loadTexture(){
             throw std::runtime_error("Can not load FreeType char.");
 
         auto &glyph = p.second;
-        auto bitmap = createTmpData(_ft_face->glyph->bitmap.buffer, glyph->width * glyph->height);
+        glyph->tex_x1 = (float)glyph->x / _tex_w;
+        glyph->tex_y1 = (float)glyph->y / _tex_h;
+        glyph->tex_x2 = (float)(glyph->x + glyph->width) / _tex_w;
+        glyph->tex_y2 = (float)(glyph->y + glyph->height) / _tex_h;
+
+        auto buffer = _ft_face->glyph->bitmap.buffer;
+        auto bitmap = createTmpData(nullptr, glyph->width * glyph->height);
+
+        // Mirror Y to opengl coords
+        for (auto i = 0; i < glyph->height; ++i){
+            auto p_src = buffer + (glyph->height - 1 - i) * glyph->width;
+            auto p_dst = *(char**)bitmap.get() + i * glyph->width;
+            memcpy(p_dst, p_src, glyph->width);
+        }
 
         _tex->setSubImage2D(0, glyph->x, glyph->y, glyph->width, glyph->height,
                             gl::TexturePixelFormat::RED, gl::TexturePixelData::UByte, bitmap);

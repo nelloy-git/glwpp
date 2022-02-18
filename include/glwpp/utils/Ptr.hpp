@@ -90,8 +90,14 @@ static T getVopValue(const Vop<T> &vop){
 using VoidData = sptr<void>;
 
 static sptr<void*> createTmpData(const void* src, size_t size){
-    void* data = malloc(size);
-    memcpy(data, src, size);
+    void* data;
+
+    if (src != nullptr){
+        data = malloc(size);
+        memcpy(data, src, size);
+    } else {
+        data = calloc(size, sizeof(char));
+    }
 
     static auto deleter = [](void** ptr){
         delete *ptr;

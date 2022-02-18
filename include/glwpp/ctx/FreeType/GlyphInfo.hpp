@@ -2,13 +2,18 @@
 
 namespace glwpp {
 
-struct Glyph {
-    Glyph(){};
+struct GlyphInfo {
+    GlyphInfo(){};
 
-    // Position in texture
+    float tex_x1;
+    float tex_y1;
+    float tex_x2;
+    float tex_y2;
+
+    // Position in texture (pixels)
     int x;
     int y;
-    // Size in pixels
+    // Size in texture (pixels)
     int width;
     int height;
 
