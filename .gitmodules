@@ -7,6 +7,9 @@
 [submodule "3rdparty/thread_pool"]
 	path = 3rdparty/thread_pool
 	url = https://github.com/bshoshany/thread-pool.git
-[submodule ".\\3rdparty\\assimp"]
-	path = .\\3rdparty\\assimp
+[submodule "3rdparty/assimp"]
+	path = 3rdparty/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "3rdparty/freetype"]
+	path = 3rdparty/freetype
+	url = https://github.com/freetype/freetype.git
