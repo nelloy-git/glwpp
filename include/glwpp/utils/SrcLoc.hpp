@@ -23,6 +23,7 @@ public:
         _loc->column = column;
         _loc->function = function;
     }
+    SrcLoc(const SrcLoc& other) : _loc(other._loc){};
     inline auto file_name() const {return _loc->file;}
     inline auto line() const {return _loc->line;}
     inline auto function_name() const {return _loc->function;}
@@ -34,7 +35,7 @@ private:
         std::uint_least32_t column;
         char const* function;
     };
-    std::unique_ptr<Loc> _loc;
+    std::shared_ptr<Loc> _loc;
     
 #endif
 
