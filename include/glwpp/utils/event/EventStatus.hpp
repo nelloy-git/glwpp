@@ -2,7 +2,7 @@
 #include <deque>
 #include <functional>
 
-#include "glwpp/utils/Ptr.hpp"
+#include "glwpp/utils/Utils.hpp"
 
 namespace glwpp {
 

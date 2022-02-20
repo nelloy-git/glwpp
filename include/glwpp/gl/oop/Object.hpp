@@ -2,10 +2,10 @@
 
 #include <atomic>
 #include <iostream>
-#include <source_location>
 
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/gl/types.hpp"
+#include "glwpp/utils/Vop.hpp"
 #include "glwpp/utils/Ptr.hpp"
 
 namespace glwpp::gl {
@@ -16,11 +16,14 @@ namespace glwpp {
 
 class Object {
 public:
+    std::shared_future<bool> getId(Ptr<gl::UInt> dst) const;
+    wptr<Context> getContext() const;
+
+protected:
     template<class I, class ... Args>
     Object(const wptr<Context>& ctx, const I& init, const Vop<Args>&... args) :
         _ctx(ctx){
-        _gl = make_sptr<sptr<gl::CtxObject>>(nullptr);
-        _execute(Object::_init<I, Args...>, init, _gl, args...);
+        _execute(ctx, &Object::_init<I, Args...>, Ptr<gl::CtxObject>(_gl), Vop<I>(init), args...);
     };
     Object(const Object& other):
         _ctx(other._ctx),
@@ -28,37 +31,39 @@ public:
     }
     virtual ~Object() = 0;
 
-    std::shared_future<bool> getId(Ptr<gl::UInt> dst) const;
-    wptr<Context> getCtx() const;
-
-protected:
     template<class T>
-    Ptr<sptr<T>> _getPtr(){
-        return std::reinterpret_pointer_cast<sptr<T>>(_gl);
+    Ptr<T> _getPtr(){
+        return std::dynamic_pointer_cast<T>(_gl);
     };
 
     template<class T>
-    Ptr<const sptr<const T>> _getPtr() const {
-        return std::reinterpret_pointer_cast<const sptr<const T>>(_gl);
+    const Ptr<T> _getPtr() const {
+        return std::dynamic_pointer_cast<T>(_gl);
     };
-    
-    static sptr<Context> _lockCtx(const wptr<Context>& ctx);
-    sptr<Context> _lockCtx() const;
+
+    template<class T>
+    Vop<T> _getVop(){
+        return std::dynamic_pointer_cast<T>(_gl);
+    };
+
+    template<class T>
+    const Vop<T> _getVop() const {
+        return std::dynamic_pointer_cast<T>(_gl);
+    };
 
     template<class F, class ... Args>
-    std::shared_future<bool> _execute(const F& func, const Args&... args) const {
-        auto locked = _lockCtx();
-        auto packed = std::make_tuple(args...);
+    static std::shared_future<bool> _execute(wptr<Context> weak_ctx,
+                                             const F& func, const Args&... args){
+        auto ctx = weak_ctx.lock();
+        if (!ctx){
+            return _getFalseFuture();
+        }
 
-        if (std::this_thread::get_id() == locked->getThreadId()){
-            std::promise<bool> p;
-            auto f = p.get_future();
-            p.set_value(true);
-
-            std::apply(func, _unpackArgs(packed));
-            return f;
+        if (std::this_thread::get_id() == ctx->getThreadId()){
+            std::apply(func, _unpackArgs(std::make_tuple(args...)));
+            return _getTrueFuture();
         } else {
-            return locked->onRun.push([func, packed](){
+            return ctx->onRun.push([func, packed = std::make_tuple(args...)](){
                 std::apply(func, _unpackArgs(packed));
             });
         }
@@ -66,38 +71,34 @@ protected:
 
     template<class T, auto M, class R, class ... Args>
     std::shared_future<bool> _getFromMethod(Ptr<R> dst, const Args&... args){
-        static auto func = [](sptr<T>* gl, Ptr<R> dst, auto... args){
-            auto raw = gl->get();
-            *getPtrValue(dst) = (raw->*M)(args...);
+        static auto func = [](T* gl, R* dst, auto... args){
+            *dst = (gl->*M)(args...);
         };
-        return _execute(func, _getPtr<T>(), dst, args...);
+        return _execute(_ctx, func, _getPtr<T>(), dst, args...);
     }
 
     template<class T, auto M, class R, class ... Args>
     std::shared_future<bool> _getFromMethod(Ptr<R> dst, const Args&... args) const {
-        static auto func = [](const sptr<const T>* gl, Ptr<R> dst, auto... args){
-            auto raw = gl->get();
-            *getPtrValue(dst) = (raw->*M)(args...);
+        static auto func = [](const T* gl, R* dst, auto... args){
+            *dst = (gl->*M)(args...);
         };
-        return _execute(func, _getPtr<T>(), dst, args...);
+        return _execute(_ctx, func, _getPtr<T>(), dst, args...);
     }
 
     template<class T, auto M, class ... Args>
     std::shared_future<bool> _callMethod(const Args&... args){
-        static auto func = [](sptr<T>* gl, auto... args){
-            auto raw = gl->get();
-            (raw->*M)(args...);
+        static auto func = [](T* gl, auto... args){
+            (gl->*M)(args...);
         };
-        return _execute(func, _getPtr<T>(), args...);
+        return _execute(_ctx, func, _getPtr<T>(), args...);
     }
 
     template<class T, auto M, class ... Args>
     std::shared_future<bool> _callMethod(const Args&... args) const {
-        static auto func = [](const sptr<const T>* gl, auto... args){
-            auto raw = gl->get();
-            (raw->*M)(args...);
+        static auto func = [](const T* gl, auto... args){
+            (gl->*M)(args...);
         };
-        return _execute(func, _getPtr<T>(), args...);
+        return _execute(_ctx, func, _getPtr<T>(), args...);
     }
     
     template<class ... ArgsIn>
@@ -106,9 +107,9 @@ protected:
             using full_type = decltype(arg);
 
             if constexpr (is_vop<full_type>::value){
-                return getVopValue(arg);
+                return arg.getVal();
             } else if constexpr (is_ptr<full_type>::value){
-                return getPtrValue(arg);
+                return arg.getPtr();
             } else {
                 return arg;
             }
@@ -117,12 +118,26 @@ protected:
     }
 
 private:
-    sptr<sptr<gl::CtxObject>> _gl;
+    sptr<gl::CtxObject> _gl;
     wptr<Context> _ctx;
 
     template<class F, class ... Args>
-    static void _init(const F& init, sptr<sptr<gl::CtxObject>> dst, Args... args){
+    static void _init(gl::CtxObject* dst, const F& init, const Args&... args){
         *dst = init(args...);
+    }
+
+    static std::future<bool> _getTrueFuture(){
+        std::promise<bool> p;
+        auto f = p.get_future();
+        p.set_value(true);
+        return f;
+    }
+
+    static std::future<bool> _getFalseFuture(){
+        std::promise<bool> p;
+        auto f = p.get_future();
+        p.set_value(false);
+        return f;
     }
 };
 

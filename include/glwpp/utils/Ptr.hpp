@@ -1,109 +1,60 @@
 #pragma once
 
-#include <atomic>
 #include <memory>
-#include <mutex>
-#include <source_location>
 #include <variant>
 
 namespace glwpp {
-    
-using SrcLoc = std::source_location;
 
 template<class T>
-using sptr = std::shared_ptr<T>;
+class Ptr {
+    using Container = std::variant<T*, std::shared_ptr<T>>;
+public:
+    Ptr(T*&& data) : _data(new Container(data)){}
+    Ptr(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
+    Ptr(const Ptr& other) : _data(other._data){}
 
-template<class T>
-using wptr = std::weak_ptr<T>;
+    T& getVal(){
+        return _getVal(*_data);
+    }
 
-template<class T, class D = std::default_delete<T>>
-using uptr = std::unique_ptr<T, D>;
+    const T& getVal() const {
+        return _getVal(*_data);
+    }
 
-template<class T, class ... Args>
-inline sptr<T> make_sptr(Args&&... args){
-    return std::make_shared<T>(std::forward<Args>(args)...);
-}
+    T* getPtr(){
+        return _getPtr(*_data);
+    }
 
-// Pointer
-template<class T>
-using Ptr = std::variant<T*, sptr<T>>;
+    const T* const getPtr() const {
+        return _getPtr(*_data);
+    }
 
-template<typename>
+private:
+    std::shared_ptr<std::variant<T*, std::shared_ptr<T>>> _data;
+
+    static inline auto& _getVal(auto& data){
+        switch (data.index()){
+            case 0: return *std::get<0>(data);
+            case 1: return *std::get<1>(data);
+            default: throw std::runtime_error("Ptr internal error");;
+        }
+    }
+
+    static inline auto* _getPtr(auto& data){
+        switch (data.index()){
+            case 0: return std::get<0>(data);
+            case 1: return std::get<1>(data).get();
+            default: throw std::runtime_error("Ptr internal error");
+        }
+    }
+};
+
+template<class>
 struct is_ptr : std::false_type {};
 
-template<typename T>
+template<class T>
 struct is_ptr<Ptr<T>> : std::true_type {
     using type = T;
 };
-
-template<class T>
-static T* getPtrValue(const Ptr<T> &ptr){
-    switch (ptr.index()){
-        case 0: return std::get<T*>(ptr);
-        case 1: return std::get<sptr<T>>(ptr).get();
-        default: throw std::runtime_error("Is not Ptr.");
-    }
-}
-
-// Value or pointer
-template<class T>
-using Vop = std::variant<T, T*, sptr<T>>;
-
-template<typename>
-struct is_vop : std::false_type {};
-
-template<typename T>
-struct is_vop<Vop<T>> : std::true_type {
-    using type = T;
-};
-
-template<class T>
-static T& getVopRef(Vop<T> &vop){
-    switch (vop.index()){
-        case 0: return std::get<T>(vop);
-        case 1: return *std::get<T*>(vop);
-        case 2: return *std::get<sptr<T>>(vop);
-        default: throw std::runtime_error("Is not Vop.");
-    }
-}
-
-template<class T>
-static const T& getVopRef(const Vop<T> &vop){
-    switch (vop.index()){
-        case 0: return std::get<T>(vop);
-        case 1: return *std::get<T*>(vop);
-        case 2: return *std::get<sptr<T>>(vop);
-        default: throw std::runtime_error("Is not Vop.");
-    }
-}
-
-template<class T>
-static T getVopValue(const Vop<T> &vop){
-    switch (vop.index()){
-        case 0: return std::get<T>(vop);
-        case 1: return *std::get<T*>(vop);
-        case 2: return *std::get<sptr<T>>(vop);
-        default: throw std::runtime_error("Is not Vop.");
-    }
-}
-
-using VoidData = sptr<void>;
-
-static sptr<void*> createTmpData(const void* src, size_t size){
-    void* data;
-
-    if (src != nullptr){
-        data = malloc(size);
-        memcpy(data, src, size);
-    } else {
-        data = calloc(size, sizeof(char));
-    }
-
-    static auto deleter = [](void** ptr){
-        delete *ptr;
-        delete ptr;
-    };
-    return sptr<void*>(new void*(data), deleter);
-}
 
 }

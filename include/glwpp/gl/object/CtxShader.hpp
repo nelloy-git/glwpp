@@ -11,14 +11,16 @@ namespace glwpp::gl {
 
 class CtxShader : public CtxObject {
 public:
-    CtxShader(const ShaderType& type, const SrcLoc& loc = SrcLoc::current());
+    CtxShader(const ShaderType& type, const SrcLoc& loc = SrcLoc());
     
-    ShaderType getType(const SrcLoc& loc = SrcLoc::current()) const;
-    bool isCompiled(const SrcLoc& loc = SrcLoc::current()) const;
-    Int getSourceLength(const SrcLoc& loc = SrcLoc::current()) const;
-    std::string getInfoLog(const SrcLoc& loc = SrcLoc::current()) const;
+    Int getParamI(const Enum& param, const SrcLoc& loc = SrcLoc()) const;
+    ShaderType getType(const SrcLoc& loc = SrcLoc()) const;
+    bool isCompiled(const SrcLoc& loc = SrcLoc()) const;
 
-    void compile(const std::string& code, const SrcLoc& loc = SrcLoc::current());
+    Int getSourceLength(const SrcLoc& loc = SrcLoc()) const;
+    std::string getInfoLog(const SrcLoc& loc = SrcLoc()) const;
+
+    void compile(const std::string& code, const SrcLoc& loc = SrcLoc());
 };
 
 } // namespace glwpp::gl

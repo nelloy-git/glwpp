@@ -101,11 +101,3 @@ void Context::_initGlfwWindow(){
     _bindGlfwCallback<&glfw::Window::setKeyCallback>(onKey);
     _bindGlfwCallback<&glfw::Window::setCharCallback>(onChar);
 }
-
-// template<auto setter, class ... Args>
-// void _bindGlfwCallback(Event<Context*, Args...> &event){
-//     std::function<void(glfw::Window*, Args...)> func = [this, &event](glfw::Window*, Args... args){
-//         event.emit(this, args...);
-//     };
-//     (this->_glfw_window->*setter)(func);
-// }

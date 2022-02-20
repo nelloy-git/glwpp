@@ -5,8 +5,14 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
+namespace {
+    CtxShader InitShader(const ShaderType& type, const SrcLoc& loc){
+        return CtxShader(type, loc);
+    }
+}
+
 Shader::Shader(wptr<Context> ctx, const Vop<gl::ShaderType>& type, const SrcLoc& loc) :
-    Object(ctx, &make_sptr<gl::CtxShader, const ShaderType&, const SrcLoc&>, type, Vop<SrcLoc>(loc)){
+    Object(ctx, &InitShader, type, Vop<SrcLoc>(loc)){
 }
 
 std::shared_future<bool> Shader::getType(Ptr<ShaderType> dst, const SrcLoc& loc) const {

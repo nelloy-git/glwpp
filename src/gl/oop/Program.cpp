@@ -5,8 +5,14 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
+namespace {
+    CtxProgram InitProgram(const SrcLoc& loc){
+        return CtxProgram(loc);
+    }
+}
+
 Program::Program(wptr<Context> ctx, const SrcLoc& loc) :
-    Object(ctx, &make_sptr<gl::CtxProgram, const SrcLoc&>, Vop<SrcLoc>(loc)){
+    Object(ctx, &InitProgram, Vop<SrcLoc>(loc)){
 }
 
 std::shared_future<bool> Program::isLinked(Ptr<bool> dst, const SrcLoc& loc) const {
@@ -41,21 +47,16 @@ std::shared_future<bool> Program::getInfoLog(Ptr<std::string> dst, const SrcLoc&
     return _getFromMethod<CtxProgram, &CtxProgram::getInfoLog>(dst, loc);
 }
 
-std::shared_future<bool> Program::getAttributeLocation(Ptr<gl::Int> dst, const Vop<std::string> name, const SrcLoc& loc) const {
+std::shared_future<bool> Program::getAttributeLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc) const {
     return _getFromMethod<CtxProgram, &CtxProgram::getAttributeLocation>(dst, name, loc);
 }
 
-std::shared_future<bool> Program::getUniformLocation(Ptr<gl::Int> dst, const Vop<std::string> name, const SrcLoc& loc) const {
+std::shared_future<bool> Program::getUniformLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc) const {
     return _getFromMethod<CtxProgram, &CtxProgram::getUniformLocation>(dst, name, loc);
 }
 
-std::shared_future<bool> Program::attach(const Vop<Shader> shader, const SrcLoc& loc){
-    static auto func = [](sptr<CtxProgram>* gl, const sptr<const CtxShader>* shader, const SrcLoc& loc){
-        auto raw_prog = gl->get();
-        auto raw_shader = shader->get();
-        raw_prog->attach(*raw_shader, loc);
-    };
-    return _execute(func, _getPtr<CtxProgram>(), getVopRef(shader)._getPtr<CtxShader>(), loc);
+std::shared_future<bool> Program::attach(Shader& shader, const SrcLoc& loc){
+    return _callMethod<CtxProgram, &CtxProgram::attach>(shader._getVop<CtxShader>(), loc);
 }
 
 std::shared_future<bool> Program::link(const SrcLoc& loc){

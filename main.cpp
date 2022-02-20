@@ -131,7 +131,7 @@ glwpp::VertexArray loadRect(std::shared_ptr<glwpp::Context> win){
     vao.setAttribFormat(index + 1, 2, glwpp::gl::DataType::Float, false, relative_offset_1);
 
     vao.setElementBuffer(elements);
-    vao.setVertexBuffer(index, vertices, 0, (glwpp::gl::Sizei)(4 * sizeof(float)));
+    vao.setVertexBuffer(index, vertices, (glwpp::gl::IntPtr)0, (glwpp::gl::Sizei)(4 * sizeof(float)));
 
     return vao;
 }
@@ -181,7 +181,7 @@ Glyph loadGlyph(glwpp::wptr<glwpp::Context> ctx, const glwpp::Font& font, size_t
     glyph.vao.setAttribFormat(index + 1, 2, glwpp::gl::DataType::Float, false, relative_offset_1);
 
     glyph.vao.setElementBuffer(glyph.elems);
-    glyph.vao.setVertexBuffer(index, glyph.verts, 0, (glwpp::gl::Sizei)(4 * sizeof(float)));
+    glyph.vao.setVertexBuffer(index, glyph.verts, (glwpp::gl::IntPtr)0, (glwpp::gl::Sizei)(4 * sizeof(float)));
 
     return glyph;
 };
@@ -205,50 +205,49 @@ int main(int argc, char **argv){
     auto win = std::make_shared<glwpp::Context>(ctx_params);
     pushKeyPrinter(win, &running);
     pushTimePrinter(win);
-    auto prog = loadProgram(win);
+    // auto prog = loadProgram(win);
 
     // auto vao = loadRect(win);
-    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 100);
-    auto glyph = loadGlyph(win, font, (size_t)'G');
-    font.getTex()->setUnit((unsigned int)0);
+    // auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 100);
+    // auto glyph = loadGlyph(win, font, (size_t)'G');
+    // font.getTex()->setUnit((unsigned int)0);
 
-    setProgUniform1F(prog, "offset_x", 0);
-    setProgUniform1F(prog, "offset_y", 0);
-    setProgUniform1F(prog, "scale_x", 0.25);
-    setProgUniform1F(prog, "scale_y", 0.25);
+    // setProgUniform1F(prog, "offset_x", 0);
+    // setProgUniform1F(prog, "offset_y", 0);
+    // setProgUniform1F(prog, "scale_x", 0.25);
+    // setProgUniform1F(prog, "scale_y", 0.25);
 
-    std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
-    draw = [glyph, &draw](glwpp::Context* win, std::chrono::microseconds time){
-        // glVertexAttribLPointer()
-        glwpp::gl::UInt id;
-        glyph.vao.getId(&id);
+    // std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
+    // draw = [glyph, &draw](glwpp::Context* win, std::chrono::microseconds time){
+    //     glwpp::gl::UInt id;
+    //     glyph.vao.getId(&id);
 
-        glBindVertexArray(id);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //     glBindVertexArray(id);
+    //     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        glwpp::gl::Enum err = glGetError();
-        while (err != GL_NO_ERROR){
-            std::string err_name;
-            switch (err){
-                case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
-                case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
-                case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
-                case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
-                case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
-                case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
-                case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
-                case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
-                default: err_name = "UNKNOWN";
-            }
+    //     glwpp::gl::Enum err = glGetError();
+    //     while (err != GL_NO_ERROR){
+    //         std::string err_name;
+    //         switch (err){
+    //             case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
+    //             case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
+    //             case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
+    //             case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
+    //             case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
+    //             case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
+    //             case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
+    //             case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
+    //             default: err_name = "UNKNOWN";
+    //         }
 
-            std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
-            err = glGetError();
-        }
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    //         std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
+    //         err = glGetError();
+    //     }
+    //     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-        win->onRun.push(draw);
-    };
-    auto is_done_future = win->onRun.push(draw);
+    //     win->onRun.push(draw);
+    // };
+    // auto is_done_future = win->onRun.push(draw);
 
     while (running){
         win->start();

@@ -4,6 +4,37 @@
 
 namespace glwpp {
 
+template<class T>
+using sptr = std::shared_ptr<T>;
+
+template<class T>
+using wptr = std::weak_ptr<T>;
+
+template<class T, class D = std::default_delete<T>>
+using uptr = std::unique_ptr<T, D>;
+
+template<class T, class ... Args>
+inline sptr<T> make_sptr(Args&&... args){
+    return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+static sptr<void*> createTmpData(const void* src, size_t size){
+    void* data;
+
+    if (src != nullptr){
+        data = malloc(size);
+        memcpy(data, src, size);
+    } else {
+        data = calloc(size, sizeof(char));
+    }
+
+    static auto deleter = [](void** ptr){
+        delete *ptr;
+        delete ptr;
+    };
+    return sptr<void*>(new void*(data), deleter);
+}
+
 template<template<typename ...> class T, class ... OutArgs>
 inline decltype(auto) make_shared(OutArgs&& ... args){
     using Tmp = std::remove_pointer_t<decltype(new T(args...))>;
@@ -26,4 +57,4 @@ template<bool... b> constexpr bool var_and = (b && ...);
 template<class T, class... Any> constexpr bool is_same_any = (std::is_same_v<T, Any> || ...);
 template<class T, class... All> constexpr bool is_same_all = (std::is_same_v<T, All> && ...);
 
-}
+} // namespace glwpp

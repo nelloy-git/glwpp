@@ -11,7 +11,6 @@ namespace {
 static UInt* CreateProgram(const SrcLoc& loc){
     auto id = new UInt;
     *id = glCreateProgram();
-    CtxObject::printDebug(loc);
     return id;
 }
 static void DeleteProgram(gl::UInt *id, bool is_init_thread){
@@ -20,44 +19,46 @@ static void DeleteProgram(gl::UInt *id, bool is_init_thread){
     }
     delete id;
 }
-static Int GetParamI(UInt id, Enum param, const SrcLoc& loc){
-    Int dst;
-    glGetProgramiv(id, param, &dst);
-    CtxObject::printDebug(loc);
-    return dst;
-}
 }
 
 CtxProgram::CtxProgram(const SrcLoc& loc) :
     CtxObject(&CreateProgram, &DeleteProgram, loc){
+    _printDebug(loc);
+}
+
+Int CtxProgram::getParamI(const Enum& param, const SrcLoc& loc) const {
+    Int dst;
+    glGetProgramiv(getId(), param, &dst);
+    CtxObject::_printDebug(loc);
+    return dst;
 }
 
 bool CtxProgram::isLinked(const SrcLoc& loc) const {
-    return GL_TRUE == GetParamI(getId(), GL_LINK_STATUS, loc);
+    return GL_TRUE == getParamI(GL_LINK_STATUS, loc);
 }
 
 bool CtxProgram::isValidated(const SrcLoc& loc) const {
-    return GL_TRUE == GetParamI(getId(), GL_VALIDATE_STATUS, loc);
+    return GL_TRUE == getParamI(GL_VALIDATE_STATUS, loc);
 }
 
 Int CtxProgram::getAttachedShadersCount(const SrcLoc& loc) const {
-    return GetParamI(getId(), GL_ATTACHED_SHADERS, loc);
+    return getParamI(GL_ATTACHED_SHADERS, loc);
 }
 
 Int CtxProgram::getActiveAttributesCount(const SrcLoc& loc) const {
-    return GetParamI(getId(), GL_ACTIVE_ATTRIBUTES, loc);
+    return getParamI(GL_ACTIVE_ATTRIBUTES, loc);
 }
 
 Int CtxProgram::getActiveAttributeMaxNameLength(const SrcLoc& loc) const {
-    return GetParamI(getId(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, loc);
+    return getParamI(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, loc);
 }
 
 Int CtxProgram::getActiveUniformsCount(const SrcLoc& loc) const {
-    return GetParamI(getId(), GL_ACTIVE_UNIFORMS, loc);
+    return getParamI(GL_ACTIVE_UNIFORMS, loc);
 }
 
 Int CtxProgram::getActiveUniformMaxNameLength(const SrcLoc& loc) const {
-    return GetParamI(getId(), GL_ACTIVE_UNIFORM_MAX_LENGTH, loc);
+    return getParamI(GL_ACTIVE_UNIFORM_MAX_LENGTH, loc);
 }
 
 std::string CtxProgram::getInfoLog(const SrcLoc& loc) const {
@@ -67,59 +68,59 @@ std::string CtxProgram::getInfoLog(const SrcLoc& loc) const {
     std::string log;
     log.resize(length);
     glGetProgramInfoLog(getId(), length, &length, log.data());
-    printDebug(loc);
+    _printDebug(loc);
 
     return log;
 }
 
 void CtxProgram::attach(const CtxShader& shader, const SrcLoc& loc){
     glAttachShader(getId(), shader.getId());
-    printDebug(loc);
+    _printDebug(loc);
 }
 
 void CtxProgram::link(const SrcLoc& loc){
     glLinkProgram(getId());
-    printDebug(loc);
+    _printDebug(loc);
 }
 
 void CtxProgram::validate(const SrcLoc& loc) const {
     glValidateProgram(getId());
-    printDebug(loc);
+    _printDebug(loc);
 }
 
 void CtxProgram::use(const SrcLoc& loc) const {
     glUseProgram(getId());
-    printDebug(loc);
+    _printDebug(loc);
 }
 
 Int CtxProgram::getAttributeLocation(const std::string &name, const SrcLoc& loc) const {
     auto res = glGetAttribLocation(getId(), name.c_str());
-    printDebug(loc);
+    _printDebug(loc);
     return res;
 }
 
 Int CtxProgram::getUniformLocation(const std::string &name, const SrcLoc& loc) const {
     auto res = glGetUniformLocation(getId(), name.c_str());
-    printDebug(loc);
+    _printDebug(loc);
     return res;
 }
 
-void CtxProgram::setUniform1F(const Int& unif_loc, const float& val0, const SrcLoc& loc){
+void CtxProgram::setUniform1F(const Int& unif_loc, const Float& val0, const SrcLoc& loc){
     glProgramUniform1f(getId(), unif_loc, val0);
-    printDebug(loc);
+    _printDebug(loc);
 }
 
-void CtxProgram::setUniform2F(const Int& unif_loc, const float& val0, const float& val1, const SrcLoc& loc){
+void CtxProgram::setUniform2F(const Int& unif_loc, const Float& val0, const Float& val1, const SrcLoc& loc){
     glProgramUniform2f(getId(), unif_loc, val0, val1);
-    printDebug(loc);
+    _printDebug(loc);
 }
 
-void CtxProgram::setUniform3F(const Int& unif_loc, const float& val0, const float& val1, const float& val2, const SrcLoc& loc){
+void CtxProgram::setUniform3F(const Int& unif_loc, const Float& val0, const Float& val1, const Float& val2, const SrcLoc& loc){
     glProgramUniform3f(getId(), unif_loc, val0, val1, val2);
-    printDebug(loc);
+    _printDebug(loc);
 }
 
-void CtxProgram::setUniform4F(const Int& unif_loc, const float& val0, const float& val1, const float& val2, const float& val3, const SrcLoc& loc){
+void CtxProgram::setUniform4F(const Int& unif_loc, const Float& val0, const Float& val1, const Float& val2, const Float& val3, const SrcLoc& loc){
     glProgramUniform4f(getId(), unif_loc, val0, val1, val2, val3);
-    printDebug(loc);
+    _printDebug(loc);
 }

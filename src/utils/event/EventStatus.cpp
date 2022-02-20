@@ -1,5 +1,7 @@
 #include "glwpp/utils/event/EventStatus.hpp"
 
+#include <thread>
+
 using namespace glwpp;
 
 namespace {
