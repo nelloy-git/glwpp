@@ -19,6 +19,10 @@ static void DeleteTexture(UInt *id, bool is_init_thread){
     }
     delete id;
 }
+};
+
+CtxTexture::CtxTexture(const Dummy&) :
+    CtxObject(Dummy{}){
 }
 
 CtxTexture::CtxTexture(const TextureType& type, const SrcLoc& loc) :

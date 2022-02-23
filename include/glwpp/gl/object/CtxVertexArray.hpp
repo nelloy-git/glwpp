@@ -11,6 +11,8 @@ namespace glwpp::gl {
 
 class CtxVertexArray : public CtxObject {
 public:
+    // Dummy object. Can be used for preallocation.
+    CtxVertexArray(const Dummy&);
     CtxVertexArray(const SrcLoc& loc = SrcLoc());
     
     Int getAttribParamI(const UInt& index, const Enum& param, const SrcLoc& loc = SrcLoc()) const;

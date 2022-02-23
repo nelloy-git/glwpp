@@ -16,19 +16,17 @@ namespace glwpp {
 
 class Object {
 public:
-    std::shared_future<bool> getId(Ptr<gl::UInt> dst) const;
+    void getId(Ptr<gl::UInt> dst) const;
     wptr<Context> getContext() const;
 
 protected:
     template<class I, class ... Args>
     Object(const wptr<Context>& ctx, const I& init, const Vop<Args>&... args) :
         _ctx(ctx){
-        _execute(ctx, &Object::_init<I, Args...>, Ptr<gl::CtxObject>(_gl), Vop<I>(init), args...);
+        using T = std::invoke_result_t<I, Args...>;
+        _gl = make_sptr<T>(Dummy{});
+        _execute<&Object::_init<I, Args...>>(ctx, Ptr<gl::CtxObject>(_gl), Vop<I>(init), args...);
     };
-    Object(const Object& other):
-        _ctx(other._ctx),
-        _gl(other._gl){
-    }
     virtual ~Object() = 0;
 
     template<class T>
@@ -51,54 +49,51 @@ protected:
         return std::dynamic_pointer_cast<T>(_gl);
     };
 
-    template<class F, class ... Args>
-    static std::shared_future<bool> _execute(wptr<Context> weak_ctx,
-                                             const F& func, const Args&... args){
+    template<auto F, class ... Args>
+    static inline bool _execute(wptr<Context> weak_ctx, const Args&... args){
         auto ctx = weak_ctx.lock();
-        if (!ctx){
-            return _getFalseFuture();
-        }
+        if (!ctx) return false;
 
-        if (std::this_thread::get_id() == ctx->getThreadId()){
-            std::apply(func, _unpackArgs(std::make_tuple(args...)));
-            return _getTrueFuture();
+        if (ctx->getThreadId() == std::this_thread::get_id()){
+            std::apply(F, _unpackArgs(std::make_tuple(args...)));
         } else {
-            return ctx->onRun.push([func, packed = std::make_tuple(args...)](){
-                std::apply(func, _unpackArgs(packed));
+            ctx->onRun.push([packed = std::make_tuple(args...)](){
+                std::apply(F, _unpackArgs(packed));
             });
         }
-    }
-
-    template<class T, auto M, class R, class ... Args>
-    std::shared_future<bool> _getFromMethod(Ptr<R> dst, const Args&... args){
-        static auto func = [](T* gl, R* dst, auto... args){
-            *dst = (gl->*M)(args...);
-        };
-        return _execute(_ctx, func, _getPtr<T>(), dst, args...);
-    }
-
-    template<class T, auto M, class R, class ... Args>
-    std::shared_future<bool> _getFromMethod(Ptr<R> dst, const Args&... args) const {
-        static auto func = [](const T* gl, R* dst, auto... args){
-            *dst = (gl->*M)(args...);
-        };
-        return _execute(_ctx, func, _getPtr<T>(), dst, args...);
+        return true;
     }
 
     template<class T, auto M, class ... Args>
-    std::shared_future<bool> _callMethod(const Args&... args){
-        static auto func = [](T* gl, auto... args){
-            (gl->*M)(args...);
+    inline bool _executeMethod(const Args&... args){
+        static constexpr auto F = [](T* instance, auto&&... args){
+            (instance->*M)(args...);
         };
-        return _execute(_ctx, func, _getPtr<T>(), args...);
+        return _execute<F>(_ctx, _getPtr<T>(), args...);
     }
 
     template<class T, auto M, class ... Args>
-    std::shared_future<bool> _callMethod(const Args&... args) const {
-        static auto func = [](const T* gl, auto... args){
-            (gl->*M)(args...);
+    inline bool _executeMethod(const Args&... args) const {
+        static constexpr auto F = [](const T* instance, auto&&... args){
+            (instance->*M)(args...);
         };
-        return _execute(_ctx, func, _getPtr<T>(), args...);
+        return _execute<F>(_ctx, _getPtr<T>(), args...);
+    }
+
+    template<class T, auto M, class R, class ... Args>
+    inline bool _executeGetter(Ptr<R>& dst, const Args&... args){
+        static constexpr auto F = []<class ... ArgsM>(T* instance, R* dst, ArgsM&& ... args){
+            *dst = (instance->*M)(std::forward<ArgsM>(args)...);
+        };
+        return _execute<F>(_ctx, _getPtr<T>(), dst, args...);
+    }
+
+    template<class T, auto M, class R, class ... Args>
+    inline bool _executeGetter(Ptr<R>& dst, const Args&... args) const {
+        static constexpr auto F = []<class ... ArgsM>(const T* instance, R* dst, ArgsM&& ... args){
+            *dst = (instance->*M)(std::forward<ArgsM>(args)...);
+        };
+        return _execute<F>(_ctx, _getPtr<T>(), dst, args...);
     }
     
     template<class ... ArgsIn>
@@ -114,7 +109,7 @@ protected:
                 return arg;
             }
         };
-        return std::apply([](auto... x){return std::make_tuple(f(x)...);} , args);
+        return std::apply([](auto... args){return std::make_tuple(f(args)...);} , args);
     }
 
 private:
@@ -125,28 +120,13 @@ private:
     static void _init(gl::CtxObject* dst, const F& init, const Args&... args){
         *dst = init(args...);
     }
-
-    static std::future<bool> _getTrueFuture(){
-        std::promise<bool> p;
-        auto f = p.get_future();
-        p.set_value(true);
-        return f;
-    }
-
-    static std::future<bool> _getFalseFuture(){
-        std::promise<bool> p;
-        auto f = p.get_future();
-        p.set_value(false);
-        return f;
-    }
 };
 
 inline Object::~Object(){
     auto locked_ctx = _ctx.lock();
-    if (locked_ctx && std::this_thread::get_id() != locked_ctx->getThreadId() && _gl.use_count() <= 1){
-        auto gl = _gl;
-        _gl.reset();
-        locked_ctx->onRun.push([gl](){});
+
+    if (locked_ctx && locked_ctx->getThreadId() != std::this_thread::get_id()){
+        locked_ctx->onRun.push([gl = std::move(_gl)](){});
     }
 };
 

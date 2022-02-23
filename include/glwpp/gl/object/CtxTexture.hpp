@@ -13,6 +13,8 @@ namespace glwpp::gl {
 
 class CtxTexture : public CtxObject {
 public:
+    // Dummy object. Can be used for preallocation.
+    CtxTexture(const Dummy&);
     CtxTexture(const TextureType& type, const SrcLoc& loc = SrcLoc());
     
     void buffer(const TextureFormat& fmt, const CtxBuffer& buffer, const SrcLoc& loc = SrcLoc());

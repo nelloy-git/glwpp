@@ -6,7 +6,7 @@
 
 using namespace glwpp::gl;
 
-UInt CtxObject::getId() const {
+const UInt& CtxObject::getId() const {
     return *_id;
 }
 

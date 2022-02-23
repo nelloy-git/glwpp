@@ -13,14 +13,14 @@ namespace glwpp {
 class Shader : public Object {
     friend class Program;
 public:
-    Shader(wptr<Context> ctx, const Vop<gl::ShaderType>& type, const SrcLoc& loc = SrcLoc());
+    Shader(const std::weak_ptr<Context>& weak_ctx, const Vop<gl::ShaderType>& type, const SrcLoc& loc = SrcLoc());
 
-    std::shared_future<bool> getType(Ptr<gl::ShaderType> dst, const SrcLoc& loc = SrcLoc()) const;
-    std::shared_future<bool> isCompiled(Ptr<bool> dst, const SrcLoc& loc = SrcLoc()) const;
-    std::shared_future<bool> getSourceLength(Ptr<gl::Int> dst, const SrcLoc& loc = SrcLoc()) const;
-    std::shared_future<bool> getInfoLog(Ptr<std::string> dst, const SrcLoc& loc = SrcLoc()) const;
+    bool getType(Ptr<gl::ShaderType> dst, const SrcLoc& loc = SrcLoc()) const;
+    bool isCompiled(Ptr<bool> dst, const SrcLoc& loc = SrcLoc()) const;
+    bool getSourceLength(Ptr<gl::Int> dst, const SrcLoc& loc = SrcLoc()) const;
+    bool getInfoLog(Ptr<std::string> dst, const SrcLoc& loc = SrcLoc()) const;
 
-    std::shared_future<bool> compile(const Vop<std::string>& code, const SrcLoc& loc = SrcLoc());
+    bool compile(const Vop<std::string>& code, const SrcLoc& loc = SrcLoc());
 };
 
 } // namespace glwpp

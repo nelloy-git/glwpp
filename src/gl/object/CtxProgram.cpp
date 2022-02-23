@@ -21,6 +21,10 @@ static void DeleteProgram(gl::UInt *id, bool is_init_thread){
 }
 }
 
+CtxProgram::CtxProgram(const Dummy&) :
+    CtxObject(Dummy{}){
+}
+
 CtxProgram::CtxProgram(const SrcLoc& loc) :
     CtxObject(&CreateProgram, &DeleteProgram, loc){
     _printDebug(loc);

@@ -30,10 +30,9 @@ include_directories(./3rdparty/VLD/include)
 include_directories(./3rdparty/freetype/include)
 
 add_library (${PROJECT_NAME} STATIC
-    ./3rdparty/glad/src/gl.c
+    3rdparty/glad/src/gl.c
 
-    ./src/ctx/Context.cpp
-    ./src/ctx/FreeType/Font.cpp
+    src/ctx/Context.cpp
     
     src/glfw/enums/Action.cpp
     src/glfw/enums/Button.cpp
@@ -54,6 +53,8 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/oop/Shader.cpp
     src/gl/oop/Texture.cpp
     src/gl/oop/VertexArray.cpp
+
+    src/ctx/FreeType/Font.cpp
 
     src/utils/event/EventStatus.cpp
 )

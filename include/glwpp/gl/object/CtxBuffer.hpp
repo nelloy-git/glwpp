@@ -9,7 +9,9 @@ namespace glwpp::gl {
 
 class CtxBuffer : public CtxObject {
 public:
-    CtxBuffer(const SrcLoc& loc = SrcLoc());
+    // Dummy object. Can be used for preallocation.
+    CtxBuffer(const Dummy&);
+    CtxBuffer(const SrcLoc& loc);
 
     using Data = void*;
 

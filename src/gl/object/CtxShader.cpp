@@ -19,6 +19,10 @@ static void DeleteShader(UInt *id, bool is_init_thread){
 }
 }
 
+CtxShader::CtxShader(const Dummy&) :
+    CtxObject(Dummy{}){
+}
+
 CtxShader::CtxShader(const gl::ShaderType& type, const SrcLoc& loc) : 
     CtxObject(&CreateShader, &DeleteShader, type, loc){
     _printDebug(loc);

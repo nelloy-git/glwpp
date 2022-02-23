@@ -21,6 +21,10 @@ static void DeleteBufferId(gl::UInt* id, bool is_init_thread){
 };
 };
 
+CtxBuffer::CtxBuffer(const Dummy&) :
+    CtxObject(Dummy{}){
+}
+
 CtxBuffer::CtxBuffer(const SrcLoc& loc) :
     CtxObject(&CreateBufferId, &DeleteBufferId, loc){
     _printDebug(loc);

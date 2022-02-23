@@ -19,6 +19,10 @@ static void DeleteVertexArray(gl::UInt *id, bool is_init_thread){
 }
 };
 
+CtxVertexArray::CtxVertexArray(const Dummy&) :
+    CtxObject(Dummy{}){
+}
+
 CtxVertexArray::CtxVertexArray(const SrcLoc& loc) : 
     CtxObject(&CreateVertexArray, &DeleteVertexArray, loc){
     CtxObject::_printDebug(loc);

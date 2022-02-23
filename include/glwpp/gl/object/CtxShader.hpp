@@ -11,6 +11,8 @@ namespace glwpp::gl {
 
 class CtxShader : public CtxObject {
 public:
+    // Dummy object. Can be used for preallocation.
+    CtxShader(const Dummy&);
     CtxShader(const ShaderType& type, const SrcLoc& loc = SrcLoc());
     
     Int getParamI(const Enum& param, const SrcLoc& loc = SrcLoc()) const;

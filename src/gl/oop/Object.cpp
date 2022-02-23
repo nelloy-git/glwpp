@@ -4,8 +4,8 @@
 
 using namespace glwpp;
 
-std::shared_future<bool> Object::getId(Ptr<gl::UInt> dst) const {
-    return _getFromMethod<gl::CtxObject, &gl::CtxObject::getId>(dst);
+void Object::getId(Ptr<gl::UInt> dst) const {
+    _executeGetter<gl::CtxObject, &gl::CtxObject::getId>(dst);
 }
 
 wptr<Context> Object::getContext() const {

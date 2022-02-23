@@ -18,6 +18,13 @@ inline sptr<T> make_sptr(Args&&... args){
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
+template<class T, class ... Args>
+inline uptr<T> make_uptr(Args&&... args){
+    return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
+struct Dummy {};
+
 static sptr<void*> createTmpData(const void* src, size_t size){
     void* data;
 

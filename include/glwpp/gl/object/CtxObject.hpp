@@ -11,6 +11,9 @@ namespace glwpp::gl {
 
 class CtxObject {
 public:
+    // Dummy object. Can be used for preallocation.
+    CtxObject(const Dummy&){_id = make_sptr<UInt>(0);}
+
     // N: gl::UInt* (ArgsN...) - initialization of gl object.
     // D: void (gl::UInt *id, bool is_init_thread) - deletion of gl object. In case of init thread is removed is_init_thread == false
     // ArgsN - initialization arguments
@@ -20,7 +23,7 @@ public:
     };
     virtual ~CtxObject() = 0;
 
-    UInt getId() const;
+    const UInt& getId() const;
 
 protected:
     static void _printDebug(const SrcLoc& loc);
@@ -31,7 +34,7 @@ private:
     template<class D>
     auto _getDeleter(const D& del){
         return [thread_id = std::this_thread::get_id(), del](gl::UInt *id){
-            del(id, std::this_thread::get_id() == thread_id);
+            del(id, thread_id == std::this_thread::get_id());
         };
     }
 };

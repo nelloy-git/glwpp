@@ -9,6 +9,8 @@ namespace glwpp::gl {
 
 class CtxProgram : public CtxObject {
 public:
+    // Dummy object. Can be used for preallocation.
+    CtxProgram(const Dummy&);
     CtxProgram(const SrcLoc& loc = SrcLoc());
 
     Int getParamI(const Enum& param, const SrcLoc& loc = SrcLoc()) const;

@@ -6,118 +6,141 @@
 #include <mutex>
 
 #include "glwpp/utils/FuncWrapper.hpp"
-#include "glwpp/utils/event/EventStatus.hpp"
+#include "glwpp/utils/SrcLoc.hpp"
 #include "glwpp/utils/event/EventThreadPool.hpp"
 
 namespace glwpp {
 
 template<class ... Args>
 class Event final {
+    using Action = std::function<void(Args...)>;
+    using Condition = std::function<bool(Args...)>;
+    using ActionData = std::tuple<sptr<Condition>, sptr<Action>, sptr<SrcLoc>>;
 
-    template <typename T>
-    struct Signature;
-
-    template <typename R, typename... Args>
-    struct Signature<std::function<R(Args...)>> {
-        using type = R(Args...);
-    };
-    
 public:
-    Event(sptr<thread_pool> th_pool = EventThreadPool::get()) :
-        _pool(th_pool),
-        _valid(true){
-        _todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
-        _checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
+    Event(const sptr<thread_pool>& th_pool = EventThreadPool::get()) :
+        _pool(th_pool){
+        _list = make_sptr<std::deque<ActionData>>();
     }
-    Event(Event&) = delete;
-    Event(Event&&) = delete;
     Event(const Event&) = delete;
     Event(const Event&&) = delete;
 
-    ~Event(){
-        _valid = false;
-        std::lock_guard lg(_lock);
-        auto todo_list = _todo_list;
-        auto checker_list = _checker_list;
+    ~Event(){}
 
-        _todo_list.reset();
-        _checker_list.reset();
-
-        _pool->push_task([todo_list, checker_list](){});
-    }
-
-    template<class F>
-    auto push(const F& callback){
-        using S = Signature<decltype(std::function{callback})>;
-        return _push(callback, S{});
-    }
-
-    EventStatus emit(const Args&... args){
-        std::lock_guard lg(_lock);
-        if (!_valid) return EventStatus(false);
-
-        auto todo_list = make_sptr<std::deque<std::function<void(Args...)>>>();
-        auto checker_list = make_sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>>();
-
-        todo_list.swap(_todo_list);
-        checker_list.swap(_checker_list);
-
-        while (!todo_list->empty()){
-            _pool->push_task(todo_list->front(), args...);
-            todo_list->pop_front();
+    // Both action and condition are constexpr
+    template<auto F, auto C = nullptr>
+    void push(const SrcLoc& loc = SrcLoc()){
+        static constexpr auto expanded_condition = _expandCondition<C>();
+        static constexpr auto expanded_action = expand_func<F, Args...>();
+        
+        sptr<Condition> condition;
+        if constexpr (C != nullptr){
+            condition = make_sptr<Condition>(expanded_condition);
         }
+        auto action = make_sptr<Action>(expanded_action);
+        auto ploc = make_sptr<SrcLoc>(loc);
 
-        return EventStatus(checker_list);
+        _push(condition, action, ploc);
+    }
+
+    // Condition is constexpr, emit once by default
+    template<auto C = nullptr, class F>
+    void push(const F& event_action, const SrcLoc& loc = SrcLoc()){
+        static constexpr auto expanded_condition = _expandCondition<C>();
+        auto expanded_action = expand_func<Args...>(event_action);
+        
+        sptr<Condition> condition;
+        if constexpr (C != nullptr){
+            condition = make_sptr<Condition>(expanded_condition);
+        }
+        auto action = make_sptr<Action>(expanded_action);
+        auto ploc = make_sptr<SrcLoc>(loc);
+
+        _push(condition, action, ploc);
+    }
+
+    // Anything is runtime
+    template<class F, class C>
+    void push(const F& event_action, const C& alive_condition, const SrcLoc& loc = SrcLoc()){
+        auto expanded_condition = expand_func<Args...>(alive_condition);
+        auto expanded_action = expand_func<Args...>(event_action);
+
+        auto condition = make_sptr<Condition>(expanded_condition);
+        auto action = make_sptr<Action>(expanded_action);
+        auto ploc = make_sptr<SrcLoc>(loc);
+
+        _push(condition, action, ploc);
+    }
+
+    std::future<bool> emit(const Args&... args){
+        auto divided = _divideList(args...);
+        return _pool->submit([divided](const Args&... args){
+            for (auto& data : *divided.to_do){
+                (*std::get<1>(data))(args...);
+            }
+        }, args...);
     }
 
     size_t size(){
-        return _todo_list->size();
+        std::lock_guard lg(_lock);
+        return _list->size();
     }
 
 private:
     sptr<thread_pool> _pool;
 
-    std::atomic<bool> _valid;
     std::mutex _lock;
-    sptr<std::deque<std::function<void(Args...)>>> _todo_list;
-    sptr<std::deque<std::function<bool(const std::chrono::microseconds&)>>> _checker_list;
-    
-    template<class R>
-    std::function<bool(const std::chrono::microseconds&)> _getChecker(const std::shared_future<R> &future){
-        return [future](const std::chrono::microseconds &time){
-            return future.wait_for(time) == std::future_status::ready;
-        };
+    sptr<std::deque<ActionData>> _list;
+
+    void _push(const sptr<std::function<bool(Args...)>>& condition,
+               const sptr<std::function<void(Args...)>>& action,
+               const sptr<SrcLoc>& loc){
+        std::lock_guard lg(_lock);
+        _list->push_back(std::make_tuple(condition, action, loc));
+    }
+
+    struct DividedList {
+        sptr<std::deque<ActionData>> to_do;
+        sptr<std::deque<ActionData>> to_clear;
     };
-    
 
-    template<class F, class R, class ... FArgs, class FR = std::conditional_t<(std::is_void_v<R>), bool, R>>
-    inline std::shared_future<FR> _push(const F& callback, Signature<std::function<R(FArgs...)>> signature){
-        auto promise = make_sptr<std::promise<FR>>();
-        std::shared_future<FR> future = promise->get_future();
-
-        auto cb = [promise, func = func_wrap<Args...>(std::function(callback))](const Args&... args){
-            try {
-                if constexpr (std::is_same_v<R, void>){
-                    func(args...);
-                    promise->set_value(true);
-                } else {
-                    promise->set_value(func(args...));
-                }
-                
-            } catch (...) {
-                try {
-                    promise->set_exception(std::current_exception());
-                } catch (...) {
-                }
-            }
-        };
-        auto checker = _getChecker(future);
+    DividedList _divideList(const Args&... args){
+        DividedList divided;
+        divided.to_do = make_sptr<std::deque<ActionData>>();
+        divided.to_clear = make_sptr<std::deque<ActionData>>();
 
         std::lock_guard lg(_lock);
-        _todo_list->push_back(cb);
-        _checker_list->push_back(checker);
-        
-        return future;
+        auto iter = _list->begin();
+        while(iter != _list->end()){
+            auto &data = *iter;
+            auto cond = std::get<0>(data);
+            // No condition => execute once
+            if (!cond){
+                divided.to_do->push_back(*iter);
+                iter = _list->erase(iter);
+                continue;
+            } else {
+                bool alive = (*cond)(args...);
+                if (alive){
+                    divided.to_do->push_back(*iter);
+                    ++iter;
+                } else {
+                    divided.to_clear->push_back(*iter);
+                    iter = _list->erase(iter);
+                }
+            }
+        }
+
+        return divided;
+    }
+
+    template<auto C>
+    static constexpr auto _expandCondition(){
+        if constexpr (C != nullptr){
+            return expand_func<C, Args...>();
+        } else {
+            return nullptr;
+        }
     }
 };
 

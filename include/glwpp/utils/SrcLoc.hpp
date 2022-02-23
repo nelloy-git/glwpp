@@ -18,6 +18,7 @@ public:
            std::uint_least32_t line = __builtin_LINE(),
            std::uint_least32_t column = __builtin_COLUMN(),
            char const* function = __builtin_FUNCTION()) noexcept {
+        _loc = std::make_shared<Loc>();
         _loc->file = file;
         _loc->line = line;
         _loc->column = column;

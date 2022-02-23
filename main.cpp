@@ -25,23 +25,17 @@ std::string loadTextFile(const std::string path){
     return buffer.str();
 }
 
-void pushKeyPrinter(std::shared_ptr<glwpp::Context> win, std::atomic<bool> *running){
-    static std::function<void(glwpp::Context*, glwpp::Key)> print_func;
-
-    print_func = [func = &print_func, running](glwpp::Context *win, glwpp::Key key){
+void pushKeyPrinter(std::shared_ptr<glwpp::Context> win, std::atomic<bool> &running){
+    win->onKey.push([&running](const glwpp::Key& key){
         std::cout << "Key: " << char(key) << std::endl;
         if (key == glwpp::Key::Escape){
-            *running = false;
+            running = false;
         }
-        win->onKey.push(*func);
-    };
-    win->onKey.push(print_func);
+    }, []{return true;});
 }
 
-void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
-    static std::function<void(glwpp::Context*, std::chrono::microseconds)> frame_timer_func;
-
-    frame_timer_func = [func = &frame_timer_func](glwpp::Context* win, std::chrono::microseconds time){
+static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
+    constexpr auto action = [](const std::chrono::microseconds& time){
         static int total_time = 0;
         static int counter = 0;
 
@@ -53,9 +47,10 @@ void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
             total_time = 0;
             counter = 0;
         }
-        win->onRun.push(*func);
     };
-    win->onRun.push(frame_timer_func);
+    constexpr auto condition = []{return true;};
+
+    win->onRun.push<condition>(action);
 }
 
 glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
@@ -192,6 +187,10 @@ void setProgUniform1F(glwpp::Program& prog, const std::string& name, const float
     prog.setUniform1F(loc, val);
 }
 
+void func(int a){
+    std::cout << a << std::endl;
+}
+
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
     ctx_params.gl_major_ver = 4;
@@ -203,60 +202,60 @@ int main(int argc, char **argv){
 
     std::atomic<bool> running = true;
     auto win = std::make_shared<glwpp::Context>(ctx_params);
-    pushKeyPrinter(win, &running);
+    pushKeyPrinter(win, running);
     pushTimePrinter(win);
-    // auto prog = loadProgram(win);
+    auto prog = loadProgram(win);
 
-    // auto vao = loadRect(win);
-    // auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 100);
-    // auto glyph = loadGlyph(win, font, (size_t)'G');
-    // font.getTex()->setUnit((unsigned int)0);
+    auto vao = loadRect(win);
+    auto font = glwpp::Font(win, "D:\\projects\\glwpp\\3rdparty\\fonts\\jungle_tribe\\JungleTribeDemoRegular.ttf", 100);
+    auto glyph = loadGlyph(win, font, (size_t)'G');
+    font.getTex()->setUnit((unsigned int)0);
 
-    // setProgUniform1F(prog, "offset_x", 0);
-    // setProgUniform1F(prog, "offset_y", 0);
-    // setProgUniform1F(prog, "scale_x", 0.25);
-    // setProgUniform1F(prog, "scale_y", 0.25);
+    setProgUniform1F(prog, "offset_x", 0);
+    setProgUniform1F(prog, "offset_y", 0);
+    setProgUniform1F(prog, "scale_x", 0.25);
+    setProgUniform1F(prog, "scale_y", 0.25);
 
-    // std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
-    // draw = [glyph, &draw](glwpp::Context* win, std::chrono::microseconds time){
-    //     glwpp::gl::UInt id;
-    //     glyph.vao.getId(&id);
+    std::function<void(glwpp::Context*, std::chrono::microseconds)> draw;
+    draw = [glyph, &draw](glwpp::Context* win, std::chrono::microseconds time){
+        glwpp::gl::UInt id;
+        glyph.vao.getId(&id);
 
-    //     glBindVertexArray(id);
-    //     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(id);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    //     glwpp::gl::Enum err = glGetError();
-    //     while (err != GL_NO_ERROR){
-    //         std::string err_name;
-    //         switch (err){
-    //             case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
-    //             case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
-    //             case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
-    //             case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
-    //             case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
-    //             case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
-    //             case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
-    //             case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
-    //             default: err_name = "UNKNOWN";
-    //         }
+        glwpp::gl::Enum err = glGetError();
+        while (err != GL_NO_ERROR){
+            std::string err_name;
+            switch (err){
+                case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
+                case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
+                case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
+                case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
+                case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
+                case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
+                case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
+                case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
+                default: err_name = "UNKNOWN";
+            }
 
-    //         std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
-    //         err = glGetError();
-    //     }
-    //     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+            std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
+            err = glGetError();
+        }
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-    //     win->onRun.push(draw);
-    // };
-    // auto is_done_future = win->onRun.push(draw);
+        win->onRun.push(draw);
+    };
+    win->onRun.push(draw);
 
     while (running){
         win->start();
         win->wait();
 
-        // static bool shown = false;
-        // if (!shown){            
-        //     shown = true;
-        // }
+    //     // static bool shown = false;
+    //     // if (!shown){            
+    //     //     shown = true;
+    //     // }
     };
 
     // auto watcher = glwpp::make_sptr<glwpp::Watcher>();
