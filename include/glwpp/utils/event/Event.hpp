@@ -59,7 +59,7 @@ public:
         _push(condition, action, ploc);
     }
 
-    // Anything is runtime
+    // Everything is runtime
     template<class F, class C>
     void push(const F& event_action, const C& alive_condition, const SrcLoc& loc = SrcLoc()){
         auto expanded_condition = expand_func<Args...>(alive_condition);

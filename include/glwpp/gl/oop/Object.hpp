@@ -21,11 +21,11 @@ public:
 
 protected:
     template<class I, class ... Args>
-    Object(const wptr<Context>& ctx, const I& init, const Vop<Args>&... args) :
+    Object(const wptr<Context>& ctx, const I& init, const Val<Args>&... args) :
         _ctx(ctx){
         using T = std::invoke_result_t<I, Args...>;
         _gl = make_sptr<T>(Dummy{});
-        _execute<&Object::_init<I, Args...>>(ctx, Ptr<gl::CtxObject>(_gl), Vop<I>(init), args...);
+        _execute<&Object::_init<I, Args...>>(ctx, Ptr<gl::CtxObject>(_gl), Val<I>(init), args...);
     };
     virtual ~Object() = 0;
 
@@ -40,13 +40,13 @@ protected:
     };
 
     template<class T>
-    Vop<T> _getVop(){
-        return std::dynamic_pointer_cast<T>(_gl);
+    Val<T> _getVop(){
+        return Val<T>(std::dynamic_pointer_cast<T>(_gl));
     };
 
     template<class T>
-    const Vop<T> _getVop() const {
-        return std::dynamic_pointer_cast<T>(_gl);
+    const Val<T> _getVop() const {
+        return Val<T>(std::dynamic_pointer_cast<T>(_gl));
     };
 
     template<auto F, class ... Args>

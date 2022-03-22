@@ -13,40 +13,40 @@ class VertexArray : public Object {
 public:
     VertexArray(wptr<Context> ctx, const SrcLoc& loc = SrcLoc());
     
-    bool isAttribEnabled(const Vop<gl::UInt>& index, Ptr<bool>& dst,
+    bool isAttribEnabled(const Val<gl::UInt>& index, Ptr<bool>& dst,
                          const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribSize(const Vop<gl::UInt>& index, Ptr<gl::Int>& dst,
+    bool getAttribSize(const Val<gl::UInt>& index, Ptr<gl::Int>& dst,
                        const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribStride(const Vop<gl::UInt>& index, Ptr<gl::Int>& dst,
+    bool getAttribStride(const Val<gl::UInt>& index, Ptr<gl::Int>& dst,
                          const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribType(const Vop<gl::UInt>& index, Ptr<gl::DataType>& dst,
+    bool getAttribType(const Val<gl::UInt>& index, Ptr<gl::DataType>& dst,
                        const SrcLoc& loc = SrcLoc()) const;
-    bool isAttribNormalized(const Vop<gl::UInt>& index, Ptr<bool>& dst,
+    bool isAttribNormalized(const Val<gl::UInt>& index, Ptr<bool>& dst,
                             const SrcLoc& loc = SrcLoc()) const;
-    bool isAttribInteger(const Vop<gl::UInt>& index, Ptr<bool>& dst,
+    bool isAttribInteger(const Val<gl::UInt>& index, Ptr<bool>& dst,
                          const SrcLoc& loc = SrcLoc()) const;
-    bool isAttribLong(const Vop<gl::UInt>& index, Ptr<bool>& dst,
+    bool isAttribLong(const Val<gl::UInt>& index, Ptr<bool>& dst,
                       const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribDivisor(const Vop<gl::UInt>& index, Ptr<gl::Int>& dst,
+    bool getAttribDivisor(const Val<gl::UInt>& index, Ptr<gl::Int>& dst,
                           const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribRelativeOffset(const Vop<gl::UInt>& index, Ptr<gl::Int>& dst,
+    bool getAttribRelativeOffset(const Val<gl::UInt>& index, Ptr<gl::Int>& dst,
                                  const SrcLoc& loc = SrcLoc()) const;
-    bool getAttribBindingOffset(const Vop<gl::UInt>& index, Ptr<gl::Int64>& dst,
+    bool getAttribBindingOffset(const Val<gl::UInt>& index, Ptr<gl::Int64>& dst,
                                 const SrcLoc& loc = SrcLoc()) const;
     
-    bool enableAttrib(const Vop<gl::UInt>& index, const SrcLoc& loc = SrcLoc());
-    bool disableAttrib(const Vop<gl::UInt>& index, const SrcLoc& loc = SrcLoc());
-    bool setAttribBinding(const Vop<gl::UInt>& index, const Vop<gl::UInt>& binding,
+    bool enableAttrib(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc());
+    bool disableAttrib(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc());
+    bool setAttribBinding(const Val<gl::UInt>& index, const Val<gl::UInt>& binding,
                          const SrcLoc& loc = SrcLoc());
-    bool setAttribFormat(const Vop<gl::UInt>& index, const Vop<gl::Int>& size,
-                         const Vop<gl::DataType>& type, const Vop<bool>& normalized,
-                         const Vop<gl::UInt>& relative_offset, const SrcLoc& loc = SrcLoc());
-    bool setBindingDivisor(const Vop<gl::UInt>& binding, const Vop<gl::UInt>& divisor,
+    bool setAttribFormat(const Val<gl::UInt>& index, const Val<gl::Int>& size,
+                         const Val<gl::DataType>& type, const Val<bool>& normalized,
+                         const Val<gl::UInt>& relative_offset, const SrcLoc& loc = SrcLoc());
+    bool setBindingDivisor(const Val<gl::UInt>& binding, const Val<gl::UInt>& divisor,
                            const SrcLoc& loc = SrcLoc());
 
     bool setElementBuffer(const Buffer& buffer, const SrcLoc& loc = SrcLoc());
-    bool setVertexBuffer(const Vop<gl::UInt>& binding, const Buffer& buffer,
-                         const Vop<gl::IntPtr>& offset, const Vop<gl::Sizei>& stride,
+    bool setVertexBuffer(const Val<gl::UInt>& binding, const Buffer& buffer,
+                         const Val<gl::IntPtr>& offset, const Val<gl::Sizei>& stride,
                          const SrcLoc& loc = SrcLoc());
 };
     

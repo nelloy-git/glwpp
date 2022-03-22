@@ -9,14 +9,16 @@ template<class T>
 class Ptr {
     using Container = std::variant<T*, std::shared_ptr<T>>;
 public:
-    Ptr(T*&& data) : _data(new Container(data)){}
+    Ptr(T* data) : _data(new Container(data)){}
     Ptr(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
-    Ptr(const Ptr& other) : _data(other._data){}
+    virtual ~Ptr(){};
 
+    template<class T = T, class = std::enable_if_t<(!std::is_same_v<T, void>)>>
     T& getVal(){
         return _getVal(*_data);
     }
 
+    template<class T = T, class = std::enable_if_t<(!std::is_same_v<T, void>)>>
     const T& getVal() const {
         return _getVal(*_data);
     }

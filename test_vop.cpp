@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv){
     int value = 11;
-    auto v = glwpp::Vop(value);
+    auto v = glwpp::Val(value);
 
     auto v2 = v.getPtr();
 

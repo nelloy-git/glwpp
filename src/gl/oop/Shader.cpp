@@ -11,8 +11,8 @@ namespace {
     }
 }
 
-Shader::Shader(const std::weak_ptr<Context>& weak_ctx, const Vop<gl::ShaderType>& type, const SrcLoc& loc) :
-    Object(weak_ctx, &InitShader, type, Vop<SrcLoc>(loc)){
+Shader::Shader(const std::weak_ptr<Context>& weak_ctx, const Val<gl::ShaderType>& type, const SrcLoc& loc) :
+    Object(weak_ctx, &InitShader, type, Val<SrcLoc>(loc)){
 }
 
 bool Shader::getType(Ptr<ShaderType> dst, const SrcLoc& loc) const {
@@ -31,6 +31,6 @@ bool Shader::getInfoLog(Ptr<std::string> dst, const SrcLoc& loc) const {
     return _executeGetter<CtxShader, &CtxShader::getInfoLog>(dst, loc);
 }
 
-bool Shader::compile(const Vop<std::string>& code, const SrcLoc& loc){
+bool Shader::compile(const Val<std::string>& code, const SrcLoc& loc){
     return _executeMethod<CtxShader, &CtxShader::compile>(code, loc);
 }

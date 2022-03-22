@@ -100,39 +100,39 @@ public:
     MagFilter getMagFilter(const SrcLoc& loc = SrcLoc()) const;
     void setMagFilter(const MagFilter& filter, const SrcLoc& loc = SrcLoc());
 
-    // std::shared_future<bool> getLevelParam_iv(Vop<const Int> level, Vop<const TextureLevelParam> param, Ptr<Int> dst);
-    // std::shared_future<bool> getLevelParam_fv(Vop<const Int> level, Vop<const TextureLevelParam> param, Ptr<Float> dst);
-    // std::shared_future<bool> getParam_iv(Vop<const TextureParam> param, Ptr<Int> dst);
-    // std::shared_future<bool> setParam_iv(Vop<const TextureParam> param, Vop<const Int> value);
-    // std::shared_future<bool> getParam_fv(Vop<const TextureParam> param, Ptr<Float> dst);
-    // std::shared_future<bool> setParam_fv(Vop<const TextureParam> param, Vop<const Float> value);
+    // std::shared_future<bool> getLevelParam_iv(Val<const Int> level, Val<const TextureLevelParam> param, Ptr<Int> dst);
+    // std::shared_future<bool> getLevelParam_fv(Val<const Int> level, Val<const TextureLevelParam> param, Ptr<Float> dst);
+    // std::shared_future<bool> getParam_iv(Val<const TextureParam> param, Ptr<Int> dst);
+    // std::shared_future<bool> setParam_iv(Val<const TextureParam> param, Val<const Int> value);
+    // std::shared_future<bool> getParam_fv(Val<const TextureParam> param, Ptr<Float> dst);
+    // std::shared_future<bool> setParam_fv(Val<const TextureParam> param, Val<const Float> value);
 
-    // std::shared_future<bool> setActive(Vop<const UInt> index) const;
+    // std::shared_future<bool> setActive(Val<const UInt> index) const;
     // std::shared_future<bool> generateMipMap();
 
     // using Data = void*;
-    // std::shared_future<bool> getImage(Vop<const Int> level, Vop<const TexturePixelFormat> fmt,
-    //                                   Vop<const TexturePixelData> type, Vop<const Sizei> size, Vop<Data> data);
-    // std::shared_future<bool> getSubImage(Vop<const Int> level, Vop<const TexturePixelFormat> fmt,
-    //                                      Vop<const Int> x, Vop<const Int> y, Vop<const Int> z,
-    //                                      Vop<const Sizei> w, Vop<const Sizei> h, Vop<const Sizei> d,
-    //                                      Vop<const TexturePixelData> type, Vop<const Sizei> size, Vop<Data> data);
-    // std::shared_future<bool> setSubImage1D(Vop<const Int> level,
-    //                                        Vop<const Int> x, Vop<const Sizei> w,
-    //                                        Vop<const TexturePixelFormat> fmt, Vop<const TexturePixelData> type,
-    //                                        Vop<const Data> data);
+    // std::shared_future<bool> getImage(Val<const Int> level, Val<const TexturePixelFormat> fmt,
+    //                                   Val<const TexturePixelData> type, Val<const Sizei> size, Val<Data> data);
+    // std::shared_future<bool> getSubImage(Val<const Int> level, Val<const TexturePixelFormat> fmt,
+    //                                      Val<const Int> x, Val<const Int> y, Val<const Int> z,
+    //                                      Val<const Sizei> w, Val<const Sizei> h, Val<const Sizei> d,
+    //                                      Val<const TexturePixelData> type, Val<const Sizei> size, Val<Data> data);
+    // std::shared_future<bool> setSubImage1D(Val<const Int> level,
+    //                                        Val<const Int> x, Val<const Sizei> w,
+    //                                        Val<const TexturePixelFormat> fmt, Val<const TexturePixelData> type,
+    //                                        Val<const Data> data);
     
-    // std::shared_future<bool> setSubImage2D(Vop<const Int> level,
-    //                                        Vop<const Int> x, Vop<const Int> y,
-    //                                        Vop<const Sizei> w, Vop<const Sizei> h,
-    //                                        Vop<const TexturePixelFormat> fmt, Vop<const TexturePixelData> type,
-    //                                        Vop<const Data> data);
+    // std::shared_future<bool> setSubImage2D(Val<const Int> level,
+    //                                        Val<const Int> x, Val<const Int> y,
+    //                                        Val<const Sizei> w, Val<const Sizei> h,
+    //                                        Val<const TexturePixelFormat> fmt, Val<const TexturePixelData> type,
+    //                                        Val<const Data> data);
     
-    // std::shared_future<bool> setSubImage3D(Vop<const Int> level,
-    //                                        Vop<const Int> x, Vop<const Int> y, Vop<const Int> z,
-    //                                        Vop<const Sizei> w, Vop<const Sizei> h, Vop<const Sizei> d,
-    //                                        Vop<const TexturePixelFormat> fmt, Vop<const TexturePixelData> type,
-    //                                        Vop<const Data> data);
+    // std::shared_future<bool> setSubImage3D(Val<const Int> level,
+    //                                        Val<const Int> x, Val<const Int> y, Val<const Int> z,
+    //                                        Val<const Sizei> w, Val<const Sizei> h, Val<const Sizei> d,
+    //                                        Val<const TexturePixelFormat> fmt, Val<const TexturePixelData> type,
+    //                                        Val<const Data> data);
 
     // =================================
     // Wrappers for Texture::setParam_iv

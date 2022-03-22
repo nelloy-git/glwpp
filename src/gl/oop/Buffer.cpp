@@ -12,16 +12,16 @@ namespace {
 }
 
 Buffer::Buffer(const std::weak_ptr<Context>& weak_ctx, const SrcLoc& loc) :
-    Object(weak_ctx, &InitBuffer, Vop<SrcLoc>(loc)){
+    Object(weak_ctx, &InitBuffer, Val<SrcLoc>(loc)){
 }
 
-bool Buffer::data(const Vop<gl::SizeiPtr>& size, const Vop<Data>& data,
-                  const Vop<gl::BufferUsage>& usage, const SrcLoc& loc){
+bool Buffer::data(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
+                  const Val<gl::BufferUsage>& usage, const SrcLoc& loc){
     return _executeMethod<CtxBuffer, &CtxBuffer::data>(size, data, usage, loc);
 }
 
-bool Buffer::storage(const Vop<gl::SizeiPtr>& size, const Vop<Data>& data,
-                     const Vop<gl::BitField>& flags, const SrcLoc& loc){
+bool Buffer::storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
+                     const Val<gl::BitField>& flags, const SrcLoc& loc){
     return _executeMethod<CtxBuffer, &CtxBuffer::storage>(size, data, flags, loc);
 }
 
@@ -61,17 +61,17 @@ bool Buffer::getUsage(Ptr<gl::BufferUsage>& dst, const SrcLoc& loc) const {
     return _executeGetter<CtxBuffer, &CtxBuffer::getUsage>(dst, loc);
 }
 
-bool Buffer::getSubData(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                        Ptr<Data>& dst, const SrcLoc& loc) const {
+bool Buffer::getSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                        Ptr<void>& dst, const SrcLoc& loc) const {
     return _executeMethod<CtxBuffer, &CtxBuffer::getSubData>(offset, size, dst, loc);
 }
-bool Buffer::setSubData(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                        const Vop<Data>& data, const SrcLoc& loc) {
+bool Buffer::setSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                        const Ptr<void>& data, const SrcLoc& loc) {
     return _executeMethod<CtxBuffer, &CtxBuffer::setSubData>(offset, size, data, loc);
 }
 
-bool Buffer::copySubDataTo(Buffer& dst, const Vop<IntPtr>& read_offset,
-                           const Vop<IntPtr>& write_offset, const Vop<SizeiPtr>& size,
+bool Buffer::copySubDataTo(Buffer& dst, const Val<IntPtr>& read_offset,
+                           const Val<IntPtr>& write_offset, const Val<SizeiPtr>& size,
                            const SrcLoc& loc) const {
     return _executeMethod<CtxBuffer, &CtxBuffer::copySubDataTo>(dst._getVop<CtxBuffer>(), read_offset, write_offset, size, loc);
 }
@@ -80,17 +80,17 @@ bool Buffer::getMapPointer(Ptr<MapPtr>& dst, const SrcLoc& loc) const {
     return _executeGetter<CtxBuffer, &CtxBuffer::getMapPointer>(dst, loc);
 }
 
-bool Buffer::map(const Vop<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc& loc){
+bool Buffer::map(const Val<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc& loc){
     return _executeGetter<CtxBuffer, &CtxBuffer::map>(dst, access, loc);
 }
 
-bool Buffer::mapRange(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                      const Vop<gl::BitField>& access, Ptr<MapPtr>& dst,
+bool Buffer::mapRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                      const Val<gl::BitField>& access, Ptr<MapPtr>& dst,
                       const SrcLoc& loc){
     return _executeGetter<CtxBuffer, &CtxBuffer::mapRange>(dst, offset, size, access, loc);
 }
 
-bool Buffer::mapFlushRange(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
+bool Buffer::mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
                            const SrcLoc& loc){
     return _executeMethod<CtxBuffer, &CtxBuffer::mapFlushRange>(offset, size, loc);
 }

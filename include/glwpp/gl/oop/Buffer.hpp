@@ -21,12 +21,10 @@ class Buffer : public Object {
 public:    
     Buffer(const std::weak_ptr<Context>& weak_ctx, const SrcLoc& loc = SrcLoc());
 
-    using Data = void*;
-
-    bool data(const Vop<gl::SizeiPtr>& size, const Vop<Data>& data,
-              const Vop<gl::BufferUsage>& usage, const SrcLoc& loc = SrcLoc());
-    bool storage(const Vop<gl::SizeiPtr>& size, const Vop<Data>& data,
-                 const Vop<gl::BitField>& flags, const SrcLoc& loc = SrcLoc());
+    bool data(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
+              const Val<gl::BufferUsage>& usage, const SrcLoc& loc = SrcLoc());
+    bool storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
+                 const Val<gl::BitField>& flags, const SrcLoc& loc = SrcLoc());
 
     bool getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc& loc = SrcLoc()) const;
     bool getMapRangeAccess(Ptr<gl::BitField>& dst, const SrcLoc& loc = SrcLoc()) const;
@@ -38,21 +36,21 @@ public:
     bool getStorageFlags(Ptr<gl::BitField>& dst, const SrcLoc& loc = SrcLoc()) const;
     bool getUsage(Ptr<gl::BufferUsage>& dst, const SrcLoc& loc = SrcLoc()) const;
 
-    bool getSubData(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                    Ptr<Data>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool setSubData(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                    const Vop<Data>& data, const SrcLoc& loc = SrcLoc());
-    bool copySubDataTo(Buffer& dst, const Vop<gl::IntPtr>& read_offset,
-                       const Vop<gl::IntPtr>& write_offset, const Vop<gl::SizeiPtr>& size,
+    bool getSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                    Ptr<void>& dst, const SrcLoc& loc = SrcLoc()) const;
+    bool setSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                    const Ptr<void>& data, const SrcLoc& loc = SrcLoc());
+    bool copySubDataTo(Buffer& dst, const Val<gl::IntPtr>& read_offset,
+                       const Val<gl::IntPtr>& write_offset, const Val<gl::SizeiPtr>& size,
                        const SrcLoc& loc = SrcLoc()) const;
 
     using MapPtr = void*;
     bool getMapPointer(Ptr<MapPtr>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool map(const Vop<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc& loc = SrcLoc());
-    bool mapRange(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
-                  const Vop<gl::BitField>& access, Ptr<MapPtr>& dst,
+    bool map(const Val<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc& loc = SrcLoc());
+    bool mapRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
+                  const Val<gl::BitField>& access, Ptr<MapPtr>& dst,
                   const SrcLoc& loc = SrcLoc());
-    bool mapFlushRange(const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
+    bool mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
                        const SrcLoc& loc = SrcLoc());
     bool unmap(Ptr<bool>& dst, const SrcLoc& loc = SrcLoc());
 };

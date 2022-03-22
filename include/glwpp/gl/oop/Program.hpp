@@ -20,27 +20,27 @@ public:
     bool getActiveUniformMaxNameLength(Ptr<gl::Int> dst, const SrcLoc& loc = SrcLoc()) const;
     bool getInfoLog(Ptr<std::string> dst, const SrcLoc& loc = SrcLoc()) const;
 
-    bool getAttributeLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc = SrcLoc()) const;
-    bool getUniformLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc = SrcLoc()) const;
+    bool getAttributeLocation(Ptr<gl::Int> dst, const Val<std::string>& name, const SrcLoc& loc = SrcLoc()) const;
+    bool getUniformLocation(Ptr<gl::Int> dst, const Val<std::string>& name, const SrcLoc& loc = SrcLoc()) const;
 
     bool attach(Shader& shader, const SrcLoc& loc = SrcLoc());
     bool link(const SrcLoc& loc = SrcLoc());
     bool validate(const SrcLoc& loc = SrcLoc()) const;
     bool use(const SrcLoc& loc = SrcLoc()) const;
 
-    bool setUniform1F(const Vop<gl::Int>& unif_loc,
-                      const Vop<gl::Float>& val0,
+    bool setUniform1F(const Val<gl::Int>& unif_loc,
+                      const Val<gl::Float>& val0,
                       const SrcLoc& loc = SrcLoc());
-    bool setUniform2F(const Vop<gl::Int>& unif_loc,
-                      const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+    bool setUniform2F(const Val<gl::Int>& unif_loc,
+                      const Val<gl::Float>& val0, const Val<gl::Float>& val1,
                       const SrcLoc& loc = SrcLoc());
-    bool setUniform3F(const Vop<gl::Int>& unif_loc,
-                      const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
-                      const Vop<gl::Float>& val2,
+    bool setUniform3F(const Val<gl::Int>& unif_loc,
+                      const Val<gl::Float>& val0, const Val<gl::Float>& val1,
+                      const Val<gl::Float>& val2,
                       const SrcLoc& loc = SrcLoc());
-    bool setUniform4F(const Vop<gl::Int>& unif_loc,
-                      const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
-                      const Vop<gl::Float>& val2, const Vop<gl::Float>& val3,
+    bool setUniform4F(const Val<gl::Int>& unif_loc,
+                      const Val<gl::Float>& val0, const Val<gl::Float>& val1,
+                      const Val<gl::Float>& val2, const Val<gl::Float>& val3,
                       const SrcLoc& loc = SrcLoc());
 };
 

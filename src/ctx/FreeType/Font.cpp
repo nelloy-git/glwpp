@@ -136,7 +136,7 @@ void Font::_loadTexture(){
         // Mirror Y to opengl coords
         for (auto i = 0; i < glyph->height; ++i){
             auto p_src = buffer + (glyph->height - 1 - i) * glyph->width;
-            auto p_dst = *(char**)bitmap.get() + i * glyph->width;
+            auto p_dst = (char*)bitmap.get() + i * glyph->width;
             memcpy(p_dst, p_src, glyph->width);
         }
 

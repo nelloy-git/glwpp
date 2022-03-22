@@ -8,13 +8,18 @@
 namespace glwpp {
 
 template<class T>
-class VopBase {
+class Val {
     using Container = std::variant<T, T*, std::shared_ptr<T>>;
+
 public:
-    VopBase(const T& data){_data = std::make_shared<Container>(data);}
-    VopBase(const T* const data){_data = std::make_shared<Container>(data);}
-    VopBase(std::shared_ptr<T> data){_data = std::make_shared<Container>(data);}
-    virtual ~VopBase(){};
+    Val(const T& data){_data = std::make_shared<Container>(data);}
+    explicit Val(const T* const data){_data = std::make_shared<Container>(data);}
+    Val(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
+    virtual ~Val(){};
+
+    // template<class T = T, class = std::enable_if_t<std::is_same_v<T, gl::UInt>>>
+    // Val(const int& data){_data = std::make_shared<Container>(data);}
+
 
     T& getVal(){
         return _getVal(*_data);
@@ -40,7 +45,7 @@ private:
             case 0: return std::get<0>(data);
             case 1: return *std::get<1>(data);
             case 2: return *std::get<2>(data);
-            default: throw std::runtime_error("Vop internal error");
+            default: throw std::runtime_error("Val internal error");
         }
     }
 
@@ -49,40 +54,23 @@ private:
             case 0: return &std::get<0>(data);
             case 1: return std::get<1>(data);
             case 2: return std::get<2>(data).get();
-            default: throw std::runtime_error("Vop internal error");
+            default: throw std::runtime_error("Val internal error");
         }
     }
 };
-
-template<class T>
-class Vop : public VopBase<T> {
-public:
-    Vop(const T& data) : VopBase<T>(data){};
-    Vop(const T* data) : VopBase<T>(data){};
-    Vop(std::shared_ptr<T> data) : VopBase<T>(data){};
-};
-
-// template<>
-// class Vop<gl::IntPtr> : public VopBase<gl::IntPtr> {
-// public:
-//     Vop(const gl::Int& data) : VopBase<gl::IntPtr>(data){};
-//     Vop(const gl::IntPtr& data) : VopBase<gl::IntPtr>(data){};
-//     Vop(const gl::IntPtr* const data) : VopBase<gl::IntPtr>(data){};
-//     Vop(std::shared_ptr<gl::IntPtr> data) : VopBase<gl::IntPtr>(data){};
-// };
 
 template<class>
 struct is_vop : std::false_type {};
 
 template<class T>
-struct is_vop<Vop<T>> : std::true_type {
+struct is_vop<Val<T>> : std::true_type {
     using type = T;
 };
 
-// template<> Vop<gl::IntPtr>::Vop<gl::IntPtr>(const gl::IntPtr& data){}
+// template<> Val<gl::IntPtr>::Val<gl::IntPtr>(const gl::IntPtr& data){}
 
 // template<>
-// class Vop<gl::IntPtr> {
+// class Val<gl::IntPtr> {
 
 // };
 

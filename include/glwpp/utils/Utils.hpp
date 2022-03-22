@@ -25,7 +25,7 @@ inline uptr<T> make_uptr(Args&&... args){
 
 struct Dummy {};
 
-static sptr<void*> createTmpData(const void* src, size_t size){
+static sptr<void> createTmpData(const void* src, size_t size){
     void* data;
 
     if (src != nullptr){
@@ -35,11 +35,10 @@ static sptr<void*> createTmpData(const void* src, size_t size){
         data = calloc(size, sizeof(char));
     }
 
-    static auto deleter = [](void** ptr){
-        delete *ptr;
+    static auto deleter = [](void* ptr){
         delete ptr;
     };
-    return sptr<void*>(new void*(data), deleter);
+    return sptr<void>(data, deleter);
 }
 
 template<template<typename ...> class T, class ... OutArgs>

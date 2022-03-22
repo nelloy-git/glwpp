@@ -12,7 +12,7 @@ namespace {
 }
 
 Program::Program(const wptr<Context>& weak_ctx, const SrcLoc& loc) :
-    Object(weak_ctx, &InitProgram, Vop<SrcLoc>(loc)){
+    Object(weak_ctx, &InitProgram, Val<SrcLoc>(loc)){
 }
 
 bool Program::isLinked(Ptr<bool> dst, const SrcLoc& loc) const {
@@ -47,11 +47,11 @@ bool Program::getInfoLog(Ptr<std::string> dst, const SrcLoc& loc) const {
     return _executeGetter<CtxProgram, &CtxProgram::getInfoLog>(dst, loc);
 }
 
-bool Program::getAttributeLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc) const {
+bool Program::getAttributeLocation(Ptr<gl::Int> dst, const Val<std::string>& name, const SrcLoc& loc) const {
     return _executeGetter<CtxProgram, &CtxProgram::getAttributeLocation>(dst, name, loc);
 }
 
-bool Program::getUniformLocation(Ptr<gl::Int> dst, const Vop<std::string>& name, const SrcLoc& loc) const {
+bool Program::getUniformLocation(Ptr<gl::Int> dst, const Val<std::string>& name, const SrcLoc& loc) const {
     return _executeGetter<CtxProgram, &CtxProgram::getUniformLocation>(dst, name, loc);
 }
 
@@ -71,28 +71,28 @@ bool Program::use(const SrcLoc& loc) const {
     return _executeMethod<CtxProgram, &CtxProgram::use>(loc);
 }
 
-bool Program::setUniform1F(const Vop<gl::Int> &unif_loc,
-                           const Vop<gl::Float>& val0,
+bool Program::setUniform1F(const Val<gl::Int> &unif_loc,
+                           const Val<gl::Float>& val0,
                            const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform1F>(unif_loc, val0, loc);
 }
 
-bool Program::setUniform2F(const Vop<gl::Int> &unif_loc,
-                           const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
+bool Program::setUniform2F(const Val<gl::Int> &unif_loc,
+                           const Val<gl::Float>& val0, const Val<gl::Float>& val1,
                            const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform2F>(unif_loc, val0, val1, loc);
 }
 
-bool Program::setUniform3F(const Vop<gl::Int> &unif_loc,
-                           const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
-                           const Vop<gl::Float>& val2,
+bool Program::setUniform3F(const Val<gl::Int> &unif_loc,
+                           const Val<gl::Float>& val0, const Val<gl::Float>& val1,
+                           const Val<gl::Float>& val2,
                            const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform3F>(unif_loc, val0, val1, val2, loc);
 }
 
-bool Program::setUniform4F(const Vop<gl::Int> &unif_loc,
-                           const Vop<gl::Float>& val0, const Vop<gl::Float>& val1,
-                           const Vop<gl::Float>& val2, const Vop<gl::Float>& val3,
+bool Program::setUniform4F(const Val<gl::Int> &unif_loc,
+                           const Val<gl::Float>& val0, const Val<gl::Float>& val1,
+                           const Val<gl::Float>& val2, const Val<gl::Float>& val3,
                            const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform4F>(unif_loc, val0, val1, val2, val3, loc);
 }

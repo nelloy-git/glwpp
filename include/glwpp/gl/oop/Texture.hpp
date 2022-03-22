@@ -16,61 +16,60 @@ namespace glwpp {
 
 class Texture : public Object {
 public:
-    Texture(wptr<Context> ctx, const Vop<gl::TextureType>& type, const SrcLoc& loc = SrcLoc());
+    Texture(wptr<Context> ctx, const Val<gl::TextureType>& type, const SrcLoc& loc = SrcLoc());
 
-    bool buffer(const Vop<gl::TextureFormat>& fmt, const Buffer& buffer,
+    bool buffer(const Val<gl::TextureFormat>& fmt, const Buffer& buffer,
                 const SrcLoc& loc = SrcLoc());
-    bool bufferRange(const Vop<gl::TextureFormat>& fmt, const Buffer& buffer,
-                     const Vop<gl::IntPtr>& offset, const Vop<gl::SizeiPtr>& size,
+    bool bufferRange(const Val<gl::TextureFormat>& fmt, const Buffer& buffer,
+                     const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
                      const SrcLoc& loc = SrcLoc());
-    bool storage1D(const Vop<gl::Sizei>& levels, const Vop<gl::TextureFormat>& fmt,
-                   const Vop<gl::Sizei>& width,
+    bool storage1D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
+                   const Val<gl::Sizei>& width,
                    const SrcLoc& loc = SrcLoc());
-    bool storage2D(const Vop<gl::Sizei>& levels, const Vop<gl::TextureFormat>& fmt,
-                   const Vop<gl::Sizei>& width, const Vop<gl::Sizei>& height,
+    bool storage2D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
+                   const Val<gl::Sizei>& width, const Val<gl::Sizei>& height,
                    const SrcLoc& loc = SrcLoc());
-    bool storage3D(const Vop<gl::Sizei>& levels, const Vop<gl::TextureFormat>& fmt,
-                   const Vop<gl::Sizei>& width, const Vop<gl::Sizei>& height, const Vop<gl::Sizei>& depth,
+    bool storage3D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
+                   const Val<gl::Sizei>& width, const Val<gl::Sizei>& height, const Val<gl::Sizei>& depth,
                    const SrcLoc& loc = SrcLoc());
-    bool storageMultisample2D(const Vop<gl::Sizei>& levels, const Vop<gl::TextureFormat>& fmt,
-                              const Vop<gl::Sizei>& width, const Vop<gl::Sizei>& height,
-                              const Vop<gl::Bool>& fixed_locations,
+    bool storageMultisample2D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
+                              const Val<gl::Sizei>& width, const Val<gl::Sizei>& height,
+                              const Val<gl::Bool>& fixed_locations,
                               const SrcLoc& loc = SrcLoc());
-    bool storageMultisample3D(const Vop<gl::Sizei>& levels, const Vop<gl::TextureFormat>& fmt,
-                              const Vop<gl::Sizei>& width, const Vop<gl::Sizei>& height, const Vop<gl::Sizei>& depth,
-                              const Vop<gl::Bool>& fixed_locations,
+    bool storageMultisample3D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
+                              const Val<gl::Sizei>& width, const Val<gl::Sizei>& height, const Val<gl::Sizei>& depth,
+                              const Val<gl::Bool>& fixed_locations,
                               const SrcLoc& loc = SrcLoc());
 
-    bool setUnit(const Vop<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
+    bool setUnit(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
     bool generateMipMap(const SrcLoc& loc = SrcLoc());
 
-    using Data = void*;
-    bool getImage(const Vop<gl::Int>& level, const Vop<gl::TexturePixelFormat>& fmt,
-                  const Vop<gl::TexturePixelData>& type, const Vop<gl::Sizei>& size, Vop<Data>& data,
+    bool getImage(const Val<gl::Int>& level, const Val<gl::TexturePixelFormat>& fmt,
+                  const Val<gl::TexturePixelData>& type, const Val<gl::Sizei>& size, Ptr<void>& data,
                   const SrcLoc& loc = SrcLoc());
-    bool getSubImage(const Vop<gl::Int>& level, const Vop<gl::TexturePixelFormat>& fmt,
-                     const Vop<gl::Int>& x, const Vop<gl::Int>& y, const Vop<gl::Int>& z,
-                     const Vop<gl::Sizei>& w, const Vop<gl::Sizei>& h, const Vop<gl::Sizei>& d,
-                     const Vop<gl::TexturePixelData>& type, const Vop<gl::Sizei>& size, Vop<Data>& data,
+    bool getSubImage(const Val<gl::Int>& level, const Val<gl::TexturePixelFormat>& fmt,
+                     const Val<gl::Int>& x, const Val<gl::Int>& y, const Val<gl::Int>& z,
+                     const Val<gl::Sizei>& w, const Val<gl::Sizei>& h, const Val<gl::Sizei>& d,
+                     const Val<gl::TexturePixelData>& type, const Val<gl::Sizei>& size, Ptr<void>& data,
                      const SrcLoc& loc = SrcLoc());
-    bool setSubImage1D(const Vop<gl::Int>& level,
-                       const Vop<gl::Int>& x, const Vop<gl::Sizei>& w,
-                       const Vop<gl::TexturePixelFormat>& fmt, const Vop<gl::TexturePixelData>& type,
-                       const Vop<Data>& data,
+    bool setSubImage1D(const Val<gl::Int>& level,
+                       const Val<gl::Int>& x, const Val<gl::Sizei>& w,
+                       const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
+                       const Ptr<void>& data,
                        const SrcLoc& loc = SrcLoc());
     
-    bool setSubImage2D(const Vop<gl::Int>& level,
-                       const Vop<gl::Int>& x, const Vop<gl::Int>& y,
-                       const Vop<gl::Sizei>& w, const Vop<gl::Sizei>& h,
-                       const Vop<gl::TexturePixelFormat>& fmt, const Vop<gl::TexturePixelData>& type,
-                       const Vop<Data>& data,
+    bool setSubImage2D(const Val<gl::Int>& level,
+                       const Val<gl::Int>& x, const Val<gl::Int>& y,
+                       const Val<gl::Sizei>& w, const Val<gl::Sizei>& h,
+                       const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
+                       const Ptr<void>& data,
                        const SrcLoc& loc = SrcLoc());
     
-    bool setSubImage3D(const Vop<gl::Int>& level,
-                       const Vop<gl::Int>& x, const Vop<gl::Int>& y, const Vop<gl::Int>& z,
-                       const Vop<gl::Sizei>& w, const Vop<gl::Sizei>& h, const Vop<gl::Sizei>& d,
-                       const Vop<gl::TexturePixelFormat>& fmt, const Vop<gl::TexturePixelData>& type,
-                       const Vop<Data>& data,
+    bool setSubImage3D(const Val<gl::Int>& level,
+                       const Val<gl::Int>& x, const Val<gl::Int>& y, const Val<gl::Int>& z,
+                       const Val<gl::Sizei>& w, const Val<gl::Sizei>& h, const Val<gl::Sizei>& d,
+                       const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
+                       const Ptr<void>& data,
                        const SrcLoc& loc = SrcLoc());
 
     // =================================
@@ -80,19 +79,19 @@ public:
     using Wrap = gl::CtxTexture::Wrap;
 
     bool getWrapS(Ptr<Wrap>& dst, const SrcLoc& loc = SrcLoc());
-    bool setWrapS(const Vop<Wrap>& wrap, const SrcLoc& loc = SrcLoc());
+    bool setWrapS(const Val<Wrap>& wrap, const SrcLoc& loc = SrcLoc());
     bool getWrapT(Ptr<Wrap>& dst, const SrcLoc& loc = SrcLoc());
-    bool setWrapT(const Vop<Wrap>& wrap, const SrcLoc& loc = SrcLoc());
+    bool setWrapT(const Val<Wrap>& wrap, const SrcLoc& loc = SrcLoc());
 
     using MinFilter = gl::CtxTexture::MinFilter;
 
     bool getMinFilter(Ptr<MinFilter>& dst, const SrcLoc& loc = SrcLoc());
-    bool setMinFilter(const Vop<MinFilter>& filter, const SrcLoc& loc = SrcLoc());
+    bool setMinFilter(const Val<MinFilter>& filter, const SrcLoc& loc = SrcLoc());
 
     using MagFilter = gl::CtxTexture::MagFilter;
 
     bool getMagFilter(Ptr<MagFilter>& dst, const SrcLoc& loc = SrcLoc());
-    bool setMagFilter(const Vop<MagFilter>& filter, const SrcLoc& loc = SrcLoc());
+    bool setMagFilter(const Val<MagFilter>& filter, const SrcLoc& loc = SrcLoc());
 };
 
 } // namespace glwpp
