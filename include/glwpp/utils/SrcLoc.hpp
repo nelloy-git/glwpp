@@ -4,15 +4,16 @@
 #include <source_location>
 namespace glwpp {
 
-class SrcLoc {
-
 #ifndef GLWPP_DEBUG
 
+class SrcLoc {
 public:
     SrcLoc(){}
+}
 
 #else
 
+class SrcLoc {
 public:
     SrcLoc(char const* file = __builtin_FILE(), 
            std::uint_least32_t line = __builtin_LINE(),
@@ -37,9 +38,9 @@ private:
         char const* function;
     };
     std::shared_ptr<Loc> _loc;
-    
+};
+
 #endif
 
-};
 
 } // namespace glwpp

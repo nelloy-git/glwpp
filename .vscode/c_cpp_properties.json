@@ -5,6 +5,7 @@
             "includePath": [
                 "${default}",
                 "include",
+                "3rdparty/assimp/include",
                 "3rdparty/glfw/include",
                 "3rdparty/glad/include",
                 "3rdparty/googletest/googletest/include",

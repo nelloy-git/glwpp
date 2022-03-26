@@ -57,6 +57,8 @@ add_library (${PROJECT_NAME} STATIC
     src/ctx/FreeType/Font.cpp
 
     src/utils/event/EventStatus.cpp
+
+    src/model/Mesh.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

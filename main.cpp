@@ -5,6 +5,10 @@
 #include <chrono>
 #include <filesystem>
 
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
 #include "glwpp/utils/File.hpp"
 
 #include "glwpp/ctx/Context.hpp"
@@ -16,9 +20,11 @@
 #include "glwpp/gl/oop/Texture.hpp"
 #include "glwpp/gl/oop/VertexArray.hpp"
 
+#include "glwpp/model/Mesh.hpp"
+
 #include "glad/gl.h"
 
-std::string loadTextFile(const std::string path){
+std::string loadTextFile(const std::string& path){
     std::ifstream t(path);
     std::stringstream buffer;
     buffer << t.rdbuf();
@@ -152,11 +158,24 @@ int main(int argc, char **argv){
 
     auto vao = loadRect(win);
 
+
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile("D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models\\STL\\Spider_binary.stl",
+                                             aiProcess_CalcTangentSpace       |
+                                             aiProcess_Triangulate            |
+                                             aiProcess_JoinIdenticalVertices  |
+                                             aiProcess_SortByPType);
+    glwpp::Mesh mesh(win, glwpp::MeshInfo(glwpp::gl::DataType::Int_2_10_10_10,
+                                          glwpp::gl::DataType::Float,
+                                          glwpp::gl::DataType::Float,
+                                          glwpp::gl::DataType::Float,
+                                          glwpp::gl::DataType::Float,
+                                          glwpp::gl::DataType::Float));
+    mesh.loadAssimpMesh(*scene->mMeshes[0]);
+
     while (running){
         win->start();
         win->wait();
-
-        
     };
 }
 
