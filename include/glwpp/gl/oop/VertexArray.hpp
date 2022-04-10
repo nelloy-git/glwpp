@@ -48,6 +48,9 @@ public:
     bool setVertexBuffer(const Val<gl::UInt>& binding, const Buffer& buffer,
                          const Val<gl::IntPtr>& offset, const Val<gl::Sizei>& stride,
                          const SrcLoc& loc = SrcLoc());
+
+    bool draw(const Val<gl::DrawMode>& mode, const Val<size_t>& vertex_count,
+              const Val<gl::DataType>& index_type, const Val<size_t>& instances, const SrcLoc& loc = SrcLoc()) const;
 };
     
 } // namespace glwpp

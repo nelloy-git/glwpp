@@ -8,6 +8,7 @@
                 "3rdparty/assimp/include",
                 "3rdparty/glfw/include",
                 "3rdparty/glad/include",
+                "3rdparty/glm",
                 "3rdparty/googletest/googletest/include",
                 "3rdparty/freetype/include",
                 "3rdparty/thread_pool",

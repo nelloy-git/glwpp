@@ -38,6 +38,9 @@ public:
     void setElementBuffer(const CtxBuffer& buffer, const SrcLoc& loc = SrcLoc());
     void setVertexBuffer(const gl::UInt& binding, const CtxBuffer& buffer,
                          const gl::IntPtr& offset, const Sizei& stride, const SrcLoc& loc = SrcLoc());
+
+    void draw(const gl::DrawMode& mode, const size_t& vertex_count,
+              const gl::DataType& index_type, const size_t& instances, const SrcLoc& loc = SrcLoc()) const;
 };
     
 } // namespace glwpp::gl

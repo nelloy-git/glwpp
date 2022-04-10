@@ -1,99 +1,54 @@
 #pragma once
 
+#include <tuple>
+
 #include "glwpp/gl/enums/DataType.hpp"
+
+#include "glwpp/model/MeshConfig.hpp"
+
+struct aiMesh;
+template<class T>
+struct aiVector3t;
+template<class T>
+struct aiColor4t;
 
 namespace glwpp {
 
-static const size_t MESH_MAX_TEX_COORDS = 8;
-static const size_t MESH_MAX_VERT_COLORS = 8;
-
-class MeshAttributeInfo {
-public:
-    MeshAttributeInfo(const gl::DataType& type) :
-        enabled(false), type(type), size(0), offset(0){
-    };
-    MeshAttributeInfo(const MeshAttributeInfo& other) :
-        enabled(other.enabled), type(other.type), size(other.size), offset(other.size){
-    };
-
-    bool enabled;               // Do model have attribute
-    const gl::DataType type;    // gl memory type
-    size_t size;                // gl memory size
-    size_t offset;              // gl memory offset
-
-    float value_offset;         // all attribute values are normalized [0, 1]. can be used to restore original values in shader
-    float value_mult;           // all attribute values are normalized [0, 1]. can be used to restore original values in shader
-};
-
 class MeshInfo {
 public:
-    MeshInfo(const gl::DataType& position_type,
-             const gl::DataType& normal_type,
-             const gl::DataType& tangent_type,
-             const gl::DataType& bitangent_type,
-             const gl::DataType& texture_coord_type,
-             const gl::DataType& color_type) :
-        position(position_type),
-        normal(normal_type),
-        tangent(tangent_type),
-        bitangent(bitangent_type),
-        texture_coord{MeshAttributeInfo(texture_coord_type),
-                      MeshAttributeInfo(texture_coord_type), 
-                      MeshAttributeInfo(texture_coord_type), 
-                      MeshAttributeInfo(texture_coord_type), 
-                      MeshAttributeInfo(texture_coord_type),
-                      MeshAttributeInfo(texture_coord_type), 
-                      MeshAttributeInfo(texture_coord_type),
-                      MeshAttributeInfo(texture_coord_type)},
-        color{MeshAttributeInfo(color_type),
-              MeshAttributeInfo(color_type), 
-              MeshAttributeInfo(color_type), 
-              MeshAttributeInfo(color_type), 
-              MeshAttributeInfo(color_type),
-              MeshAttributeInfo(color_type), 
-              MeshAttributeInfo(color_type),
-              MeshAttributeInfo(color_type)}{
-    }
-    MeshInfo(const MeshInfo& other) :
-        position(other.position),
-        normal(other.normal),
-        tangent(other.tangent),
-        bitangent(other.bitangent),
-        texture_coord{other.texture_coord[0],
-                      other.texture_coord[1],
-                      other.texture_coord[2],
-                      other.texture_coord[3],
-                      other.texture_coord[4],
-                      other.texture_coord[5],
-                      other.texture_coord[6],
-                      other.texture_coord[7]},
-        color{other.color[0],
-              other.color[1],
-              other.color[2],
-              other.color[3],
-              other.color[4],
-              other.color[5],
-              other.color[6],
-              other.color[7]}{
-    }
+    using Offset = std::tuple<float, float, float, float>;
 
-    size_t size(){
-        size_t s = position.size + normal.size + tangent.size + bitangent.size;
-        for (int i = 0; i < MESH_MAX_TEX_COORDS; ++i){
-            s += texture_coord[i].size;
-        }
-        for (int i = 0; i < MESH_MAX_VERT_COLORS; ++i){
-            s += color[i].size;
-        }
-        return s;
-    }
+    MeshInfo();
+    virtual ~MeshInfo();
 
-    MeshAttributeInfo position;
-    MeshAttributeInfo normal;
-    MeshAttributeInfo tangent;
-    MeshAttributeInfo bitangent;
-    MeshAttributeInfo texture_coord[MESH_MAX_TEX_COORDS];
-    MeshAttributeInfo color[MESH_MAX_VERT_COLORS];
+    void apply(const MeshConfig& config, const aiMesh& ai_mesh);
+
+    const size_t& getTotalBytes() const;
+    const bool& isEnabled(const MeshAttribute& attribute) const;
+    const gl::DataType& getType(const MeshAttribute& attribute) const;
+    const MeshAttributeSize& getSize(const MeshAttribute& attribute) const;
+    const size_t& getOffset(const MeshAttribute& attribute) const;
+    const size_t& getStride(const MeshAttribute& attribute) const;
+    const float getValueOffset(const MeshAttribute& attribute, size_t i) const;
+    const float& getValueMultiplier(const MeshAttribute& attribute) const;
+
+    aiVector3t<float> norm(const MeshAttribute& attribute, const aiVector3t<float>& vec) const;
+    aiColor4t<float> norm(const MeshAttribute& attribute, const aiColor4t<float>& vec) const;
+
+private:
+
+    size_t _total_bytes;
+
+    bool _enabled[MESH_ATTRIBUTE_COUNT];            // Do model have attribute
+    gl::DataType _type[MESH_ATTRIBUTE_COUNT];       // gl memory type
+    MeshAttributeSize _size[MESH_ATTRIBUTE_COUNT];  // number of values
+    size_t _offset[MESH_ATTRIBUTE_COUNT];           // gl memory relative offset
+    size_t _stride[MESH_ATTRIBUTE_COUNT];           // gl memory stride
+
+    Offset _value_offset[MESH_ATTRIBUTE_COUNT]; // all attribute values are normalized [0, 1]. can be used to restore original values in shader
+    float _value_mult[MESH_ATTRIBUTE_COUNT];                                    // all attribute values are normalized [0, 1]. can be used to restore original values in shader
+
+    void _applyOffset(const std::tuple<float, float, float, float>& vals);
 };
 
 } // namespace glwpp

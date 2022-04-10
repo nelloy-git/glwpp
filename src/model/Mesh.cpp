@@ -6,9 +6,46 @@
 
 using namespace glwpp;
 
-Mesh::Mesh(const wptr<Context>& ctx, const MeshInfo& info) :
-    _ctx(ctx),
-    _info(info){
+Mesh Mesh::Cube(const wptr<Context>& wctx, const MeshConfig& prefered_types){
+    static const aiVector3D vertices[8] = {
+        {0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
+        {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}
+    };
+    static const unsigned int faces_data[12][3] = {
+        {0, 5, 4}, {0, 1, 5}, {0, 4, 6}, {0, 6, 2},
+        {0, 1, 3}, {0, 3, 2}, {7, 6, 4}, {7, 4, 5},
+        {7, 3, 2}, {7, 2, 6}, {7, 5, 1}, {7, 1, 3}
+    };
+
+    aiMesh ai_mesh;
+    ai_mesh.mNumVertices = 8;
+    ai_mesh.mVertices = new aiVector3D[8];
+    memcpy(ai_mesh.mVertices, vertices, sizeof(vertices));
+
+    ai_mesh.mNumFaces = 12;
+    ai_mesh.mFaces = new aiFace[12];
+    for (int i = 0; i < 12; ++i){
+        ai_mesh.mFaces[i].mNumIndices = 3;
+        ai_mesh.mFaces[i].mIndices = new unsigned int[3];
+        memcpy(ai_mesh.mFaces[i].mIndices, faces_data[i], sizeof(faces_data[i]));
+    }
+
+    aiFace faces[12];
+    for (int i = 0; i < 12; ++i){
+        faces[i].mNumIndices = 3;
+        faces[i].mIndices = new unsigned int[3];
+        memcpy(faces[i].mIndices, faces_data[i], sizeof(faces_data[i]));
+    }
+
+    Mesh cube(wctx, prefered_types);
+    cube.loadAssimpMesh(ai_mesh);
+
+    return std::move(cube);
+}
+
+Mesh::Mesh(const wptr<Context>& wctx, const MeshConfig& prefered_types) :
+    _ctx(wctx),
+    _config(prefered_types){
 }
 
 Mesh::~Mesh(){
@@ -16,151 +53,227 @@ Mesh::~Mesh(){
 }
 
 bool Mesh::loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc){
-    _calcMeshInfo(ai_mesh);
-
-    size_t vert_buffer_size = _info.size();
-    _vertices = std::make_unique<Buffer>(_ctx, loc);
-
-    gl::BufferStorageFlagBitfield flags(gl::BufferStorageFlag::Dynamic);
-    _vertices->storage(vert_buffer_size, nullptr, flags.fields, loc);
-    _vertices->setSubData(_info.position.offset,
-                          _info.position.size,
-                          _packVec3D(ai_mesh.mVertices, ai_mesh.mNumVertices, _info.position.type),
-                          loc);
+    _info.apply(_config, ai_mesh);
+    _prepareIndexBuffer(ai_mesh);
+    _prepareVertexBuffer(ai_mesh);
+    _prepareVertexArray(ai_mesh);
 
     return true;
 }
 
-template<class T>
-static size_t getVertexAttributeSize(const gl::DataType& type){
-    if constexpr (std::is_same_v<std::remove_reference_t<T>, aiVector3D>){
-        switch (type){
-            case gl::DataType::Byte: return sizeof(Attribute3D<gl::DataType::Byte>);
-            case gl::DataType::UByte: return sizeof(Attribute3D<gl::DataType::UByte>);
-            case gl::DataType::Short: return sizeof(Attribute3D<gl::DataType::Short>);
-            case gl::DataType::UShort: return sizeof(Attribute3D<gl::DataType::UShort>);
-            case gl::DataType::Int: return sizeof(Attribute3D<gl::DataType::Int>);
-            case gl::DataType::UInt: return sizeof(Attribute3D<gl::DataType::UInt>);
-            case gl::DataType::Float: return sizeof(Attribute3D<gl::DataType::Float>);
-            case gl::DataType::Int_2_10_10_10: return sizeof(Attribute3D<gl::DataType::Int_2_10_10_10>);
-            case gl::DataType::UInt_2_10_10_10: return sizeof(Attribute3D<gl::DataType::UInt_2_10_10_10>);
-            
-            default: throw std::runtime_error("Unsuported gl::DataType");
-        }
-    } else if constexpr (std::is_same_v<std::remove_reference_t<T>, aiColor4D>){
-        []<bool B = false>(){static_assert(B, "Unknown ai_Vector");}();
-    } else {
-        []<bool B = false>(){static_assert(B, "Unknown ai_Vector");}();
-    }
+const sptr<VertexArray>& Mesh::getVAO(){
+    return _vao;
 }
 
-void Mesh::_calcMeshInfo(const aiMesh& ai_mesh){
-    size_t offset = 0;
-    size_t count = ai_mesh.mNumVertices;
+void Mesh::_prepareIndexBuffer(const aiMesh& ai_mesh){
+    sptr<void> buffer;
+    size_t buffer_size;
+    auto count = ai_mesh.mNumVertices;
+    auto type =   count < 256   ? gl::DataType::UByte 
+                : count < 65536 ? gl::DataType::UShort
+                                : gl::DataType::UInt;
 
-    _info.position.enabled = ai_mesh.HasPositions();
-    if (_info.position.enabled){
-        _info.position.size = count * getVertexAttributeSize<decltype(*aiMesh::mVertices)>(_info.position.type);
-        _info.position.offset = offset;
-        offset += _info.position.size;
+    switch (type){
+    case gl::DataType::UByte:
+        buffer_size = _getIndexBufferSize<gl::DataType::UByte>(ai_mesh);
+        buffer = _makeIndexBuffer<gl::DataType::UByte>(ai_mesh);
+        break;
+    case gl::DataType::UShort:
+        buffer_size = _getIndexBufferSize<gl::DataType::UShort>(ai_mesh);
+        buffer = _makeIndexBuffer<gl::DataType::UShort>(ai_mesh);
+        break;
+    case gl::DataType::UInt:
+        buffer_size = _getIndexBufferSize<gl::DataType::UInt>(ai_mesh);
+        buffer = _makeIndexBuffer<gl::DataType::UInt>(ai_mesh);
+        break;
+    default: break;
     }
 
-    _info.normal.enabled = ai_mesh.HasNormals();
-    if (_info.normal.enabled){
-        _info.normal.size = count * getVertexAttributeSize<decltype(*aiMesh::mNormals)>(_info.normal.type);
-        _info.normal.offset = offset;
-        offset += _info.normal.size;
-    }
+    _faces_count = ai_mesh.mNumFaces;
+    _indices = make_sptr<Buffer>(_ctx);
+    _indices->storage(buffer_size, buffer, 0);
+}
 
-    _info.tangent.enabled = ai_mesh.HasTangentsAndBitangents();
-    _info.bitangent.enabled = _info.tangent.enabled;
-    if (_info.tangent.enabled){
-        _info.tangent.size = count * getVertexAttributeSize<decltype(*aiMesh::mTangents)>(_info.tangent.type);
-        _info.tangent.offset = offset;
-        offset += _info.tangent.size;
-        
-        _info.bitangent.size = count * getVertexAttributeSize<decltype(*aiMesh::mBitangents)>(_info.bitangent.type);
-        _info.bitangent.offset = offset;
-        offset += _info.bitangent.size;
-    }
+template<gl::DataType D>
+size_t Mesh::_getIndexBufferSize(const aiMesh& ai_mesh){
+    return ai_mesh.mNumFaces * 3 * sizeof(gl::RawVertexAttribType<D>::type);
+}
 
-    for (int i = 0; i < MESH_MAX_TEX_COORDS; ++i){
-        _info.texture_coord->enabled = ai_mesh.HasTextureCoords(i);
-        if (_info.texture_coord->enabled){
-            _info.texture_coord[i].size = count * getVertexAttributeSize<decltype(*aiMesh::mTextureCoords[i])>(_info.texture_coord[i].type);
-            _info.texture_coord[i].offset = offset;
-            offset += _info.texture_coord[i].size;
+template<gl::DataType D>
+sptr<void> Mesh::_makeIndexBuffer(const aiMesh& ai_mesh){
+    auto total_size = _getIndexBufferSize<D>(ai_mesh);;
+    auto tmp = createTmpData(nullptr, total_size);
+    auto ptr = reinterpret_cast<unsigned char*>(tmp.get());
+
+    for (size_t i = 0; i < ai_mesh.mNumFaces; ++i){
+        for (size_t j = 0; j < 3; ++j){
+            ptr[3 * i + j] = ai_mesh.mFaces[i].mIndices[j];
         }
     }
+    return tmp;
+}
 
-    for (int i = 0; i < MESH_MAX_VERT_COLORS; ++i){
-        _info.color[i].enabled = ai_mesh.HasVertexColors(i);
-        if (_info.color[i].enabled){
-            // _info.color[i].size = count * getVertexAttributeSize<decltype(*aiMesh::mColors[i])>(_info.color[i].type);
-            _info.color[i].offset = offset;
-            offset += _info.color[i].size;
-        }
+void Mesh::_prepareVertexBuffer(const aiMesh& ai_mesh){
+    auto tmp = createTmpData(nullptr, ai_mesh.mNumVertices * _info.getTotalBytes());
+    auto buffer = reinterpret_cast<char*>(tmp.get());
+
+    for (size_t i = 0; i < ai_mesh.mNumVertices; ++i){
+        char* vertex_ptr = buffer + i * _info.getTotalBytes();
+        _fillVertex(vertex_ptr, i, ai_mesh);
+    }
+
+    _vertices = make_sptr<Buffer>(_ctx);
+    _vertices->storage(ai_mesh.mNumVertices * _info.getTotalBytes(), tmp, 0);
+}
+
+void Mesh::_fillVertex(char* vertex_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh){
+    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
+        auto attr = static_cast<MeshAttribute>(i);
+        char* attr_ptr = vertex_ptr + _info.getOffset(attr);
+        _fillAttribute(attr_ptr, vertex_pos, ai_mesh, attr);
     }
 }
 
-namespace {
-
-static inline std::pair<float, float> findMinMaxAiVector3D(const aiVector3D* arr, size_t size){
-    static auto inf = std::numeric_limits<float>::infinity();
-    static auto ninf = -std::numeric_limits<float>::infinity();
-
-    float min = inf;
-    float max = ninf;
-    for (unsigned int i = 0; i < size; ++i){
-        min = std::min(min, arr[i].x);
-        min = std::min(min, arr[i].y);
-        min = std::min(min, arr[i].z);
-
-        max = std::max(max, arr[i].x);
-        max = std::max(max, arr[i].y);
-        max = std::max(max, arr[i].z);
-    }
-    return std::make_pair(min, max);
-}
-
-template<gl::DataType T>
-static inline sptr<void> copy_attrib(const aiVector3D* src, float mult, float offset, size_t count){
-    auto tmp_data = createTmpData(nullptr, count * sizeof(Attribute3D<T>));
-    auto data_ptr = reinterpret_cast<Attribute3D<T>*>(tmp_data.get());
-
-    for (size_t i = 0; i < count; ++i){
-        auto& cur = src[i];
-        
-        float x = (cur.x + offset) / mult;
-        float y = (cur.y + offset) / mult;
-        float z = (cur.z + offset) / mult;
-
-        data_ptr[i].set(x, y, z);
-    }
-
-    return tmp_data;
-}
-
-}
-
-sptr<void> Mesh::_packVec3D(const aiVector3D* src, const size_t& count, const gl::DataType& target){
-    auto min_max = findMinMaxAiVector3D(src, count);
-    float offset = -min_max.first;
-    float mult = min_max.second - min_max.first;
-
-    _info.position.value_offset = offset;
-    _info.position.value_mult = mult;
+void Mesh::_fillAttribute(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr){
+    auto size = _info.getSize(attr);
+    switch (size){
+    case MeshAttributeSize::Scalar: return _fillAttributeSized<1>(attr_ptr, vertex_pos, ai_mesh, attr);
+    case MeshAttributeSize::Vec2: return _fillAttributeSized<2>(attr_ptr, vertex_pos, ai_mesh, attr);
+    case MeshAttributeSize::Vec3: return _fillAttributeSized<3>(attr_ptr, vertex_pos, ai_mesh, attr);
+    case MeshAttributeSize::Vec4: return _fillAttributeSized<4>(attr_ptr, vertex_pos, ai_mesh, attr);
     
-    switch (_info.position.type){
-        case gl::DataType::Byte: return copy_attrib<gl::DataType::Byte>(src, mult, offset, count);
-        case gl::DataType::UByte: return copy_attrib<gl::DataType::UByte>(src, mult, offset, count);
-        case gl::DataType::Short: return copy_attrib<gl::DataType::Short>(src, mult, offset, count);
-        case gl::DataType::UShort: return copy_attrib<gl::DataType::UShort>(src, mult, offset, count);
-        case gl::DataType::Int: return copy_attrib<gl::DataType::Int>(src, mult, offset, count);
-        case gl::DataType::UInt: return copy_attrib<gl::DataType::UInt>(src, mult, offset, count);
-        case gl::DataType::Float: return copy_attrib<gl::DataType::Float>(src, mult, offset, count);
-        case gl::DataType::Int_2_10_10_10: return copy_attrib<gl::DataType::Int_2_10_10_10>(src, mult, offset, count);
-        case gl::DataType::UInt_2_10_10_10: return copy_attrib<gl::DataType::UInt_2_10_10_10>(src, mult, offset, count);
-        default: throw std::runtime_error("Unsuported gl::DataType");
+    default: return;
     }
+}
+
+template<size_t S>
+void Mesh::_fillAttributeSized(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr){
+    auto type = _info.getType(attr);
+
+    if constexpr (S == 1 || S == 2 || S == 4){
+        switch (type){
+        case gl::DataType::Byte: return _fillAttributeSizedTyped<S, gl::DataType::Byte>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UByte: return _fillAttributeSizedTyped<S, gl::DataType::UByte>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Short: return _fillAttributeSizedTyped<S, gl::DataType::Short>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UShort: return _fillAttributeSizedTyped<S, gl::DataType::UShort>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Int: return _fillAttributeSizedTyped<S, gl::DataType::Int>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UInt: return _fillAttributeSizedTyped<S, gl::DataType::UInt>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Float: return _fillAttributeSizedTyped<S, gl::DataType::Float>(attr_ptr, vertex_pos, ai_mesh, attr);
+        default: throw std::runtime_error("Unsuported gl::DataType with size 1, 2 or 4");
+        }
+    } else if constexpr (S == 3){
+        switch (type){
+        case gl::DataType::Byte: return _fillAttributeSizedTyped<S, gl::DataType::Byte>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UByte: return _fillAttributeSizedTyped<S, gl::DataType::UByte>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Short: return _fillAttributeSizedTyped<S, gl::DataType::Short>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UShort: return _fillAttributeSizedTyped<S, gl::DataType::UShort>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Int: return _fillAttributeSizedTyped<S, gl::DataType::Int>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UInt: return _fillAttributeSizedTyped<S, gl::DataType::UInt>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Float: return _fillAttributeSizedTyped<S, gl::DataType::Float>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::Int_2_10_10_10: return _fillAttributeSizedTyped<S, gl::DataType::Int_2_10_10_10>(attr_ptr, vertex_pos, ai_mesh, attr);
+        case gl::DataType::UInt_2_10_10_10: return _fillAttributeSizedTyped<S, gl::DataType::UInt_2_10_10_10>(attr_ptr, vertex_pos, ai_mesh, attr);
+        default: throw std::runtime_error("Unsuported gl::DataType with size 3");
+        }
+    }
+    throw std::runtime_error("Unsuported size");
+}
+
+template<size_t S, gl::DataType D>
+void Mesh::_fillAttributeSizedTyped(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr){
+    auto ptr = reinterpret_cast<Attribute<D, S>*>(attr_ptr);
+
+    if (attr != MeshAttribute::Color_0
+        && attr != MeshAttribute::Color_1
+        && attr != MeshAttribute::Color_2
+        && attr != MeshAttribute::Color_3){
+        
+        aiVector3D normed;
+        switch (attr){
+        case MeshAttribute::Position: normed = _info.norm(attr, ai_mesh.mVertices[vertex_pos]); break;
+        case MeshAttribute::Normal: normed = _info.norm(attr, ai_mesh.mNormals[vertex_pos]); break;
+        case MeshAttribute::Tangent: normed = _info.norm(attr, ai_mesh.mTangents[vertex_pos]); break;
+        case MeshAttribute::Bitangent: normed = _info.norm(attr, ai_mesh.mBitangents[vertex_pos]); break;
+        case MeshAttribute::TexCoord_0: normed = _info.norm(attr, ai_mesh.mTextureCoords[0][vertex_pos]); break;
+        case MeshAttribute::TexCoord_1: normed = _info.norm(attr, ai_mesh.mTextureCoords[1][vertex_pos]); break;
+        case MeshAttribute::TexCoord_2: normed = _info.norm(attr, ai_mesh.mTextureCoords[2][vertex_pos]); break;
+        case MeshAttribute::TexCoord_3: normed = _info.norm(attr, ai_mesh.mTextureCoords[3][vertex_pos]); break;
+        case MeshAttribute::TexCoord_4: normed = _info.norm(attr, ai_mesh.mTextureCoords[4][vertex_pos]); break;
+        case MeshAttribute::TexCoord_5: normed = _info.norm(attr, ai_mesh.mTextureCoords[5][vertex_pos]); break;
+        case MeshAttribute::TexCoord_6: normed = _info.norm(attr, ai_mesh.mTextureCoords[6][vertex_pos]); break;
+        case MeshAttribute::TexCoord_7: normed = _info.norm(attr, ai_mesh.mTextureCoords[7][vertex_pos]); break;
+        
+        default: throw std::runtime_error("Unknown attribute");
+        }
+        ptr->set(normed.x, normed.y, normed.z, 0);
+    } else {
+        aiColor4D normed;
+        switch (attr){
+        case MeshAttribute::Color_0: normed = _info.norm(attr, ai_mesh.mColors[0][vertex_pos]); break;
+        case MeshAttribute::Color_1: normed = _info.norm(attr, ai_mesh.mColors[1][vertex_pos]); break;
+        case MeshAttribute::Color_2: normed = _info.norm(attr, ai_mesh.mColors[2][vertex_pos]); break;
+        case MeshAttribute::Color_3: normed = _info.norm(attr, ai_mesh.mColors[3][vertex_pos]); break;
+        
+        default: throw std::runtime_error("Unknown attribute");
+        }
+        ptr->set(normed.r, normed.b, normed.g, normed.a);
+    }
+}
+
+void Mesh::_prepareVertexArray(const aiMesh& ai_mesh){
+    _vao = make_sptr<VertexArray>(_ctx);
+    _vao->setElementBuffer(*_indices);
+    _vao->setVertexBuffer(0, *_vertices, 0, _info.getTotalBytes());
+
+    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
+        auto attr = static_cast<MeshAttribute>(i);
+        if (!_info.isEnabled(attr)){
+            continue;
+        }
+
+        _vao->enableAttrib(i);
+        _vao->setAttribBinding(i, 0);
+        _vao->setAttribFormat(i, static_cast<size_t>(_info.getSize(attr)), _info.getType(attr), true, _info.getOffset(attr));
+    }
+}
+
+const MeshConfig& Mesh::_get_default_types(){
+    static const MeshConfig default_types = [](){
+        MeshConfig types;
+        types.setType(MeshAttribute::Position, gl::DataType::UByte);
+        types.setType(MeshAttribute::Normal, gl::DataType::UByte);
+        types.setType(MeshAttribute::Tangent, gl::DataType::UByte);
+        types.setType(MeshAttribute::Bitangent, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_0, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_1, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_2, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_3, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_4, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_5, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_6, gl::DataType::UByte);
+        types.setType(MeshAttribute::TexCoord_7, gl::DataType::UByte);
+        types.setType(MeshAttribute::Color_0, gl::DataType::UByte);
+        types.setType(MeshAttribute::Color_1, gl::DataType::UByte);
+        types.setType(MeshAttribute::Color_2, gl::DataType::UByte);
+        types.setType(MeshAttribute::Color_3, gl::DataType::UByte);
+        
+        types.setSize(MeshAttribute::Position, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::Normal, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::Tangent, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::Bitangent, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_0, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_1, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_2, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_3, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_4, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_5, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_6, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::TexCoord_7, MeshAttributeSize::Vec3);
+        types.setSize(MeshAttribute::Color_0, MeshAttributeSize::Vec4);
+        types.setSize(MeshAttribute::Color_1, MeshAttributeSize::Vec4);
+        types.setSize(MeshAttribute::Color_2, MeshAttributeSize::Vec4);
+        types.setSize(MeshAttribute::Color_3, MeshAttributeSize::Vec4);
+
+        return types;
+    }();
+    return default_types;
 }

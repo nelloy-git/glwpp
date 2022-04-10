@@ -13,8 +13,8 @@ enum class DataType : gl::Enum {
     UInt = 0x1405,                  // GL_UNSIGNED_INT
     Float = 0x1406,                 // GL_FLOAT
     Double = 0x140A,                // GL_DOUBLE
-    Int_2_10_10_10 = 0x8D9F,    // GL_INT_2_10_10_10_REV
-    UInt_2_10_10_10 = 0x8368,   // GL_UNSIGNED_INT_2_10_10_10_REV
+    Int_2_10_10_10 = 0x8D9F,        // GL_INT_2_10_10_10_REV
+    UInt_2_10_10_10 = 0x8368,       // GL_UNSIGNED_INT_2_10_10_10_REV
 };
 
 template<DataType T>

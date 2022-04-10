@@ -90,3 +90,8 @@ bool VertexArray::setVertexBuffer(const Val<gl::UInt>& binding, const Buffer& bu
     return _executeMethod<CtxVertexArray, &CtxVertexArray::setVertexBuffer>(binding, buffer._getVop<CtxBuffer>(),
                                                                          offset, stride, loc);
 }
+
+bool VertexArray::draw(const Val<gl::DrawMode>& mode, const Val<size_t>& vertex_count,
+                       const Val<gl::DataType>& index_type, const Val<size_t>& instances, const SrcLoc& loc) const {
+    return _executeMethod<CtxVertexArray, &CtxVertexArray::draw>(mode, vertex_count, index_type, instances, loc);
+}

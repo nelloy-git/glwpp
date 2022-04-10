@@ -5,9 +5,12 @@
 #include "glwpp/gl/oop/Buffer.hpp"
 #include "glwpp/gl/oop/VertexArray.hpp"
 
+// #include "glwpp/model/MeshInfo.hpp"
+#include "glwpp/model/MeshConfig.hpp"
 #include "glwpp/model/MeshInfo.hpp"
 
 struct aiMesh;
+struct aiFace;
 
 template<class T>
 class aiVector3t;
@@ -15,31 +18,51 @@ class aiVector3t;
 namespace glwpp {
 
 class Mesh {
-    static const size_t MAX_TEX_COORD = 8;
-    static const size_t MAX_VERTEX_COLOR = 8;
 
 public:
-    Mesh(const wptr<Context>& wctx, const MeshInfo& info);
+
+    static Mesh Cube(const wptr<Context>& wctx, const MeshConfig& prefered_types = Mesh::_get_default_types());
+
+    Mesh(const wptr<Context>& wctx, const MeshConfig& prefered_types = Mesh::_get_default_types());
     virtual ~Mesh();
 
     bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc = SrcLoc());
+    const sptr<VertexArray>& getVAO();
 
 private:
     wptr<Context> _ctx;
+    MeshConfig _config;
     MeshInfo _info;
 
-    uptr<VertexArray> _vao;
-    uptr<Buffer> _vertices;
-    uptr<Buffer> _elements;
+    size_t _faces_count;
+    sptr<VertexArray> _vao;
+    sptr<Buffer> _vertices;
+    sptr<Buffer> _indices;
 
-    bool _has_bones;
-    bool _has_faces;
+    void _prepareMeshInfo(const aiMesh& ai_mesh);
+    void _prepareIndexBuffer(const aiMesh& ai_mesh);
+    template<gl::DataType>
+    size_t _getIndexBufferSize(const aiMesh& ai_mesh);
+    template<gl::DataType>
+    sptr<void> _makeIndexBuffer(const aiMesh& ai_mesh);
+    void _prepareVertexBuffer(const aiMesh& ai_mesh);
+    void _fillVertex(char* vertex_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh);
+    void _fillAttribute(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
+    template<size_t S>
+    void _fillAttributeSized(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
+    template<size_t S, gl::DataType D>
+    void _fillAttributeSizedTyped(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
+    void _prepareVertexArray(const aiMesh& ai_mash);
 
-    void _calcMeshInfo(const aiMesh& ai_mesh);
+    // void _fillAttribute3D(char* dst, const MeshAttribute& attr, const aiVector3D& ai_vec3);
+
     
-    sptr<void> _preparePosition(const aiMesh& ai_mesh);
+    // sptr<void> _preparePosition(const aiMesh& ai_mesh);
 
-    sptr<void> _packVec3D(const aiVector3t<float>* src, const size_t& count, const gl::DataType& target);
+    static const MeshConfig& _get_default_types();
+
+    // static sptr<void> _packIndices(const aiFace* src, const size_t& count);
+    // static sptr<void> _packVec3D(const aiVector3t<float>* src, const size_t& count);
 
     
 };

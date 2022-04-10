@@ -98,7 +98,7 @@ void CtxVertexArray::setAttribBinding(const UInt& index, const UInt& binding, co
 }
 
 void CtxVertexArray::setAttribFormat(const UInt& index, const Int& size, const DataType& type,
-                                  const bool& normalized, const UInt& relative_offset, const SrcLoc& loc){
+                                     const bool& normalized, const UInt& relative_offset, const SrcLoc& loc){
     glVertexArrayAttribFormat(getId(), index, size, static_cast<Enum>(type),
                               normalized ? GL_TRUE : GL_FALSE, relative_offset);
     _printDebug(loc);
@@ -116,7 +116,15 @@ void CtxVertexArray::setElementBuffer(const CtxBuffer& buffer, const SrcLoc& loc
 }
 
 void CtxVertexArray::setVertexBuffer(const gl::UInt& binding, const CtxBuffer& buffer,
-                                  const gl::IntPtr& offset, const Sizei& stride, const SrcLoc& loc){
+                                     const gl::IntPtr& offset, const Sizei& stride, const SrcLoc& loc){
     glVertexArrayVertexBuffer(getId(), binding, buffer.getId(), offset, stride);
+    _printDebug(loc);
+}
+
+void CtxVertexArray::draw(const gl::DrawMode& mode, const size_t& vertex_count,
+                          const gl::DataType& index_type, const size_t& instances, const SrcLoc& loc) const {
+    glBindVertexArray(getId());
+    glDrawElementsInstanced(static_cast<Enum>(mode), vertex_count, static_cast<Enum>(index_type), nullptr, instances);
+    glBindVertexArray(0);
     _printDebug(loc);
 }

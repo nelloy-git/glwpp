@@ -60,7 +60,7 @@ static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
 
 glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
     auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
-    v_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.vs"));
+    v_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
     win->onRun.push([v_shader](){
         bool compiled = false;
         v_shader.isCompiled(&compiled);
@@ -72,7 +72,7 @@ glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
     });
     
     auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
-    f_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.fs"));
+    f_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
     auto compiled = glwpp::make_sptr<bool>(false);
     f_shader.isCompiled(compiled);
     win->onRun.push([compiled](){
@@ -126,7 +126,6 @@ glwpp::VertexArray loadRect(std::shared_ptr<glwpp::Context> win){
     vertices.data(sizeof(rect_vert), rect_vert, glwpp::gl::BufferUsage::DynamicDraw);
 
     glwpp::VertexArray vao(win);
-    glwpp::gl::UInt index = 0;
     vao.enableAttrib(0);
     vao.setAttribBinding(0, 0);
     vao.setAttribFormat(0, 2, glwpp::gl::DataType::Float, false, 0);
@@ -139,6 +138,34 @@ glwpp::VertexArray loadRect(std::shared_ptr<glwpp::Context> win){
     vao.setVertexBuffer(0, vertices, 0, 4 * sizeof(float));
 
     return vao;
+}
+
+void draw(const glwpp::VertexArray& vao){
+    glwpp::gl::UInt id;
+    vao.getId(&id);
+
+    glBindVertexArray(id);
+    // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0, 1);
+
+    glwpp::gl::Enum err = glGetError();
+    while (err != GL_NO_ERROR){
+        std::string err_name;
+        switch (err){
+            case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
+            case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
+            case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
+            case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
+            case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
+            case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
+            case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
+            case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
+            default: err_name = "UNKNOWN";
+        }
+
+        std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
+        err = glGetError();
+    }
 }
 
 int main(int argc, char **argv){
@@ -156,26 +183,28 @@ int main(int argc, char **argv){
     pushTimePrinter(win);
     auto prog = loadProgram(win);
 
-    auto vao = loadRect(win);
-
-
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile("D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models\\STL\\Spider_binary.stl",
                                              aiProcess_CalcTangentSpace       |
                                              aiProcess_Triangulate            |
                                              aiProcess_JoinIdenticalVertices  |
                                              aiProcess_SortByPType);
-    glwpp::Mesh mesh(win, glwpp::MeshInfo(glwpp::gl::DataType::Int_2_10_10_10,
-                                          glwpp::gl::DataType::Float,
-                                          glwpp::gl::DataType::Float,
-                                          glwpp::gl::DataType::Float,
-                                          glwpp::gl::DataType::Float,
-                                          glwpp::gl::DataType::Float));
+
+    // glwpp::Mesh cube = glwpp::Mesh::Cube(win);
+    // auto vao = cube.getVAO();
+
+    glwpp::Mesh mesh(win);
     mesh.loadAssimpMesh(*scene->mMeshes[0]);
+    auto vao = mesh.getVAO();
+
+    // win->onRun.push<[]{return true;}>([vao](){
+    //     draw(*vao);
+    // });
 
     while (running){
         win->start();
         win->wait();
+        vao->draw(glwpp::gl::DrawMode::Triangles, 12, glwpp::gl::DataType::UByte, 1);
     };
 }
 
