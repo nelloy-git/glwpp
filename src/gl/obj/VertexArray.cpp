@@ -1,6 +1,6 @@
-#include "glwpp/gl/oop/VertexArray.hpp"
+#include "glwpp/gl/obj/VertexArray.hpp"
 
-#include "glwpp/gl/object/CtxVertexArray.hpp"
+#include "glwpp/gl/ctx_only/CtxVertexArray.hpp"
 
 using namespace glwpp;
 using namespace glwpp::gl;

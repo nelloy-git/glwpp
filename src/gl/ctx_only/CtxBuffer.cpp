@@ -1,4 +1,4 @@
-#include "glwpp/gl/object/CtxBuffer.hpp"
+#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 
 #include <iostream>
 
@@ -37,6 +37,28 @@ void CtxBuffer::data(const gl::SizeiPtr& size, const Data data, const gl::Buffer
 
 void CtxBuffer::storage(const gl::SizeiPtr& size, const Data data, const gl::BitField& flags, const SrcLoc& loc){
     glNamedBufferStorage(getId(), size, data, flags);
+    _printDebug(loc);
+}
+
+void CtxBuffer::bindUniformBase(const UInt& index, const SrcLoc& loc) const{
+    glBindBufferBase(GL_UNIFORM_BUFFER, index, getId());
+    _printDebug(loc);
+}
+
+void CtxBuffer::bindUniformRange(const UInt& index, const IntPtr& offset,
+                                 const SizeiPtr& size, const SrcLoc& loc) const{
+    glBindBufferRange(GL_UNIFORM_BUFFER, index, getId(), offset, size);
+    _printDebug(loc);
+}
+
+void CtxBuffer::bindShaderStorageBase(const UInt& index, const SrcLoc& loc) const{
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, getId());
+    _printDebug(loc);
+}
+
+void CtxBuffer::bindShaderStorageRange(const UInt& index, const IntPtr& offset,
+                                       const SizeiPtr& size, const SrcLoc& loc) const{
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, index, getId(), offset, size);
     _printDebug(loc);
 }
 

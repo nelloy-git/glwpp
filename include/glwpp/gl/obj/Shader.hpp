@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "glwpp/gl/oop/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
 #include "glwpp/gl/enums/ShaderType.hpp"
 #include "glwpp/gl/enums/ShaderParam.hpp"

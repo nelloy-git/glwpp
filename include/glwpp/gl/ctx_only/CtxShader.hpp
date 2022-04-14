@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 #include "glwpp/gl/enums/ShaderType.hpp"
 #include "glwpp/gl/enums/ShaderParam.hpp"

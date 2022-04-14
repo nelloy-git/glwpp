@@ -1,4 +1,4 @@
-#include "glwpp/gl/object/CtxVertexArray.hpp"
+#include "glwpp/gl/ctx_only/CtxVertexArray.hpp"
 
 #include "glad/gl.h"
 

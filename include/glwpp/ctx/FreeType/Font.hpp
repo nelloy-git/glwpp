@@ -4,7 +4,7 @@
 #include <string>
 
 #include "glwpp/ctx/FreeType/GlyphInfo.hpp"
-#include "glwpp/gl/oop/Texture.hpp"
+#include "glwpp/gl/obj/Texture.hpp"
 #include "glwpp/utils/Ptr.hpp"
 
 struct FT_FaceRec_;

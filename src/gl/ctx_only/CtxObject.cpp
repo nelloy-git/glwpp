@@ -1,4 +1,4 @@
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 #include <iostream>
 

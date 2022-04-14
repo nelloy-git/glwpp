@@ -1,11 +1,11 @@
 #pragma once
 
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 #include "glwpp/gl/enums/DataType.hpp"
 #include "glwpp/gl/enums/DrawMode.hpp"
 #include "glwpp/gl/enums/VertexArrayAttribParam.hpp"
-#include "glwpp/gl/object/CtxBuffer.hpp"
+#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 
 namespace glwpp::gl {
 

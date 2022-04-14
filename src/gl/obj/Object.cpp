@@ -1,6 +1,6 @@
-#include "glwpp/gl/oop/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 using namespace glwpp;
 

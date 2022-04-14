@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glwpp/gl/oop/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
 #include "glwpp/gl/enums/BufferMapAccess.hpp"
 #include "glwpp/gl/enums/BufferMapRangeAccess.hpp"
@@ -25,6 +25,13 @@ public:
               const Val<gl::BufferUsage>& usage, const SrcLoc& loc = SrcLoc());
     bool storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
                  const Val<gl::BitField>& flags, const SrcLoc& loc = SrcLoc());
+
+    bool bindUniformBase(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
+    bool bindUniformRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
+                     const Val<gl::SizeiPtr>& size, const SrcLoc& loc = SrcLoc()) const;
+    bool bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
+    bool bindShaderStorageRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
+                           const Val<gl::SizeiPtr>& size, const SrcLoc& loc = SrcLoc()) const;
 
     bool getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc& loc = SrcLoc()) const;
     bool getMapRangeAccess(Ptr<gl::BitField>& dst, const SrcLoc& loc = SrcLoc()) const;

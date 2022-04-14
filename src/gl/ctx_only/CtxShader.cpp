@@ -1,4 +1,4 @@
-#include "glwpp/gl/object/CtxShader.hpp"
+#include "glwpp/gl/ctx_only/CtxShader.hpp"
 
 #include "glad/gl.h"
 

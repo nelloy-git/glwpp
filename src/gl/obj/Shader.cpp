@@ -1,6 +1,6 @@
-#include "glwpp/gl/oop/Shader.hpp"
+#include "glwpp/gl/obj/Shader.hpp"
 
-#include "glwpp/gl/object/CtxShader.hpp"
+#include "glwpp/gl/ctx_only/CtxShader.hpp"
 
 using namespace glwpp;
 using namespace glwpp::gl;

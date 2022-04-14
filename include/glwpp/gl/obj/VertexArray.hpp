@@ -1,11 +1,11 @@
 #pragma once
 
-#include "glwpp/gl/oop/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
 #include "glwpp/gl/enums/DataType.hpp"
 #include "glwpp/gl/enums/DrawMode.hpp"
 #include "glwpp/gl/enums/VertexArrayAttribParam.hpp"
-#include "glwpp/gl/oop/Buffer.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
 
 namespace glwpp {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 #include "glwpp/gl/enums/BufferMapAccess.hpp"
 #include "glwpp/gl/enums/BufferUsage.hpp"
@@ -17,6 +17,13 @@ public:
 
     void data(const SizeiPtr& size, const Data data, const BufferUsage& usage, const SrcLoc& loc = SrcLoc());
     void storage(const SizeiPtr& size, const Data data, const BitField& flags, const SrcLoc& loc = SrcLoc());
+
+    void bindUniformBase(const UInt& index, const SrcLoc& loc = SrcLoc()) const;
+    void bindUniformRange(const UInt& index, const IntPtr& offset,
+                          const SizeiPtr& size, const SrcLoc& loc = SrcLoc()) const;
+    void bindShaderStorageBase(const UInt& index, const SrcLoc& loc = SrcLoc()) const;
+    void bindShaderStorageRange(const UInt& index, const IntPtr& offset,
+                                const SizeiPtr& size, const SrcLoc& loc = SrcLoc()) const;
 
     Int getParamI(Enum param, const SrcLoc& loc = SrcLoc()) const;
     Int64 getParamI64(Enum param, const SrcLoc& loc = SrcLoc()) const;

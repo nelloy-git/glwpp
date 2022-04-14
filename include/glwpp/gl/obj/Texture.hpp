@@ -1,15 +1,15 @@
 #pragma once
 
-#include "glwpp/gl/oop/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
-#include "glwpp/gl/object/CtxTexture.hpp"
+#include "glwpp/gl/ctx_only/CtxTexture.hpp"
 
 #include "glwpp/gl/enums/TextureBufferFormat.hpp"
 #include "glwpp/gl/enums/TextureType.hpp"
 #include "glwpp/gl/enums/TextureParam.hpp"
 #include "glwpp/gl/enums/TexturePixelData.hpp"
 #include "glwpp/gl/enums/TexturePixelFormat.hpp"
-#include "glwpp/gl/oop/Buffer.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
 #include "glwpp/utils/SrcLoc.hpp"
 
 namespace glwpp {

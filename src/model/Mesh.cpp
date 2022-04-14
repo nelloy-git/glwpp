@@ -2,7 +2,7 @@
 
 #include "assimp/scene.h"
 
-#include "glwpp/model/Attrubute.hpp"
+#include "glwpp/model/VertexAttribute.hpp"
 
 using namespace glwpp;
 

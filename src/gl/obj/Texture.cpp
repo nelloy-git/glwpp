@@ -1,6 +1,6 @@
-#include "glwpp/gl/oop/Texture.hpp"
+#include "glwpp/gl/obj/Texture.hpp"
 
-#include "glwpp/gl/object/CtxTexture.hpp"
+#include "glwpp/gl/ctx_only/CtxTexture.hpp"
 
 using namespace glwpp;
 using namespace glwpp::gl;

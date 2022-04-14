@@ -1,4 +1,4 @@
-#include "glwpp/gl/object/CtxTexture.hpp"
+#include "glwpp/gl/ctx_only/CtxTexture.hpp"
 
 #include <unordered_map>
 

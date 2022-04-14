@@ -10,11 +10,11 @@
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/ctx/FreeType/Font.hpp"
 
-#include "glwpp/gl/oop/Buffer.hpp"
-#include "glwpp/gl/oop/Program.hpp"
-#include "glwpp/gl/oop/Shader.hpp"
-#include "glwpp/gl/oop/Texture.hpp"
-#include "glwpp/gl/oop/VertexArray.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
+#include "glwpp/gl/obj/Program.hpp"
+#include "glwpp/gl/obj/Shader.hpp"
+#include "glwpp/gl/obj/Texture.hpp"
+#include "glwpp/gl/obj/VertexArray.hpp"
 
 #include "glad/gl.h"
 

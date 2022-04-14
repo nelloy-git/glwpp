@@ -1,13 +1,13 @@
 #pragma once
 
-#include "glwpp/gl/object/CtxObject.hpp"
+#include "glwpp/gl/ctx_only/CtxObject.hpp"
 
 #include "glwpp/gl/enums/TextureBufferFormat.hpp"
 #include "glwpp/gl/enums/TextureType.hpp"
 #include "glwpp/gl/enums/TextureParam.hpp"
 #include "glwpp/gl/enums/TexturePixelData.hpp"
 #include "glwpp/gl/enums/TexturePixelFormat.hpp"
-#include "glwpp/gl/object/CtxBuffer.hpp"
+#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 
 namespace glwpp::gl {
 

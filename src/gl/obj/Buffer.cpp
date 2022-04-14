@@ -1,6 +1,6 @@
-#include "glwpp/gl/oop/Buffer.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
 
-#include "glwpp/gl/object/CtxBuffer.hpp"
+#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 
 using namespace glwpp;
 using namespace glwpp::gl;
@@ -24,6 +24,25 @@ bool Buffer::storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
                      const Val<gl::BitField>& flags, const SrcLoc& loc){
     return _executeMethod<CtxBuffer, &CtxBuffer::storage>(size, data, flags, loc);
 }
+
+bool Buffer::bindUniformBase(const Val<gl::UInt>& index, const SrcLoc& loc) const {
+    return _executeMethod<CtxBuffer, &CtxBuffer::bindUniformBase>(index, loc);
+}
+
+bool Buffer::bindUniformRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
+                              const Val<gl::SizeiPtr>& size, const SrcLoc& loc) const {
+    return _executeMethod<CtxBuffer, &CtxBuffer::bindUniformRange>(index, offset, size, loc);
+}
+                    
+bool Buffer::bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc& loc) const {
+    return _executeMethod<CtxBuffer, &CtxBuffer::bindShaderStorageBase>(index, loc);
+}
+
+bool Buffer::bindShaderStorageRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
+                               const Val<gl::SizeiPtr>& size, const SrcLoc& loc) const {
+    return _executeMethod<CtxBuffer, &CtxBuffer::bindShaderStorageRange>(index, offset, size, loc);
+
+}                        
 
 bool Buffer::getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc& loc) const {
     return _executeGetter<CtxBuffer, &CtxBuffer::getMapAccess>(dst, loc);

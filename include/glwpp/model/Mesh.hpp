@@ -2,8 +2,8 @@
 
 #include "glwpp/ctx/Context.hpp"
 
-#include "glwpp/gl/oop/Buffer.hpp"
-#include "glwpp/gl/oop/VertexArray.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
+#include "glwpp/gl/obj/VertexArray.hpp"
 
 // #include "glwpp/model/MeshInfo.hpp"
 #include "glwpp/model/MeshConfig.hpp"

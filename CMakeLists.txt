@@ -40,19 +40,19 @@ add_library (${PROJECT_NAME} STATIC
     src/glfw/enums/Mod.cpp
     src/glfw/Window.cpp
 
-    src/gl/object/CtxObject.cpp
-    src/gl/object/CtxBuffer.cpp
-    src/gl/object/CtxProgram.cpp
-    src/gl/object/CtxShader.cpp
-    src/gl/object/CtxTexture.cpp
-    src/gl/object/CtxVertexArray.cpp
+    src/gl/ctx_only/CtxObject.cpp
+    src/gl/ctx_only/CtxBuffer.cpp
+    src/gl/ctx_only/CtxProgram.cpp
+    src/gl/ctx_only/CtxShader.cpp
+    src/gl/ctx_only/CtxTexture.cpp
+    src/gl/ctx_only/CtxVertexArray.cpp
 
-    src/gl/oop/Object.cpp
-    src/gl/oop/Buffer.cpp
-    src/gl/oop/Program.cpp
-    src/gl/oop/Shader.cpp
-    src/gl/oop/Texture.cpp
-    src/gl/oop/VertexArray.cpp
+    src/gl/obj/Object.cpp
+    src/gl/obj/Buffer.cpp
+    src/gl/obj/Program.cpp
+    src/gl/obj/Shader.cpp
+    src/gl/obj/Texture.cpp
+    src/gl/obj/VertexArray.cpp
 
     src/ctx/FreeType/Font.cpp
 
