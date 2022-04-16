@@ -224,6 +224,10 @@ const size_t& MeshInfo::getStride(const MeshAttribute& attribute) const {
     return _stride[static_cast<size_t>(attribute)];
 }
 
+const Offset& MeshInfo::getValueOffset(const MeshAttribute& attribute) const {
+    return _value_offset[static_cast<size_t>(attribute)];
+}
+
 const float MeshInfo::getValueOffset(const MeshAttribute& attribute, size_t i) const {
     switch (i){
     case 0: return -std::get<0>(_value_offset[static_cast<size_t>(attribute)]);

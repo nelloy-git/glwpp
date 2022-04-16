@@ -1,4 +1,4 @@
-#include "glwpp/ctx/Camera.hpp"
+#include "glwpp/drawer/Camera.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -12,6 +12,10 @@ Camera::~Camera(){
 }
 
 const glm::mat4& Camera::getMat() const {
+    return *_mat;
+}
+
+const sptr<glm::mat4>& Camera::getMatPtr() const {
     return _mat;
 }
 
@@ -112,8 +116,8 @@ void Camera::_update(){
     glm::mat4 view_mat = glm::lookAt(_pos, _pos + _forward, _up);
     if (_use_perspective){
         auto proj_mat = glm::perspectiveFov(_fov, static_cast<float>(_width), static_cast<float>(_height), _near_z, _far_z);
-        _mat = proj_mat * view_mat;
+        *_mat = proj_mat * view_mat;
     } else {
-        _mat = view_mat;
+        *_mat = view_mat;
     }
 }

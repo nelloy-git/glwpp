@@ -22,6 +22,8 @@
 
 #include "glwpp/model/Mesh.hpp"
 
+#include "glwpp/Drawer.hpp"
+
 #include "glad/gl.h"
 
 std::string loadTextFile(const std::string& path){
@@ -192,19 +194,56 @@ int main(int argc, char **argv){
 
     // glwpp::Mesh cube = glwpp::Mesh::Cube(win);
     // auto vao = cube.getVAO();
+    
+    auto meshes = std::vector<glwpp::Mesh>();
+    for (size_t i = 0; i < scene->mNumMeshes; ++i){
+        auto &mesh = meshes.emplace_back(win);
+        mesh.loadAssimpMesh(*scene->mMeshes[i]);
+    }
 
-    glwpp::Mesh mesh(win);
-    mesh.loadAssimpMesh(*scene->mMeshes[0]);
-    auto vao = mesh.getVAO();
+    // glwpp::Mesh mesh(win);
+    // mesh.loadAssimpMesh(*scene->mMeshes[0]);
+    // auto vao = mesh.getVAO();
 
-    // win->onRun.push<[]{return true;}>([vao](){
-    //     draw(*vao);
-    // });
+    glwpp::Drawer drawer(prog);
+    drawer.setCameraMatLocation("camera");
+
+    win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
+        switch (key){
+        case glwpp::Key::W: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{ 0.01, 0, 0}); break;
+        case glwpp::Key::S: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{-0.01, 0, 0}); break;
+        case glwpp::Key::A: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0, -0.01}); break;
+        case glwpp::Key::D: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0,  0.01}); break;
+        case glwpp::Key::LeftControl: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, -0.01, 0}); break;
+        case glwpp::Key::Space: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0.01, 0}); break;
+        
+        default: break;
+        }
+    });
+
+    win->onRun.push<[]{return true;}>([](){
+        glClear(GL_COLOR_BUFFER_BIT);
+    });
 
     while (running){
         win->start();
         win->wait();
-        vao->draw(glwpp::gl::DrawMode::Triangles, 12, glwpp::gl::DataType::UByte, 1);
+        drawer.updateCamera();
+        for (size_t i = 0; i < scene->mNumMeshes; ++i){
+            win->onRun.push([&prog, &meshes, i](){
+                glwpp::gl::Int loc;
+                auto values = &meshes[i].getValueOffset(glwpp::MeshAttribute::Position);
+                prog.getUniformLocation(&loc, "offset");
+                // prog.setUniform3F(loc, reinterpret_cast<const glwpp::gl::Float*>(values), 1);
+
+                prog.getUniformLocation(&loc, "mult");
+                prog.setUniform1F(loc, &meshes[i].getValueMultiplicator(glwpp::MeshAttribute::Position));
+
+                // std::cout << std::get<0>(*values) << ", " << std::get<1>(*values) << ", " << std::get<2>(*values) << std::endl;
+                // std::cout << meshes[i].getValueMultiplicator(glwpp::MeshAttribute::Position) << std::endl;
+            });
+            meshes[i].getVAO()->draw(glwpp::gl::DrawMode::Triangles, 3 * scene->mMeshes[i]->mNumFaces, glwpp::gl::DataType::UByte, 1);
+        }
     };
 }
 

@@ -71,19 +71,19 @@ bool Program::use(const SrcLoc& loc) const {
     return _executeMethod<CtxProgram, &CtxProgram::use>(loc);
 }
 
-bool Program::setUniform1F(const Val<gl::Int>& unif_loc, const Ptr<Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
+bool Program::setUniform1F(const Val<gl::Int>& unif_loc, const Ptr<const Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform1F>(unif_loc, data, count, loc);
 }
 
-bool Program::setUniform2F(const Val<gl::Int>& unif_loc, const Ptr<Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
+bool Program::setUniform2F(const Val<gl::Int>& unif_loc, const Ptr<const Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform2F>(unif_loc, data, count, loc);
 }
 
-bool Program::setUniform3F(const Val<gl::Int>& unif_loc, const Ptr<Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
+bool Program::setUniform3F(const Val<gl::Int>& unif_loc, const Ptr<const Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform3F>(unif_loc, data, count, loc);
 }
 
-bool Program::setUniform4F(const Val<gl::Int>& unif_loc, const Ptr<Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
+bool Program::setUniform4F(const Val<gl::Int>& unif_loc, const Ptr<const Float>& data, const Val<Sizei>& count, const SrcLoc& loc){
     return _executeMethod<CtxProgram, &CtxProgram::setUniform4F>(unif_loc, data, count, loc);
 }
 

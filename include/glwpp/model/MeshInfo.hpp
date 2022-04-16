@@ -29,6 +29,8 @@ public:
     const MeshAttributeSize& getSize(const MeshAttribute& attribute) const;
     const size_t& getOffset(const MeshAttribute& attribute) const;
     const size_t& getStride(const MeshAttribute& attribute) const;
+    
+    const Offset& getValueOffset(const MeshAttribute& attribute) const;
     const float getValueOffset(const MeshAttribute& attribute, size_t i) const;
     const float& getValueMultiplier(const MeshAttribute& attribute) const;
 

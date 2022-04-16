@@ -17,8 +17,8 @@ public:
     Val(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
     virtual ~Val(){};
 
-    // template<class T = T, class = std::enable_if_t<std::is_same_v<T, gl::UInt>>>
-    // Val(const int& data){_data = std::make_shared<Container>(data);}
+    template<class T = T, class = std::enable_if_t<std::is_same_v<T, std::string>>>
+    Val(const char* data){_data = std::make_shared<Container>(data);}
 
 
     T& getVal(){

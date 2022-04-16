@@ -33,27 +33,27 @@ public:
     UInt getUniformBlockLocation(const std::string &name, const SrcLoc& loc = SrcLoc()) const;
 
     void setUniform1F(const Int& unif_loc, const Float* data, const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
-    void setUniform2F(const Int& unif_loc, const Float* data, const Sizei& count = 2, const SrcLoc& loc = SrcLoc());
-    void setUniform3F(const Int& unif_loc, const Float* data, const Sizei& count = 3, const SrcLoc& loc = SrcLoc());
-    void setUniform4F(const Int& unif_loc, const Float* data, const Sizei& count = 4, const SrcLoc& loc = SrcLoc());
+    void setUniform2F(const Int& unif_loc, const Float* data, const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
+    void setUniform3F(const Int& unif_loc, const Float* data, const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
+    void setUniform4F(const Int& unif_loc, const Float* data, const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat2x2F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 4, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat2x3F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 6, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat2x4F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 8, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat3x2F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 6, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat3x3F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 9, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat3x4F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 12, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat4x2F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 8, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat4x3F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 12, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void setUniformMat4x4F(const Int& unif_loc, const Float* data, const bool& transpose = false, 
-                           const Sizei& count = 16, const SrcLoc& loc = SrcLoc());
+                           const Sizei& count = 1, const SrcLoc& loc = SrcLoc());
     void bindUniformBlock(const UInt& block_loc, const UInt& index);
 };
 

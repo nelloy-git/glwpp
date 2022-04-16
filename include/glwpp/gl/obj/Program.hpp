@@ -28,28 +28,28 @@ public:
     bool validate(const SrcLoc& loc = SrcLoc()) const;
     bool use(const SrcLoc& loc = SrcLoc()) const;                      
 
-    bool setUniform1F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
-    bool setUniform2F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<gl::Sizei>& count = 2, const SrcLoc& loc = SrcLoc());
-    bool setUniform3F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<gl::Sizei>& count = 3, const SrcLoc& loc = SrcLoc());
-    bool setUniform4F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<gl::Sizei>& count = 4, const SrcLoc& loc = SrcLoc());
+    bool setUniform1F(const Val<gl::Int>& unif_loc, const Ptr<const gl::Float>& data, const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
+    bool setUniform2F(const Val<gl::Int>& unif_loc, const Ptr<const gl::Float>& data, const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
+    bool setUniform3F(const Val<gl::Int>& unif_loc, const Ptr<const gl::Float>& data, const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
+    bool setUniform4F(const Val<gl::Int>& unif_loc, const Ptr<const gl::Float>& data, const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat2x2F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 4, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat2x3F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 6, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat2x4F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 8, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat3x2F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 6, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat3x3F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 9, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat3x4F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 12, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat4x2F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 8, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat4x3F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 12, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
     bool setUniformMat4x4F(const Val<gl::Int>& unif_loc, const Ptr<gl::Float>& data, const Val<bool>& transpose = false, 
-                           const Val<gl::Sizei>& count = 16, const SrcLoc& loc = SrcLoc());
+                           const Val<gl::Sizei>& count = 1, const SrcLoc& loc = SrcLoc());
 };
 
 } // namespace glwpp

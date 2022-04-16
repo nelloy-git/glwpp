@@ -2,6 +2,8 @@
 
 #include "glm/glm.hpp"
 
+#include "glwpp/utils/Utils.hpp"
+
 namespace glwpp {
 
 class Camera {
@@ -11,6 +13,7 @@ public:
     virtual ~Camera();
 
     const glm::mat4& getMat() const;
+    const sptr<glm::mat4>& getMatPtr() const;
 
     // Camera transform
 
@@ -49,7 +52,7 @@ public:
 private:
     void _update();
 
-    glm::mat4 _mat = glm::mat4(1.0f);
+    sptr<glm::mat4> _mat = make_sptr<glm::mat4>(1.0f);
     glm::vec3 _forward = {1, 0, 0};
     glm::vec3 _up = {0, 1, 0};
 
@@ -62,8 +65,8 @@ private:
     float _fov = 2 * 3.14159265359 / 3;
     float _near_z = 0.1;
     float _far_z = 100;
-    int _width;
-    int _height;
+    int _width = 640;
+    int _height = 480;
 };
 
 }

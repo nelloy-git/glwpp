@@ -27,7 +27,10 @@ public:
     virtual ~Mesh();
 
     bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc = SrcLoc());
-    const sptr<VertexArray>& getVAO();
+
+    const MeshInfo::Offset& getValueOffset(const MeshAttribute& attribute) const;
+    const float& getValueMultiplicator(const MeshAttribute& attribute) const;
+    const sptr<VertexArray>& getVAO() const;
 
 private:
     wptr<Context> _ctx;

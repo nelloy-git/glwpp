@@ -61,7 +61,15 @@ bool Mesh::loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc){
     return true;
 }
 
-const sptr<VertexArray>& Mesh::getVAO(){
+const MeshInfo::Offset& Mesh::getValueOffset(const MeshAttribute& attribute) const {
+    return _info.getValueOffset(attribute);
+}
+
+const float& Mesh::getValueMultiplicator(const MeshAttribute& attribute) const {
+    return _info.getValueMultiplier(attribute);
+}
+
+const sptr<VertexArray>& Mesh::getVAO() const {
     return _vao;
 }
 
