@@ -10,9 +10,14 @@
 namespace glwpp::gl {
 
 class CtxVertexArray : public CtxObject {
+    static UInt _createGlVertexArray(const SrcLoc& loc);
+    static void _deleteGlVertexArray(const UInt& id);
+
 public:
-    // Dummy object. Can be used for preallocation.
-    CtxVertexArray(const Dummy&);
+    // Empty CtxVertexArray
+    CtxVertexArray(const EmptyObj& flag) : CtxObject(flag){};
+    // Refer same gl object
+    CtxVertexArray(const CtxVertexArray& other) : CtxObject(other){};
     CtxVertexArray(const SrcLoc& loc = SrcLoc());
     
     Int getAttribParamI(const UInt& index, const Enum& param, const SrcLoc& loc = SrcLoc()) const;

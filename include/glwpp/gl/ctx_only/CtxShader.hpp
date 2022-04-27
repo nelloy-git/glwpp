@@ -10,9 +10,14 @@
 namespace glwpp::gl {
 
 class CtxShader : public CtxObject {
+    static UInt _createGlShader(const ShaderType& type, const SrcLoc& loc);
+    static void _deleteGlShader(const UInt& id);
+
 public:
-    // Dummy object. Can be used for preallocation.
-    CtxShader(const Dummy&);
+    // Empty CtxShader
+    CtxShader(const EmptyObj& flag) : CtxObject(flag){};
+    // Refer same gl object
+    CtxShader(const CtxShader& other) : CtxObject(other){};
     CtxShader(const ShaderType& type, const SrcLoc& loc = SrcLoc());
     
     Int getParamI(const Enum& param, const SrcLoc& loc = SrcLoc()) const;

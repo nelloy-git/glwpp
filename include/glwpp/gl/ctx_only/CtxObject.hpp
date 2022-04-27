@@ -7,39 +7,60 @@
 #include "glwpp/utils/SrcLoc.hpp"
 #include "glwpp/utils/Utils.hpp"
 
+namespace glwpp {
+    class Object;
+}
+
 namespace glwpp::gl {
 
 class CtxObject {
-public:
-    // Dummy object. Can be used for preallocation.
-    CtxObject(const Dummy&){_id = make_sptr<UInt>(0);}
+    friend Object;
 
-    // N: gl::UInt* (ArgsN...) - initialization of gl object.
-    // D: void (gl::UInt *id, bool is_init_thread) - deletion of gl object. In case of init thread is removed is_init_thread == false
-    // ArgsN - initialization arguments
-    template<class N, class D, class ... ArgsN>
-    CtxObject(const N& init, const D& del, const ArgsN&... args_n) :
-        _id(init(args_n...), _getDeleter(del)){
-    };
-    virtual ~CtxObject() = 0;
+public:
+    // Empty object
+    CtxObject(const EmptyObj&){};
+    // Refer same gl object
+    CtxObject(const CtxObject& other) :
+        _id(other._id){
+    }
+
+    template<auto D>
+    static CtxObject create(const UInt& id){
+        CtxObject obj(EmptyObj{});
+        obj._id = sptr<UInt>(new UInt(id), Deleter<D>{});
+        return obj;
+    }
+
+    virtual ~CtxObject(){
+    }
 
     const UInt& getId() const;
 
 protected:
+
     static void _printDebug(const SrcLoc& loc);
 
 private:
     sptr<UInt> _id;
 
-    template<class D>
-    auto _getDeleter(const D& del){
-        return [thread_id = std::this_thread::get_id(), del](gl::UInt *id){
-            del(id, thread_id == std::this_thread::get_id());
-        };
-    }
-};
 
-inline CtxObject::~CtxObject(){
-}
+    template<auto D>
+    class Deleter {
+    public:
+        Deleter() :
+            _thread_id(std::this_thread::get_id()){
+        };
+
+        void operator()(UInt* gl_id){
+            if (std::this_thread::get_id() == _thread_id){
+                D(*gl_id);
+            }
+            delete gl_id;
+        }
+
+    private:
+        const std::thread::id _thread_id;
+    };
+};
 
 } // namespace glwpp::gl

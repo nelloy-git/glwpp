@@ -28,7 +28,7 @@ public:
 
     bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc = SrcLoc());
 
-    const MeshInfo::Offset& getValueOffset(const MeshAttribute& attribute) const;
+    const glm::vec4& getValueOffset(const MeshAttribute& attribute) const;
     const float& getValueMultiplicator(const MeshAttribute& attribute) const;
     const sptr<VertexArray>& getVAO() const;
 

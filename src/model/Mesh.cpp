@@ -61,7 +61,7 @@ bool Mesh::loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc){
     return true;
 }
 
-const MeshInfo::Offset& Mesh::getValueOffset(const MeshAttribute& attribute) const {
+const glm::vec4& Mesh::getValueOffset(const MeshAttribute& attribute) const {
     return _info.getValueOffset(attribute);
 }
 
@@ -135,9 +135,10 @@ void Mesh::_prepareVertexBuffer(const aiMesh& ai_mesh){
 }
 
 void Mesh::_fillVertex(char* vertex_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh){
-    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
+    static const size_t enum_size = GetMeshAttributeEnumSize();
+    for (size_t i = 0; i < enum_size; ++i){
         auto attr = static_cast<MeshAttribute>(i);
-        char* attr_ptr = vertex_ptr + _info.getOffset(attr);
+        char* attr_ptr = vertex_ptr + _info.getByteOffset(attr);
         _fillAttribute(attr_ptr, vertex_pos, ai_mesh, attr);
     }
 }
@@ -195,7 +196,7 @@ void Mesh::_fillAttributeSizedTyped(char* attr_ptr, const size_t& vertex_pos, co
         && attr != MeshAttribute::Color_2
         && attr != MeshAttribute::Color_3){
         
-        aiVector3D normed;
+        glm::vec3 normed;
         switch (attr){
         case MeshAttribute::Position: normed = _info.norm(attr, ai_mesh.mVertices[vertex_pos]); break;
         case MeshAttribute::Normal: normed = _info.norm(attr, ai_mesh.mNormals[vertex_pos]); break;
@@ -214,7 +215,7 @@ void Mesh::_fillAttributeSizedTyped(char* attr_ptr, const size_t& vertex_pos, co
         }
         ptr->set(normed.x, normed.y, normed.z, 0);
     } else {
-        aiColor4D normed;
+        glm::vec4 normed;
         switch (attr){
         case MeshAttribute::Color_0: normed = _info.norm(attr, ai_mesh.mColors[0][vertex_pos]); break;
         case MeshAttribute::Color_1: normed = _info.norm(attr, ai_mesh.mColors[1][vertex_pos]); break;
@@ -232,7 +233,8 @@ void Mesh::_prepareVertexArray(const aiMesh& ai_mesh){
     _vao->setElementBuffer(*_indices);
     _vao->setVertexBuffer(0, *_vertices, 0, _info.getTotalBytes());
 
-    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
+    static const size_t enum_size = GetMeshAttributeEnumSize();
+    for (size_t i = 0; i < enum_size; ++i){
         auto attr = static_cast<MeshAttribute>(i);
         if (!_info.isEnabled(attr)){
             continue;
@@ -240,7 +242,7 @@ void Mesh::_prepareVertexArray(const aiMesh& ai_mesh){
 
         _vao->enableAttrib(i);
         _vao->setAttribBinding(i, 0);
-        _vao->setAttribFormat(i, static_cast<size_t>(_info.getSize(attr)), _info.getType(attr), true, _info.getOffset(attr));
+        _vao->setAttribFormat(i, static_cast<size_t>(_info.getSize(attr)), _info.getType(attr), true, _info.getByteOffset(attr));
     }
 }
 

@@ -23,7 +23,7 @@ inline uptr<T> make_uptr(Args&&... args){
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
-struct Dummy {};
+struct EmptyObj {};
 
 static sptr<void> createTmpData(const void* src, size_t size){
     void* data;

@@ -5,26 +5,19 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-namespace {
-static UInt* CreateShader(const ShaderType& type, const SrcLoc& loc){
-    auto id = new UInt;
-    *id = glCreateShader(static_cast<Enum>(type));
+UInt CtxShader::_createGlShader(const ShaderType& type, const SrcLoc& loc){
+    UInt id = glCreateShader(static_cast<Enum>(type));
+    _printDebug(loc);
     return id;
 }
-static void DeleteShader(UInt *id, bool is_init_thread){
-    if (is_init_thread && glIsShader(*id)){
-        glDeleteShader(*id);
-    }
-    delete id;
-}
-}
 
-CtxShader::CtxShader(const Dummy&) :
-    CtxObject(Dummy{}){
+void CtxShader::_deleteGlShader(const UInt& id){
+    glDeleteShader(id);
+    _printDebug(SrcLoc{});
 }
 
 CtxShader::CtxShader(const gl::ShaderType& type, const SrcLoc& loc) : 
-    CtxObject(&CreateShader, &DeleteShader, type, loc){
+    CtxObject(CtxObject::create<&_deleteGlShader>(_createGlShader(type, loc))){
     _printDebug(loc);
 }
 

@@ -17,14 +17,14 @@ namespace glwpp {
 class Object {
 public:
     void getId(Ptr<gl::UInt> dst) const;
-    wptr<Context> getContext() const;
+    wptr<Context> getWCtx() const;
 
 protected:
     template<class I, class ... Args>
     Object(const wptr<Context>& ctx, const I& init, const Val<Args>&... args) :
         _ctx(ctx){
         using T = std::invoke_result_t<I, Args...>;
-        _gl = make_sptr<T>(Dummy{});
+        _gl = make_sptr<T>(EmptyObj{});
         _execute<&Object::_init<I, Args...>>(ctx, Ptr<gl::CtxObject>(_gl), Val<I>(init), args...);
     };
     virtual ~Object() = 0;

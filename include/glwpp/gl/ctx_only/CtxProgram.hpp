@@ -8,9 +8,14 @@
 namespace glwpp::gl {
 
 class CtxProgram : public CtxObject {
+    static UInt _createGlProgram(const SrcLoc& loc);
+    static void _deleteGlProgram(const UInt& id);
+    
 public:
-    // Dummy object. Can be used for preallocation.
-    CtxProgram(const Dummy&);
+    // Empty CtxProgram
+    CtxProgram(const EmptyObj& flag) : CtxObject(flag){};
+    // Refer same gl object
+    CtxProgram(const CtxProgram& other) : CtxObject(other){};
     CtxProgram(const SrcLoc& loc = SrcLoc());
 
     Int getParamI(const Enum& param, const SrcLoc& loc = SrcLoc()) const;

@@ -8,8 +8,6 @@
 
 using namespace glwpp;
 
-using Offset = MeshInfo::Offset;
-
 namespace {
 
 template<size_t S>
@@ -46,7 +44,6 @@ static constexpr size_t getAttributeSize(const gl::DataType& type, const MeshAtt
         default: return 0;
     }
 }
-
 static bool doAiMeshHasAttrib(const aiMesh& ai_mesh, const MeshAttribute& attr){
     switch (attr){
     case MeshAttribute::Position: return ai_mesh.HasPositions();
@@ -69,35 +66,34 @@ static bool doAiMeshHasAttrib(const aiMesh& ai_mesh, const MeshAttribute& attr){
     }
 }
 
-static inline Offset findValueOffset(const aiVector3D* arr, size_t arr_size){
+static inline glm::vec4 findValueOffset(const aiVector3D* arr, size_t arr_size){
     static auto inf = std::numeric_limits<float>::infinity();
-    static Offset min_template(inf, inf, inf, static_cast<float>(0));
-    Offset offset = min_template;
+    glm::vec4 offset(inf, inf, inf, static_cast<float>(0));
 
     for (size_t i = 0; i < arr_size; ++i){
-        std::get<0>(offset) = std::min(std::get<0>(offset), arr[i].x);
-        std::get<1>(offset) = std::min(std::get<1>(offset), arr[i].y);
-        std::get<2>(offset) = std::min(std::get<2>(offset), arr[i].z);
+        offset.x = std::min(offset.x, arr[i].x);
+        offset.y = std::min(offset.y, arr[i].y);
+        offset.z = std::min(offset.z, arr[i].z);
     }
 
     return offset;
 }
 
-static inline Offset findValueOffset(const aiColor4D* arr, size_t arr_size){
+static inline glm::vec4 findValueOffset(const aiColor4D* arr, size_t arr_size){
     static auto inf = std::numeric_limits<float>::infinity();
-    Offset offset{inf, inf, inf, inf};
+    glm::vec4 offset(inf, inf, inf, inf);
 
     for (size_t i = 0; i < arr_size; ++i){
-        std::get<0>(offset) = std::min(std::get<0>(offset), arr[i].r);
-        std::get<1>(offset) = std::min(std::get<1>(offset), arr[i].g);
-        std::get<2>(offset) = std::min(std::get<2>(offset), arr[i].b);
-        std::get<3>(offset) = std::min(std::get<3>(offset), arr[i].a);
+        offset.x = std::min(offset.x, arr[i].r);
+        offset.y = std::min(offset.y, arr[i].g);
+        offset.z = std::min(offset.z, arr[i].b);
+        offset.w = std::min(offset.w, arr[i].a);
     }
 
     return offset;
 }
 
-static inline Offset getAiMeshAttribOffset(const aiMesh& ai_mesh, const MeshAttribute& attr){
+static inline glm::vec4 getAiMeshAttribOffset(const aiMesh& ai_mesh, const MeshAttribute& attr){
     switch (attr){
     case MeshAttribute::Position: return findValueOffset(ai_mesh.mVertices, ai_mesh.mNumVertices);
     case MeshAttribute::Normal: return findValueOffset(ai_mesh.mNormals, ai_mesh.mNumVertices);
@@ -119,32 +115,32 @@ static inline Offset getAiMeshAttribOffset(const aiMesh& ai_mesh, const MeshAttr
     }
 }
 
-static inline float findValueMult(const aiVector3D* arr, size_t arr_size, const Offset& offset){
+static inline float findValueMult(const aiVector3D* arr, size_t arr_size, const glm::vec4& offset){
     float max = -std::numeric_limits<float>::infinity();
 
     for (size_t i = 0; i < arr_size; ++i){
-        max = std::max(max, arr[i].x - std::get<0>(offset));
-        max = std::max(max, arr[i].y - std::get<1>(offset));
-        max = std::max(max, arr[i].z - std::get<2>(offset));
+        max = std::max(max, arr[i].x - offset.x);
+        max = std::max(max, arr[i].y - offset.y);
+        max = std::max(max, arr[i].z - offset.z);
     }
 
     return max == 0 ? 1 : max;
 }
 
-static inline float findValueMult(const aiColor4D* arr, size_t arr_size, const Offset& offset){
+static inline float findValueMult(const aiColor4D* arr, size_t arr_size, const glm::vec4& offset){
     float max = -std::numeric_limits<float>::infinity();
 
     for (size_t i = 0; i < arr_size; ++i){
-        max = std::max(max, arr[i].r - std::get<0>(offset));
-        max = std::max(max, arr[i].g - std::get<1>(offset));
-        max = std::max(max, arr[i].b - std::get<2>(offset));
-        max = std::max(max, arr[i].a - std::get<3>(offset));
+        max = std::max(max, arr[i].r - offset.x);
+        max = std::max(max, arr[i].g - offset.y);
+        max = std::max(max, arr[i].b - offset.z);
+        max = std::max(max, arr[i].a - offset.w);
     }
 
     return max == 0 ? 1 : max;
 }
 
-static inline float getAiMeshAttribMult(const aiMesh& ai_mesh, const MeshAttribute& attr, const Offset& offset){
+static inline float getAiMeshAttribMult(const aiMesh& ai_mesh, const MeshAttribute& attr, const glm::vec4& offset){
     switch (attr){
     case MeshAttribute::Position: return findValueMult(ai_mesh.mVertices, ai_mesh.mNumVertices, offset);
     case MeshAttribute::Normal: return findValueMult(ai_mesh.mNormals, ai_mesh.mNumVertices, offset);
@@ -169,95 +165,136 @@ static inline float getAiMeshAttribMult(const aiMesh& ai_mesh, const MeshAttribu
 }
 
 MeshInfo::MeshInfo(){
-    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
-        _value_mult[i] = 1;
+    static const size_t enum_size = GetMeshAttributeEnumSize();
+    for (size_t i = 0; i < enum_size; ++i){
+        _attrib_info.push_back({
+            .enabled = false,
+            .type = gl::DataType::Float,
+            .size = MeshAttributeSize::None,
+            .byte_offset = 0,
+            .byte_stride = 0,
+            .value_offset = {0, 0, 0, 0},
+            .value_mult = 1,
+        });
     }
 }
 
 MeshInfo::~MeshInfo(){
 }
 
-#include <iostream>
-
 void MeshInfo::apply(const MeshConfig& cfg, const aiMesh& ai_mesh){
-    _total_bytes = 0;
+    static const size_t enum_size = GetMeshAttributeEnumSize();
 
-    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
-        auto attr = static_cast<MeshAttribute>(i);
+    _bytes_total = 0;
+    for (size_t i = 0; i < enum_size; ++i){
+        MeshAttribute attr = static_cast<MeshAttribute>(i);
+        AttribInfo& attr_info = _get_info(attr);
 
-        _enabled[i] = doAiMeshHasAttrib(ai_mesh, attr) && cfg.getSize(attr) != MeshAttributeSize::None;
-        _type[i] = _enabled[i] ? cfg.getType(attr) : static_cast<gl::DataType>(0);
-        _size[i] = _enabled[i] ? cfg.getSize(attr) : MeshAttributeSize::None;
-        _offset[i] = _total_bytes;
-        _value_offset[i] = _enabled[i] ? getAiMeshAttribOffset(ai_mesh, attr) : Offset{float(0), float(0), float(0), float(0)};
-        _value_mult[i] = _enabled[i] ? getAiMeshAttribMult(ai_mesh, attr, _value_offset[i]) : 1;
+        attr_info.enabled = doAiMeshHasAttrib(ai_mesh, attr) && cfg.getSize(attr) != MeshAttributeSize::None;
+        attr_info.type = attr_info.enabled ? cfg.getType(attr) : static_cast<gl::DataType>(0);
+        attr_info.size = attr_info.enabled ? cfg.getSize(attr) : MeshAttributeSize::None;
+        attr_info.byte_offset = _bytes_total;
+        attr_info.value_offset = attr_info.enabled ? getAiMeshAttribOffset(ai_mesh, attr) : glm::vec4(0);
+        attr_info.value_mult = attr_info.enabled ? getAiMeshAttribMult(ai_mesh, attr, attr_info.value_offset) : 1;
 
-        _total_bytes += getAttributeSize(_type[i], _size[i]);
+        _bytes_total += getAttributeSize(attr_info.type, attr_info.size);
     }
 
-    for (size_t i = 0; i < MESH_ATTRIBUTE_COUNT; ++i){
-        _stride[i] = _total_bytes;
+    for (size_t i = 0; i < enum_size; ++i){
+        MeshAttribute attr = static_cast<MeshAttribute>(i);
+        AttribInfo& attr_info = _get_info(attr);
+        attr_info.byte_stride = _bytes_total;
     }
 }
 
 const size_t& MeshInfo::getTotalBytes() const {
-    return _total_bytes;
+    return _bytes_total;
 }
 
 const bool& MeshInfo::isEnabled(const MeshAttribute& attribute) const {
-    return _enabled[static_cast<size_t>(attribute)];
+    return _get_info(attribute).enabled;
 }
 
 const gl::DataType& MeshInfo::getType(const MeshAttribute& attribute) const {
-    return _type[static_cast<size_t>(attribute)];
+    return _get_info(attribute).type;
 }
 
 const MeshAttributeSize& MeshInfo::getSize(const MeshAttribute& attribute) const {
-    return _size[static_cast<size_t>(attribute)];
+    return _get_info(attribute).size;
 }
 
-const size_t& MeshInfo::getOffset(const MeshAttribute& attribute) const {
-    return _offset[static_cast<size_t>(attribute)];
+const size_t& MeshInfo::getByteOffset(const MeshAttribute& attribute) const {
+    return _get_info(attribute).byte_offset;
 }
 
-const size_t& MeshInfo::getStride(const MeshAttribute& attribute) const {
-    return _stride[static_cast<size_t>(attribute)];
+const size_t& MeshInfo::getByteStride(const MeshAttribute& attribute) const {
+    return _get_info(attribute).byte_stride;
 }
 
-const Offset& MeshInfo::getValueOffset(const MeshAttribute& attribute) const {
-    return _value_offset[static_cast<size_t>(attribute)];
-}
-
-const float MeshInfo::getValueOffset(const MeshAttribute& attribute, size_t i) const {
-    switch (i){
-    case 0: return -std::get<0>(_value_offset[static_cast<size_t>(attribute)]);
-    case 1: return -std::get<1>(_value_offset[static_cast<size_t>(attribute)]);
-    case 2: return -std::get<2>(_value_offset[static_cast<size_t>(attribute)]);
-    case 3: return -std::get<3>(_value_offset[static_cast<size_t>(attribute)]);
-    
-    default: throw std::runtime_error("Unsuported i");
-    }
+const glm::vec4& MeshInfo::getValueOffset(const MeshAttribute& attribute) const {
+    return _get_info(attribute).value_offset;
 }
 
 const float& MeshInfo::getValueMultiplier(const MeshAttribute& attribute) const {
-    return _value_mult[static_cast<size_t>(attribute)];
+    return _get_info(attribute).value_mult;
 }
 
-aiVector3D MeshInfo::norm(const MeshAttribute& attribute, const aiVector3D& vec) const {
-    size_t i = static_cast<size_t>(attribute);
+glm::vec3 MeshInfo::norm(const MeshAttribute& attribute, const aiVector3D& vec) const {
+    auto attr_info = _get_info(attribute);
+    auto& offset = attr_info.value_offset;
+    auto& mult = attr_info.value_mult;
+
     return {
-        (vec.x - std::get<0>(_value_offset[i])) / _value_mult[i],
-        (vec.y - std::get<1>(_value_offset[i])) / _value_mult[i],
-        (vec.z - std::get<2>(_value_offset[i])) / _value_mult[i],
+        (vec.x - offset.x) / mult,
+        (vec.y - offset.y) / mult,
+        (vec.z - offset.z) / mult
     };
 }
 
-aiColor4D MeshInfo::norm(const MeshAttribute& attribute, const aiColor4D& vec) const {
-    size_t i = static_cast<size_t>(attribute);
+glm::vec3 MeshInfo::norm(const MeshAttribute& attribute, const glm::vec3& vec) const {
+    auto attr_info = _get_info(attribute);
+    auto& offset = attr_info.value_offset;
+    auto& mult = attr_info.value_mult;
+
     return {
-        (vec.r - std::get<0>(_value_offset[i])) / _value_mult[i],
-        (vec.g - std::get<1>(_value_offset[i])) / _value_mult[i],
-        (vec.b - std::get<2>(_value_offset[i])) / _value_mult[i],
-        (vec.a - std::get<3>(_value_offset[i])) / _value_mult[i],
+        (vec.x - offset.x) / mult,
+        (vec.y - offset.y) / mult,
+        (vec.z - offset.z) / mult
     };
+}
+
+glm::vec4 MeshInfo::norm(const MeshAttribute& attribute, const aiColor4D& vec) const {
+    auto attr_info = _get_info(attribute);
+    auto& offset = attr_info.value_offset;
+    auto& mult = attr_info.value_mult;
+
+    return {
+        (vec.r - offset.x) / mult,
+        (vec.g - offset.y) / mult,
+        (vec.b - offset.z) / mult,
+        (vec.a - offset.w) / mult
+    };
+}
+
+glm::vec4 MeshInfo::norm(const MeshAttribute& attribute, const glm::vec4& vec) const {
+    auto attr_info = _get_info(attribute);
+    auto& offset = attr_info.value_offset;
+    auto& mult = attr_info.value_mult;
+
+    return {
+        (vec.x - offset.x) / mult,
+        (vec.y - offset.y) / mult,
+        (vec.z - offset.z) / mult,
+        (vec.w - offset.w) / mult
+    };
+}
+
+MeshInfo::AttribInfo& MeshInfo::_get_info(const MeshAttribute& attribute){
+    auto i = static_cast<size_t>(attribute);
+    return _attrib_info[i];
+}
+
+const MeshInfo::AttribInfo& MeshInfo::_get_info(const MeshAttribute& attribute) const {
+    auto i = static_cast<size_t>(attribute);
+    return _attrib_info[i];
 }

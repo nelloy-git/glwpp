@@ -19,6 +19,7 @@
 #include "glwpp/gl/obj/Shader.hpp"
 #include "glwpp/gl/obj/Texture.hpp"
 #include "glwpp/gl/obj/VertexArray.hpp"
+#include "glwpp/gl/obj/Vector.hpp"
 
 #include "glwpp/model/Mesh.hpp"
 
@@ -206,7 +207,8 @@ int main(int argc, char **argv){
     // auto vao = mesh.getVAO();
 
     glwpp::Drawer drawer(prog);
-    drawer.setCameraMatLocation("camera");
+    drawer.bindUniform(glwpp::Drawer::Uniform::Camera_mat4, "camera");
+    // drawer.setCameraMatLocation("camera");
 
     win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
         switch (key){
@@ -224,6 +226,14 @@ int main(int argc, char **argv){
     win->onRun.push<[]{return true;}>([](){
         glClear(GL_COLOR_BUFFER_BIT);
     });
+
+    glwpp::Vector<int> vec(win);
+    vec.reserve(10);
+    vec.push_back(15);
+    vec.push_back(11);
+    vec.push_back(5);
+    // vec.reserve(10);
+    // glwpp::Buffer buf(vec);
 
     while (running){
         win->start();

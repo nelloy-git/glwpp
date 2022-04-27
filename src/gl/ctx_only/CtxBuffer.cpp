@@ -7,35 +7,28 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-namespace {
-static UInt* CreateBufferId(const SrcLoc& loc){
-    auto id = new UInt;
-    glCreateBuffers(1, id);
+UInt CtxBuffer::_createGlBuffer(const SrcLoc& loc){
+    UInt id;
+    glCreateBuffers(1, &id);
     return id;
-};
-static void DeleteBufferId(gl::UInt* id, bool is_init_thread){
-    if (is_init_thread && glIsBuffer(*id)){
-        glDeleteBuffers(1, id);
-    }    
-    delete id;
-};
-};
+}
 
-CtxBuffer::CtxBuffer(const Dummy&) :
-    CtxObject(Dummy{}){
+void CtxBuffer::_deleteGlBuffer(const UInt& id){
+    glDeleteBuffers(1, &id);
+    _printDebug(SrcLoc{});
 }
 
 CtxBuffer::CtxBuffer(const SrcLoc& loc) :
-    CtxObject(&CreateBufferId, &DeleteBufferId, loc){
+    CtxObject(CtxObject::create<&_deleteGlBuffer>(_createGlBuffer(loc))){
     _printDebug(loc);
 }
 
-void CtxBuffer::data(const gl::SizeiPtr& size, const Data data, const gl::BufferUsage& usage, const SrcLoc& loc){
+void CtxBuffer::data(const gl::SizeiPtr& size, const void* data, const gl::BufferUsage& usage, const SrcLoc& loc){
     glNamedBufferData(getId(), size, data, static_cast<Enum>(usage));
     _printDebug(loc);
 }
 
-void CtxBuffer::storage(const gl::SizeiPtr& size, const Data data, const gl::BitField& flags, const SrcLoc& loc){
+void CtxBuffer::storage(const gl::SizeiPtr& size, const void* data, const gl::BitField& flags, const SrcLoc& loc){
     glNamedBufferStorage(getId(), size, data, flags);
     _printDebug(loc);
 }
@@ -112,19 +105,19 @@ BufferUsage CtxBuffer::getUsage(const SrcLoc& loc) const {
     return static_cast<BufferUsage>(getParamI(GL_BUFFER_USAGE, loc));
 }
 
-void CtxBuffer::getSubData(const IntPtr& offset, const SizeiPtr& size, Data dst, const SrcLoc& loc) const {
+void CtxBuffer::getSubData(const IntPtr& offset, const SizeiPtr& size, void* dst, const SrcLoc& loc) const {
     glGetNamedBufferSubData(getId(), offset, size, dst);
     _printDebug(loc);
 }
 
-void CtxBuffer::setSubData(const IntPtr& offset, const SizeiPtr& size, const Data data, const SrcLoc& loc){
+void CtxBuffer::setSubData(const IntPtr& offset, const SizeiPtr& size, const void* data, const SrcLoc& loc){
     glNamedBufferSubData(getId(), offset, size, data);
     _printDebug(loc);
 }
 
 void CtxBuffer::copySubDataTo(CtxBuffer& dst, const IntPtr& read_offset, const IntPtr& write_offset,
                               const SizeiPtr& size, const SrcLoc& loc) const {
-    glCopyBufferSubData(getId(), dst.getId(), read_offset, write_offset, size);
+    glCopyNamedBufferSubData(getId(), dst.getId(), read_offset, write_offset, size);
     _printDebug(loc);
 }
 

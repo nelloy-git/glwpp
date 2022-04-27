@@ -1,17 +1,20 @@
 #version 460 core
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTex;
+const int vPosN = 0;
+const int vTexN = 1;
 
-out vec2 vTex;
+layout (location = vPosN) in vec3 vPos;
+layout (location = vTexN) in vec2 vTex;
 
-layout(location = 2) uniform mat4 camera;
+out vec2 vertOutTex;
 
-uniform vec3 offset = {0, 0, 0};
-uniform float mult = 1;
+uniform mat4 camera;
+uniform vec4 offset[16];
+uniform float mult[16];
 
 void main(){
-    vec3 pos = mult * (aPos + offset);
+    vec3 pos = mult[vPosN] * (vPos + offset[vPosN].xyz);
     gl_Position = camera * vec4(pos, 1.0);
-    vTex = aTex;
+
+    vertOutTex = mult[vTexN] * (vTex + offset[vTexN].xy);
 }

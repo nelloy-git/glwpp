@@ -14,12 +14,16 @@
 
 namespace glwpp {
 
+namespace gl {
+    class CtxBuffer;
+};
+
 class Buffer : public Object {
     friend class Texture;
     friend class VertexArray;
 
 public:    
-    Buffer(const std::weak_ptr<Context>& weak_ctx, const SrcLoc& loc = SrcLoc());
+    Buffer(const std::weak_ptr<Context>& wctx, const SrcLoc& loc = SrcLoc());
 
     bool data(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
               const Val<gl::BufferUsage>& usage, const SrcLoc& loc = SrcLoc());
@@ -60,6 +64,10 @@ public:
     bool mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
                        const SrcLoc& loc = SrcLoc());
     bool unmap(Ptr<bool>& dst, const SrcLoc& loc = SrcLoc());
+
+protected:
+    Ptr<gl::CtxBuffer> _getPtr();
+    Ptr<gl::CtxBuffer> _getPtr() const;
 };
 
 } // namespace glwpp

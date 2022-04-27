@@ -41,7 +41,6 @@ bool Buffer::bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc& loc
 bool Buffer::bindShaderStorageRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
                                const Val<gl::SizeiPtr>& size, const SrcLoc& loc) const {
     return _executeMethod<CtxBuffer, &CtxBuffer::bindShaderStorageRange>(index, offset, size, loc);
-
 }                        
 
 bool Buffer::getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc& loc) const {
@@ -116,4 +115,12 @@ bool Buffer::mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr
 
 bool Buffer::unmap(Ptr<bool>& dst, const SrcLoc& loc){
     return _executeGetter<CtxBuffer, &CtxBuffer::unmap>(dst, loc);
+}
+
+Ptr<gl::CtxBuffer> Buffer::_getPtr(){
+    return Object::_getPtr<gl::CtxBuffer>();
+}
+
+Ptr<gl::CtxBuffer> Buffer::_getPtr() const {
+    return Object::_getPtr<gl::CtxBuffer>();
 }

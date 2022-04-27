@@ -11,7 +11,7 @@ enum class MeshAttributeSize : size_t {
 };
 
 enum class MeshAttribute : size_t {
-    Position,
+    Position = 0,
     Normal,
     Tangent,
     Bitangent,
@@ -26,10 +26,10 @@ enum class MeshAttribute : size_t {
     Color_0,
     Color_1,
     Color_2,
-    Color_3,
-    None
+    Color_3
 };
-static constexpr size_t MESH_ATTRIBUTE_COUNT = static_cast<size_t>(MeshAttribute::None);
-static_assert(MESH_ATTRIBUTE_COUNT <= 16, "Too many mesh attributes");
+
+// Linter fills bad because of magic_enum
+size_t GetMeshAttributeEnumSize();
 
 } // namespace glwpp

@@ -7,26 +7,20 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-namespace {
-static UInt* CreateTexture(const TextureType& type, const SrcLoc& loc){
-    auto id = new UInt;
-    glCreateTextures(static_cast<Enum>(type), 1, id);
+UInt CtxTexture::_createGlTexture(const TextureType& type, const SrcLoc& loc){
+    UInt id;
+    glCreateTextures(static_cast<Enum>(type), 1, &id);
+    _printDebug(loc);
     return id;
 }
-static void DeleteTexture(UInt *id, bool is_init_thread){
-    if (is_init_thread && glIsTexture(*id)){
-        glDeleteTextures(1, id);
-    }
-    delete id;
-}
-};
 
-CtxTexture::CtxTexture(const Dummy&) :
-    CtxObject(Dummy{}){
+void CtxTexture::_deleteGlTexture(const UInt& id){
+    glDeleteTextures(1, &id);
+    _printDebug(SrcLoc{});
 }
 
 CtxTexture::CtxTexture(const TextureType& type, const SrcLoc& loc) :
-    CtxObject(&CreateTexture, &DeleteTexture, type, loc){
+    CtxObject(CtxObject::create<&_deleteGlTexture>(_createGlTexture(type, loc))){
     CtxObject::_printDebug(loc);
 }
 

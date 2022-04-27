@@ -7,26 +7,19 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-namespace {
-static UInt* CreateProgram(const SrcLoc& loc){
-    auto id = new UInt;
-    *id = glCreateProgram();
+UInt CtxProgram::_createGlProgram(const SrcLoc& loc){
+    UInt id = glCreateProgram();
+    _printDebug(loc);
     return id;
 }
-static void DeleteProgram(gl::UInt *id, bool is_init_thread){
-    if (is_init_thread && glIsProgram(*id)){
-        glDeleteProgram(*id);
-    }
-    delete id;
-}
-}
 
-CtxProgram::CtxProgram(const Dummy&) :
-    CtxObject(Dummy{}){
+void CtxProgram::_deleteGlProgram(const UInt& id){
+    glDeleteProgram(id);
+    _printDebug(SrcLoc{});
 }
 
 CtxProgram::CtxProgram(const SrcLoc& loc) :
-    CtxObject(&CreateProgram, &DeleteProgram, loc){
+    CtxObject(CtxObject::create<&_deleteGlProgram>(_createGlProgram(loc))){
     _printDebug(loc);
 }
 

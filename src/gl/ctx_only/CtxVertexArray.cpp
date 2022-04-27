@@ -5,26 +5,20 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-namespace {
-static UInt* CreateVertexArray(const SrcLoc& loc){
-    auto id = new UInt;
-    glCreateVertexArrays(1, id);
+UInt CtxVertexArray::_createGlVertexArray(const SrcLoc& loc){
+    UInt id;
+    glCreateVertexArrays(1, &id);
+    _printDebug(loc);
     return id;
 }
-static void DeleteVertexArray(gl::UInt *id, bool is_init_thread){
-    if (is_init_thread && glIsVertexArray(*id)){
-        glDeleteVertexArrays(1, id);
-    }
-    delete id;
-}
-};
 
-CtxVertexArray::CtxVertexArray(const Dummy&) :
-    CtxObject(Dummy{}){
+void CtxVertexArray::_deleteGlVertexArray(const gl::UInt& id){
+    glDeleteVertexArrays(1, &id);
+    _printDebug(SrcLoc{});
 }
 
 CtxVertexArray::CtxVertexArray(const SrcLoc& loc) : 
-    CtxObject(&CreateVertexArray, &DeleteVertexArray, loc){
+    CtxObject(CtxObject::create<&_deleteGlVertexArray>(_createGlVertexArray(loc))){
     CtxObject::_printDebug(loc);
 }
 

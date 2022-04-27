@@ -12,9 +12,14 @@
 namespace glwpp::gl {
 
 class CtxTexture : public CtxObject {
+    static UInt _createGlTexture(const TextureType& type, const SrcLoc& loc);
+    static void _deleteGlTexture(const UInt& id);
+
 public:
-    // Dummy object. Can be used for preallocation.
-    CtxTexture(const Dummy&);
+    // Empty CtxTexture
+    CtxTexture(const EmptyObj& flag) : CtxObject(flag){};
+    // Refer same gl object
+    CtxTexture(const CtxTexture& other) : CtxObject(other){};
     CtxTexture(const TextureType& type, const SrcLoc& loc = SrcLoc());
     
     void buffer(const TextureFormat& fmt, const CtxBuffer& buffer, const SrcLoc& loc = SrcLoc());

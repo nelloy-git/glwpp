@@ -76,7 +76,11 @@ public:
         auto divided = _divideList(args...);
         return _pool->submit([divided](const Args&... args){
             for (auto& data : *divided.to_do){
-                (*std::get<1>(data))(args...);
+                try {
+                    (*std::get<1>(data))(args...);
+                } catch (const std::exception& e){
+                    std::cout << e.what() << std::endl;
+                }
             }
         }, args...);
     }
