@@ -29,7 +29,7 @@ public:
 
     // Both action and condition are constexpr
     template<auto F, auto C = nullptr>
-    void push(const SrcLoc& loc = SrcLoc()){
+    void push(const SrcLoc loc = SrcLoc()){
         static constexpr auto expanded_condition = _expandCondition<C>();
         static constexpr auto expanded_action = expand_func<F, Args...>();
         
@@ -45,7 +45,7 @@ public:
 
     // Condition is constexpr, emit once by default
     template<auto C = nullptr, class F>
-    void push(const F& event_action, const SrcLoc& loc = SrcLoc()){
+    void push(const F& event_action, const SrcLoc loc = SrcLoc()){
         static constexpr auto expanded_condition = _expandCondition<C>();
         auto expanded_action = expand_func<Args...>(event_action);
         
@@ -61,7 +61,7 @@ public:
 
     // Everything is runtime
     template<class F, class C>
-    void push(const F& event_action, const C& alive_condition, const SrcLoc& loc = SrcLoc()){
+    void push(const F& event_action, const C& alive_condition, const SrcLoc loc = SrcLoc()){
         auto expanded_condition = expand_func<Args...>(alive_condition);
         auto expanded_action = expand_func<Args...>(event_action);
 

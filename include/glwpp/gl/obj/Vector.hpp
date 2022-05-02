@@ -18,15 +18,15 @@ public:
 
     bool capacity(Ptr<size_t>& dst) const;
     bool size(Ptr<size_t>& dst) const;
-    bool shape(const SrcLoc& loc = SrcLoc());
-    bool reserve(const Val<size_t>& size, const SrcLoc& loc = SrcLoc());
+    virtual bool shape(const SrcLoc& loc = SrcLoc());
+    virtual bool reserve(const Val<size_t>& size, const SrcLoc& loc = SrcLoc());
 
-    bool push_back(const Val<T>& value, const SrcLoc& loc = SrcLoc());
-    bool pop_back(const SrcLoc& loc = SrcLoc());
-    bool set(const Val<size_t>& i, const Val<T>& value, const SrcLoc& loc = SrcLoc());
-    bool get(Ptr<T>& dst, const Val<size_t>& i, const SrcLoc& loc = SrcLoc()) const;
+    virtual bool push_back(const Val<T>& value, const SrcLoc& loc = SrcLoc());
+    virtual bool pop_back(const SrcLoc& loc = SrcLoc());
+    virtual bool set(const Val<size_t>& i, const Val<T>& value, const SrcLoc& loc = SrcLoc());
+    virtual bool get(Ptr<T>& dst, const Val<size_t>& i, const SrcLoc& loc = SrcLoc()) const;
 
-private:
+protected:   
     sptr<size_t> _capacity;
     sptr<size_t> _size;
 };
@@ -165,7 +165,7 @@ template<typename T>
 bool Vector<T>::pop_back(const SrcLoc& loc){
     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _capacity, size_t* _size,
                                  const SrcLoc& loc){
-        --*size;
+        --*_size;
         buffer->setSubData(*_size, sizeof(T), nullptr, loc);
     };
     return _execute<F>(getWCtx(), _getPtr(), Ptr(_capacity), Ptr(_size), Val(loc));
@@ -175,11 +175,9 @@ template<typename T>
 bool Vector<T>::set(const Val<size_t>& i, const Val<T>& value, const SrcLoc& loc){
     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _capacity, size_t* _size,
                                  const size_t& i, const T& value, const SrcLoc& loc){
-        std::cout << i << std::endl;
         if (i >= *_size){
             throw std::runtime_error("Out of bounds: " + std::string(loc.file_name()) + ":" + std::to_string(loc.line()));
         }
-        std::cout << i << std::endl;
         buffer->setSubData(i * sizeof(T), sizeof(T), &value, loc);
     };
     return _execute<F>(getWCtx(), _getPtr(), Ptr(_capacity), Ptr(_size), i, value, Val(loc));

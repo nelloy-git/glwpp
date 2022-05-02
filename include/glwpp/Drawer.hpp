@@ -18,14 +18,14 @@ public:
     static size_t GetAttributeEnumSize();
 
     enum class Uniform {
-        Camera_mat4,
+        Camera,
         PositionOffset_vec3,
         PositionMult_scalar
     };
     static size_t GetUniformEnumSize();
 
-    void bindAttribute(const Attribute& attr, const std::string& name);
-    void bindAttribute(const Attribute& attr, const gl::Int& location);
+    void bindMeshAttribute(const Attribute& attr, const std::string& name);
+    void bindMeshAttribute(const Attribute& attr, const gl::Int& location);
     void bindUniform(const Uniform& uniform, const std::string& name);
     void bindUniform(const Uniform& uniform, const gl::Int& location);
 

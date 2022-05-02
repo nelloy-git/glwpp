@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include "glwpp/gl/obj/Vector.hpp"
+#include "glwpp/gl/obj/MappedVector.hpp"
 
 namespace glwpp {
 
@@ -13,12 +13,12 @@ public:
         _base_transform_pos(pos){
     }
 
-    void setTransform(const glm::mat4& value, const SrcLoc& loc = SrcLoc()){
+    void setTransform(const glm::mat4& value, const SrcLoc loc = SrcLoc()){
         _base_transform_list->set(_base_transform_pos, value, loc);
     };
 
 private:
-    sptr<Vector<glm::mat4>> _base_transform_list;
+    sptr<MappedVector<glm::mat4>> _base_transform_list;
     size_t _base_transform_pos;
 
 };

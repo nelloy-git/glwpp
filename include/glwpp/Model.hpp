@@ -9,7 +9,11 @@
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/model/Mesh.hpp"
 
-#include "glwpp/gl/obj/Vector.hpp"
+#include "glwpp/gl/obj/MappedVector.hpp"
+
+struct aiMatrix4x4;
+struct aiNode;
+struct aiScene;
 
 namespace glwpp {
     
@@ -18,7 +22,7 @@ public:
     Model(const wptr<Context>& wctx);
     virtual ~Model();
 
-    bool loadFile(const std::string& path, const MeshConfig& mesh_cfg);
+    bool loadFile(const aiScene* ai_scene, const MeshConfig& mesh_cfg);
     std::optional<std::string> getError();
 
 private:
@@ -29,7 +33,10 @@ private:
     std::vector<Mesh> _meshes;
     std::vector<glm::mat4> _transform;
 
-    sptr<Vector<glm::mat4>> _base_transform_list;
+    sptr<MappedVector<glm::mat4>> _base_transform_list;
+
+    void _recurseAiNodes(const aiNode* ai_node);
+    glm::mat4 _ai2glm(const aiMatrix4x4& ai_mat);
 };
 
 } // namespace glwpp

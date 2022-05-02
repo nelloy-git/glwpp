@@ -13,27 +13,35 @@ Model::Model(const wptr<Context>& wctx) :
 Model::~Model(){
 }
 
-bool Model::loadFile(const std::string& path, const MeshConfig& mesh_cfg){
+bool Model::loadFile(const aiScene* ai_scene, const MeshConfig& mesh_cfg){
     _mesh_cfg = mesh_cfg;
     _last_err = std::nullopt;
 
-    Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_CalcTangentSpace       |
-                                                   aiProcess_Triangulate            |
-                                                   aiProcess_JoinIdenticalVertices  |
-                                                   aiProcess_SortByPType);
+    // Assimp::Importer importer;
+    // const aiScene *scene = importer.ReadFile(path, aiProcess_CalcTangentSpace       |
+    //                                                aiProcess_Triangulate            |
+    //                                                aiProcess_JoinIdenticalVertices  |
+    //                                                aiProcess_SortByPType);
 
-    if (!scene){
-        _last_err = importer.GetErrorString();
+    if (!ai_scene){
+        _last_err = "Empty aiScene pointer";
+        return false;
+    }
+
+    auto ai_root = ai_scene->mRootNode;
+    if (!ai_root){
+        _last_err = "Empty aiScene pointer";
         return false;
     }
 
     _meshes = {};
-    for (size_t i = 0; i < scene->mNumMeshes; ++i){
+    for (size_t i = 0; i < ai_scene->mNumMeshes; ++i){
         _meshes.emplace_back(_ctx, _mesh_cfg);
     }
 
-
+    _transform = {};
+    _transform.push_back(_ai2glm(ai_root->mTransformation));
+    for (size_t i = 0; i < ai_root->)
 }
 
 std::optional<std::string> Model::getError(){

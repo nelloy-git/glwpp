@@ -26,7 +26,7 @@ public:
     Mesh(const wptr<Context>& wctx, const MeshConfig& prefered_types = Mesh::_get_default_types());
     virtual ~Mesh();
 
-    bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc = SrcLoc());
+    bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc loc = SrcLoc());
 
     const glm::vec4& getValueOffset(const MeshAttribute& attribute) const;
     const float& getValueMultiplicator(const MeshAttribute& attribute) const;

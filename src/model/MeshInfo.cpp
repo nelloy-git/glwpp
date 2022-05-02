@@ -1,10 +1,11 @@
 #include "glwpp/model/MeshInfo.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
 #include "assimp/mesh.h"
 
-#include "glwpp/model/VertexAttribute.hpp"
+#include "glwpp/model/MeshVertexAttribute.hpp"
 
 using namespace glwpp;
 
@@ -162,6 +163,75 @@ static inline float getAiMeshAttribMult(const aiMesh& ai_mesh, const MeshAttribu
     }
 }
 
+static inline gl::DataType nextGlDataType(const gl::DataType& type){
+    switch (type){
+    case gl::DataType::UByte: return gl::DataType::UInt_2_10_10_10;
+    case gl::DataType::UInt_2_10_10_10: return gl::DataType::UShort;
+    default: return gl::DataType::Float;
+    }
+}
+
+static inline float getGlDataTypeValue(const gl::DataType& type, const float& value){
+    static constexpr double ubyte = 1.0 / (double)(1 << 8);
+    static constexpr double uint_2_10_10_10 = 1.0 / (double)(1 << 10);
+    static constexpr double ushort = 1.0 / (double)(1 << 16);
+
+    switch (type){
+    case gl::DataType::UByte: return int(value / ubyte) * ubyte;
+    case gl::DataType::UInt_2_10_10_10: return int(value / uint_2_10_10_10) * uint_2_10_10_10;
+    case gl::DataType::UShort: return int(value / ushort) * ushort;
+    default: return value;
+    }
+}
+
+static inline gl::DataType getGlDataType(const aiVector3D* arr, size_t arr_size, const float& epsilon){
+    auto type = gl::DataType::UByte;
+    for (size_t i = 0; i < arr_size; ++i){
+        for (size_t j = 0; j < 3; ++j){
+            auto v = arr[i][j];
+            if (std::abs(v - getGlDataTypeValue(type, v)) > epsilon){
+                type = nextGlDataType(type);
+            }
+        }
+    }
+    return type;
+}
+
+static inline gl::DataType getGlDataType(const aiColor4D* arr, size_t arr_size, const float& epsilon){
+    auto type = gl::DataType::UByte;
+    for (size_t i = 0; i < arr_size; ++i){
+        for (size_t j = 0; j < 4; ++j){
+            auto v = arr[i][j];
+            if (std::abs(v - getGlDataTypeValue(type, v)) > epsilon){
+                type = nextGlDataType(type);
+            }
+        }
+    }
+    return type;
+}
+
+static inline gl::DataType getGlDataType(const aiMesh& ai_mesh, const MeshAttribute& attr, const float& epsilon){
+    switch (attr){
+    case MeshAttribute::Position: return getGlDataType(ai_mesh.mVertices, ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Normal: return getGlDataType(ai_mesh.mNormals, ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Tangent: return getGlDataType(ai_mesh.mTangents, ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Bitangent: return getGlDataType(ai_mesh.mBitangents, ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_0: return getGlDataType(ai_mesh.mTextureCoords[0], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_1: return getGlDataType(ai_mesh.mTextureCoords[1], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_2: return getGlDataType(ai_mesh.mTextureCoords[2], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_3: return getGlDataType(ai_mesh.mTextureCoords[3], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_4: return getGlDataType(ai_mesh.mTextureCoords[4], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_5: return getGlDataType(ai_mesh.mTextureCoords[5], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_6: return getGlDataType(ai_mesh.mTextureCoords[6], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::TexCoord_7: return getGlDataType(ai_mesh.mTextureCoords[7], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Color_0: return getGlDataType(ai_mesh.mColors[0], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Color_1: return getGlDataType(ai_mesh.mColors[1], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Color_2: return getGlDataType(ai_mesh.mColors[2], ai_mesh.mNumVertices, epsilon);
+    case MeshAttribute::Color_3: return getGlDataType(ai_mesh.mColors[3], ai_mesh.mNumVertices, epsilon);
+    default: throw std::runtime_error("Unsuported MeshAttribute");
+    }
+}
+
 }
 
 MeshInfo::MeshInfo(){
@@ -191,11 +261,13 @@ void MeshInfo::apply(const MeshConfig& cfg, const aiMesh& ai_mesh){
         AttribInfo& attr_info = _get_info(attr);
 
         attr_info.enabled = doAiMeshHasAttrib(ai_mesh, attr) && cfg.getSize(attr) != MeshAttributeSize::None;
-        attr_info.type = attr_info.enabled ? cfg.getType(attr) : static_cast<gl::DataType>(0);
         attr_info.size = attr_info.enabled ? cfg.getSize(attr) : MeshAttributeSize::None;
         attr_info.byte_offset = _bytes_total;
         attr_info.value_offset = attr_info.enabled ? getAiMeshAttribOffset(ai_mesh, attr) : glm::vec4(0);
         attr_info.value_mult = attr_info.enabled ? getAiMeshAttribMult(ai_mesh, attr, attr_info.value_offset) : 1;
+        attr_info.type = attr_info.enabled ? getGlDataType(ai_mesh, attr, attr_info.value_mult * cfg.getCompression(attr)) : static_cast<gl::DataType>(0);
+
+        std::cout << "Attr: " << i << " - " << static_cast<size_t>(attr_info.type) << std::endl;
 
         _bytes_total += getAttributeSize(attr_info.type, attr_info.size);
     }

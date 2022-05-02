@@ -207,7 +207,7 @@ int main(int argc, char **argv){
     // auto vao = mesh.getVAO();
 
     glwpp::Drawer drawer(prog);
-    drawer.bindUniform(glwpp::Drawer::Uniform::Camera_mat4, "camera");
+    drawer.bindUniform(glwpp::Drawer::Uniform::Camera, "Camera");
     // drawer.setCameraMatLocation("camera");
 
     win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
@@ -231,6 +231,9 @@ int main(int argc, char **argv){
     vec.reserve(10);
     vec.push_back(15);
     vec.push_back(11);
+    vec.push_back(5);
+    vec.push_back(5);
+    vec.push_back(5);
     vec.push_back(5);
     // vec.reserve(10);
     // glwpp::Buffer buf(vec);

@@ -42,7 +42,8 @@ size_t Drawer::GetUniformEnumSize(){
 }
 
 Drawer::Drawer(const Program& program) :
-    _program(program){
+    _program(program),
+    camera(program.getWCtx()){
     camera.setPosition({0, 0, 0});
 
     static const size_t attribute_enum_size = GetAttributeEnumSize();
@@ -59,12 +60,12 @@ Drawer::Drawer(const Program& program) :
 Drawer::~Drawer(){
 }
 
-void Drawer::bindAttribute(const Attribute& attr, const std::string& name){
+void Drawer::bindMeshAttribute(const Attribute& attr, const std::string& name){
     auto attr_i = static_cast<size_t>(attr);
     _program.getAttributeLocation(_attribute_location[attr_i], name);
 } 
 
-void Drawer::bindAttribute(const Attribute& attr, const gl::Int& location){
+void Drawer::bindMeshAttribute(const Attribute& attr, const gl::Int& location){
     auto attr_i = static_cast<size_t>(attr);
     *_attribute_location[attr_i] = location;
 }
@@ -72,6 +73,12 @@ void Drawer::bindAttribute(const Attribute& attr, const gl::Int& location){
 void Drawer::bindUniform(const Uniform& uniform, const std::string& name){
     auto unif_i = static_cast<size_t>(uniform);
     _program.getUniformLocation(_uniform_location[unif_i], name);
+
+    if (uniform == Uniform::Camera){
+        auto index = make_sptr<gl::UInt>();
+        _program.getUniformBlockLocation(index, name);
+        camera.bindBufferIndex(index);
+    }
 }
 
 void Drawer::bindUniform(const Uniform& uniform, const gl::Int& location){
@@ -80,10 +87,11 @@ void Drawer::bindUniform(const Uniform& uniform, const gl::Int& location){
 }
 
 void Drawer::updateCamera(){
-    static auto cam_unif_i = static_cast<size_t>(Uniform::Camera_mat4);
-    _program.setUniformMat4x4F(_uniform_location[cam_unif_i], 
-                               std::reinterpret_pointer_cast<gl::Float>(camera.getMatPtr()),
-                               false);
+    static auto cam_unif_i = static_cast<size_t>(Uniform::Camera);
+    // _pro
+    // _program.setUniformMat4x4F(_uniform_location[cam_unif_i], 
+    //                            std::reinterpret_pointer_cast<gl::Float>(camera.getMatPtr()),
+    //                            false);
 }
 
 void Drawer::drawMesh(const glwpp::Mesh& mesh){

@@ -10,7 +10,7 @@ const UInt& CtxObject::getId() const {
     return *_id;
 }
 
-void CtxObject::_printDebug(const SrcLoc& loc){
+void CtxObject::_printDebug(const SrcLoc loc){
 #ifdef GLWPP_DEBUG
     Enum err = glGetError();
     while (err != GL_NO_ERROR){
@@ -27,8 +27,8 @@ void CtxObject::_printDebug(const SrcLoc& loc){
             default: err_name = "UNKNOWN";
         }
 
-        std::cout << loc.file_name() << ":" << loc.line() << "\t" << loc.function_name()
-                    << " Err: " << err_name << "(" << err << ")" << std::endl;
+        std::cout << loc.to_string() << std::endl
+                  << " Err: " << err_name << "(" << err << ")" << std::endl;
         err = glGetError();
     }
 #endif

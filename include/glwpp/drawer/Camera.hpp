@@ -2,15 +2,18 @@
 
 #include "glm/glm.hpp"
 
+#include "glwpp/gl/obj/Array.hpp"
 #include "glwpp/utils/Utils.hpp"
 
 namespace glwpp {
 
 class Camera {
 public:
-    Camera();
+    Camera(const wptr<Context>& wctx, const SrcLoc loc = SrcLoc());
     Camera(const Camera& other) = default;
     virtual ~Camera();
+
+    void bindBufferIndex(const sptr<gl::UInt>& index);
 
     const glm::mat4& getMat() const;
     const sptr<glm::mat4>& getMatPtr() const;
@@ -52,6 +55,11 @@ public:
 private:
     void _update();
 
+    struct UniformBlock {
+        glm::mat4 mat = glm::mat4(1.0F);
+    };
+
+    Array<UniformBlock> _gl_cam;
     sptr<glm::mat4> _mat = make_sptr<glm::mat4>(1.0f);
     glm::vec3 _forward = {1, 0, 0};
     glm::vec3 _up = {0, 1, 0};

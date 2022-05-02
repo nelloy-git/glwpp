@@ -38,7 +38,7 @@ public:
 
 protected:
 
-    static void _printDebug(const SrcLoc& loc);
+    static void _printDebug(const SrcLoc loc);
 
 private:
     sptr<UInt> _id;

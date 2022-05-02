@@ -1,8 +1,9 @@
 #include "glwpp/model/Mesh.hpp"
 
 #include "assimp/scene.h"
+#include "magic_enum.hpp"
 
-#include "glwpp/model/VertexAttribute.hpp"
+#include "glwpp/model/MeshVertexAttribute.hpp"
 
 using namespace glwpp;
 
@@ -52,7 +53,7 @@ Mesh::~Mesh(){
 
 }
 
-bool Mesh::loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc& loc){
+bool Mesh::loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc loc){
     _info.apply(_config, ai_mesh);
     _prepareIndexBuffer(ai_mesh);
     _prepareVertexBuffer(ai_mesh);
@@ -114,6 +115,10 @@ sptr<void> Mesh::_makeIndexBuffer(const aiMesh& ai_mesh){
     auto ptr = reinterpret_cast<unsigned char*>(tmp.get());
 
     for (size_t i = 0; i < ai_mesh.mNumFaces; ++i){
+        if (ai_mesh.mFaces->mNumIndices != 3){
+            throw std::runtime_error("Only triangulated models are supported.");
+        }
+
         for (size_t j = 0; j < 3; ++j){
             ptr[3 * i + j] = ai_mesh.mFaces[i].mIndices[j];
         }
@@ -241,7 +246,7 @@ void Mesh::_prepareVertexArray(const aiMesh& ai_mesh){
         }
 
         _vao->enableAttrib(i);
-        _vao->setAttribBinding(i, 0);
+        _vao->setAttribBinding(i, _config.getLocation(attr));
         _vao->setAttribFormat(i, static_cast<size_t>(_info.getSize(attr)), _info.getType(attr), true, _info.getByteOffset(attr));
     }
 }
@@ -249,22 +254,22 @@ void Mesh::_prepareVertexArray(const aiMesh& ai_mesh){
 const MeshConfig& Mesh::_get_default_types(){
     static const MeshConfig default_types = [](){
         MeshConfig types;
-        types.setType(MeshAttribute::Position, gl::DataType::UByte);
-        types.setType(MeshAttribute::Normal, gl::DataType::UByte);
-        types.setType(MeshAttribute::Tangent, gl::DataType::UByte);
-        types.setType(MeshAttribute::Bitangent, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_0, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_1, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_2, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_3, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_4, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_5, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_6, gl::DataType::UByte);
-        types.setType(MeshAttribute::TexCoord_7, gl::DataType::UByte);
-        types.setType(MeshAttribute::Color_0, gl::DataType::UByte);
-        types.setType(MeshAttribute::Color_1, gl::DataType::UByte);
-        types.setType(MeshAttribute::Color_2, gl::DataType::UByte);
-        types.setType(MeshAttribute::Color_3, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Position, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Normal, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Tangent, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Bitangent, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_0, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_1, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_2, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_3, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_4, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_5, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_6, gl::DataType::UByte);
+        // types.setType(MeshAttribute::TexCoord_7, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Color_0, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Color_1, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Color_2, gl::DataType::UByte);
+        // types.setType(MeshAttribute::Color_3, gl::DataType::UByte);
         
         types.setSize(MeshAttribute::Position, MeshAttributeSize::Vec3);
         types.setSize(MeshAttribute::Normal, MeshAttributeSize::Vec3);

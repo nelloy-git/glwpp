@@ -3,7 +3,8 @@
 #include <memory>
 #include <variant>
 
-#include "glwpp/gl/types.hpp"
+#include "glwpp/utils/SrcLoc.hpp"
+// #include "glwpp/gl/types.hpp"
 
 namespace glwpp {
 
@@ -12,7 +13,13 @@ class Val {
     using Container = std::variant<T, T*, std::shared_ptr<T>>;
 
 public:
-    Val(const T& data){_data = std::make_shared<Container>(data);}
+    Val(const T& data){
+        if constexpr (std::is_same_v<T, SrcLoc>){
+            _data = std::make_shared<Container>(std::move(data));
+        } else {
+            _data = std::make_shared<Container>(data);
+        }
+    }
     explicit Val(const T* const data){_data = std::make_shared<Container>(data);}
     Val(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
     virtual ~Val(){};
@@ -66,12 +73,5 @@ template<class T>
 struct is_vop<Val<T>> : std::true_type {
     using type = T;
 };
-
-// template<> Val<gl::IntPtr>::Val<gl::IntPtr>(const gl::IntPtr& data){}
-
-// template<>
-// class Val<gl::IntPtr> {
-
-// };
 
 } // namespace glwpp

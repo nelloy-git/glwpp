@@ -5,10 +5,15 @@
 
 using namespace glwpp;
 
-Camera::Camera(){
+Camera::Camera(const wptr<Context>& wctx, const SrcLoc loc) :
+    _gl_cam(wctx, 1, loc){
 }
 
 Camera::~Camera(){
+}
+
+void Camera::bindBufferIndex(const sptr<gl::UInt>& index){
+    _gl_cam.bindUniformBase(index);
 }
 
 const glm::mat4& Camera::getMat() const {
@@ -117,7 +122,9 @@ void Camera::_update(){
     if (_use_perspective){
         auto proj_mat = glm::perspectiveFov(_fov, static_cast<float>(_width), static_cast<float>(_height), _near_z, _far_z);
         *_mat = proj_mat * view_mat;
+        _gl_cam.set(0, UniformBlock{*_mat});
     } else {
         *_mat = view_mat;
+        _gl_cam.set(0, UniformBlock{*_mat});
     }
 }

@@ -23,47 +23,47 @@ class Buffer : public Object {
     friend class VertexArray;
 
 public:    
-    Buffer(const std::weak_ptr<Context>& wctx, const SrcLoc& loc = SrcLoc());
+    Buffer(const std::weak_ptr<Context>& wctx, const SrcLoc loc = SrcLoc());
 
     bool data(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
-              const Val<gl::BufferUsage>& usage, const SrcLoc& loc = SrcLoc());
+              const Val<gl::BufferUsage>& usage, const SrcLoc loc = SrcLoc());
     bool storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
-                 const Val<gl::BitField>& flags, const SrcLoc& loc = SrcLoc());
+                 const Val<gl::BitField>& flags, const SrcLoc loc = SrcLoc());
 
-    bool bindUniformBase(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
+    bool bindUniformBase(const Val<gl::UInt>& index, const SrcLoc loc = SrcLoc()) const;
     bool bindUniformRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
-                     const Val<gl::SizeiPtr>& size, const SrcLoc& loc = SrcLoc()) const;
-    bool bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc& loc = SrcLoc()) const;
+                     const Val<gl::SizeiPtr>& size, const SrcLoc loc = SrcLoc()) const;
+    bool bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc loc = SrcLoc()) const;
     bool bindShaderStorageRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
-                           const Val<gl::SizeiPtr>& size, const SrcLoc& loc = SrcLoc()) const;
+                           const Val<gl::SizeiPtr>& size, const SrcLoc loc = SrcLoc()) const;
 
-    bool getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getMapRangeAccess(Ptr<gl::BitField>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool isImmutable(Ptr<bool>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool isMapped(Ptr<bool>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getMapLength(Ptr<gl::Int64>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getMapOffset(Ptr<gl::Int64>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getSize(Ptr<gl::Int>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getStorageFlags(Ptr<gl::BitField>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool getUsage(Ptr<gl::BufferUsage>& dst, const SrcLoc& loc = SrcLoc()) const;
+    bool getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getMapRangeAccess(Ptr<gl::BitField>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool isImmutable(Ptr<bool>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool isMapped(Ptr<bool>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getMapLength(Ptr<gl::Int64>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getMapOffset(Ptr<gl::Int64>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getSize(Ptr<gl::Int>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getStorageFlags(Ptr<gl::BitField>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool getUsage(Ptr<gl::BufferUsage>& dst, const SrcLoc loc = SrcLoc()) const;
 
     bool getSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                    Ptr<void>& dst, const SrcLoc& loc = SrcLoc()) const;
+                    Ptr<void>& dst, const SrcLoc loc = SrcLoc()) const;
     bool setSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                    const Ptr<void>& data, const SrcLoc& loc = SrcLoc());
+                    const Ptr<void>& data, const SrcLoc loc = SrcLoc());
     bool copySubDataTo(Buffer& dst, const Val<gl::IntPtr>& read_offset,
                        const Val<gl::IntPtr>& write_offset, const Val<gl::SizeiPtr>& size,
-                       const SrcLoc& loc = SrcLoc()) const;
+                       const SrcLoc loc = SrcLoc()) const;
 
     using MapPtr = void*;
-    bool getMapPointer(Ptr<MapPtr>& dst, const SrcLoc& loc = SrcLoc()) const;
-    bool map(const Val<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc& loc = SrcLoc());
+    bool getMapPointer(Ptr<MapPtr>& dst, const SrcLoc loc = SrcLoc()) const;
+    bool map(const Val<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc loc = SrcLoc());
     bool mapRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
                   const Val<gl::BitField>& access, Ptr<MapPtr>& dst,
-                  const SrcLoc& loc = SrcLoc());
+                  const SrcLoc loc = SrcLoc());
     bool mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                       const SrcLoc& loc = SrcLoc());
-    bool unmap(Ptr<bool>& dst, const SrcLoc& loc = SrcLoc());
+                       const SrcLoc loc = SrcLoc());
+    bool unmap(Ptr<bool>& dst, const SrcLoc loc = SrcLoc());
 
 protected:
     Ptr<gl::CtxBuffer> _getPtr();

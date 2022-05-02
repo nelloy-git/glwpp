@@ -5,25 +5,35 @@ using namespace glwpp;
 MeshConfig::MeshConfig(){
     static const size_t enum_size = GetMeshAttributeEnumSize();
     for (size_t i = 0; i < enum_size; ++i){
+        _loc.push_back(0);
         _size.push_back(MeshAttributeSize::None);
-        _type.push_back(gl::DataType::Float);
+        _epsilon.push_back(1);
     }
 }
 
 MeshConfig::MeshConfig(const MeshConfig& other){
     static const size_t enum_size = GetMeshAttributeEnumSize();
     for (size_t i = 0; i < enum_size; ++i){
+        _loc.push_back(0);
         _size.push_back(other._size[i]);
-        _type.push_back(other._type[i]);
+        _epsilon.push_back(other._epsilon[i]);
     }
 }
 
-const gl::DataType& MeshConfig::getType(const MeshAttribute& attribute) const {
-    return _type[_get_i(attribute)];
+const gl::UInt& MeshConfig::getLocation(const MeshAttribute& attribute) const {
+    return _loc[_get_i(attribute)];
 }
 
-void MeshConfig::setType(const MeshAttribute& attribute, const gl::DataType& type){
-    _type[_get_i(attribute)] = type;
+void MeshConfig::setLocation(const MeshAttribute& attribute, const gl::UInt& location){
+    _loc[_get_i(attribute)] = location;
+}
+
+const float& MeshConfig::getCompression(const MeshAttribute& attribute) const {
+    return _epsilon[_get_i(attribute)];
+}
+
+void MeshConfig::setCompression(const MeshAttribute& attribute, const float& epsilon){
+    _epsilon[_get_i(attribute)] = epsilon;
 }
 
 const MeshAttributeSize& MeshConfig::getSize(const MeshAttribute& attribute) const {
