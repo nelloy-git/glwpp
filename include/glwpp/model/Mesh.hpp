@@ -1,13 +1,14 @@
 #pragma once
 
-#include "glwpp/ctx/Context.hpp"
+#include <atomic>
 
-#include "glwpp/gl/obj/Buffer.hpp"
+#include "glwpp/ctx/Context.hpp"
 #include "glwpp/gl/obj/VertexArray.hpp"
 
-// #include "glwpp/model/MeshInfo.hpp"
-#include "glwpp/model/MeshConfig.hpp"
-#include "glwpp/model/MeshInfo.hpp"
+#include "glwpp/model/MeshIndexData.hpp"
+#include "glwpp/model/MeshVertexConfig.hpp"
+#include "glwpp/model/MeshVertexData.hpp"
+#include "glwpp/utils/EnumContainer.hpp"
 
 struct aiMesh;
 struct aiFace;
@@ -20,54 +21,24 @@ namespace glwpp {
 class Mesh {
 
 public:
+    static Mesh Cube(const wptr<Context>& wctx, const MeshVertexConfig& vert_config);
 
-    static Mesh Cube(const wptr<Context>& wctx, const MeshConfig& prefered_types = Mesh::_get_default_types());
-
-    Mesh(const wptr<Context>& wctx, const MeshConfig& prefered_types = Mesh::_get_default_types());
+    Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config);
     virtual ~Mesh();
 
-    bool loadAssimpMesh(const aiMesh& ai_mesh, const SrcLoc loc = SrcLoc());
+    sptr<VertexArray> getVertexArray();
 
-    const glm::vec4& getValueOffset(const MeshAttribute& attribute) const;
-    const float& getValueMultiplicator(const MeshAttribute& attribute) const;
-    const sptr<VertexArray>& getVAO() const;
+    void setAttributeBindings(const EnumContainer<MeshAttribute, gl::Int>& bindings);
+    const EnumContainer<MeshAttribute, gl::Int>& getAttributeBindings() const;
 
 private:
     wptr<Context> _ctx;
-    MeshConfig _config;
-    MeshInfo _info;
+    sptr<VertexArray> _vert_arr;
 
-    size_t _faces_count;
-    sptr<VertexArray> _vao;
-    sptr<Buffer> _vertices;
-    sptr<Buffer> _indices;
+    MeshIndexData _index_data;
+    MeshVertexData _vert_data;
 
-    void _prepareMeshInfo(const aiMesh& ai_mesh);
-    void _prepareIndexBuffer(const aiMesh& ai_mesh);
-    template<gl::DataType>
-    size_t _getIndexBufferSize(const aiMesh& ai_mesh);
-    template<gl::DataType>
-    sptr<void> _makeIndexBuffer(const aiMesh& ai_mesh);
-    void _prepareVertexBuffer(const aiMesh& ai_mesh);
-    void _fillVertex(char* vertex_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh);
-    void _fillAttribute(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
-    template<size_t S>
-    void _fillAttributeSized(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
-    template<size_t S, gl::DataType D>
-    void _fillAttributeSizedTyped(char* attr_ptr, const size_t& vertex_pos, const aiMesh& ai_mesh, const MeshAttribute& attr);
-    void _prepareVertexArray(const aiMesh& ai_mash);
-
-    // void _fillAttribute3D(char* dst, const MeshAttribute& attr, const aiVector3D& ai_vec3);
-
-    
-    // sptr<void> _preparePosition(const aiMesh& ai_mesh);
-
-    static const MeshConfig& _get_default_types();
-
-    // static sptr<void> _packIndices(const aiFace* src, const size_t& count);
-    // static sptr<void> _packVec3D(const aiVector3t<float>* src, const size_t& count);
-
-    
+    EnumContainer<MeshAttribute, gl::Int> _attr_bindings;
 };
 
 } // namespace glwpp

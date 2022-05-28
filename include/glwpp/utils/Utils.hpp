@@ -4,28 +4,28 @@
 
 namespace glwpp {
 
-template<class T>
+template<typename T>
 using sptr = std::shared_ptr<T>;
 
-template<class T>
+template<typename T>
 using wptr = std::weak_ptr<T>;
 
-template<class T, class D = std::default_delete<T>>
+template<typename T, typename D = std::default_delete<T>>
 using uptr = std::unique_ptr<T, D>;
 
-template<class T, class ... Args>
+template<typename T, typename ... Args>
 inline sptr<T> make_sptr(Args&&... args){
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
-template<class T, class ... Args>
+template<typename T, typename ... Args>
 inline uptr<T> make_uptr(Args&&... args){
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
 struct EmptyObj {};
 
-static sptr<void> createTmpData(const void* src, size_t size){
+static sptr<void> createTmpData(size_t size, const void* src = nullptr){
     void* data;
 
     if (src != nullptr){
@@ -41,26 +41,26 @@ static sptr<void> createTmpData(const void* src, size_t size){
     return sptr<void>(data, deleter);
 }
 
-template<template<typename ...> class T, class ... OutArgs>
+template<template<typename ...> typename T, typename ... OutArgs>
 inline decltype(auto) make_shared(OutArgs&& ... args){
     using Tmp = std::remove_pointer_t<decltype(new T(args...))>;
     return std::make_shared<Tmp>(std::forward<OutArgs>(args)...);
 };
 
-template <template<typename...> class base, class derived>
+template <template<auto...> typename base, typename derived>
 struct is_base_of_template_impl
 {
-    template<typename... Ts>
+    template<auto... Ts>
     static constexpr std::true_type  test(const base<Ts...> *);
     static constexpr std::false_type test(...);
     using type = decltype(test(std::declval<derived*>()));
 };
 
-template < template <typename...> class base, typename derived>
+template < template <auto...> typename base, typename derived>
 using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
 template<bool... b> constexpr bool var_and = (b && ...);
-template<class T, class... Any> constexpr bool is_same_any = (std::is_same_v<T, Any> || ...);
-template<class T, class... All> constexpr bool is_same_all = (std::is_same_v<T, All> && ...);
+template<typename T, typename... Any> constexpr bool is_same_any = ((std::is_same_v<T, Any>) || ...);
+template<typename T, typename... All> constexpr bool is_same_all = ((std::is_same_v<T, All>) && ...);
 
 } // namespace glwpp

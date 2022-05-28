@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <optional>
 #include <string>
 #include <vector>
@@ -7,36 +8,43 @@
 #include "glm/glm.hpp"
 
 #include "glwpp/ctx/Context.hpp"
+#include "glwpp/gl/obj/Vector.hpp"
 #include "glwpp/model/Mesh.hpp"
+#include "glwpp/model/ModelNode.hpp"
 
-#include "glwpp/gl/obj/MappedVector.hpp"
-
-struct aiMatrix4x4;
-struct aiNode;
 struct aiScene;
 
 namespace glwpp {
     
 class Model {
 public:
-    Model(const wptr<Context>& wctx);
+    Model(const wptr<Context>& wctx, const std::string& path,
+          const MeshVertexConfig& vert_config = getDefaultVertexConfig());
     virtual ~Model();
 
-    bool loadFile(const aiScene* ai_scene, const MeshConfig& mesh_cfg);
+    static void setDefaultVertexConfig(const MeshVertexConfig& config);
+    static MeshVertexConfig getDefaultVertexConfig();
+
     std::optional<std::string> getError();
+
+    const Vector<glm::mat4> getBaseTransforms() const;
+    const std::vector<Mesh>& getMeshes() const;
+
+    void forEveryNode(const std::function<void(const ModelNode& node)>& func) const;
+
 
 private:
     const wptr<Context> _ctx;
-    MeshConfig _mesh_cfg;
     std::optional<std::string> _last_err;
 
-    std::vector<Mesh> _meshes;
-    std::vector<glm::mat4> _transform;
+    uptr<std::vector<sptr<Mesh>>> _meshes;
+    uptr<ModelNodeTree> _node_tree;
 
-    sptr<MappedVector<glm::mat4>> _base_transform_list;
+    bool _loadMeshes(const aiScene* ai_scene, const MeshVertexConfig& vert_config);
+    bool _loadNodes(const aiScene* ai_scene);
 
-    void _recurseAiNodes(const aiNode* ai_node);
-    glm::mat4 _ai2glm(const aiMatrix4x4& ai_mat);
+    static std::mutex _default_config_lock;
+    static MeshVertexConfig _default_vertex_config;
 };
 
 } // namespace glwpp

@@ -19,8 +19,13 @@ public:
     void getId(Ptr<gl::UInt> dst) const;
     wptr<Context> getWCtx() const;
 
+    template<auto F, typename ... Args>
+    bool executeCustomCode(const Args&... args){
+        return _execute<F>(_ctx, args...);
+    };
+
 protected:
-    template<class I, class ... Args>
+    template<typename I, typename ... Args>
     Object(const wptr<Context>& ctx, const I& init, const Val<Args>&... args) :
         _ctx(ctx){
         using T = std::invoke_result_t<I, Args...>;
@@ -29,27 +34,27 @@ protected:
     };
     virtual ~Object() = 0;
 
-    template<class T>
+    template<typename T>
     Ptr<T> _getPtr(){
         return std::dynamic_pointer_cast<T>(_gl);
     };
 
-    template<class T>
+    template<typename T>
     const Ptr<T> _getPtr() const {
         return std::dynamic_pointer_cast<T>(_gl);
     };
 
-    template<class T>
+    template<typename T>
     Val<T> _getVop(){
         return Val<T>(std::dynamic_pointer_cast<T>(_gl));
     };
 
-    template<class T>
+    template<typename T>
     const Val<T> _getVop() const {
         return Val<T>(std::dynamic_pointer_cast<T>(_gl));
     };
 
-    template<auto F, class ... Args>
+    template<auto F, typename ... Args>
     static inline bool _execute(wptr<Context> weak_ctx, const Args&... args){
         auto ctx = weak_ctx.lock();
         if (!ctx) return false;
@@ -64,7 +69,7 @@ protected:
         return true;
     }
 
-    template<class T, auto M, class ... Args>
+    template<typename T, auto M, typename ... Args>
     inline bool _executeMethod(const Args&... args){
         static constexpr auto F = [](T* instance, auto&&... args){
             (instance->*M)(args...);
@@ -72,7 +77,7 @@ protected:
         return _execute<F>(_ctx, _getPtr<T>(), args...);
     }
 
-    template<class T, auto M, class ... Args>
+    template<typename T, auto M, typename ... Args>
     inline bool _executeMethod(const Args&... args) const {
         static constexpr auto F = [](const T* instance, auto&&... args){
             (instance->*M)(args...);
@@ -80,23 +85,23 @@ protected:
         return _execute<F>(_ctx, _getPtr<T>(), args...);
     }
 
-    template<class T, auto M, class R, class ... Args>
+    template<typename T, auto M, typename R, typename ... Args>
     inline bool _executeGetter(Ptr<R>& dst, const Args&... args){
-        static constexpr auto F = []<class ... ArgsM>(T* instance, R* dst, ArgsM&& ... args){
+        static constexpr auto F = []<typename ... ArgsM>(T* instance, R* dst, ArgsM&& ... args){
             *dst = (instance->*M)(std::forward<ArgsM>(args)...);
         };
         return _execute<F>(_ctx, _getPtr<T>(), dst, args...);
     }
 
-    template<class T, auto M, class R, class ... Args>
+    template<typename T, auto M, typename R, typename ... Args>
     inline bool _executeGetter(Ptr<R>& dst, const Args&... args) const {
-        static constexpr auto F = []<class ... ArgsM>(const T* instance, R* dst, ArgsM&& ... args){
+        static constexpr auto F = []<typename ... ArgsM>(const T* instance, R* dst, ArgsM&& ... args){
             *dst = (instance->*M)(std::forward<ArgsM>(args)...);
         };
         return _execute<F>(_ctx, _getPtr<T>(), dst, args...);
     }
     
-    template<class ... ArgsIn>
+    template<typename ... ArgsIn>
     static auto _unpackArgs(const std::tuple<ArgsIn...>& args){
         static auto f = [](auto arg){
             using full_type = decltype(arg);
@@ -116,7 +121,7 @@ private:
     sptr<gl::CtxObject> _gl;
     wptr<Context> _ctx;
 
-    template<class F, class ... Args>
+    template<typename F, typename ... Args>
     static void _init(gl::CtxObject* dst, const F& init, const Args&... args){
         *dst = init(args...);
     }

@@ -63,9 +63,11 @@ add_library (${PROJECT_NAME} STATIC
     src/drawer/Camera.cpp
 
     src/model/Mesh.cpp
-    src/model/MeshAttribute.cpp
-    src/model/MeshConfig.cpp
-    src/model/MeshInfo.cpp
+    src/model/MeshAttributeData.cpp
+    src/model/MeshIndexData.cpp
+    src/model/MeshVertexConfig.cpp
+    src/model/MeshVertexData.cpp
+    src/model/ModelNode.cpp
 
     src/Drawer.cpp
 )

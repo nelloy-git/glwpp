@@ -150,13 +150,13 @@ Glyph loadGlyph(glwpp::wptr<glwpp::Context> ctx, const glwpp::Font& font, size_t
         0, 0, glyph_data->tex_x1, glyph_data->tex_y1,
         0, 1, glyph_data->tex_x1, glyph_data->tex_y2,
     };
-    auto v = glwpp::createTmpData(verts, sizeof(verts));
+    auto v = glwpp::createTmpData(sizeof(verts), verts);
 
     unsigned int elems[] = {
         0, 1, 3,
         1, 2, 3
     };
-    auto e = glwpp::createTmpData(elems, sizeof(elems));
+    auto e = glwpp::createTmpData(sizeof(elems), elems);
     
     glyph.elems.data(sizeof(elems), e, glwpp::gl::BufferUsage::DynamicDraw);
     glyph.verts.data(sizeof(verts), v, glwpp::gl::BufferUsage::DynamicDraw);

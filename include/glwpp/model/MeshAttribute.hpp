@@ -1,14 +1,56 @@
 #pragma once
 
+#include <stdexcept>
+
+#include "glwpp/gl/enums/DataType.hpp"
+
 namespace glwpp {
 
 enum class MeshAttributeSize : size_t {
-    None,
     Scalar,
     Vec2,
     Vec3,
     Vec4
 };
+
+constexpr size_t getMeshAttributeSizeComponents(const MeshAttributeSize& size){
+    switch(size){
+    case MeshAttributeSize::Scalar: return 1;
+    case MeshAttributeSize::Vec2: return 2;
+    case MeshAttributeSize::Vec3: return 3;
+    case MeshAttributeSize::Vec4: return 4;
+    default: throw std::runtime_error("Unknown MeshAttributeSize");
+    }
+};
+
+enum class MeshAttributeType {
+    UInt_11_11_10,
+    UInt_10_10_10_2,
+    UByte,
+    UShort,
+    UInt,
+    Float,
+};
+
+constexpr gl::DataType getMeshAttributeTypeGlType(const MeshAttributeType& type){
+    switch (type){
+    case MeshAttributeType::UByte: return gl::DataType::UByte;
+    case MeshAttributeType::UInt_11_11_10: return gl::DataType::UInt_10_11_11_Rev;
+    case MeshAttributeType::UInt_10_10_10_2: return gl::DataType::UInt_2_10_10_10_Rev;
+    case MeshAttributeType::UShort: return gl::DataType::UShort;
+    case MeshAttributeType::UInt: return gl::DataType::UInt;
+    case MeshAttributeType::Float: return gl::DataType::Float;
+    default: throw std::runtime_error("Unknown MeshAttributeType");
+    }
+}
+
+template<MeshAttributeType T>
+struct MeshAttributeTypeCpu {
+    using type = gl::DataTypeCpu_t<getMeshAttributeTypeGlType(T)>;
+};
+
+template<MeshAttributeType T>
+using MeshAttributeTypeCpu_t = gl::DataTypeCpu_t<getMeshAttributeTypeGlType(T)>;
 
 enum class MeshAttribute : size_t {
     Position = 0,
@@ -26,10 +68,11 @@ enum class MeshAttribute : size_t {
     Color_0,
     Color_1,
     Color_2,
-    Color_3
+    Color_3,
+    Color_4,
+    Color_5,
+    Color_6,
+    Color_7
 };
-
-// Linter fills bad because of magic_enum
-size_t GetMeshAttributeEnumSize();
 
 } // namespace glwpp

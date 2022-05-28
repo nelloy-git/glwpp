@@ -131,7 +131,7 @@ void Font::_loadTexture(){
         glyph->tex_y2 = (float)(glyph->y + glyph->height) / _tex_h;
 
         auto buffer = _ft_face->glyph->bitmap.buffer;
-        auto bitmap = createTmpData(nullptr, glyph->width * glyph->height);
+        auto bitmap = createTmpData(glyph->width * glyph->height);
 
         // Mirror Y to opengl coords
         for (auto i = 0; i < glyph->height; ++i){
