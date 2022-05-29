@@ -55,6 +55,9 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/obj/Shader.cpp
     src/gl/obj/Texture.cpp
     src/gl/obj/VertexArray.cpp
+    
+    src/gl/obj_v2/Object.cpp
+    src/gl/obj_v2/Buffer.cpp
 
     src/ctx/FreeType/Font.cpp
 

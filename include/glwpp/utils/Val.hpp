@@ -67,10 +67,10 @@ private:
 };
 
 template<class>
-struct is_vop : std::false_type {};
+struct is_val : std::false_type {};
 
 template<class T>
-struct is_vop<Val<T>> : std::true_type {
+struct is_val<Val<T>> : std::true_type {
     using type = T;
 };
 

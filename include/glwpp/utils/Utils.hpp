@@ -63,4 +63,8 @@ template<bool... b> constexpr bool var_and = (b && ...);
 template<typename T, typename... Any> constexpr bool is_same_any = ((std::is_same_v<T, Any>) || ...);
 template<typename T, typename... All> constexpr bool is_same_all = ((std::is_same_v<T, All>) && ...);
 
+// concept
+template<class T, class U>
+concept Derived = std::is_base_of<U, T>::value;
+
 } // namespace glwpp

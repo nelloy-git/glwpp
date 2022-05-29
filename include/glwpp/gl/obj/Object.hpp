@@ -5,7 +5,7 @@
 
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/gl/types.hpp"
-#include "glwpp/utils/Vop.hpp"
+#include "glwpp/utils/Val.hpp"
 #include "glwpp/utils/Ptr.hpp"
 
 namespace glwpp::gl {
@@ -106,7 +106,7 @@ protected:
         static auto f = [](auto arg){
             using full_type = decltype(arg);
 
-            if constexpr (is_vop<full_type>::value){
+            if constexpr (is_val<full_type>::value){
                 return arg.getVal();
             } else if constexpr (is_ptr<full_type>::value){
                 return arg.getPtr();

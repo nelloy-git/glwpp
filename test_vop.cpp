@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "glwpp/utils/Vop.hpp"
+#include "glwpp/utils/Val.hpp"
 
 int main(int argc, char **argv){
     int value = 11;

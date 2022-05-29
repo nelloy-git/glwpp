@@ -14,6 +14,8 @@
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/ctx/FreeType/Font.hpp"
 
+#include "glwpp/gl/obj_v2/Buffer.hpp"
+
 #include "glwpp/gl/obj/Buffer.hpp"
 #include "glwpp/gl/obj/Program.hpp"
 #include "glwpp/gl/obj/Shader.hpp"
@@ -177,10 +179,23 @@ int main(int argc, char **argv){
         glClear(GL_COLOR_BUFFER_BIT);
     });
 
+    {
+        glwpp::gl::v2::Buffer buffer(win);
+        auto data = glwpp::sptr<void>(new int);
+        buffer.data(4, data, glwpp::gl::BufferUsage::StaticDraw);
+
+        // auto res = glwpp::gl::v2::Ptr(glwpp::make_sptr<glwpp::gl::Int>(0));
+        // buffer->getParamInt(res, GL_BUFFER_MAPPED);
+
+        // auto obj = glwpp::make_sptr<glwpp::gl::v2::Buffer>(win);
+        // obj->init();
+    }
+    
+
     while (running){
         win->start();
         win->wait();
-        drawer.updateCamera();
+        // drawer.updateCamera();
         // for (size_t i = 0; i < scene->mNumMeshes; ++i){
         //     win->onRun.push([&prog, &meshes, i](){
         //         glwpp::gl::Int loc;
