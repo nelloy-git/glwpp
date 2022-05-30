@@ -1,0 +1,102 @@
+\hypertarget{_mesh_attribute_data_8hpp_source}{}\doxysection{Mesh\+Attribute\+Data.\+hpp}
+\label{_mesh_attribute_data_8hpp_source}\index{include/glwpp/model/MeshAttributeData.hpp@{include/glwpp/model/MeshAttributeData.hpp}}
+\mbox{\hyperlink{_mesh_attribute_data_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <array>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdexcept>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_mesh_attribute_8hpp}{glwpp/model/MeshAttribute.hpp}}"{}}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{static} \textcolor{keyword}{constexpr} uint32\_t packMeshAttributeDataValue(\textcolor{keyword}{const} \textcolor{keywordtype}{float}\& value, \textcolor{keywordtype}{size\_t} bits)\{}
+\DoxyCodeLine{11     uint32\_t mult = (1 << bits) -\/ 1;}
+\DoxyCodeLine{12     \textcolor{keywordflow}{return} ((uint32\_t)(value * mult)) \& mult;}
+\DoxyCodeLine{13 \};}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{float} unpackMeshAttributeDataValue(\textcolor{keyword}{const} uint32\_t\& value, \textcolor{keywordtype}{size\_t} bits)\{}
+\DoxyCodeLine{16     uint32\_t mult = (1 << bits) -\/ 1;}
+\DoxyCodeLine{17     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{float})value / (float)mult;}
+\DoxyCodeLine{18 \};}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespaceglwpp_ada9a82a94cee5e752c7caaa5f34b7271}{getMeshAttributeDataBytes}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{MeshAttributeType}}\& T, \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{MeshAttributeSize}}\& S);}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{template}<MeshAttributeType T, MeshAttributeSize S>}
+\DoxyCodeLine{23 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data}{MeshAttributeData}} final \{}
+\DoxyCodeLine{24 \textcolor{keyword}{public}:}
+\DoxyCodeLine{25     \textcolor{keyword}{using }\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a971093778911f2bee09196a0d62cbebb}{ComponentType}} = \mbox{\hyperlink{namespaceglwpp_a4776b56a6b801a9047cdd61aac063285}{MeshAttributeTypeCpu\_t<T>}};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a5dbc98dcc983a70728bd082d1a47546e}{S}} == \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983caf60357a8d17e45793298323f1b372a74}{MeshAttributeSize::Scalar}} ? 1 }
+\DoxyCodeLine{28                                          : \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a5dbc98dcc983a70728bd082d1a47546e}{S}} == \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983cafe98032d4f1c52a2f0b617f9205d5f80}{MeshAttributeSize::Vec2}} ? 2}
+\DoxyCodeLine{29                                          : \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a5dbc98dcc983a70728bd082d1a47546e}{S}} == \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983ca01b2dc1a2922d9be9e12ef0709600977}{MeshAttributeSize::Vec3}} ? 3}
+\DoxyCodeLine{30                                          : \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a5dbc98dcc983a70728bd082d1a47546e}{S}} == \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983caf67402842935c0240e8109e7312def66}{MeshAttributeSize::Vec4}} ? 4}
+\DoxyCodeLine{31                                          : 0;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a8b714cf482e3d11c52061d706d637ba6}{Packed}} = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927daf7218f01a98541fef302b8ffabf7d640}{MeshAttributeType::UInt\_11\_11\_10}}}
+\DoxyCodeLine{34                                 || \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da1e519119c2b8dbd407396efcd65bc856}{MeshAttributeType::UInt\_10\_10\_10\_2}};}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_aa300657b8f4fb82bbc734deae3b7ef08}{Unpacked}} = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da4b4ba765b750d5836bfeb2213cc3caea}{MeshAttributeType::UByte}}}
+\DoxyCodeLine{37                                   || \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927dadfe785f133347f9b473f99009732b1bc}{MeshAttributeType::UShort}}}
+\DoxyCodeLine{38                                   || \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da22ae0e2b89e5e3d477f988cc36d3272b}{MeshAttributeType::Float}};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \textcolor{keyword}{static\_assert}(\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a8b714cf482e3d11c52061d706d637ba6}{Packed}} != \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_aa300657b8f4fb82bbc734deae3b7ef08}{Unpacked}}, \textcolor{stringliteral}{"{}Invalid MeshAttributeType"{}});}
+\DoxyCodeLine{41     \textcolor{keyword}{static\_assert}(\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} != 0, \textcolor{stringliteral}{"{}Invalid MeshAttributeSize"{}});}
+\DoxyCodeLine{42     \textcolor{keyword}{static\_assert}(!(\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} != 3 \&\& \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927daf7218f01a98541fef302b8ffabf7d640}{MeshAttributeType::UInt\_11\_11\_10}}), \textcolor{stringliteral}{"{}Used UInt\_11\_11\_10 with non Vec3"{}});}
+\DoxyCodeLine{43     \textcolor{keyword}{static\_assert}(!(\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} != 4 \&\& \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da1e519119c2b8dbd407396efcd65bc856}{MeshAttributeType::UInt\_10\_10\_10\_2}}), \textcolor{stringliteral}{"{}Used UInt\_10\_10\_10\_2 with non Vec4"{}});}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a099459cff5763b638accd14d7b634fbb}{set}}(\textcolor{keyword}{const} \textcolor{keywordtype}{float}\& x, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& y, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& z, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& w)\{}
+\DoxyCodeLine{46         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a8b714cf482e3d11c52061d706d637ba6}{Packed}})\{}
+\DoxyCodeLine{47             \_raw[0] = \_convertPacked(x, y, z, w);}
+\DoxyCodeLine{48         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{49             \_raw[0] = \_convertUnpacked(x);}
+\DoxyCodeLine{50             \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} > 1)\{\_raw[1] = \_convertUnpacked(y);\}}
+\DoxyCodeLine{51             \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} > 2)\{\_raw[2] = \_convertUnpacked(z);\}}
+\DoxyCodeLine{52             \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab7082f9517870d2271b6c30cf34cde38}{Components}} > 3)\{\_raw[3] = \_convertUnpacked(w);\}}
+\DoxyCodeLine{53         \}}
+\DoxyCodeLine{54     \}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_ab2a94d5d380e4643d16eeb1ea3949901}{set}}(\textcolor{keyword}{const} \textcolor{keyword}{auto}\& vec)\{}
+\DoxyCodeLine{57         \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a099459cff5763b638accd14d7b634fbb}{set}}(vec.x, vec.y, vec.z, vec.w);}
+\DoxyCodeLine{58     \}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{keyword}{private}:}
+\DoxyCodeLine{61     \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data}{MeshAttributeData}}()\{\};}
+\DoxyCodeLine{62     std::array<ComponentType, Packed ? 1 : Components> \_raw;}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keyword}{static} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a971093778911f2bee09196a0d62cbebb}{ComponentType}} \_convertUnpacked(\textcolor{keyword}{const} \textcolor{keywordtype}{float}\& v)\{}
+\DoxyCodeLine{65         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (T == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da4b4ba765b750d5836bfeb2213cc3caea}{MeshAttributeType::UByte}})\{}
+\DoxyCodeLine{66             \textcolor{keywordflow}{return} packMeshAttributeDataValue(v, 8);}
+\DoxyCodeLine{67         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927dadfe785f133347f9b473f99009732b1bc}{MeshAttributeType::UShort}})\{}
+\DoxyCodeLine{68             \textcolor{keywordflow}{return} packMeshAttributeDataValue(v, 16);}
+\DoxyCodeLine{69         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da22ae0e2b89e5e3d477f988cc36d3272b}{MeshAttributeType::Float}})\{}
+\DoxyCodeLine{70             \textcolor{keywordflow}{return} v;}
+\DoxyCodeLine{71         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{72             []<\textcolor{keywordtype}{bool} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a9d5ed678fe57bcca610140957afab571}{B}} = \textcolor{keyword}{false}>()\{\textcolor{keyword}{static\_assert}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a9d5ed678fe57bcca610140957afab571}{B}}, \textcolor{stringliteral}{"{}Unknown MeshAttributeType"{}});\}();}
+\DoxyCodeLine{73         \}}
+\DoxyCodeLine{74     \};}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keyword}{static} \mbox{\hyperlink{classglwpp_1_1_mesh_attribute_data_a971093778911f2bee09196a0d62cbebb}{ComponentType}} \_convertPacked(\textcolor{keyword}{const} \textcolor{keywordtype}{float}\& x, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& y, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& z, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& w)\{}
+\DoxyCodeLine{77         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927daf7218f01a98541fef302b8ffabf7d640}{MeshAttributeType::UInt\_11\_11\_10}})\{}
+\DoxyCodeLine{78             \textcolor{keywordflow}{return} 0 | (packMeshAttributeDataValue(x, 11))}
+\DoxyCodeLine{79                      | (packMeshAttributeDataValue(y, 11) << 11)}
+\DoxyCodeLine{80                      | (packMeshAttributeDataValue(z, 10) << 22);}
+\DoxyCodeLine{81         \} \textcolor{keywordflow}{else}}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} == \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da1e519119c2b8dbd407396efcd65bc856}{MeshAttributeType::UInt\_10\_10\_10\_2}})\{}
+\DoxyCodeLine{84             \textcolor{keywordflow}{return} 0 | (packMeshAttributeDataValue(x, 10))}
+\DoxyCodeLine{85                      | (packMeshAttributeDataValue(y, 10) << 10)}
+\DoxyCodeLine{86                      | (packMeshAttributeDataValue(z, 10) << 20)}
+\DoxyCodeLine{87                      | (packMeshAttributeDataValue(w,  2) << 30);}
+\DoxyCodeLine{88         \} \textcolor{keywordflow}{else}}
+\DoxyCodeLine{89         }
+\DoxyCodeLine{90         \{}
+\DoxyCodeLine{91             []<\textcolor{keywordtype}{bool} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a9d5ed678fe57bcca610140957afab571}{B}} = \textcolor{keyword}{false}>()\{\textcolor{keyword}{static\_assert}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a9d5ed678fe57bcca610140957afab571}{B}}, \textcolor{stringliteral}{"{}Unknown MeshAttributeType"{}});\}();}
+\DoxyCodeLine{92         \}}
+\DoxyCodeLine{93     \};}
+\DoxyCodeLine{94 \};}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

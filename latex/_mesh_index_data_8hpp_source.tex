@@ -1,0 +1,34 @@
+\hypertarget{_mesh_index_data_8hpp_source}{}\doxysection{Mesh\+Index\+Data.\+hpp}
+\label{_mesh_index_data_8hpp_source}\index{include/glwpp/model/MeshIndexData.hpp@{include/glwpp/model/MeshIndexData.hpp}}
+\mbox{\hyperlink{_mesh_index_data_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_data_type_8hpp}{glwpp/gl/enums/DataType.hpp}}"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{obj_2_buffer_8hpp}{glwpp/gl/obj/Buffer.hpp}}"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{struct }aiMesh;}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_mesh_index_data}{MeshIndexData}} \{}
+\DoxyCodeLine{11 \textcolor{keyword}{public}:}
+\DoxyCodeLine{12     \mbox{\hyperlink{classglwpp_1_1_mesh_index_data_a2dd3a754d80ce432e4c090189bd94b9b}{MeshIndexData}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{13     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1_mesh_index_data_a2fd4b01c28f2f2bf040257fa0d6a116c}{\string~MeshIndexData}}();}
+\DoxyCodeLine{14     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \mbox{\hyperlink{classglwpp_1_1_mesh_index_data_af68218171845b1ab01b230392ee3c9dc}{getIndices}}();}
+\DoxyCodeLine{15     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \mbox{\hyperlink{classglwpp_1_1_mesh_index_data_ae05064b60bbd17323b33563a0aad46a8}{getIndices}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{16     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{gl::DataType}}\& \mbox{\hyperlink{classglwpp_1_1_mesh_index_data_a8e9bfddfed95ddd3b90331c635a5c830}{getType}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{private}:}
+\DoxyCodeLine{19     \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}} \_ctx;}
+\DoxyCodeLine{20     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{gl::DataType}} \_type;}
+\DoxyCodeLine{21     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \_indices; }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} \_fillIndexType(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{24     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{25     \textcolor{keywordtype}{void} \_fillIndexBuffer(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{26 \};}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

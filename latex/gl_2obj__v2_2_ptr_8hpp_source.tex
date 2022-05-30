@@ -1,0 +1,51 @@
+\hypertarget{gl_2obj__v2_2_ptr_8hpp_source}{}\doxysection{Ptr.\+hpp}
+\label{gl_2obj__v2_2_ptr_8hpp_source}\index{include/glwpp/gl/obj\_v2/Ptr.hpp@{include/glwpp/gl/obj\_v2/Ptr.hpp}}
+\mbox{\hyperlink{gl_2obj__v2_2_ptr_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_utils_8hpp}{glwpp/utils/Utils.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl_1_1v2}{glwpp::gl::v2}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr}} \{}
+\DoxyCodeLine{9 \textcolor{keyword}{public}:}
+\DoxyCodeLine{10     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_a96da274cf1529f883f97dfd384d13baa}{Ptr}}(\mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}}\& data) : \_data(data)\{\}}
+\DoxyCodeLine{11     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_a305f97ffba0e93f8b316e3e8288bdd5a}{Ptr}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}}\& data) : \_data(data)\{\}}
+\DoxyCodeLine{12     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_a6e439a61650280b3a900e6fac514ab1f}{Ptr}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr<T>}}\& other) : \_data(other.\_data)\{\}}
+\DoxyCodeLine{13     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_a54cc12c99d9dd50ae5c097b76021493a}{Ptr}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr<T>}}\&\& other) : \_data(std::move(other.\_data))\{\}}
+\DoxyCodeLine{14     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_ae01eaf886ade68a18fec2dbf62302afa}{\string~Ptr}}()\{\};}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16     \textcolor{keyword}{operator} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}*()\{\textcolor{keywordflow}{return} \_data.get();\}}
+\DoxyCodeLine{17     \textcolor{keyword}{operator} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}*() \textcolor{keyword}{const} \{\textcolor{keywordflow}{return} \_data.get();\}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     \textcolor{keyword}{template}<\textcolor{keyword}{class} T = T, \textcolor{keyword}{class} = std::enable\_if\_t<(!std::is\_same\_v<T, \textcolor{keywordtype}{void}>)>>}
+\DoxyCodeLine{20     \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_ab5cc192f87c6e26b006d7a1929f8055d}{getVal}}()\{\textcolor{keywordflow}{return} *\_data;\}}
+\DoxyCodeLine{21     \textcolor{keyword}{template}<\textcolor{keyword}{class} T = T, \textcolor{keyword}{class} = std::enable\_if\_t<(!std::is\_same\_v<T, \textcolor{keywordtype}{void}>)>>}
+\DoxyCodeLine{22     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_aead52673d274c359e74503b41c2ab502}{getVal}}()\textcolor{keyword}{ const }\{\textcolor{keywordflow}{return} *\_data;\}}
+\DoxyCodeLine{23     }
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}}\& \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_ac9e606d2e3d0d83e15334afe021e353a}{getPtr}}()\{\textcolor{keywordflow}{return} \_data;\}}
+\DoxyCodeLine{25     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}}\& \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_ab71488bdb4de1f41447fa4e9fe365592}{getPtr}}()\textcolor{keyword}{ const }\{\textcolor{keywordflow}{return} \_data;\}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{template}<\textcolor{keyword}{typename} D>}
+\DoxyCodeLine{28     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr<D>}} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr_a79562ea486f3be435bddc6d3318717bc}{reinterpret}}()\{}
+\DoxyCodeLine{29         \textcolor{keywordflow}{return} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr<D>}}(std::reinterpret\_pointer\_cast<D>(\_data));}
+\DoxyCodeLine{30     \}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keyword}{private}:}
+\DoxyCodeLine{33     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}} \_data;}
+\DoxyCodeLine{34     }
+\DoxyCodeLine{35 \};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{keyword}{template}<\textcolor{keyword}{class}>}
+\DoxyCodeLine{38 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1v2_1_1is_ptr}{isPtr}} : std::false\_type \{\};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{41 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1v2_1_1is_ptr}{isPtr}}<\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_ptr}{Ptr}}<\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}>> : std::true\_type \{}
+\DoxyCodeLine{42     \textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1v2_1_1is_ptr_3_01_ptr_3_01_t_01_4_01_4_a978dcb01f51c7ce84c51b9e0b288356b}{type}} = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}};}
+\DoxyCodeLine{43 \};}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \}}
+
+\end{DoxyCode}

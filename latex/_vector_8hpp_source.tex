@@ -1,0 +1,204 @@
+\hypertarget{_vector_8hpp_source}{}\doxysection{Vector.\+hpp}
+\label{_vector_8hpp_source}\index{include/glwpp/gl/obj/Vector.hpp@{include/glwpp/gl/obj/Vector.hpp}}
+\mbox{\hyperlink{_vector_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_ctx_buffer_8hpp}{glwpp/gl/ctx\_only/CtxBuffer.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{obj_2_buffer_8hpp}{glwpp/gl/obj/Buffer.hpp}}"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_vector}{Vector}} : \textcolor{keyword}{public} \mbox{\hyperlink{classglwpp_1_1_buffer}{Buffer}} \{}
+\DoxyCodeLine{11     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} INIT\_CAPACITY = 4;}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{public}:}
+\DoxyCodeLine{14     \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{15     \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{16     \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& initial, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{17     \mbox{\hyperlink{classglwpp_1_1_vector_a44e43cd986e663fa3defe1a2a69476cf}{\string~Vector}}()\{\};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a1b7094335434b124d9df8fba6202ee60}{capacity}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<size\_t>}}\& dst) \textcolor{keyword}{const};}
+\DoxyCodeLine{20     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<size\_t>}}\& dst) \textcolor{keyword}{const};}
+\DoxyCodeLine{21     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a25ae4b01eefc17f0015fc1176a99efcb}{shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{22     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a780c8a078d0ec83a36526d63fc8a430a}{reserve}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a700f7e5597ea24ec4fa5e9be6bbba28e}{push\_back}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{25     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_adb47c53c2d966a726b6447c302fbd764}{pop\_back}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{26     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a53f34f826e54a252f4157a623a97a821}{set}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{27     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a287e5b9dd22795c012771686b6667ab5}{get}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<T>}}\& dst, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keyword}{protected}:   }
+\DoxyCodeLine{30     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<size\_t>}} \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}};}
+\DoxyCodeLine{31     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<size\_t>}} \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}};}
+\DoxyCodeLine{32 \};}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{35 \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector<T>::Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc) :}
+\DoxyCodeLine{36     \mbox{\hyperlink{classglwpp_1_1_buffer}{Buffer}}(wctx, loc)\{}
+\DoxyCodeLine{37     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}},}
+\DoxyCodeLine{38                                  \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{39         *\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = INIT\_CAPACITY;}
+\DoxyCodeLine{40         *\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = 0;}
+\DoxyCodeLine{41         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(*\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{42     \};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{45     \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{46     \_execute<F>(\mbox{\hyperlink{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}{getWCtx}}(), \mbox{\hyperlink{classglwpp_1_1_buffer_aa299d61a62621c80e46e953c8ddcf88d}{\_getPtr}}(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}}), \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{47 \};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{50 \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector<T>::Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& size, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc) :}
+\DoxyCodeLine{51     \mbox{\hyperlink{classglwpp_1_1_buffer}{Buffer}}(wctx, loc)\{}
+\DoxyCodeLine{52     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}},}
+\DoxyCodeLine{53                                  \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{54         *\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}};}
+\DoxyCodeLine{55         *\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}};}
+\DoxyCodeLine{56         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(*\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58         \textcolor{keyword}{auto} ptr = \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}*\textcolor{keyword}{>}(buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a204cc93064ae78b6ccdafdc0d2cbff8f}{map}}(\mbox{\hyperlink{namespaceglwpp_1_1gl_a7e15913748d1cca445c126c2ff9162bfa53dfe5089ae9e65887cb0215cb0098f5}{gl::BufferMapAccess::WriteOnly}}, loc));}
+\DoxyCodeLine{59         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}; ++i)\{}
+\DoxyCodeLine{60             ptr[i] = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\{\};}
+\DoxyCodeLine{61         \}}
+\DoxyCodeLine{62         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9724bf4b302b8e224e7e5db1b0268e72}{unmap}}(loc);}
+\DoxyCodeLine{63     \};}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{66     \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{67     \_execute<F>(\mbox{\hyperlink{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}{getWCtx}}(), \mbox{\hyperlink{classglwpp_1_1_buffer_aa299d61a62621c80e46e953c8ddcf88d}{\_getPtr}}(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}}), \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{68 \};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{71 \mbox{\hyperlink{classglwpp_1_1_vector_ab42c58bb22523b879d8965e20ba45617}{Vector<T>::Vector}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& size, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& initial, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc) :}
+\DoxyCodeLine{72     \mbox{\hyperlink{classglwpp_1_1_buffer}{Buffer}}(wctx, loc)\{}
+\DoxyCodeLine{73     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}, \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}},}
+\DoxyCodeLine{74                                  \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& initial, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{75         *\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}};}
+\DoxyCodeLine{76         *\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}};}
+\DoxyCodeLine{77         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(*\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79         \textcolor{keyword}{auto} ptr = \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}*\textcolor{keyword}{>}(buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a204cc93064ae78b6ccdafdc0d2cbff8f}{map}}(\mbox{\hyperlink{namespaceglwpp_1_1gl_a7e15913748d1cca445c126c2ff9162bfa53dfe5089ae9e65887cb0215cb0098f5}{gl::BufferMapAccess::WriteOnly}}, loc));}
+\DoxyCodeLine{80         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}; ++i)\{}
+\DoxyCodeLine{81             ptr[i] = initial;}
+\DoxyCodeLine{82         \}}
+\DoxyCodeLine{83         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9724bf4b302b8e224e7e5db1b0268e72}{unmap}}(loc);}
+\DoxyCodeLine{84     \};}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86     \mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{87     \mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}} = make\_sptr<size\_t>(0);}
+\DoxyCodeLine{88     \_execute<F>(\mbox{\hyperlink{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}{getWCtx}}(), \mbox{\hyperlink{classglwpp_1_1_buffer_aa299d61a62621c80e46e953c8ddcf88d}{\_getPtr}}(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a31eb8a6289c768bd4a673998e476fe8c}{\_capacity}}), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\mbox{\hyperlink{classglwpp_1_1_vector_a2d41780d3965f9a6dbf04d4206457e75}{\_size}}), \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{size}}, initial, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{89 \};}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{92 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a1b7094335434b124d9df8fba6202ee60}{Vector<T>::capacity}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<size\_t>}}\& dst)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{93     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* dst)\{}
+\DoxyCodeLine{94         *dst = *\_capacity;}
+\DoxyCodeLine{95     \};}
+\DoxyCodeLine{96     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), dst);}
+\DoxyCodeLine{97 \};}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{100 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a09676983030f5fe7787fb82ac0c3e11f}{Vector<T>::size}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<size\_t>}}\& dst)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{101     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\textcolor{keywordtype}{size\_t}* \_size, \textcolor{keywordtype}{size\_t}* dst)\{}
+\DoxyCodeLine{102         *dst = *\_size;}
+\DoxyCodeLine{103     \};}
+\DoxyCodeLine{104     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), dst);}
+\DoxyCodeLine{105 \};}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{108 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a25ae4b01eefc17f0015fc1176a99efcb}{Vector<T>::shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{109     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{110                                  \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{111         \textcolor{keywordflow}{if} (\_size <= 0 || *\_capacity <= *\_size)\{\textcolor{keywordflow}{return};\}}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113         \textcolor{keywordtype}{size\_t} tmp\_bytes = *\_size * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}});}
+\DoxyCodeLine{114         \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}} tmp(loc);}
+\DoxyCodeLine{115         tmp.data(tmp\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3dac3ed2ba606af12869974bdab26334e6c}{gl::BufferUsage::StaticDraw}}, loc);}
+\DoxyCodeLine{116         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a0d770df469b82ccee4d4b618cf13c877}{copySubDataTo}}(tmp, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{117         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(tmp\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{118         tmp.copySubDataTo(*buffer, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{119         *\_capacity = *\_size;}
+\DoxyCodeLine{120     \};}
+\DoxyCodeLine{121     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{122 \}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{125 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a780c8a078d0ec83a36526d63fc8a430a}{Vector<T>::reserve}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& capacity, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{126     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{127                                  \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& capacity, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{128         \textcolor{keywordflow}{if} (*\_capacity >= capacity)\{\textcolor{keywordflow}{return};\}}
+\DoxyCodeLine{129         }
+\DoxyCodeLine{130         *\_capacity = capacity;}
+\DoxyCodeLine{131         \textcolor{keywordtype}{size\_t} tmp\_bytes = *\_size * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}});}
+\DoxyCodeLine{132         \textcolor{keywordtype}{size\_t} new\_bytes = *\_capacity * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}});}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134         \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}} tmp(loc);}
+\DoxyCodeLine{135         tmp.data(tmp\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{136         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a0d770df469b82ccee4d4b618cf13c877}{copySubDataTo}}(tmp, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{137         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(new\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{138         tmp.copySubDataTo(*buffer, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{139     \};}
+\DoxyCodeLine{140     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), capacity, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{141 \}}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{144 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a700f7e5597ea24ec4fa5e9be6bbba28e}{Vector<T>::push\_back}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{145     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{146                                  \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{147         \textcolor{keywordflow}{if} (*\_size == *\_capacity)\{}
+\DoxyCodeLine{148             *\_capacity = 2 * *\_capacity;}
+\DoxyCodeLine{149             \textcolor{keywordtype}{size\_t} tmp\_bytes = *\_size * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}});}
+\DoxyCodeLine{150             \textcolor{keywordtype}{size\_t} new\_bytes = *\_capacity * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}});}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152             \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}} tmp(loc);}
+\DoxyCodeLine{153             tmp.data(tmp\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{154             buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a0d770df469b82ccee4d4b618cf13c877}{copySubDataTo}}(tmp, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{155             buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a9b0e8b97dd5057d405c9b91d71501c95}{data}}(new\_bytes, \textcolor{keyword}{nullptr}, \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{gl::BufferUsage::DynamicDraw}}, loc);}
+\DoxyCodeLine{156             tmp.copySubDataTo(*buffer, 0, 0, tmp\_bytes, loc);}
+\DoxyCodeLine{157         \}}
+\DoxyCodeLine{158         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_ad8ecc9fe989022232dd90d932483308c}{setSubData}}(*\_size * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \&value, loc);}
+\DoxyCodeLine{159         ++*\_size;}
+\DoxyCodeLine{160     \};}
+\DoxyCodeLine{161     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), value, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{162 \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{165 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_adb47c53c2d966a726b6447c302fbd764}{Vector<T>::pop\_back}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{166     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{167                                  \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{168         -\/-\/*\_size;}
+\DoxyCodeLine{169         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_ad8ecc9fe989022232dd90d932483308c}{setSubData}}(*\_size, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{nullptr}, loc);}
+\DoxyCodeLine{170     \};}
+\DoxyCodeLine{171     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{172 \}}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{175 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a53f34f826e54a252f4157a623a97a821}{Vector<T>::set}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<T>}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{176     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{177                                  \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& value, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{178         \textcolor{keywordflow}{if} (i >= *\_size)\{}
+\DoxyCodeLine{179             \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Out of bounds: "{}} + std::string(loc.file\_name()) + \textcolor{stringliteral}{"{}:"{}} + std::to\_string(loc.line()));}
+\DoxyCodeLine{180         \}}
+\DoxyCodeLine{181         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_ad8ecc9fe989022232dd90d932483308c}{setSubData}}(i * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \&value, loc);}
+\DoxyCodeLine{182     \};}
+\DoxyCodeLine{183     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), i, value, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{184 \}}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{187 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_vector_a287e5b9dd22795c012771686b6667ab5}{Vector<T>::get}}(\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr<T>}}\& dst, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val}{Val<size\_t>}}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{188     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}} = [](\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer}{gl::CtxBuffer}}* buffer, \textcolor{keywordtype}{size\_t}* \_capacity, \textcolor{keywordtype}{size\_t}* \_size,}
+\DoxyCodeLine{189                                  \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}* dst, \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& i, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}\& loc)\{}
+\DoxyCodeLine{190         \textcolor{keywordflow}{if} (i >= *\_size)\{}
+\DoxyCodeLine{191             \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Out of bounds: "{}} + std::string(loc.file\_name()) + \textcolor{stringliteral}{"{}:"{}} + std::to\_string(loc.line()));}
+\DoxyCodeLine{192         \}}
+\DoxyCodeLine{193         buffer-\/>\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_buffer_a0fe7fe2ca9a046a084b04ea9411bcddf}{getSubData}}(i * \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), \textcolor{keyword}{sizeof}(\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}), dst, loc);}
+\DoxyCodeLine{194     \};}
+\DoxyCodeLine{195     \textcolor{keywordflow}{return} \_execute<F>(getWCtx(), \_getPtr(), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_capacity), \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}(\_size), dst, i, \mbox{\hyperlink{classglwpp_1_1_val}{Val}}(loc));}
+\DoxyCodeLine{196 \}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198 \}}
+
+\end{DoxyCode}

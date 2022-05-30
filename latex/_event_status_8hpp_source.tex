@@ -1,0 +1,30 @@
+\hypertarget{_event_status_8hpp_source}{}\doxysection{Event\+Status.\+hpp}
+\label{_event_status_8hpp_source}\index{include/glwpp/utils/event/EventStatus.hpp@{include/glwpp/utils/event/EventStatus.hpp}}
+\mbox{\hyperlink{_event_status_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include <chrono>}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include <deque>}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <functional>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_utils_8hpp}{glwpp/utils/Utils.hpp}}"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}} \{}
+\DoxyCodeLine{10 \textcolor{keyword}{public}:}
+\DoxyCodeLine{11     \mbox{\hyperlink{classglwpp_1_1_event_status_afb2d6d1478ba38647085f4197d5114cc}{EventStatus}}(\textcolor{keywordtype}{bool} result);}
+\DoxyCodeLine{12     \mbox{\hyperlink{classglwpp_1_1_event_status_a928afea729d68d8c4712e94bf3bac64d}{EventStatus}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}<std::deque<std::function<\textcolor{keywordtype}{bool}(\textcolor{keyword}{const} std::chrono::microseconds\&)>>> \&checkers);}
+\DoxyCodeLine{13     \mbox{\hyperlink{classglwpp_1_1_event_status_a8adbf71dac13706d5bb5ce23d746d742}{EventStatus}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}}\&);}
+\DoxyCodeLine{14     \mbox{\hyperlink{classglwpp_1_1_event_status_a5c32f551b4423016f39a83e95adb5b70}{EventStatus}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}}\&\&);}
+\DoxyCodeLine{15     \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}} \mbox{\hyperlink{classglwpp_1_1_event_status_a3291feff15f050b474f16e8ff46859b2}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}}\&);}
+\DoxyCodeLine{16     \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}} \mbox{\hyperlink{classglwpp_1_1_event_status_a3185252c73dee317ef2729bf0efad46e}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_event_status}{EventStatus}}\&\&);}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1_event_status_ae4c02c7ea0b77adf38b570a5c85a3167}{isEmitFinished}}(\textcolor{keyword}{const} std::chrono::microseconds\& wait);}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{private}:}
+\DoxyCodeLine{21     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}<std::deque<std::function<bool(\textcolor{keyword}{const} std::chrono::microseconds\&)>>> \_checkers;}
+\DoxyCodeLine{22 \};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \}}
+
+\end{DoxyCode}

@@ -1,0 +1,35 @@
+\hypertarget{_buffer_usage_8hpp_source}{}\doxysection{Buffer\+Usage.\+hpp}
+\label{_buffer_usage_8hpp_source}\index{include/glwpp/gl/enums/BufferUsage.hpp@{include/glwpp/gl/enums/BufferUsage.hpp}}
+\mbox{\hyperlink{_buffer_usage_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{// /The frequency of access may be one of these:}}
+\DoxyCodeLine{8 \textcolor{comment}{// Dynamic -\/ The data store contents will be modified repeatedly and used many times.}}
+\DoxyCodeLine{9 \textcolor{comment}{// Static  -\/ The data store contents will be modified once and used many times.}}
+\DoxyCodeLine{10 \textcolor{comment}{// Stream  -\/ The data store contents will be modified once and used at most a few times.}}
+\DoxyCodeLine{11 \textcolor{comment}{// The nature of access may be one of these:}}
+\DoxyCodeLine{12 \textcolor{comment}{// Copy -\/ The data store contents are modified by reading data from the GL, and used as the source for GL drawing and image specification commands.}}
+\DoxyCodeLine{13 \textcolor{comment}{// Draw -\/ The data store contents are modified by the application, and used as the source for GL drawing and image specification commands.}}
+\DoxyCodeLine{14 \textcolor{comment}{// Read -\/ The data store contents are modified by reading data from the GL, and used to return that data when queried by the application.}}
+\DoxyCodeLine{15 \textcolor{keyword}{enum class} \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3d}{BufferUsage}} : \mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}} \{}
+\DoxyCodeLine{16     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3dac572ac15b4bcbc9e975b79480e253c14}{DynamicCopy}} = 0x88EA,}
+\DoxyCodeLine{17     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da07988dce2d161630856fb73bc06682c0}{DynamicDraw}} = 0x88E8,}
+\DoxyCodeLine{18     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da2ca7cf82bf5d2f11738ae1a371d5ae32}{DynamicRead}} = 0x88E9,}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3dac5a66e746248ebb7fe5f99443172fca7}{StaticCopy}} = 0x88E6,}
+\DoxyCodeLine{21     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3dac3ed2ba606af12869974bdab26334e6c}{StaticDraw}} = 0x88E4,}
+\DoxyCodeLine{22     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da3b35249bb273aea8b56c05f2c914a38a}{StaticRead}} = 0x88E5,}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da72d80d051f94e8aa1e3dc1ebfb6cc8cc}{StreamCopy}} = 0x88E2,}
+\DoxyCodeLine{25     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3dab831b12d8d415645f1f00e37e0426ca2}{StreamDraw}} = 0x88E0,}
+\DoxyCodeLine{26     \mbox{\hyperlink{namespaceglwpp_1_1gl_aba164a4e1f8ac66486d10df343308f3da10953b8796ab666281dc734e99aa5180}{StreamRead}} = 0x88E1,}
+\DoxyCodeLine{27 \};}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \}}
+
+\end{DoxyCode}

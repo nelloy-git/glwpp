@@ -1,0 +1,112 @@
+\hypertarget{namespaceglwpp_1_1detailed}{}\doxysection{glwpp\+::detailed Namespace Reference}
+\label{namespaceglwpp_1_1detailed}\index{glwpp::detailed@{glwpp::detailed}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1expanded__function__compiletime}{expanded\+\_\+function\+\_\+compiletime}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1ignore}{ignore}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature_3_01std_1_1function_3_01_r_07_args_8_8_8_08_4_01_4}{Signature$<$ std\+::function$<$ R(\+Args...)$>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1tuple__type__index}{tuple\+\_\+type\+\_\+index}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1tuple__type__index_3_01_t_00_01std_1_1tuple_3_01_t_00_01_types_8_8_8_01_4_01_4}{tuple\+\_\+type\+\_\+index$<$ T, std\+::tuple$<$ T, Types... $>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1detailed_1_1tuple__type__index_3_01_t_00_01std_1_1tuple_3_01_u_00_01_types_8_8_8_01_4_01_4}{tuple\+\_\+type\+\_\+index$<$ T, std\+::tuple$<$ U, Types... $>$ $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$std\+::size\+\_\+t Min, std\+::size\+\_\+t Max$>$ }\\using \mbox{\hyperlink{namespaceglwpp_1_1detailed_a37fa869b4e4c3a638e1c81410868d9c0}{make\+\_\+index\+\_\+range}} = decltype(\mbox{\hyperlink{namespaceglwpp_1_1detailed_ab7356b4b76b81aa2d04fc5b83303fc87}{add}}$<$ Min $>$(std\+::make\+\_\+index\+\_\+sequence$<$ Max-\/Min $>$()))
+\item 
+{\footnotesize template$<$class T , class... Types$>$ }\\using \mbox{\hyperlink{namespaceglwpp_1_1detailed_a1ea2194afdd18ed343bc28003ccdf05e}{tuple\+\_\+type\+\_\+index\+\_\+v}} = \mbox{\hyperlink{structglwpp_1_1detailed_1_1tuple__type__index}{tuple\+\_\+type\+\_\+index}}$<$ T, Types... $>$\+::value
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$std\+::size\+\_\+t N, std\+::size\+\_\+t... Seq$>$ }\\constexpr std\+::index\+\_\+sequence$<$(N+Seq)... $>$ \mbox{\hyperlink{namespaceglwpp_1_1detailed_ab7356b4b76b81aa2d04fc5b83303fc87}{add}} (std\+::index\+\_\+sequence$<$ Seq... $>$)
+\item 
+{\footnotesize template$<$int I, class... Ts$>$ }\\decltype(auto) \mbox{\hyperlink{namespaceglwpp_1_1detailed_a1a8e2dff0881f9db85cf9e82a713662b}{get\+Arg}} (Ts \&\&... ts)
+\item 
+{\footnotesize template$<$class T1 , class T2 , size\+\_\+t ... Seq$>$ }\\constexpr bool \mbox{\hyperlink{namespaceglwpp_1_1detailed_ac6f739e34829fca3b758005de3c6aed3}{is\+\_\+same\+\_\+tuples}} (std\+::index\+\_\+sequence$<$ Seq... $>$)
+\item 
+{\footnotesize template$<$class ... Args\+Out, size\+\_\+t ... Use, class F $>$ }\\auto \mbox{\hyperlink{namespaceglwpp_1_1detailed_abbb6843636959bb89e33c573bb3156e7}{get\+\_\+expanded}} (const F \&func, const std\+::index\+\_\+sequence$<$ Use... $>$ \&seq)
+\item 
+{\footnotesize template$<$class ... Args\+Out, class F , class R , class ... Args\+In$>$ }\\auto \mbox{\hyperlink{namespaceglwpp_1_1detailed_ac6723fcaea6b92dbdc34131cb99670b3}{func\+\_\+expand\+\_\+back}} (const F \&func, const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&signature)
+\item 
+{\footnotesize template$<$class ... Args\+Out, class F , class R , class ... Args\+In$>$ }\\auto \mbox{\hyperlink{namespaceglwpp_1_1detailed_a83cfc5f0ff53e628256d9d965930c857}{func\+\_\+expand\+\_\+front}} (const F \&func, const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&signature)
+\item 
+{\footnotesize template$<$class ... Args\+Out, size\+\_\+t ... Use, class F , class R , class ... Args\+In$>$ }\\auto \mbox{\hyperlink{namespaceglwpp_1_1detailed_aa3c648bd8e6d3b627ef7fb1db7ba8a8d}{func\+\_\+expand}} (const F \&func, const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&signature, const std\+::index\+\_\+sequence$<$ Use... $>$ \&seq)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_a37fa869b4e4c3a638e1c81410868d9c0}\label{namespaceglwpp_1_1detailed_a37fa869b4e4c3a638e1c81410868d9c0}} 
+\index{glwpp::detailed@{glwpp::detailed}!make\_index\_range@{make\_index\_range}}
+\index{make\_index\_range@{make\_index\_range}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{make\_index\_range}{make\_index\_range}}
+{\footnotesize\ttfamily template$<$std\+::size\+\_\+t Min, std\+::size\+\_\+t Max$>$ \\
+using \mbox{\hyperlink{namespaceglwpp_1_1detailed_a37fa869b4e4c3a638e1c81410868d9c0}{glwpp\+::detailed\+::make\+\_\+index\+\_\+range}} = typedef decltype(\mbox{\hyperlink{namespaceglwpp_1_1detailed_ab7356b4b76b81aa2d04fc5b83303fc87}{add}}$<$Min$>$(std\+::make\+\_\+index\+\_\+sequence$<$Max-\/Min$>$()))}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_a1ea2194afdd18ed343bc28003ccdf05e}\label{namespaceglwpp_1_1detailed_a1ea2194afdd18ed343bc28003ccdf05e}} 
+\index{glwpp::detailed@{glwpp::detailed}!tuple\_type\_index\_v@{tuple\_type\_index\_v}}
+\index{tuple\_type\_index\_v@{tuple\_type\_index\_v}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{tuple\_type\_index\_v}{tuple\_type\_index\_v}}
+{\footnotesize\ttfamily template$<$class T , class... Types$>$ \\
+using \mbox{\hyperlink{namespaceglwpp_1_1detailed_a1ea2194afdd18ed343bc28003ccdf05e}{glwpp\+::detailed\+::tuple\+\_\+type\+\_\+index\+\_\+v}} = typedef \mbox{\hyperlink{structglwpp_1_1detailed_1_1tuple__type__index}{tuple\+\_\+type\+\_\+index}}$<$T, Types...$>$\+::value}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_ab7356b4b76b81aa2d04fc5b83303fc87}\label{namespaceglwpp_1_1detailed_ab7356b4b76b81aa2d04fc5b83303fc87}} 
+\index{glwpp::detailed@{glwpp::detailed}!add@{add}}
+\index{add@{add}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily template$<$std\+::size\+\_\+t N, std\+::size\+\_\+t... Seq$>$ \\
+constexpr std\+::index\+\_\+sequence$<$(N+Seq)... $>$ glwpp\+::detailed\+::add (\begin{DoxyParamCaption}\item[{std\+::index\+\_\+sequence$<$ Seq... $>$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_aa3c648bd8e6d3b627ef7fb1db7ba8a8d}\label{namespaceglwpp_1_1detailed_aa3c648bd8e6d3b627ef7fb1db7ba8a8d}} 
+\index{glwpp::detailed@{glwpp::detailed}!func\_expand@{func\_expand}}
+\index{func\_expand@{func\_expand}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{func\_expand()}{func\_expand()}}
+{\footnotesize\ttfamily template$<$class ... Args\+Out, size\+\_\+t ... Use, class F , class R , class ... Args\+In$>$ \\
+auto glwpp\+::detailed\+::func\+\_\+expand (\begin{DoxyParamCaption}\item[{const F \&}]{func,  }\item[{const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&}]{signature,  }\item[{const std\+::index\+\_\+sequence$<$ Use... $>$ \&}]{seq }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_ac6723fcaea6b92dbdc34131cb99670b3}\label{namespaceglwpp_1_1detailed_ac6723fcaea6b92dbdc34131cb99670b3}} 
+\index{glwpp::detailed@{glwpp::detailed}!func\_expand\_back@{func\_expand\_back}}
+\index{func\_expand\_back@{func\_expand\_back}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{func\_expand\_back()}{func\_expand\_back()}}
+{\footnotesize\ttfamily template$<$class ... Args\+Out, class F , class R , class ... Args\+In$>$ \\
+auto glwpp\+::detailed\+::func\+\_\+expand\+\_\+back (\begin{DoxyParamCaption}\item[{const F \&}]{func,  }\item[{const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&}]{signature }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_a83cfc5f0ff53e628256d9d965930c857}\label{namespaceglwpp_1_1detailed_a83cfc5f0ff53e628256d9d965930c857}} 
+\index{glwpp::detailed@{glwpp::detailed}!func\_expand\_front@{func\_expand\_front}}
+\index{func\_expand\_front@{func\_expand\_front}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{func\_expand\_front()}{func\_expand\_front()}}
+{\footnotesize\ttfamily template$<$class ... Args\+Out, class F , class R , class ... Args\+In$>$ \\
+auto glwpp\+::detailed\+::func\+\_\+expand\+\_\+front (\begin{DoxyParamCaption}\item[{const F \&}]{func,  }\item[{const \mbox{\hyperlink{structglwpp_1_1detailed_1_1_signature}{Signature}}$<$ std\+::function$<$ R(Args\+In...)$>$ $>$ \&}]{signature }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_abbb6843636959bb89e33c573bb3156e7}\label{namespaceglwpp_1_1detailed_abbb6843636959bb89e33c573bb3156e7}} 
+\index{glwpp::detailed@{glwpp::detailed}!get\_expanded@{get\_expanded}}
+\index{get\_expanded@{get\_expanded}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{get\_expanded()}{get\_expanded()}}
+{\footnotesize\ttfamily template$<$class ... Args\+Out, size\+\_\+t ... Use, class F $>$ \\
+auto glwpp\+::detailed\+::get\+\_\+expanded (\begin{DoxyParamCaption}\item[{const F \&}]{func,  }\item[{const std\+::index\+\_\+sequence$<$ Use... $>$ \&}]{seq }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_a1a8e2dff0881f9db85cf9e82a713662b}\label{namespaceglwpp_1_1detailed_a1a8e2dff0881f9db85cf9e82a713662b}} 
+\index{glwpp::detailed@{glwpp::detailed}!getArg@{getArg}}
+\index{getArg@{getArg}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{getArg()}{getArg()}}
+{\footnotesize\ttfamily template$<$int I, class... Ts$>$ \\
+decltype(auto) glwpp\+::detailed\+::get\+Arg (\begin{DoxyParamCaption}\item[{Ts \&\&...}]{ts }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{namespaceglwpp_1_1detailed_ac6f739e34829fca3b758005de3c6aed3}\label{namespaceglwpp_1_1detailed_ac6f739e34829fca3b758005de3c6aed3}} 
+\index{glwpp::detailed@{glwpp::detailed}!is\_same\_tuples@{is\_same\_tuples}}
+\index{is\_same\_tuples@{is\_same\_tuples}!glwpp::detailed@{glwpp::detailed}}
+\doxysubsubsection{\texorpdfstring{is\_same\_tuples()}{is\_same\_tuples()}}
+{\footnotesize\ttfamily template$<$class T1 , class T2 , size\+\_\+t ... Seq$>$ \\
+constexpr bool glwpp\+::detailed\+::is\+\_\+same\+\_\+tuples (\begin{DoxyParamCaption}\item[{std\+::index\+\_\+sequence$<$ Seq... $>$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}}
+

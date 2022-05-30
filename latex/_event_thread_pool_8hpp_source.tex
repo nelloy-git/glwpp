@@ -1,0 +1,23 @@
+\hypertarget{_event_thread_pool_8hpp_source}{}\doxysection{Event\+Thread\+Pool.\+hpp}
+\label{_event_thread_pool_8hpp_source}\index{include/glwpp/utils/event/EventThreadPool.hpp@{include/glwpp/utils/event/EventThreadPool.hpp}}
+\mbox{\hyperlink{_event_thread_pool_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}thread\_pool.hpp"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_utils_8hpp}{glwpp/utils/Utils.hpp}}"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_event_thread_pool}{EventThreadPool}} \{}
+\DoxyCodeLine{10 \textcolor{keyword}{public}:}
+\DoxyCodeLine{11     \textcolor{keyword}{static} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<thread\_pool>}} \mbox{\hyperlink{classglwpp_1_1_event_thread_pool_aaf48c181d66aef43c6bb7261c6d2122f}{get}}()\{}
+\DoxyCodeLine{12         \textcolor{keyword}{static} \textcolor{keyword}{auto} pool = make\_sptr<thread\_pool>();}
+\DoxyCodeLine{13         \textcolor{keywordflow}{return} pool;}
+\DoxyCodeLine{14     \}}
+\DoxyCodeLine{15 \};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \}}
+
+\end{DoxyCode}

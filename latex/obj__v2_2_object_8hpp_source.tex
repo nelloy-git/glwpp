@@ -1,0 +1,77 @@
+\hypertarget{obj__v2_2_object_8hpp_source}{}\doxysection{Object.\+hpp}
+\label{obj__v2_2_object_8hpp_source}\index{include/glwpp/gl/obj\_v2/Object.hpp@{include/glwpp/gl/obj\_v2/Object.hpp}}
+\mbox{\hyperlink{obj__v2_2_object_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <tuple>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_context_8hpp}{glwpp/ctx/Context.hpp}}"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{gl_2obj__v2_2_val_8hpp}{glwpp/gl/obj\_v2/Val.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{gl_2obj__v2_2_ptr_8hpp}{glwpp/gl/obj\_v2/Ptr.hpp}}"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_src_loc_8hpp}{glwpp/utils/SrcLoc.hpp}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl_1_1v2}{glwpp::gl::v2}} \{}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object}{Object}} \{}
+\DoxyCodeLine{14 \textcolor{keyword}{public}:}
+\DoxyCodeLine{15     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_val}{Val<const UInt>}} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_ac354823f8bee56fc2f23b99eb9ff4d13}{id}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{16     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_ab6fc57618111281449f394b22af725bb}{\string~Object}}();}
+\DoxyCodeLine{17     }
+\DoxyCodeLine{18     \textcolor{keyword}{template}<\textcolor{keyword}{typename} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a800618943025315f869e4e1f09471012}{F}}, \textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{19     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a38c570c3752fa3d94e20402e38e47cd2}{executeInContext}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_val}{Val<SrcLoc>}}\& src\_loc, F\&\& func, Args\&\&... args)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{20         \textcolor{keyword}{auto} ctx = \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a4b807dc0c6a134ae475ae9d2e8bad1a9}{\_wctx}}.lock();}
+\DoxyCodeLine{21         \textcolor{keywordflow}{if} (!ctx) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23         \textcolor{keywordflow}{if} (ctx-\/>getThreadId() == std::this\_thread::get\_id())\{}
+\DoxyCodeLine{24             func(std::forward<Args>(args)...);}
+\DoxyCodeLine{25         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{26             ctx-\/>onRun.push([func, src\_loc, ...args = std::forward<Args>(args)]()\{}
+\DoxyCodeLine{27                 func(args...);}
+\DoxyCodeLine{28             \});}
+\DoxyCodeLine{29         \}}
+\DoxyCodeLine{30         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{31     \}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{34     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{35     \textcolor{keyword}{using }\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a57da4684b23d06ebce54949ae1d234d0}{Initer}} = void(*)(\mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{gl::UInt}}\&, Args...);}
+\DoxyCodeLine{36     \textcolor{keyword}{using }\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a3a65b4d1b27e6a5e14a5ec5724f17335}{Deleter}} = void(*)(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{gl::UInt}}\&);}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a4b807dc0c6a134ae475ae9d2e8bad1a9}{\_wctx}};}
+\DoxyCodeLine{39     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<UInt>}} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a2fb13fd1d7628d9d03469a78267e27cd}{\_id}};}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{42     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_abe67472e06b1177ffdc048f53db11de3}{Object}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_val}{Val<SrcLoc>}}\& src\_loc,}
+\DoxyCodeLine{43            \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a57da4684b23d06ebce54949ae1d234d0}{Initer<Args...>}} initer, \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a3a65b4d1b27e6a5e14a5ec5724f17335}{Deleter}} deleter, Args\&\&... args) :}
+\DoxyCodeLine{44         \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a4b807dc0c6a134ae475ae9d2e8bad1a9}{\_wctx}}(wctx)\{}
+\DoxyCodeLine{45         \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a2fb13fd1d7628d9d03469a78267e27cd}{\_id}} = \_make\_id(wctx, deleter);}
+\DoxyCodeLine{46         \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a38c570c3752fa3d94e20402e38e47cd2}{executeInContext}}(src\_loc, \&Object::\_runIniterInContext<Args...>,}
+\DoxyCodeLine{47                          initer, \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_val}{Val}}(\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a2fb13fd1d7628d9d03469a78267e27cd}{\_id}}), std::forward<Args>(args)...);}
+\DoxyCodeLine{48     \}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a64ec9bcb95b43c5ba7beb958220e7d58}{Object}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object}{Object}}\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{51     \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_aa352c789036db530594214f3dedb2a15}{Object}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object}{Object}}\&\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{keyword}{private}:}
+\DoxyCodeLine{54     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{55     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_runIniterInContext(\mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a57da4684b23d06ebce54949ae1d234d0}{Initer<Args...>}} initer, \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}\& \textcolor{keywordtype}{id}, Args\&\&... args)\{}
+\DoxyCodeLine{56         initer(\textcolor{keywordtype}{id}, args...);}
+\DoxyCodeLine{57     \}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{comment}{// template<typename ... Args>}}
+\DoxyCodeLine{60     \textcolor{comment}{// bool \_init(const Val<SrcLoc>\& src\_loc, Initer<Args...> initer, Args\&\&... args)\{}}
+\DoxyCodeLine{61     \textcolor{comment}{//     if (*\_id != 0)\{throw std::logic\_error("{}glwpp::gl::Object have been initialized already"{});\}}}
+\DoxyCodeLine{62     \textcolor{comment}{//     return executeInContext(src\_loc, \&Object::\_runIniterInContext<Args...>,}}
+\DoxyCodeLine{63     \textcolor{comment}{//                             initer, Val(\_id), std::forward<Args>(args)...);}}
+\DoxyCodeLine{64     \textcolor{comment}{// \}}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<UInt>}} \_make\_id(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \mbox{\hyperlink{classglwpp_1_1gl_1_1v2_1_1_object_a3a65b4d1b27e6a5e14a5ec5724f17335}{Deleter}} deleter) \textcolor{keyword}{const};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

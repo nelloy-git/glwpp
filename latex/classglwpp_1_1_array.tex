@@ -1,0 +1,116 @@
+\hypertarget{classglwpp_1_1_array}{}\doxysection{glwpp\+::Array\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classglwpp_1_1_array}\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Array.\+hpp$>$}
+
+Inheritance diagram for glwpp\+::Array\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classglwpp_1_1_array}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_array_a8bf0e23b177d4038b4159ee22a5eea4f}{Array}} (const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&wctx, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&\mbox{\hyperlink{classglwpp_1_1_array_ab526e2e0824471077024c633606ed31a}{size}}, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+\mbox{\hyperlink{classglwpp_1_1_array_a03ae7dbde88644fcd056a32ad00edc99}{Array}} (const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&wctx, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&\mbox{\hyperlink{classglwpp_1_1_array_ab526e2e0824471077024c633606ed31a}{size}}, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \&initial, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+\mbox{\hyperlink{classglwpp_1_1_array_a1e10f01fdd3ce5c7fff89b376ea8c759}{$\sim$\+Array}} ()
+\item 
+bool \mbox{\hyperlink{classglwpp_1_1_array_ab526e2e0824471077024c633606ed31a}{size}} (\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ size\+\_\+t $>$ \&dst) const
+\item 
+virtual bool \mbox{\hyperlink{classglwpp_1_1_array_abe8fb6d14d98de2cc16e3b3031f5b25e}{set}} (const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&i, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \&value, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+virtual bool \mbox{\hyperlink{classglwpp_1_1_array_aab99b0d3e3ecb78cb313fdb5f134f92a}{get}} (\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ \&dst, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&i, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}$<$ size\+\_\+t $>$ \mbox{\hyperlink{classglwpp_1_1_array_ada48fa5e940d686d4ad48f9c784f1f4b}{\+\_\+size}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespaceglwpp_1_1gl_a4d2c9c79471804d92386aeef44b7dd1e}{gl\+::\+Bit\+Field}} \mbox{\hyperlink{classglwpp_1_1_array_a68f50d8226d26ebaa05010bc3cfb4f5f}{\+\_\+access}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_array_a8bf0e23b177d4038b4159ee22a5eea4f}\label{classglwpp_1_1_array_a8bf0e23b177d4038b4159ee22a5eea4f}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!Array@{Array}}
+\index{Array@{Array}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Array()}{Array()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::\+Array (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&}]{wctx,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&}]{size,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classglwpp_1_1_array_a03ae7dbde88644fcd056a32ad00edc99}\label{classglwpp_1_1_array_a03ae7dbde88644fcd056a32ad00edc99}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!Array@{Array}}
+\index{Array@{Array}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Array()}{Array()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::\+Array (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&}]{wctx,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&}]{size,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \&}]{initial,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classglwpp_1_1_array_a1e10f01fdd3ce5c7fff89b376ea8c759}\label{classglwpp_1_1_array_a1e10f01fdd3ce5c7fff89b376ea8c759}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!````~Array@{$\sim$Array}}
+\index{````~Array@{$\sim$Array}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$Array()}{~Array()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::$\sim$\mbox{\hyperlink{classglwpp_1_1_array}{Array}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_array_aab99b0d3e3ecb78cb313fdb5f134f92a}\label{classglwpp_1_1_array_aab99b0d3e3ecb78cb313fdb5f134f92a}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!get@{get}}
+\index{get@{get}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ \&}]{dst,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&}]{i,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_array_abe8fb6d14d98de2cc16e3b3031f5b25e}\label{classglwpp_1_1_array_abe8fb6d14d98de2cc16e3b3031f5b25e}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!set@{set}}
+\index{set@{set}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::set (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ size\+\_\+t $>$ \&}]{i,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \&}]{value,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} \&}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_array_ab526e2e0824471077024c633606ed31a}\label{classglwpp_1_1_array_ab526e2e0824471077024c633606ed31a}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!size@{size}}
+\index{size@{size}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ size\+\_\+t $>$ \&}]{dst }\end{DoxyParamCaption}) const}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_array_a68f50d8226d26ebaa05010bc3cfb4f5f}\label{classglwpp_1_1_array_a68f50d8226d26ebaa05010bc3cfb4f5f}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!\_access@{\_access}}
+\index{\_access@{\_access}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\_access}{\_access}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{namespaceglwpp_1_1gl_a4d2c9c79471804d92386aeef44b7dd1e}{gl\+::\+Bit\+Field}} \mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::\+\_\+access\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}}\textcolor{keyword}{>}(\mbox{\hyperlink{namespaceglwpp_1_1gl_ac7311765d325c7791a79553628c06570a7a1a5f3e79fdc91edf2f5ead9d66abb4}{gl::BufferStorageFlag::Read}})}
+\DoxyCodeLine{                                       | \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}}\textcolor{keyword}{>}(\mbox{\hyperlink{namespaceglwpp_1_1gl_ac7311765d325c7791a79553628c06570a1129c0e4d43f2d121652a7302712cff6}{gl::BufferStorageFlag::Write}})}
+\DoxyCodeLine{                                       | \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}}\textcolor{keyword}{>}(\mbox{\hyperlink{namespaceglwpp_1_1gl_ac7311765d325c7791a79553628c06570a5fe7b9358c9cb1b9eaa8d5aec000def4}{gl::BufferStorageFlag::Persistent}})}
+\DoxyCodeLine{                                       | \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}}\textcolor{keyword}{>}(\mbox{\hyperlink{namespaceglwpp_1_1gl_ac7311765d325c7791a79553628c06570a65d2523d959087dc90e3070bf940f94c}{gl::BufferStorageFlag::Coherent}})}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classglwpp_1_1_array_ada48fa5e940d686d4ad48f9c784f1f4b}\label{classglwpp_1_1_array_ada48fa5e940d686d4ad48f9c784f1f4b}} 
+\index{glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}!\_size@{\_size}}
+\index{\_size@{\_size}!glwpp::Array$<$ T $>$@{glwpp::Array$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\_size}{\_size}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}$<$size\+\_\+t$>$ \mbox{\hyperlink{classglwpp_1_1_array}{glwpp\+::\+Array}}$<$ T $>$\+::\+\_\+size\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/glwpp/gl/obj/\mbox{\hyperlink{_array_8hpp}{Array.\+hpp}}\end{DoxyCompactItemize}

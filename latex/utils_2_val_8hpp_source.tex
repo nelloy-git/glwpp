@@ -1,0 +1,83 @@
+\hypertarget{utils_2_val_8hpp_source}{}\doxysection{Val.\+hpp}
+\label{utils_2_val_8hpp_source}\index{include/glwpp/utils/Val.hpp@{include/glwpp/utils/Val.hpp}}
+\mbox{\hyperlink{utils_2_val_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <variant>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_src_loc_8hpp}{glwpp/utils/SrcLoc.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{comment}{// \#include "{}glwpp/gl/types.hpp"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_val}{Val}} \{}
+\DoxyCodeLine{13     \textcolor{keyword}{using }Container = std::variant<T, T*, std::shared\_ptr<T>>;}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{public}:}
+\DoxyCodeLine{16     \mbox{\hyperlink{classglwpp_1_1_val_a9bea47b179241db324e7325ddc224941}{Val}}(\textcolor{keyword}{const} T\& data)\{}
+\DoxyCodeLine{17         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same\_v<T, SrcLoc>)\{}
+\DoxyCodeLine{18             \_data = std::make\_shared<Container>(std::move(data));}
+\DoxyCodeLine{19         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{20             \_data = std::make\_shared<Container>(data);}
+\DoxyCodeLine{21         \}}
+\DoxyCodeLine{22     \}}
+\DoxyCodeLine{23     \textcolor{keyword}{explicit} \mbox{\hyperlink{classglwpp_1_1_val_a82f62d8f9ca051f8e610f8fd897308e6}{Val}}(\textcolor{keyword}{const} T* \textcolor{keyword}{const} data)\{\_data = std::make\_shared<Container>(data);\}}
+\DoxyCodeLine{24     \mbox{\hyperlink{classglwpp_1_1_val_a32880b649b5aac94117973cd8d3a9eb3}{Val}}(\textcolor{keyword}{const} std::shared\_ptr<T>\& data)\{\_data = std::make\_shared<Container>(data);\}}
+\DoxyCodeLine{25     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1_val_afbb6de7be676f27184bc1fd94388b2ca}{\string~Val}}()\{\};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{template}<\textcolor{keyword}{class} T = T, \textcolor{keyword}{class} = std::enable\_if\_t<std::is\_same\_v<T, std::\textcolor{keywordtype}{string}>>>}
+\DoxyCodeLine{28     \mbox{\hyperlink{classglwpp_1_1_val_a28d1534c74a6b73c48eb354a7b67c7b7}{Val}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* data)\{\_data = std::make\_shared<Container>(data);\}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31     \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1_val_a3f13f2a70371a297e4669bdbd05c1221}{getVal}}()\{}
+\DoxyCodeLine{32         \textcolor{keywordflow}{return} \_getVal(*\_data);}
+\DoxyCodeLine{33     \}}
+\DoxyCodeLine{34     }
+\DoxyCodeLine{35     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1_val_a6236535d03c738381d00837f84237504}{getVal}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{36         \textcolor{keywordflow}{return} \_getVal(*\_data);}
+\DoxyCodeLine{37     \}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39     \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}* \mbox{\hyperlink{classglwpp_1_1_val_ac62c680add801fd3fcc9e274c90fd13a}{getPtr}}()\{}
+\DoxyCodeLine{40         \textcolor{keywordflow}{return} \_getPtr(*\_data);}
+\DoxyCodeLine{41     \}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}* \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_val_a9121df3942f3fe5b8075fb610c589984}{getPtr}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{44         \textcolor{keywordflow}{return} \_getPtr(*\_data);}
+\DoxyCodeLine{45     \}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{private}:}
+\DoxyCodeLine{48     std::shared\_ptr<Container> \_data;}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keyword}{auto}\& \_getVal(\textcolor{keyword}{auto}\& data)\{}
+\DoxyCodeLine{51         \textcolor{keywordflow}{switch} (data.index())\{}
+\DoxyCodeLine{52             \textcolor{keywordflow}{case} 0: \textcolor{keywordflow}{return} std::get<0>(data);}
+\DoxyCodeLine{53             \textcolor{keywordflow}{case} 1: \textcolor{keywordflow}{return} *std::get<1>(data);}
+\DoxyCodeLine{54             \textcolor{keywordflow}{case} 2: \textcolor{keywordflow}{return} *std::get<2>(data);}
+\DoxyCodeLine{55             \textcolor{keywordflow}{default}: \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Val internal error"{}});}
+\DoxyCodeLine{56         \}}
+\DoxyCodeLine{57     \}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keyword}{auto}* \_getPtr(\textcolor{keyword}{auto}\& data)\{}
+\DoxyCodeLine{60         \textcolor{keywordflow}{switch} (data.index())\{}
+\DoxyCodeLine{61             \textcolor{keywordflow}{case} 0: \textcolor{keywordflow}{return} \&std::get<0>(data);}
+\DoxyCodeLine{62             \textcolor{keywordflow}{case} 1: \textcolor{keywordflow}{return} std::get<1>(data);}
+\DoxyCodeLine{63             \textcolor{keywordflow}{case} 2: \textcolor{keywordflow}{return} std::get<2>(data).get();}
+\DoxyCodeLine{64             \textcolor{keywordflow}{default}: \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Val internal error"{}});}
+\DoxyCodeLine{65         \}}
+\DoxyCodeLine{66     \}}
+\DoxyCodeLine{67 \};}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{keyword}{template}<\textcolor{keyword}{class}>}
+\DoxyCodeLine{70 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1is__val}{is\_val}} : std::false\_type \{\};}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{73 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1is__val}{is\_val}}<\mbox{\hyperlink{classglwpp_1_1_val}{Val}}<\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}>> : std::true\_type \{}
+\DoxyCodeLine{74     \textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1is__val_3_01_val_3_01_t_01_4_01_4_aeab46ff9f6853255d953184ca5b16104}{type}} = \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}};}
+\DoxyCodeLine{75 \};}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

@@ -1,0 +1,76 @@
+\hypertarget{_utils_8hpp_source}{}\doxysection{Utils.\+hpp}
+\label{_utils_8hpp_source}\index{include/glwpp/utils/Utils.hpp@{include/glwpp/utils/Utils.hpp}}
+\mbox{\hyperlink{_utils_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{8 \textcolor{keyword}{using }\mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}} = std::shared\_ptr<T>;}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{11 \textcolor{keyword}{using }\mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}} = std::weak\_ptr<T>;}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} D = std::default\_delete<T>>}
+\DoxyCodeLine{14 \textcolor{keyword}{using }\mbox{\hyperlink{namespaceglwpp_aaf55e3817b765da01408241a75df2acb}{uptr}} = std::unique\_ptr<T, D>;}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{template}<\textcolor{keyword}{typename} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}, \textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{17 \textcolor{keyword}{inline} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<T>}} \mbox{\hyperlink{namespaceglwpp_a692574fb11ff6b1311a01929f5bbb576}{make\_sptr}}(Args\&\&... args)\{}
+\DoxyCodeLine{18     \textcolor{keywordflow}{return} std::make\_shared<T>(std::forward<Args>(args)...);}
+\DoxyCodeLine{19 \}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} ... Args>}
+\DoxyCodeLine{22 \textcolor{keyword}{inline} \mbox{\hyperlink{namespaceglwpp_aaf55e3817b765da01408241a75df2acb}{uptr<T>}} \mbox{\hyperlink{namespaceglwpp_a1f5daa08f0a753c8fa5dff3a51d23ab7}{make\_uptr}}(Args\&\&... args)\{}
+\DoxyCodeLine{23     \textcolor{keywordflow}{return} std::make\_unique<T>(std::forward<Args>(args)...);}
+\DoxyCodeLine{24 \}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1_empty_obj}{EmptyObj}} \{\};}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{static} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<void>}} createTmpData(\textcolor{keywordtype}{size\_t} size, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* src = \textcolor{keyword}{nullptr})\{}
+\DoxyCodeLine{29     \textcolor{keywordtype}{void}* data;}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31     \textcolor{keywordflow}{if} (src != \textcolor{keyword}{nullptr})\{}
+\DoxyCodeLine{32         data = malloc(size);}
+\DoxyCodeLine{33         memcpy(data, src, size);}
+\DoxyCodeLine{34     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{35         data = calloc(size, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{36     \}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{keyword}{static} \textcolor{keyword}{auto} deleter = [](\textcolor{keywordtype}{void}* ptr)\{}
+\DoxyCodeLine{39         \textcolor{keyword}{delete} ptr;}
+\DoxyCodeLine{40     \};}
+\DoxyCodeLine{41     \textcolor{keywordflow}{return} sptr<void>(data, deleter);}
+\DoxyCodeLine{42 \}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{keyword}{template}<\textcolor{keyword}{template}<\textcolor{keyword}{typename} ...> \textcolor{keyword}{typename} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}, \textcolor{keyword}{typename} ... OutArgs>}
+\DoxyCodeLine{45 \textcolor{keyword}{inline} \textcolor{keyword}{decltype}(\textcolor{keyword}{auto}) \mbox{\hyperlink{namespaceglwpp_af8a30de7c20d65d1116afa1e76932c4f}{make\_shared}}(OutArgs\&\& ... args)\{}
+\DoxyCodeLine{46     \textcolor{keyword}{using }Tmp = std::remove\_pointer\_t<\textcolor{keyword}{decltype}(\textcolor{keyword}{new} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}(args...))>;}
+\DoxyCodeLine{47     \textcolor{keywordflow}{return} std::make\_shared<Tmp>(std::forward<OutArgs>(args)...);}
+\DoxyCodeLine{48 \};}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keyword}{template} <\textcolor{keyword}{template}<\textcolor{keyword}{auto}...> \textcolor{keyword}{typename} base, \textcolor{keyword}{typename} derived>}
+\DoxyCodeLine{51 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl}{is\_base\_of\_template\_impl}}}
+\DoxyCodeLine{52 \{}
+\DoxyCodeLine{53     \textcolor{keyword}{template}<\textcolor{keyword}{auto}... Ts>}
+\DoxyCodeLine{54     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} std::true\_type  \mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl_a20157c28dfcac23275b5ee628fd36409}{test}}(\textcolor{keyword}{const} base<Ts...> *);}
+\DoxyCodeLine{55     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} std::false\_type \mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl_a131f39bff7ef653b6777952245fa7fdd}{test}}(...);}
+\DoxyCodeLine{56     \textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl_a921daa3b56e225356da718fb9fbcf755}{type}} = \textcolor{keyword}{decltype}(\mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl_a20157c28dfcac23275b5ee628fd36409}{test}}(std::declval<derived*>()));}
+\DoxyCodeLine{57 \};}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \textcolor{keyword}{template} < \textcolor{keyword}{template} <\textcolor{keyword}{auto}...> \textcolor{keyword}{typename} base, \textcolor{keyword}{typename} derived>}
+\DoxyCodeLine{60 \textcolor{keyword}{using }\mbox{\hyperlink{namespaceglwpp_a7ca3656aff526073ea52f7e410035cde}{is\_base\_of\_template}} = \textcolor{keyword}{typename} \mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl_a921daa3b56e225356da718fb9fbcf755}{is\_base\_of\_template\_impl<base, derived>::type}};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{keyword}{template}<\textcolor{keywordtype}{bool}... b> \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespaceglwpp_ab824c960929556776be237509d9903d4}{var\_and}} = (b \&\& ...);}
+\DoxyCodeLine{63 \textcolor{keyword}{template}<\textcolor{keyword}{typename} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}, \textcolor{keyword}{typename}... Any> \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespaceglwpp_a3661e07783b377208500aa4ac5d34f10}{is\_same\_any}} = ((std::is\_same\_v<T, Any>) || ...);}
+\DoxyCodeLine{64 \textcolor{keyword}{template}<\textcolor{keyword}{typename} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}, \textcolor{keyword}{typename}... All> \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespaceglwpp_a3656080b942ffa1c9f168349f558d9aa}{is\_same\_all}} = ((std::is\_same\_v<T, All>) \&\& ...);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{comment}{// concept}}
+\DoxyCodeLine{67 \textcolor{keyword}{template}<\textcolor{keyword}{class} T, \textcolor{keyword}{class} U>}
+\DoxyCodeLine{68 \textcolor{keyword}{concept }\mbox{\hyperlink{conceptglwpp_1_1_derived}{Derived}} = std::is\_base\_of<U, T>::value;}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

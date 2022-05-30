@@ -1,0 +1,25 @@
+\hypertarget{_vertex_array_attrib_param_8hpp_source}{}\doxysection{Vertex\+Array\+Attrib\+Param.\+hpp}
+\label{_vertex_array_attrib_param_8hpp_source}\index{include/glwpp/gl/enums/VertexArrayAttribParam.hpp@{include/glwpp/gl/enums/VertexArrayAttribParam.hpp}}
+\mbox{\hyperlink{_vertex_array_attrib_param_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{enum class} \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541}{VertexArrayAttribParam}} : \mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}} \{}
+\DoxyCodeLine{8     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541a00d23a76e43b46dae9ec7aa9dcbebb32}{Enabled}} = 0x8622,        \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_ENABLED: param returns a value that is non-\/zero (true) if the vertex attribute array for index is enabled and 0 (false) if it is disabled. The initial value is GL\_FALSE.}}
+\DoxyCodeLine{9     \mbox{\hyperlink{namespaceglwpp_1_1gl_a086dad2e63cbf645afcda7247a077c22a6f6cb72d544962fa333e2e34ce64f719}{Size}} = 0x8623,           \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_SIZE: param returns a single value, the size of the vertex attribute array for index. The size is the number of values for each element of the vertex attribute array, and it will be 1, 2, 3 or 4. The initial value is 4.}}
+\DoxyCodeLine{10     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541a8c7fd568f39aa9b653ac0088c2ecab39}{Stride}} = 0x8624,         \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_STRIDE: param returns a single value, the array stride for (number of bytes between successive elements in) the vertex attribute array for index. A value of 0 indicates the array elements are stored sequentially in memory. The initial value is 0.}}
+\DoxyCodeLine{11     \mbox{\hyperlink{namespaceglwpp_1_1gl_a9e5c5f2783d20a1f375c64d658013fadaa1fa27779242b4902f7ae3bdd5c6d508}{Type}} = 0x8625,           \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_TYPE: param returns a single value, a symbolic constant indicating the array type for the vertex attribute array for index. Possible values are GL\_BYTE, GL\_DOUBLE, GL\_FIXED, GL\_FLOAT, GL\_HALF\_FLOAT, GL\_INT, GL\_INT\_2\_10\_10\_10\_REV, GL\_SHORT, GL\_UNSIGNED\_BYTE, GL\_UNSIGNED\_SHORT, GL\_UNSIGNED\_INT, GL\_UNSIGNED\_INT\_2\_10\_10\_10\_REV, and GL\_UNSIGNED\_INT\_10F\_11F\_11F\_REV . The initial value is GL\_FLOAT.}}
+\DoxyCodeLine{12     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541a66b28fcf83c9f24cd5b4d7bdc8f8ba0e}{Normalized}} = 0x886A,     \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_NORMALIZED: param returns a single value that is non-\/zero (true) if fixed-\/point data types for the vertex attribute array indicated by index are normalized when they are converted to floating-\/point, and 0 (false) otherwise. The initial value is GL\_FALSE.}}
+\DoxyCodeLine{13     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541aa0faef0851b4294c06f2b94bb1cb2044}{Integer}} = 0x88FD,        \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_INTEGER: param returns a single value that is non-\/zero (true) if fixed-\/point data types for the vertex attribute array indicated by index have integer data type, and 0 (false) otherwise. The initial value is 0 (GL\_FALSE).}}
+\DoxyCodeLine{14     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541a8394f0347c184cf156ac5924dccb773b}{Long}} = 0x874E,           \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_LONG: param returns a single value that is non-\/zero (true) if a vertex attribute is stored as an unconverted double, and 0 (false) otherwise. The initial value is 0 (GL\_FALSE).}}
+\DoxyCodeLine{15     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541a381a7c040960aa9e5744546707c25f20}{Divisor}} = 0x88FE,        \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_ARRAY\_DIVISOR: param returns a single value that is the frequency divisor used for instanced rendering. See glVertexAttribDivisor. The initial value is 0.}}
+\DoxyCodeLine{16     \mbox{\hyperlink{namespaceglwpp_1_1gl_a09d8a8d7ae9c301078ecbe4a49297541ab8f43ff4b566ab78b47f38a3d88890ca}{RelativeOffset}} = 0x82D5, \textcolor{comment}{// GL\_VERTEX\_ATTRIB\_RELATIVE\_OFFSET: param returns a single value that is the byte offset of the first element relative to the start of the vertex buffer binding specified attribute fetches from. The initial value is 0.}}
+\DoxyCodeLine{17 \};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \}}
+
+\end{DoxyCode}

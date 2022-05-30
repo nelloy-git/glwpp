@@ -1,0 +1,104 @@
+\hypertarget{classglwpp_1_1_event}{}\doxysection{glwpp\+::Event\texorpdfstring{$<$}{<} Args \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classglwpp_1_1_event}\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+
+
+{\ttfamily \#include $<$Event.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event_a72bd0175fba6c54d92a12cbf98000875}{Event}} (const \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}$<$ thread\+\_\+pool $>$ \&th\+\_\+pool=\mbox{\hyperlink{classglwpp_1_1_event_thread_pool_aaf48c181d66aef43c6bb7261c6d2122f}{Event\+Thread\+Pool\+::get}}())
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event_ace253412c5e67bd7b8013e2c5f525352}{Event}} (const \mbox{\hyperlink{classglwpp_1_1_event}{Event}} \&)=delete
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event_a4e2772377e121f569adb208ac7b3d0a9}{Event}} (const \mbox{\hyperlink{classglwpp_1_1_event}{Event}} \&\&)=delete
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event_a07b1502a47c0ceedc0cd1639e95b1d25}{$\sim$\+Event}} ()
+\item 
+{\footnotesize template$<$auto F, auto C = nullptr$>$ }\\void \mbox{\hyperlink{classglwpp_1_1_event_a0645166a3ece5d0d242e0ca1ca57a5f3}{push}} (const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+{\footnotesize template$<$auto C = nullptr, class F $>$ }\\void \mbox{\hyperlink{classglwpp_1_1_event_adcb2cc4c416a38dbee8734d30b1d4726}{push}} (const F \&event\+\_\+action, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+{\footnotesize template$<$class F , class C $>$ }\\void \mbox{\hyperlink{classglwpp_1_1_event_a86d0fc4ee05bca20160eb52cd672eb51}{push}} (const F \&event\+\_\+action, const C \&alive\+\_\+condition, const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}} loc=\mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}())
+\item 
+std\+::future$<$ bool $>$ \mbox{\hyperlink{classglwpp_1_1_event_a2561824d6a62bf84445272d98a6f21cf}{emit}} (const Args \&... args)
+\item 
+size\+\_\+t \mbox{\hyperlink{classglwpp_1_1_event_a5c4dd4b4740cbf51d6f3374060877fde}{size}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_event_a72bd0175fba6c54d92a12cbf98000875}\label{classglwpp_1_1_event_a72bd0175fba6c54d92a12cbf98000875}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!Event@{Event}}
+\index{Event@{Event}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{Event()}{Event()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+\mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::\+Event (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr}}$<$ thread\+\_\+pool $>$ \&}]{th\+\_\+pool = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_event_thread_pool_aaf48c181d66aef43c6bb7261c6d2122f}{Event\+Thread\+Pool\+::get}}()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_ace253412c5e67bd7b8013e2c5f525352}\label{classglwpp_1_1_event_ace253412c5e67bd7b8013e2c5f525352}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!Event@{Event}}
+\index{Event@{Event}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{Event()}{Event()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+\mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::\+Event (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ Args $>$ \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_a4e2772377e121f569adb208ac7b3d0a9}\label{classglwpp_1_1_event_a4e2772377e121f569adb208ac7b3d0a9}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!Event@{Event}}
+\index{Event@{Event}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{Event()}{Event()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+\mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::\+Event (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ Args $>$ \&\&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_a07b1502a47c0ceedc0cd1639e95b1d25}\label{classglwpp_1_1_event_a07b1502a47c0ceedc0cd1639e95b1d25}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!````~Event@{$\sim$Event}}
+\index{````~Event@{$\sim$Event}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$Event()}{~Event()}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+\mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::$\sim$\mbox{\hyperlink{classglwpp_1_1_event}{Event}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_event_a2561824d6a62bf84445272d98a6f21cf}\label{classglwpp_1_1_event_a2561824d6a62bf84445272d98a6f21cf}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!emit@{emit}}
+\index{emit@{emit}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{emit()}{emit()}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+std\+::future$<$ bool $>$ \mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::emit (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_a86d0fc4ee05bca20160eb52cd672eb51}\label{classglwpp_1_1_event_a86d0fc4ee05bca20160eb52cd672eb51}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!push@{push}}
+\index{push@{push}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+template$<$class F , class C $>$ \\
+void \mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::push (\begin{DoxyParamCaption}\item[{const F \&}]{event\+\_\+action,  }\item[{const C \&}]{alive\+\_\+condition,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_adcb2cc4c416a38dbee8734d30b1d4726}\label{classglwpp_1_1_event_adcb2cc4c416a38dbee8734d30b1d4726}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!push@{push}}
+\index{push@{push}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+template$<$auto C = nullptr, class F $>$ \\
+void \mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::push (\begin{DoxyParamCaption}\item[{const F \&}]{event\+\_\+action,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_a0645166a3ece5d0d242e0ca1ca57a5f3}\label{classglwpp_1_1_event_a0645166a3ece5d0d242e0ca1ca57a5f3}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!push@{push}}
+\index{push@{push}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+template$<$auto F, auto C = nullptr$>$ \\
+void \mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::push (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}}]{loc = {\ttfamily \mbox{\hyperlink{classglwpp_1_1_src_loc}{Src\+Loc}}()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_event_a5c4dd4b4740cbf51d6f3374060877fde}\label{classglwpp_1_1_event_a5c4dd4b4740cbf51d6f3374060877fde}} 
+\index{glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}!size@{size}}
+\index{size@{size}!glwpp::Event$<$ Args $>$@{glwpp::Event$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$class ... Args$>$ \\
+size\+\_\+t \mbox{\hyperlink{classglwpp_1_1_event}{glwpp\+::\+Event}}$<$ Args $>$\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/glwpp/utils/event/\mbox{\hyperlink{_event_8hpp}{Event.\+hpp}}\end{DoxyCompactItemize}

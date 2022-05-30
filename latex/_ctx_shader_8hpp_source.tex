@@ -1,0 +1,39 @@
+\hypertarget{_ctx_shader_8hpp_source}{}\doxysection{Ctx\+Shader.\+hpp}
+\label{_ctx_shader_8hpp_source}\index{include/glwpp/gl/ctx\_only/CtxShader.hpp@{include/glwpp/gl/ctx\_only/CtxShader.hpp}}
+\mbox{\hyperlink{_ctx_shader_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_ctx_object_8hpp}{glwpp/gl/ctx\_only/CtxObject.hpp}}"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_shader_type_8hpp}{glwpp/gl/enums/ShaderType.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_shader_param_8hpp}{glwpp/gl/enums/ShaderParam.hpp}}"{}}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader}{CtxShader}} : \textcolor{keyword}{public} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}} \{}
+\DoxyCodeLine{13     \textcolor{keyword}{static} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}} \_createGlShader(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_abfce4470a5fa72875ed18efbf664efbd}{ShaderType}}\& type, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc);}
+\DoxyCodeLine{14     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_deleteGlShader(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}\& \textcolor{keywordtype}{id});}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{public}:}
+\DoxyCodeLine{17     \textcolor{comment}{// Empty CtxShader}}
+\DoxyCodeLine{18     \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a994074e4a2c5d2d05bad0da58b72414a}{CtxShader}}(\textcolor{keyword}{const} \mbox{\hyperlink{structglwpp_1_1_empty_obj}{EmptyObj}}\& flag) : \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}}(flag)\{\};}
+\DoxyCodeLine{19     \textcolor{comment}{// Refer same gl object}}
+\DoxyCodeLine{20     \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a8f4faab0167af68be79fcba595a4aabe}{CtxShader}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader}{CtxShader}}\& other) : \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}}(other)\{\};}
+\DoxyCodeLine{21     \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_ad58af7ee28d4145bc28ae1956cf1ce0d}{CtxShader}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_abfce4470a5fa72875ed18efbf664efbd}{ShaderType}}\& type, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{22     }
+\DoxyCodeLine{23     \mbox{\hyperlink{namespaceglwpp_1_1gl_aea633029e9eae9c2753f44d88f90f222}{Int}} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a1de97cb9789f022d9ea27214fc6c2dc8}{getParamI}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{Enum}}\& param, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_1_1gl_abfce4470a5fa72875ed18efbf664efbd}{ShaderType}} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a6cf7823a5c22eef7b0b546b585272809}{getType}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{25     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a58da0f1b2146a7701b527bafaa973172}{isCompiled}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \mbox{\hyperlink{namespaceglwpp_1_1gl_aea633029e9eae9c2753f44d88f90f222}{Int}} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a7cac2a922e7b07b05c543fdbe8c70e60}{getSourceLength}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{28     std::string \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a316705e5da2714d76f6f73687faa372b}{getInfoLog}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}()) \textcolor{keyword}{const};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{void} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_shader_a9a896a4925c4700ccd89e4da623f01d1}{compile}}(\textcolor{keyword}{const} std::string\& code, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc = \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}}());}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \} \textcolor{comment}{// namespace glwpp::gl}}
+
+\end{DoxyCode}

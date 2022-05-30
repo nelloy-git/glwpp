@@ -1,0 +1,65 @@
+\hypertarget{_enum_container_8hpp_source}{}\doxysection{Enum\+Container.\+hpp}
+\label{_enum_container_8hpp_source}\index{include/glwpp/utils/EnumContainer.hpp@{include/glwpp/utils/EnumContainer.hpp}}
+\mbox{\hyperlink{_enum_container_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}magic\_enum.hpp"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{template}<\textcolor{keyword}{typename} E, \textcolor{keyword}{typename} T>}
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_enum_container}{EnumContainer}} \{}
+\DoxyCodeLine{9     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{size\_t} S = magic\_enum::enum\_count<E>();}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{public}:}
+\DoxyCodeLine{12     \mbox{\hyperlink{classglwpp_1_1_enum_container_a538a0d928f02ed473ce2dbbd50b41f7d}{EnumContainer}}()\{\};}
+\DoxyCodeLine{13     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1_enum_container_a648b779e4361e15d8fc3953dbe7bf0e2}{\string~EnumContainer}}()\{\};}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{classglwpp_1_1_enum_container_ae8d8653861a71df06b3a9ce221fc0d67}{enum\_values}}()\{}
+\DoxyCodeLine{16         \textcolor{keywordflow}{return} magic\_enum::enum\_values<E>();}
+\DoxyCodeLine{17     \}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \mbox{\hyperlink{classglwpp_1_1_enum_container_ad9e72c8567055f9c5af8a1773a07cc44}{enum\_index}}(\textcolor{keyword}{const} E\& enum\_value)\{}
+\DoxyCodeLine{20         \textcolor{keywordflow}{return} magic\_enum::enum\_index(enum\_value).value();}
+\DoxyCodeLine{21     \}}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{keyword}{inline} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1_enum_container_a2af2588bc9f0a42cb4472fc8bf52be0b}{operator[]}}(\textcolor{keyword}{const} E\& target)\{}
+\DoxyCodeLine{24         \textcolor{keywordflow}{return} \_data[magic\_enum::enum\_index(target).value()];}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{inline} \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}}\& \mbox{\hyperlink{classglwpp_1_1_enum_container_a58aa0b4e90a303e7dee8dddd11bd86c3}{operator[]}}(\textcolor{keyword}{const} E\& target)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{28         \textcolor{keywordflow}{return} \_data[magic\_enum::enum\_index(target).value()];}
+\DoxyCodeLine{29     \}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{keyword}{private}:}
+\DoxyCodeLine{32     \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170ab9ece18c950afbfa6b0fdbfa4ff731d3}{T}} \_data[\mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170a5dbc98dcc983a70728bd082d1a47546e}{S}}];}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \_is\_sequence()\{}
+\DoxyCodeLine{35         \textcolor{keywordtype}{size\_t} size = magic\_enum::enum\_count<E>();}
+\DoxyCodeLine{36         \textcolor{keyword}{auto} list = magic\_enum::enum\_values<E>();}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38         \textcolor{keyword}{using }Under = std::underlying\_type\_t<E>;}
+\DoxyCodeLine{39         Under min = std::numeric\_limits<Under>::infinity();}
+\DoxyCodeLine{40         Under max = -\/std::numeric\_limits<Under>::infinity();}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < list.size(); ++i)\{}
+\DoxyCodeLine{43             \textcolor{keywordtype}{int} val = \textcolor{keyword}{static\_cast<}Under\textcolor{keyword}{>}(list[i]);}
+\DoxyCodeLine{44             max = max > val ? max : val;}
+\DoxyCodeLine{45             min = min < val ? min : val;}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} j = i + 1; j < list.size(); ++j)\{}
+\DoxyCodeLine{48                 \textcolor{keywordtype}{int} val\_j = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(list[j]);}
+\DoxyCodeLine{49                 \textcolor{keywordflow}{if} (val == val\_j)\{}
+\DoxyCodeLine{50                     \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{51                 \}}
+\DoxyCodeLine{52             \}}
+\DoxyCodeLine{53         \}}
+\DoxyCodeLine{54         \textcolor{keywordflow}{return} (max -\/ min) == size -\/ 1 \&\& min == 0;}
+\DoxyCodeLine{55     \}}
+\DoxyCodeLine{56     \textcolor{keyword}{static\_assert}(\_is\_sequence(), \textcolor{stringliteral}{"{}E is not sequence enum"{}});}
+\DoxyCodeLine{57 \};}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

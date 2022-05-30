@@ -1,0 +1,72 @@
+\hypertarget{_mesh_attribute_8hpp}{}\doxysection{include/glwpp/model/\+Mesh\+Attribute.hpp File Reference}
+\label{_mesh_attribute_8hpp}\index{include/glwpp/model/MeshAttribute.hpp@{include/glwpp/model/MeshAttribute.hpp}}
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include \char`\"{}glwpp/gl/enums/\+Data\+Type.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1_mesh_attribute_type_cpu}{glwpp\+::\+Mesh\+Attribute\+Type\+Cpu$<$ T $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceglwpp}{glwpp}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$Mesh\+Attribute\+Type T$>$ }\\using \mbox{\hyperlink{namespaceglwpp_a4776b56a6b801a9047cdd61aac063285}{glwpp\+::\+Mesh\+Attribute\+Type\+Cpu\+\_\+t}} = gl\+::\+Data\+Type\+Cpu\+\_\+t$<$ get\+Mesh\+Attribute\+Type\+Gl\+Type(T)$>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{glwpp\+::\+Mesh\+Attribute\+Size}} \+: size\+\_\+t \{ \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983caf60357a8d17e45793298323f1b372a74}{glwpp\+::\+Scalar}}
+, \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983cafe98032d4f1c52a2f0b617f9205d5f80}{glwpp\+::\+Vec2}}
+, \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983ca01b2dc1a2922d9be9e12ef0709600977}{glwpp\+::\+Vec3}}
+, \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983caf67402842935c0240e8109e7312def66}{glwpp\+::\+Vec4}}
+ \}
+\item 
+enum class \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{glwpp\+::\+Mesh\+Attribute\+Type}} \{ \newline
+\mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927daf7218f01a98541fef302b8ffabf7d640}{glwpp\+::\+UInt\+\_\+11\+\_\+11\+\_\+10}}
+, \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da1e519119c2b8dbd407396efcd65bc856}{glwpp\+::\+UInt\+\_\+10\+\_\+10\+\_\+10\+\_\+2}}
+, \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da4b4ba765b750d5836bfeb2213cc3caea}{glwpp\+::\+UByte}}
+, \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927dadfe785f133347f9b473f99009732b1bc}{glwpp\+::\+UShort}}
+, \newline
+\mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da0b1291eded63143ac04709711274785a}{glwpp\+::\+UInt}}
+, \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927da22ae0e2b89e5e3d477f988cc36d3272b}{glwpp\+::\+Float}}
+ \}
+\item 
+enum class \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{glwpp\+::\+Mesh\+Attribute}} \+: size\+\_\+t \{ \newline
+\mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a52f5e0bc3859bc5f5e25130b6c7e8881}{glwpp\+::\+Position}} = 0
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a960b44c579bc2f6818d2daaf9e4c16f0}{glwpp\+::\+Normal}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a541671cb1be09d76a84ba1a873ec3fc8}{glwpp\+::\+Tangent}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ae3e73a4b6e7cfd12008a35f6a051b319}{glwpp\+::\+Bitangent}}
+, \newline
+\mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a7d078cb52b0f5a0cedb8b74cd0aaa0d8}{glwpp\+::\+Tex\+Coord\+\_\+0}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ae4351004fb5284c47325b69df2216354}{glwpp\+::\+Tex\+Coord\+\_\+1}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ac19fefff65ab1a2a0175d376a88a4500}{glwpp\+::\+Tex\+Coord\+\_\+2}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a6ade39f943b05193830fb2c78c38cbcc}{glwpp\+::\+Tex\+Coord\+\_\+3}}
+, \newline
+\mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ae5ac320a2af12a21e04d92cba5dccf52}{glwpp\+::\+Tex\+Coord\+\_\+4}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ae35f5e965e2bc0874aa048a93d903c21}{glwpp\+::\+Tex\+Coord\+\_\+5}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a7e3df5e97e2ef65489b1db8e119487bd}{glwpp\+::\+Tex\+Coord\+\_\+6}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a998f49d1b39031821dc9c88af7c2057f}{glwpp\+::\+Tex\+Coord\+\_\+7}}
+, \newline
+\mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0accf8c0749aec88174f3941b634b91578}{glwpp\+::\+Color\+\_\+0}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a98a9205165c8adf87214a73d007df3be}{glwpp\+::\+Color\+\_\+1}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0afc1f2132efb3f94dd2c998886ddd8c5a}{glwpp\+::\+Color\+\_\+2}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ae15eb73023a18740124b512f26d4f0f2}{glwpp\+::\+Color\+\_\+3}}
+, \newline
+\mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0ab837a8b43c14a8a3e501d12e86c25e25}{glwpp\+::\+Color\+\_\+4}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a05631eb391e4b60ffe60849c4081629e}{glwpp\+::\+Color\+\_\+5}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0aec791e9426b437c5fe31e838a84aa8b6}{glwpp\+::\+Color\+\_\+6}}
+, \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0a390f9a1394d5441f994c43f10c5dd4b9}{glwpp\+::\+Color\+\_\+7}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{namespaceglwpp_aac2b0b38f24d688c01f5bccd2ad362ae}{glwpp\+::get\+Mesh\+Attribute\+Size\+Components}} (const Mesh\+Attribute\+Size \&size)
+\item 
+constexpr gl\+::\+Data\+Type \mbox{\hyperlink{namespaceglwpp_a3d40e686872e6fb97abae545009ca0c7}{glwpp\+::get\+Mesh\+Attribute\+Type\+Gl\+Type}} (const Mesh\+Attribute\+Type \&type)
+\end{DoxyCompactItemize}

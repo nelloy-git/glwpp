@@ -1,0 +1,90 @@
+\hypertarget{_data_type_8hpp_source}{}\doxysection{Data\+Type.\+hpp}
+\label{_data_type_8hpp_source}\index{include/glwpp/gl/enums/DataType.hpp@{include/glwpp/gl/enums/DataType.hpp}}
+\mbox{\hyperlink{_data_type_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{enum class} \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}} : \mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}} \{}
+\DoxyCodeLine{8     \mbox{\hyperlink{namespaceglwpp_1_1gl_a3cb25946a6213522ce22913fbe8bd434}{Byte}} = 0x1400,                  \textcolor{comment}{// GL\_BYTE}}
+\DoxyCodeLine{9     \mbox{\hyperlink{namespaceglwpp_1_1gl_a47faa29a35fe8df9bad24eaba24f95e3}{UByte}} = 0x1401,                 \textcolor{comment}{// GL\_UNSIGNED\_BYTE}}
+\DoxyCodeLine{10     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890aebbfe32e6861395d5abd8d065c6104c6}{UByte\_3\_3\_2}} = 0x8032,           \textcolor{comment}{// GL\_UNSIGNED\_BYTE\_3\_3\_2}}
+\DoxyCodeLine{11     \mbox{\hyperlink{namespaceglwpp_1_1gl_a080be68c1ffd0bd762d5e11372609161}{Short}} = 0x1402,                 \textcolor{comment}{// GL\_SHORT}}
+\DoxyCodeLine{12     \mbox{\hyperlink{namespaceglwpp_1_1gl_abd461808fc31dc7dd48cf081d76442fd}{UShort}} = 0x1403,                \textcolor{comment}{// GL\_UNSIGNED\_SHORT}}
+\DoxyCodeLine{13     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890ad78d66eaee21b165c68d5a7722d5f2de}{UShort\_5\_5\_5\_1}} = 0x8034,        \textcolor{comment}{// GL\_UNSIGNED\_SHORT\_5\_5\_5\_1}}
+\DoxyCodeLine{14     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a2905ac119c822aa7f832e6da6bb45e56}{UShort\_4\_4\_4\_4}} = 0x8033,        \textcolor{comment}{// GL\_UNSIGNED\_SHORT\_4\_4\_4\_4}}
+\DoxyCodeLine{15     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a4ec487578ef8d5a15d6ef1eea7f535bd}{UShort\_5\_6\_5}} = 0x8363,          \textcolor{comment}{// GL\_UNSIGNED\_SHORT\_5\_6\_5}}
+\DoxyCodeLine{16     \mbox{\hyperlink{namespaceglwpp_1_1gl_aea633029e9eae9c2753f44d88f90f222}{Int}} = 0x1404,                   \textcolor{comment}{// GL\_INT}}
+\DoxyCodeLine{17     \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}} = 0x1405,                  \textcolor{comment}{// GL\_UNSIGNED\_INT}}
+\DoxyCodeLine{18     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890abcf2c0a00b460118323b0f6350cad1f3}{Int\_2\_10\_10\_10\_Rev}} = 0x8D9F,    \textcolor{comment}{// GL\_INT\_2\_10\_10\_10\_REV}}
+\DoxyCodeLine{19     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a6fbec551a5905aec6aac273672a10524}{UInt\_10\_11\_11\_Rev}} = 0x8C3B,     \textcolor{comment}{// GL\_UNSIGNED\_INT\_2\_10\_10\_10\_REV}}
+\DoxyCodeLine{20     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a3838b3ce34db25a8b9f333d825da3b8b}{UInt\_2\_10\_10\_10\_Rev}} = 0x8368,   \textcolor{comment}{// GL\_UNSIGNED\_INT\_2\_10\_10\_10\_REV}}
+\DoxyCodeLine{21     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a4e579b1d75f16f8fb3aa9cc4eaabd2ee}{UInt\_5\_9\_9\_9\_Rev}} = 0x8C3E,      \textcolor{comment}{// GL\_UNSIGNED\_INT\_5\_9\_9\_9\_REV}}
+\DoxyCodeLine{22     \mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890aac7cd6e5c0e64e18865cd85138801cd1}{UInt\_8\_8\_8\_8}} = 0x8035,          \textcolor{comment}{// GL\_UNSIGNED\_INT\_8\_8\_8\_8}}
+\DoxyCodeLine{23     \mbox{\hyperlink{namespaceglwpp_1_1gl_a6c4b3dc2942ab2de97af77084d0e4b83}{Float}} = 0x1406,                 \textcolor{comment}{// GL\_FLOAT}}
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_1_1gl_a6d1b544a297e279a3024c3e47a9f8ca5}{Double}} = 0x140A,                \textcolor{comment}{// GL\_DOUBLE}}
+\DoxyCodeLine{25 \};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{keyword}{template}<DataType T>}
+\DoxyCodeLine{28 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}} \{\};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{31 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a3cb25946a6213522ce22913fbe8bd434}{Byte}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_byte_01_4_a51a81f684c9383f61a93aebb4c8781fa}{type}} = char;\};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{34 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a47faa29a35fe8df9bad24eaba24f95e3}{UByte}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_byte_01_4_a575d5010e26dcdfe3a170b68935de83d}{type}} = \textcolor{keywordtype}{unsigned} char;\};}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{37 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890aebbfe32e6861395d5abd8d065c6104c6}{UByte\_3\_3\_2}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_byte__3__3__2_01_4_acd73c6cc40cb2a3a0d930345d864f162}{type}} = \textcolor{keywordtype}{unsigned} char;\};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{40 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a080be68c1ffd0bd762d5e11372609161}{Short}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_short_01_4_aab3690f4c6e591c8ee468c9e8a5b6b99}{type}} = \textcolor{keywordtype}{short} int;\};}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{43 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_abd461808fc31dc7dd48cf081d76442fd}{UShort}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_short_01_4_ae5bf6d5f64391529dc54816ada9d814a}{type}} = \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} int;\};}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{46 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890ad78d66eaee21b165c68d5a7722d5f2de}{UShort\_5\_5\_5\_1}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_short__5__5__5__1_01_4_a2865d5cfadef8f83711a37d43e656c28}{type}} = \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} int;\};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{49 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a2905ac119c822aa7f832e6da6bb45e56}{UShort\_4\_4\_4\_4}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_short__4__4__4__4_01_4_a2310e06507ea9d5085aa9269501b521d}{type}} = \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} int;\};}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{52 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a4ec487578ef8d5a15d6ef1eea7f535bd}{UShort\_5\_6\_5}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_short__5__6__5_01_4_a393bd29254d05a1df3f4cd2d7a0104f0}{type}} = \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} int;\};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{55 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_aea633029e9eae9c2753f44d88f90f222}{Int}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_int_01_4_a7e4b5ec3b2ebd4d3d94c62a3937e6f92}{type}} = int;\};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{58 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_int_01_4_a91414dd349a40d74439b05aebcdbd253}{type}} = \textcolor{keywordtype}{unsigned} int;\};}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{61 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a6c4b3dc2942ab2de97af77084d0e4b83}{Float}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_float_01_4_a91dada84770602a1283ae93d9f4098ed}{type}} = float;\};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{64 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a6d1b544a297e279a3024c3e47a9f8ca5}{Double}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_double_01_4_a9f1735a7bca6a5a2a9ce014bae01ed00}{type}} = double;\};}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{67 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890abcf2c0a00b460118323b0f6350cad1f3}{Int\_2\_10\_10\_10\_Rev}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_int__2__10__10__10___rev_01_4_abbb25f7629ed853381b275061a9257f0}{type}} = int;\};}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{70 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a3838b3ce34db25a8b9f333d825da3b8b}{UInt\_2\_10\_10\_10\_Rev}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_int__2__10__10__10___rev_01_4_a776506b654ab3b2c0ac0b6f2f17b7e5d}{type}} = \textcolor{keywordtype}{unsigned} int;\};}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{73 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a6fbec551a5905aec6aac273672a10524}{UInt\_10\_11\_11\_Rev}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_int__10__11__11___rev_01_4_a75dfffb3ed87b9fd16fd8c7bfab5aede}{type}} = \textcolor{keywordtype}{unsigned} int;\};}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{76 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890a4e579b1d75f16f8fb3aa9cc4eaabd2ee}{UInt\_5\_9\_9\_9\_Rev}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_int__5__9__9__9___rev_01_4_ac9e9519991d735a476151d32811eee16}{type}} = \textcolor{keywordtype}{unsigned} int;\};}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{template}<>}
+\DoxyCodeLine{79 \textcolor{keyword}{struct }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu}}<\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890}{DataType}}::\mbox{\hyperlink{namespaceglwpp_1_1gl_a90d9844ffdd9a5a40ad99847654c1890aac7cd6e5c0e64e18865cd85138801cd1}{UInt\_8\_8\_8\_8}}> \{\textcolor{keyword}{using }\mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu_3_01_data_type_1_1_u_int__8__8__8__8_01_4_a59fdefa5de3b52fad2aeb158758bbd75}{type}} = \textcolor{keywordtype}{unsigned} int;\};}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 \textcolor{keyword}{template}<DataType T>}
+\DoxyCodeLine{82 \textcolor{keyword}{using }\mbox{\hyperlink{namespaceglwpp_1_1gl_a406b136057cb584215a13d835c0b0542}{DataTypeCpu\_t}} = \mbox{\hyperlink{structglwpp_1_1gl_1_1_data_type_cpu}{DataTypeCpu<T>::type}};}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 \}}
+
+\end{DoxyCode}

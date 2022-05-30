@@ -29,6 +29,10 @@
 
 #include "glad/gl.h"
 
+
+
+#include "glwpp/utils/Pointer.hpp"
+
 std::string loadTextFile(const std::string& path){
     std::ifstream t(path);
     std::stringstream buffer;
@@ -191,6 +195,7 @@ int main(int argc, char **argv){
         // obj->init();
     }
     
+    glwpp::StrongPointer<int> s_int;
 
     while (running){
         win->start();

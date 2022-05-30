@@ -1,0 +1,88 @@
+\hypertarget{_mesh_vertex_data_8hpp_source}{}\doxysection{Mesh\+Vertex\+Data.\+hpp}
+\label{_mesh_vertex_data_8hpp_source}\index{include/glwpp/model/MeshVertexData.hpp@{include/glwpp/model/MeshVertexData.hpp}}
+\mbox{\hyperlink{_mesh_vertex_data_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <variant>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}glm/glm.hpp"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{obj_2_buffer_8hpp}{glwpp/gl/obj/Buffer.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_mesh_vertex_config_8hpp}{glwpp/model/MeshVertexConfig.hpp}}"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_enum_container_8hpp}{glwpp/utils/EnumContainer.hpp}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{struct }aiMesh;}
+\DoxyCodeLine{12 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{13 \textcolor{keyword}{struct }\mbox{\hyperlink{classai_vector3t}{aiVector3t}};}
+\DoxyCodeLine{14 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{15 \textcolor{keyword}{struct }\mbox{\hyperlink{structai_color4t}{aiColor4t}};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data}{MeshVertexData}} \{}
+\DoxyCodeLine{20 \textcolor{keyword}{public}:}
+\DoxyCodeLine{21     \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a9d0af8ca159ea993c41e1adcca59a77a}{MeshVertexData}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}}\& wctx, \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_config}{MeshVertexConfig}}\& config, \textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{22     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_ac89d59e68648a39590a5b14b20ee3d3a}{\string~MeshVertexData}}();}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a7c6e271194132b73deb20ab77dbccc5a}{getVertices}}();}
+\DoxyCodeLine{25     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_ac2df068fd3501a67f10e4df88b4ba970}{getVertices}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{26     \textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_config}{MeshVertexConfig}}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_ab2b84169127d2f2337dccbd2f3f9ca51}{getConfig}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{27     \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_ac9ba68e9d91d8e68f908698d642e1c18}{getBytesPerVertex}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29     \textcolor{keyword}{const} \textcolor{keywordtype}{bool}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_aa95163f9c5190c7d4d6905723afea216}{isEnabled}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{30     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{MeshAttributeType}}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a606e819a64d4cf0f825285935aee989c}{getType}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{31     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{MeshAttributeSize}}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_acb3fea02f08a4a98c5f7aea8cd6fd2e1}{getSize}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{32     \textcolor{keyword}{const} \textcolor{keywordtype}{size\_t}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a494c0c57eccac8b125341d23ac63f137}{getByteOffset}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{33     \textcolor{keyword}{const} glm::vec4\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a4c331c09fda2b25823a079fd36e7bfc2}{getValueOffset}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{34     \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_data_a0a5c56b8d246820156f88e003eeac16e}{getValueMultiplier}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_ae7362a5203600144bf9ea1eabf76e3e0}{MeshAttribute}}\& attribute) \textcolor{keyword}{const};}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{keyword}{private}:}
+\DoxyCodeLine{37     \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr<Context>}} \_ctx;}
+\DoxyCodeLine{38     \mbox{\hyperlink{classglwpp_1_1_mesh_vertex_config}{MeshVertexConfig}} \_config;}
+\DoxyCodeLine{39     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<Buffer>}} \_vertices;}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keyword}{struct }AttributeState \{}
+\DoxyCodeLine{42         \textcolor{keywordtype}{bool} enabled;           \textcolor{comment}{// Do model have attribute}}
+\DoxyCodeLine{43         \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{MeshAttributeType}} type;}
+\DoxyCodeLine{44         \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{MeshAttributeSize}} size;}
+\DoxyCodeLine{45         \textcolor{keywordtype}{float} compression;}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47         \textcolor{keywordtype}{size\_t} byte\_offset;     \textcolor{comment}{// gl memory relative offset of attribute in vertex}}
+\DoxyCodeLine{48         glm::vec4 value\_offset; \textcolor{comment}{// all attribute values are normalized [0, 1]. can be used to restore original values in shader}}
+\DoxyCodeLine{49         \textcolor{keywordtype}{float} value\_mult;       \textcolor{comment}{// all attribute values are normalized [0, 1]. can be used to restore original values in shader}}
+\DoxyCodeLine{50     \};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordtype}{size\_t} \_vertex\_bytes;}
+\DoxyCodeLine{53     \textcolor{keywordtype}{size\_t} \_vertex\_count;}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55     \mbox{\hyperlink{classglwpp_1_1_enum_container}{EnumContainer<MeshAttribute, AttributeState>}} \_attr\_state;}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} \_fillAttributeStates(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{58     \textcolor{keywordtype}{void} \_fillVertexBuffer(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} \_fillVertexBufferAttribute(\textcolor{keywordtype}{void}* dst, \textcolor{keyword}{const} glm::vec4\& vec,}
+\DoxyCodeLine{60                                     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{MeshAttributeType}}\& type, \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{MeshAttributeSize}}\& size);}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     \textcolor{keyword}{template}<\textcolor{keyword}{typename} In, \textcolor{keyword}{typename} Out = In>}
+\DoxyCodeLine{63     \textcolor{keyword}{static} Out \_normalize(\textcolor{keyword}{const} In\& vec, \textcolor{keyword}{const} glm::vec4\& value\_offset, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& value\_mult);}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \textcolor{keyword}{template}<MeshAttribute A>}
+\DoxyCodeLine{66     glm::vec4 \_findValueOffset(\textcolor{keyword}{const} aiMesh\& ai\_mesh) \textcolor{keyword}{const};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keyword}{template}<MeshAttribute A>}
+\DoxyCodeLine{69     \textcolor{keyword}{static} \textcolor{keywordtype}{float} \_findValueMultiplier(\textcolor{keyword}{const} aiMesh\& ai\_mesh, \textcolor{keyword}{const} glm::vec4\& value\_offset);}
+\DoxyCodeLine{70     }
+\DoxyCodeLine{71     \textcolor{keyword}{template}<MeshAttribute A>}
+\DoxyCodeLine{72     \textcolor{keyword}{static} \mbox{\hyperlink{namespaceglwpp_a0e608bf8df19c8719668967ef715927d}{MeshAttributeType}} \_findOptimalType(\textcolor{keyword}{const} aiMesh\& ai\_mesh, \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_afe042ac7978a2abb72cad6af82a6983c}{MeshAttributeSize}}\& size, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& compression,}
+\DoxyCodeLine{73                                               \textcolor{keyword}{const} glm::vec4\& value\_offset, \textcolor{keyword}{const} \textcolor{keywordtype}{float}\& value\_mult);}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75     \textcolor{keyword}{template}<MeshAttribute A>}
+\DoxyCodeLine{76     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_doAiMeshHasAttribute(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{77     }
+\DoxyCodeLine{78     \textcolor{keyword}{template}<MeshAttribute A>}
+\DoxyCodeLine{79     \textcolor{keyword}{static} \textcolor{keyword}{auto} \_getAiArray(\textcolor{keyword}{const} aiMesh\& ai\_mesh);}
+\DoxyCodeLine{80 \};}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \} \textcolor{comment}{// namespace glwpp}}
+
+\end{DoxyCode}

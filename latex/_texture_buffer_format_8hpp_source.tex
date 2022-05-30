@@ -1,0 +1,50 @@
+\hypertarget{_texture_buffer_format_8hpp_source}{}\doxysection{Texture\+Buffer\+Format.\+hpp}
+\label{_texture_buffer_format_8hpp_source}\index{include/glwpp/gl/enums/TextureBufferFormat.hpp@{include/glwpp/gl/enums/TextureBufferFormat.hpp}}
+\mbox{\hyperlink{_texture_buffer_format_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{enum class} \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5}{TextureFormat}} : \mbox{\hyperlink{namespaceglwpp_1_1gl_a2c9ccad03084f22f7bb9c92522e6f845}{gl::Enum}} \{}
+\DoxyCodeLine{8                          \textcolor{comment}{// Format      Base Type   Components  Norm    0   1   2   3}}
+\DoxyCodeLine{9     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5acfff813d86d447fa2a9c858650ebbb90}{R8}} = 0x8229,         \textcolor{comment}{// GL\_R8         ubyte       1           YES     R   0   0   1}}
+\DoxyCodeLine{10     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a9a486e1a3c543c7c58e1cc8086dc4239}{R16}} = 0x822A,        \textcolor{comment}{// GL\_R16       ushort      1           YES     R   0   0   1}}
+\DoxyCodeLine{11     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a8dfbaada0d68227f5c299c2aa637df68}{R16F}} = 0x822D,       \textcolor{comment}{// GL\_R16F     half        1           NO      R   0   0   1}}
+\DoxyCodeLine{12     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5aca70b53fb0610461a2327973614a76ce}{R32F}} = 0x822E,       \textcolor{comment}{// GL\_R32F     float       1           NO      R   0   0   1}}
+\DoxyCodeLine{13     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a1ab8b9cd2509e2ccf930739d6d29ff35}{R8I}} = 0x8231,        \textcolor{comment}{// GL\_R8I       byte        1           NO      R   0   0   1}}
+\DoxyCodeLine{14     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a3bf53b9d9aca5ddf22161b4c9d362f3f}{R16I}} = 0x8233,       \textcolor{comment}{// GL\_R16I     short       1           NO      R   0   0   1}}
+\DoxyCodeLine{15     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a88996871eb63291d92c2f9d83219648a}{R32I}} = 0x8235,       \textcolor{comment}{// GL\_R32I     int         1           NO      R   0   0   1}}
+\DoxyCodeLine{16     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a477722a31a67b4a8f4bdb09e796e343b}{R8UI}} = 0x8232,       \textcolor{comment}{// GL\_R8UI     ubyte       1           NO      R   0   0   1}}
+\DoxyCodeLine{17     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ac13d06830e39e268be15adfae07d9eb0}{R16UI}} = 0x8234,      \textcolor{comment}{// GL\_R16UI   ushort      1           NO      R   0   0   1}}
+\DoxyCodeLine{18     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a2c102dbf18ef5770d3beb5385661c1c2}{R32UI}} = 0x8236,      \textcolor{comment}{// GL\_R32UI   uint        1           NO      R   0   0   1}}
+\DoxyCodeLine{19     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a0367a93b9e3e7aa2fbe9802d80298e46}{RG8}} = 0x822B,        \textcolor{comment}{// GL\_RG8       ubyte       2           YES     R   G   0   1}}
+\DoxyCodeLine{20     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a2b66caa416f0a28686ade3fc30ab223a}{RG16}} = 0x822C,       \textcolor{comment}{// GL\_RG16     ushort      2           YES     R   G   0   1}}
+\DoxyCodeLine{21     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ad28539b874a2bc4c5d40f49b375af474}{RG16F}} = 0x822F,      \textcolor{comment}{// GL\_RG16F   half        2           NO      R   G   0   1}}
+\DoxyCodeLine{22     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ab968b93cd3c34fc9583050ce7e267394}{RG32F}} = 0x8230,      \textcolor{comment}{// GL\_RG32F   float       2           NO      R   G   0   1}}
+\DoxyCodeLine{23     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5af16a55975b8a8daa365e5b3cb116a001}{RG8I}} = 0x8237,       \textcolor{comment}{// GL\_RG8I     byte        2           NO      R   G   0   1}}
+\DoxyCodeLine{24     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5af0c6bc16df3d36b62adc241a797148de}{RG16I}} = 0x8239,      \textcolor{comment}{// GL\_RG16I   short       2           NO      R   G   0   1}}
+\DoxyCodeLine{25     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a56014c7d6ebfadbff4d0d4d3c20a0243}{RG32I}} = 0x823B,      \textcolor{comment}{// GL\_RG32I   int         2           NO      R   G   0   1}}
+\DoxyCodeLine{26     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a65264dd5d010ab021cbec10f07f97ed5}{RG8UI}} = 0x8238,      \textcolor{comment}{// GL\_RG8UI   ubyte       2           NO      R   G   0   1}}
+\DoxyCodeLine{27     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a4475a780df31a86ece088a8aac082b12}{RG16UI}} = 0x823A,     \textcolor{comment}{// GL\_RG16UI     ushort      2           NO      R   G   0   1}}
+\DoxyCodeLine{28     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ac16ead63f9b07b5c97635edac05412cd}{RG32UI}} = 0x823C,     \textcolor{comment}{// GL\_RG32UI     uint        2           NO      R   G   0   1}}
+\DoxyCodeLine{29     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ad8936cc7055546f79128b9dbfb8c8bbb}{RGB32F}} = 0x8815,     \textcolor{comment}{// GL\_RGB32F     float       3           NO      R   G   B   1}}
+\DoxyCodeLine{30     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a8305c7f5432d31774cceb858c966b22e}{RGB32I}} = 0x8D83,     \textcolor{comment}{// GL\_RGB32I     int         3           NO      R   G   B   1}}
+\DoxyCodeLine{31     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ae240d3e394b6a7cfa467efe512e96bb4}{RGB32UI}} = 0x8D71,    \textcolor{comment}{// GL\_RGB32UI   uint        3           NO      R   G   B   1}}
+\DoxyCodeLine{32     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ab4b279046a02077466fa26cabb00c642}{RGBA8}} = 0x8058,      \textcolor{comment}{// GL\_RGBA8   uint        4           YES     R   G   B   A}}
+\DoxyCodeLine{33     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a50989efe15b375dce8ba3a5714fe2543}{RGBA16}} = 0x805B,     \textcolor{comment}{// GL\_RGBA16     short       4           YES     R   G   B   A}}
+\DoxyCodeLine{34     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5aa29d843695056f9c171a9eb702d6910a}{RGBA16F}} = 0x881A,    \textcolor{comment}{// GL\_RGBA16F   half        4           NO      R   G   B   A}}
+\DoxyCodeLine{35     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a703a7a81e586669c930e3dcaf3e8c428}{RGBA32F}} = 0x8814,    \textcolor{comment}{// GL\_RGBA32F   float       4           NO      R   G   B   A}}
+\DoxyCodeLine{36     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ab99d001604e415e4ea7f107daaffd6dd}{RGBA8I}} = 0x8D8E,     \textcolor{comment}{// GL\_RGBA8I     byte        4           NO      R   G   B   A}}
+\DoxyCodeLine{37     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a3d8d82a913260a439bf38ed05d6d2f46}{RGBA16I}} = 0x8D88,    \textcolor{comment}{// GL\_RGBA16I   short       4           NO      R   G   B   A}}
+\DoxyCodeLine{38     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5a9f87275b4130dd118085dd75ee6a7ac1}{RGBA32I}} = 0x8D82,    \textcolor{comment}{// GL\_RGBA32I   int         4           NO      R   G   B   A}}
+\DoxyCodeLine{39     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5aeb843f86a572765b9be8a71bd9563bea}{RGBA8UI}} = 0x8D7C,    \textcolor{comment}{// GL\_RGBA8UI   ubyte       4           NO      R   G   B   A}}
+\DoxyCodeLine{40     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ae418a751a46186248578aecf3f30a26c}{RGBA16UI}} = 0x8D76,   \textcolor{comment}{// GL\_RGBA16UI ushort      4           NO      R   G   B   A}}
+\DoxyCodeLine{41     \mbox{\hyperlink{namespaceglwpp_1_1gl_acd5a4e924d530e113d3954b212da84a5ac050956335d883e2f6ed07cc6b0c90d8}{RGBA32UI}} = 0x8D70,   \textcolor{comment}{// GL\_RGBA32UI uint        4           NO      R   G   B   A}}
+\DoxyCodeLine{42 \};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \}}
+
+\end{DoxyCode}

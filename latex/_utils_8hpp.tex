@@ -1,0 +1,49 @@
+\hypertarget{_utils_8hpp}{}\doxysection{include/glwpp/utils/\+Utils.hpp File Reference}
+\label{_utils_8hpp}\index{include/glwpp/utils/Utils.hpp@{include/glwpp/utils/Utils.hpp}}
+{\ttfamily \#include $<$memory$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1_empty_obj}{glwpp\+::\+Empty\+Obj}}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1is__base__of__template__impl}{glwpp\+::is\+\_\+base\+\_\+of\+\_\+template\+\_\+impl$<$ base, derived $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceglwpp}{glwpp}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Concepts}
+\begin{DoxyCompactItemize}
+\item 
+concept \mbox{\hyperlink{conceptglwpp_1_1_derived}{glwpp\+::\+Derived}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\using \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{glwpp\+::sptr}} = std\+::shared\+\_\+ptr$<$ T $>$
+\item 
+{\footnotesize template$<$typename T $>$ }\\using \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{glwpp\+::wptr}} = std\+::weak\+\_\+ptr$<$ T $>$
+\item 
+{\footnotesize template$<$typename T , typename D  = std\+::default\+\_\+delete$<$\+T$>$$>$ }\\using \mbox{\hyperlink{namespaceglwpp_aaf55e3817b765da01408241a75df2acb}{glwpp\+::uptr}} = std\+::unique\+\_\+ptr$<$ T, D $>$
+\item 
+{\footnotesize template$<$template$<$ auto... $>$ typename base, typename derived $>$ }\\using \mbox{\hyperlink{namespaceglwpp_a7ca3656aff526073ea52f7e410035cde}{glwpp\+::is\+\_\+base\+\_\+of\+\_\+template}} = typename is\+\_\+base\+\_\+of\+\_\+template\+\_\+impl$<$ base, derived $>$\+::type
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T , typename ... Args$>$ }\\sptr$<$ T $>$ \mbox{\hyperlink{namespaceglwpp_a692574fb11ff6b1311a01929f5bbb576}{glwpp\+::make\+\_\+sptr}} (Args \&\&... args)
+\item 
+{\footnotesize template$<$typename T , typename ... Args$>$ }\\uptr$<$ T $>$ \mbox{\hyperlink{namespaceglwpp_a1f5daa08f0a753c8fa5dff3a51d23ab7}{glwpp\+::make\+\_\+uptr}} (Args \&\&... args)
+\item 
+{\footnotesize template$<$template$<$ typename ... $>$ typename T, typename ... Out\+Args$>$ }\\decltype(auto) \mbox{\hyperlink{namespaceglwpp_af8a30de7c20d65d1116afa1e76932c4f}{glwpp\+::make\+\_\+shared}} (Out\+Args \&\&... args)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$bool... b$>$ }\\constexpr bool \mbox{\hyperlink{namespaceglwpp_ab824c960929556776be237509d9903d4}{glwpp\+::var\+\_\+and}} = (b \&\& ...)
+\item 
+{\footnotesize template$<$typename T , typename... Any$>$ }\\constexpr bool \mbox{\hyperlink{namespaceglwpp_a3661e07783b377208500aa4ac5d34f10}{glwpp\+::is\+\_\+same\+\_\+any}} = ((std\+::is\+\_\+same\+\_\+v$<$T, Any$>$) $\vert$$\vert$ ...)
+\item 
+{\footnotesize template$<$typename T , typename... All$>$ }\\constexpr bool \mbox{\hyperlink{namespaceglwpp_a3656080b942ffa1c9f168349f558d9aa}{glwpp\+::is\+\_\+same\+\_\+all}} = ((std\+::is\+\_\+same\+\_\+v$<$T, All$>$) \&\& ...)
+\end{DoxyCompactItemize}

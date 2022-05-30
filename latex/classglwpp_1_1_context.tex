@@ -1,0 +1,215 @@
+\hypertarget{classglwpp_1_1_context}{}\doxysection{glwpp\+::Context Class Reference}
+\label{classglwpp_1_1_context}\index{glwpp::Context@{glwpp::Context}}
+
+
+{\ttfamily \#include $<$Context.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structglwpp_1_1_context_1_1_parameters}{Parameters}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_context_ad6694bb55877a853bf5ecf59c144ec68}{Context}} (const \mbox{\hyperlink{structglwpp_1_1_context_1_1_parameters}{Parameters}} \&params)
+\item 
+virtual \mbox{\hyperlink{classglwpp_1_1_context_a3308c77decf3a98ef3d94b95457aced3}{$\sim$\+Context}} ()
+\item 
+bool \mbox{\hyperlink{classglwpp_1_1_context_af9a08a248bce932720e4310be4724024}{start}} ()
+\item 
+void \mbox{\hyperlink{classglwpp_1_1_context_a58112830607f71f3b6eefb2c1bad4a43}{wait}} ()
+\item 
+std\+::thread\+::id \mbox{\hyperlink{classglwpp_1_1_context_afcce63ddb65ae3c687823319b1628d2a}{get\+Thread\+Id}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, std\+::chrono\+::microseconds $>$ \mbox{\hyperlink{classglwpp_1_1_context_ac0dafce804f70151e1ad696857a434c2}{on\+Run}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$ $>$ \mbox{\hyperlink{classglwpp_1_1_context_a263f95cba606c462df7a1b73d5598e0d}{on\+Detsroy}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$ $>$ \mbox{\hyperlink{classglwpp_1_1_context_ac275235073a1ed76d8e3b6cdd9e3778d}{on\+Run\+End}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, int, int $>$ \mbox{\hyperlink{classglwpp_1_1_context_a24d864871a5c2eada1a5ba542487348f}{on\+Win\+Move}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, int, int $>$ \mbox{\hyperlink{classglwpp_1_1_context_a3f60bf7c494778a6ddb93c1ca37cc293}{on\+Win\+Resize}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$ $>$ \mbox{\hyperlink{classglwpp_1_1_context_a23c3ee16934a797317cc435a89508e5f}{on\+Win\+Close}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$ $>$ \mbox{\hyperlink{classglwpp_1_1_context_aab1fdf317bf2d40cb89909928bd7091a}{on\+Win\+Refresh}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, bool $>$ \mbox{\hyperlink{classglwpp_1_1_context_ade8243d3629f8c2b24df0ffc6de94a97}{on\+Win\+Iconify}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, bool $>$ \mbox{\hyperlink{classglwpp_1_1_context_a1429333e546f0be79b76aed9af3b8c5d}{on\+Win\+Maximize}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, float, float $>$ \mbox{\hyperlink{classglwpp_1_1_context_ab703cff26d628489e6a88b5a068c744e}{on\+Win\+Scale}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, int, int $>$ \mbox{\hyperlink{classglwpp_1_1_context_a1a9c614b4c100509305620b611bc1ed9}{on\+Framebuffer\+Resize}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, bool $>$ \mbox{\hyperlink{classglwpp_1_1_context_a8f627b5e6e8e11d9d5dc92ff7388e037}{on\+Cursor\+Focus}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, bool $>$ \mbox{\hyperlink{classglwpp_1_1_context_a9e3dd01b7902b5699a39439a2d1d1a8c}{on\+Cursor\+Enter}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, double, double $>$ \mbox{\hyperlink{classglwpp_1_1_context_a218b9bbc29a37b9b6fd60f4b8398698d}{on\+Cursor\+Move}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, \mbox{\hyperlink{namespaceglwpp_ab843be0c449ee19576b7e3548d4fef56}{Button}}, \mbox{\hyperlink{namespaceglwpp_adf26b2f618e9f05ad0abc616d39c69ff}{Action}}, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}} $>$ \mbox{\hyperlink{classglwpp_1_1_context_aea5aae4cf61493e39bc55bdbafe9cf17}{on\+Cursor\+Button}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, double, double $>$ \mbox{\hyperlink{classglwpp_1_1_context_a66af129d69b26d27d6d8306174d4f8d4}{on\+Cursor\+Scroll}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170}{Key}}, int, \mbox{\hyperlink{namespaceglwpp_adf26b2f618e9f05ad0abc616d39c69ff}{Action}}, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}} $>$ \mbox{\hyperlink{classglwpp_1_1_context_a9d506f60fcfd0b18203b38f9d8b7f36d}{on\+Key}}
+\item 
+\mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $\ast$, unsigned int, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}} $>$ \mbox{\hyperlink{classglwpp_1_1_context_a8f656929cf412cfcaabc5887f4def007}{on\+Char}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_context_ad6694bb55877a853bf5ecf59c144ec68}\label{classglwpp_1_1_context_ad6694bb55877a853bf5ecf59c144ec68}} 
+\index{glwpp::Context@{glwpp::Context}!Context@{Context}}
+\index{Context@{Context}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{Context()}{Context()}}
+{\footnotesize\ttfamily glwpp\+::\+Context\+::\+Context (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structglwpp_1_1_context_1_1_parameters}{Parameters}} \&}]{params }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a3308c77decf3a98ef3d94b95457aced3}\label{classglwpp_1_1_context_a3308c77decf3a98ef3d94b95457aced3}} 
+\index{glwpp::Context@{glwpp::Context}!````~Context@{$\sim$Context}}
+\index{````~Context@{$\sim$Context}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{$\sim$Context()}{~Context()}}
+{\footnotesize\ttfamily virtual glwpp\+::\+Context\+::$\sim$\+Context (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_context_afcce63ddb65ae3c687823319b1628d2a}\label{classglwpp_1_1_context_afcce63ddb65ae3c687823319b1628d2a}} 
+\index{glwpp::Context@{glwpp::Context}!getThreadId@{getThreadId}}
+\index{getThreadId@{getThreadId}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{getThreadId()}{getThreadId()}}
+{\footnotesize\ttfamily std\+::thread\+::id glwpp\+::\+Context\+::get\+Thread\+Id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_af9a08a248bce932720e4310be4724024}\label{classglwpp_1_1_context_af9a08a248bce932720e4310be4724024}} 
+\index{glwpp::Context@{glwpp::Context}!start@{start}}
+\index{start@{start}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily bool glwpp\+::\+Context\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a58112830607f71f3b6eefb2c1bad4a43}\label{classglwpp_1_1_context_a58112830607f71f3b6eefb2c1bad4a43}} 
+\index{glwpp::Context@{glwpp::Context}!wait@{wait}}
+\index{wait@{wait}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{wait()}{wait()}}
+{\footnotesize\ttfamily void glwpp\+::\+Context\+::wait (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_context_a8f656929cf412cfcaabc5887f4def007}\label{classglwpp_1_1_context_a8f656929cf412cfcaabc5887f4def007}} 
+\index{glwpp::Context@{glwpp::Context}!onChar@{onChar}}
+\index{onChar@{onChar}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onChar}{onChar}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, unsigned int, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}}$>$ glwpp\+::\+Context\+::on\+Char}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_aea5aae4cf61493e39bc55bdbafe9cf17}\label{classglwpp_1_1_context_aea5aae4cf61493e39bc55bdbafe9cf17}} 
+\index{glwpp::Context@{glwpp::Context}!onCursorButton@{onCursorButton}}
+\index{onCursorButton@{onCursorButton}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onCursorButton}{onCursorButton}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, \mbox{\hyperlink{namespaceglwpp_ab843be0c449ee19576b7e3548d4fef56}{Button}}, \mbox{\hyperlink{namespaceglwpp_adf26b2f618e9f05ad0abc616d39c69ff}{Action}}, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}}$>$ glwpp\+::\+Context\+::on\+Cursor\+Button}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a9e3dd01b7902b5699a39439a2d1d1a8c}\label{classglwpp_1_1_context_a9e3dd01b7902b5699a39439a2d1d1a8c}} 
+\index{glwpp::Context@{glwpp::Context}!onCursorEnter@{onCursorEnter}}
+\index{onCursorEnter@{onCursorEnter}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onCursorEnter}{onCursorEnter}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, bool$>$ glwpp\+::\+Context\+::on\+Cursor\+Enter}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a8f627b5e6e8e11d9d5dc92ff7388e037}\label{classglwpp_1_1_context_a8f627b5e6e8e11d9d5dc92ff7388e037}} 
+\index{glwpp::Context@{glwpp::Context}!onCursorFocus@{onCursorFocus}}
+\index{onCursorFocus@{onCursorFocus}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onCursorFocus}{onCursorFocus}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, bool$>$ glwpp\+::\+Context\+::on\+Cursor\+Focus}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a218b9bbc29a37b9b6fd60f4b8398698d}\label{classglwpp_1_1_context_a218b9bbc29a37b9b6fd60f4b8398698d}} 
+\index{glwpp::Context@{glwpp::Context}!onCursorMove@{onCursorMove}}
+\index{onCursorMove@{onCursorMove}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onCursorMove}{onCursorMove}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, double, double$>$ glwpp\+::\+Context\+::on\+Cursor\+Move}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a66af129d69b26d27d6d8306174d4f8d4}\label{classglwpp_1_1_context_a66af129d69b26d27d6d8306174d4f8d4}} 
+\index{glwpp::Context@{glwpp::Context}!onCursorScroll@{onCursorScroll}}
+\index{onCursorScroll@{onCursorScroll}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onCursorScroll}{onCursorScroll}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, double, double$>$ glwpp\+::\+Context\+::on\+Cursor\+Scroll}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a263f95cba606c462df7a1b73d5598e0d}\label{classglwpp_1_1_context_a263f95cba606c462df7a1b73d5598e0d}} 
+\index{glwpp::Context@{glwpp::Context}!onDetsroy@{onDetsroy}}
+\index{onDetsroy@{onDetsroy}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onDetsroy}{onDetsroy}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$$>$ glwpp\+::\+Context\+::on\+Detsroy}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a1a9c614b4c100509305620b611bc1ed9}\label{classglwpp_1_1_context_a1a9c614b4c100509305620b611bc1ed9}} 
+\index{glwpp::Context@{glwpp::Context}!onFramebufferResize@{onFramebufferResize}}
+\index{onFramebufferResize@{onFramebufferResize}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onFramebufferResize}{onFramebufferResize}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, int, int$>$ glwpp\+::\+Context\+::on\+Framebuffer\+Resize}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a9d506f60fcfd0b18203b38f9d8b7f36d}\label{classglwpp_1_1_context_a9d506f60fcfd0b18203b38f9d8b7f36d}} 
+\index{glwpp::Context@{glwpp::Context}!onKey@{onKey}}
+\index{onKey@{onKey}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onKey}{onKey}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170}{Key}}, int, \mbox{\hyperlink{namespaceglwpp_adf26b2f618e9f05ad0abc616d39c69ff}{Action}}, \mbox{\hyperlink{structglwpp_1_1_mod_flags}{Mod\+Flags}}$>$ glwpp\+::\+Context\+::on\+Key}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_ac0dafce804f70151e1ad696857a434c2}\label{classglwpp_1_1_context_ac0dafce804f70151e1ad696857a434c2}} 
+\index{glwpp::Context@{glwpp::Context}!onRun@{onRun}}
+\index{onRun@{onRun}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onRun}{onRun}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, std\+::chrono\+::microseconds$>$ glwpp\+::\+Context\+::on\+Run}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_ac275235073a1ed76d8e3b6cdd9e3778d}\label{classglwpp_1_1_context_ac275235073a1ed76d8e3b6cdd9e3778d}} 
+\index{glwpp::Context@{glwpp::Context}!onRunEnd@{onRunEnd}}
+\index{onRunEnd@{onRunEnd}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onRunEnd}{onRunEnd}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$$>$ glwpp\+::\+Context\+::on\+Run\+End}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a23c3ee16934a797317cc435a89508e5f}\label{classglwpp_1_1_context_a23c3ee16934a797317cc435a89508e5f}} 
+\index{glwpp::Context@{glwpp::Context}!onWinClose@{onWinClose}}
+\index{onWinClose@{onWinClose}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinClose}{onWinClose}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$$>$ glwpp\+::\+Context\+::on\+Win\+Close}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_ade8243d3629f8c2b24df0ffc6de94a97}\label{classglwpp_1_1_context_ade8243d3629f8c2b24df0ffc6de94a97}} 
+\index{glwpp::Context@{glwpp::Context}!onWinIconify@{onWinIconify}}
+\index{onWinIconify@{onWinIconify}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinIconify}{onWinIconify}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, bool$>$ glwpp\+::\+Context\+::on\+Win\+Iconify}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a1429333e546f0be79b76aed9af3b8c5d}\label{classglwpp_1_1_context_a1429333e546f0be79b76aed9af3b8c5d}} 
+\index{glwpp::Context@{glwpp::Context}!onWinMaximize@{onWinMaximize}}
+\index{onWinMaximize@{onWinMaximize}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinMaximize}{onWinMaximize}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, bool$>$ glwpp\+::\+Context\+::on\+Win\+Maximize}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a24d864871a5c2eada1a5ba542487348f}\label{classglwpp_1_1_context_a24d864871a5c2eada1a5ba542487348f}} 
+\index{glwpp::Context@{glwpp::Context}!onWinMove@{onWinMove}}
+\index{onWinMove@{onWinMove}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinMove}{onWinMove}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, int, int$>$ glwpp\+::\+Context\+::on\+Win\+Move}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_aab1fdf317bf2d40cb89909928bd7091a}\label{classglwpp_1_1_context_aab1fdf317bf2d40cb89909928bd7091a}} 
+\index{glwpp::Context@{glwpp::Context}!onWinRefresh@{onWinRefresh}}
+\index{onWinRefresh@{onWinRefresh}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinRefresh}{onWinRefresh}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$$>$ glwpp\+::\+Context\+::on\+Win\+Refresh}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_a3f60bf7c494778a6ddb93c1ca37cc293}\label{classglwpp_1_1_context_a3f60bf7c494778a6ddb93c1ca37cc293}} 
+\index{glwpp::Context@{glwpp::Context}!onWinResize@{onWinResize}}
+\index{onWinResize@{onWinResize}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinResize}{onWinResize}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, int, int$>$ glwpp\+::\+Context\+::on\+Win\+Resize}
+
+\mbox{\Hypertarget{classglwpp_1_1_context_ab703cff26d628489e6a88b5a068c744e}\label{classglwpp_1_1_context_ab703cff26d628489e6a88b5a068c744e}} 
+\index{glwpp::Context@{glwpp::Context}!onWinScale@{onWinScale}}
+\index{onWinScale@{onWinScale}!glwpp::Context@{glwpp::Context}}
+\doxysubsubsection{\texorpdfstring{onWinScale}{onWinScale}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classglwpp_1_1_event}{Event}}$<$\mbox{\hyperlink{classglwpp_1_1_context}{Context}}$\ast$, float, float$>$ glwpp\+::\+Context\+::on\+Win\+Scale}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/glwpp/ctx/\mbox{\hyperlink{_context_8hpp}{Context.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,72 @@
+\hypertarget{_ctx_object_8hpp_source}{}\doxysection{Ctx\+Object.\+hpp}
+\label{_ctx_object_8hpp_source}\index{include/glwpp/gl/ctx\_only/CtxObject.hpp@{include/glwpp/gl/ctx\_only/CtxObject.hpp}}
+\mbox{\hyperlink{_ctx_object_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <thread>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <source\_location>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types_8hpp}{glwpp/gl/types.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_src_loc_8hpp}{glwpp/utils/SrcLoc.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{_utils_8hpp}{glwpp/utils/Utils.hpp}}"{}}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp}{glwpp}} \{}
+\DoxyCodeLine{11     \textcolor{keyword}{class }Object;}
+\DoxyCodeLine{12 \}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespaceglwpp_1_1gl}{glwpp::gl}} \{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{class }\mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}} \{}
+\DoxyCodeLine{17     \textcolor{keyword}{friend} \mbox{\hyperlink{classglwpp_1_1_object}{Object}};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{public}:}
+\DoxyCodeLine{20     \textcolor{comment}{// Empty object}}
+\DoxyCodeLine{21     \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_a23d8a82dcb22ec68ecbe679247175d46}{CtxObject}}(\textcolor{keyword}{const} \mbox{\hyperlink{structglwpp_1_1_empty_obj}{EmptyObj}}\&)\{\};}
+\DoxyCodeLine{22     \textcolor{comment}{// Refer same gl object}}
+\DoxyCodeLine{23     \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_ad2374f03ca6a4c5b70d6ad6c4f8b9b48}{CtxObject}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}}\& other) :}
+\DoxyCodeLine{24         \_id(other.\_id)\{}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{template}<auto D>}
+\DoxyCodeLine{28     \textcolor{keyword}{static} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_a3486f878a72cbe967cc54938a04465a3}{create}}(\textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}\& \textcolor{keywordtype}{id})\{}
+\DoxyCodeLine{29         \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object}{CtxObject}} obj(\mbox{\hyperlink{structglwpp_1_1_empty_obj}{EmptyObj}}\{\});}
+\DoxyCodeLine{30         obj.\_id = \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<UInt>}}(\textcolor{keyword}{new} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}(\textcolor{keywordtype}{id}), Deleter<D>\{\});}
+\DoxyCodeLine{31         \textcolor{keywordflow}{return} obj;}
+\DoxyCodeLine{32     \}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \textcolor{keyword}{virtual} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_a6417e6131afdfd0453e60a7bb00f90c1}{\string~CtxObject}}()\{}
+\DoxyCodeLine{35     \}}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{keyword}{const} \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}\& \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_ae35d43db02ca3a08f5c811e739994797}{getId}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{classglwpp_1_1gl_1_1_ctx_object_aff66fe3c546c21f42339c5af01f925c5}{\_printDebug}}(\textcolor{keyword}{const} \mbox{\hyperlink{classglwpp_1_1_src_loc}{SrcLoc}} loc);}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{keyword}{private}:}
+\DoxyCodeLine{44     \mbox{\hyperlink{namespaceglwpp_a1a3c08f1a5736e103e3bccd5522b64af}{sptr<UInt>}} \_id;}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keyword}{template}<auto D>}
+\DoxyCodeLine{48     \textcolor{keyword}{class }Deleter \{}
+\DoxyCodeLine{49     \textcolor{keyword}{public}:}
+\DoxyCodeLine{50         Deleter() :}
+\DoxyCodeLine{51             \_thread\_id(std::this\_thread::get\_id())\{}
+\DoxyCodeLine{52         \};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54         \textcolor{keywordtype}{void} operator()(\mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{UInt}}* gl\_id)\{}
+\DoxyCodeLine{55             \textcolor{keywordflow}{if} (std::this\_thread::get\_id() == \_thread\_id)\{}
+\DoxyCodeLine{56                 \mbox{\hyperlink{namespaceglwpp_a4c13abc6dd05c306b840819ed4191170af623e75af30e62bbd73d6df5b50bb7b5}{D}}(*gl\_id);}
+\DoxyCodeLine{57             \}}
+\DoxyCodeLine{58             \textcolor{keyword}{delete} gl\_id;}
+\DoxyCodeLine{59         \}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61     \textcolor{keyword}{private}:}
+\DoxyCodeLine{62         \textcolor{keyword}{const} std::thread::id \_thread\_id;}
+\DoxyCodeLine{63     \};}
+\DoxyCodeLine{64 \};}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \} \textcolor{comment}{// namespace glwpp::gl}}
+
+\end{DoxyCode}

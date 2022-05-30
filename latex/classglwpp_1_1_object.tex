@@ -1,0 +1,164 @@
+\hypertarget{classglwpp_1_1_object}{}\doxysection{glwpp\+::Object Class Reference}
+\label{classglwpp_1_1_object}\index{glwpp::Object@{glwpp::Object}}
+
+
+{\ttfamily \#include $<$Object.\+hpp$>$}
+
+Inheritance diagram for glwpp\+::Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.473684cm]{classglwpp_1_1_object}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classglwpp_1_1_object_abfc964ef6639e7cdcd27e7bf2649cc6a}{get\+Id}} (\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{gl\+::\+UInt}} $>$ dst) const
+\item 
+\mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \mbox{\hyperlink{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}{get\+WCtx}} () const
+\item 
+{\footnotesize template$<$auto F, typename ... Args$>$ }\\bool \mbox{\hyperlink{classglwpp_1_1_object_ab9a17a788dd16886afb15464a140b30e}{execute\+Custom\+Code}} (const Args \&... args)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename I , typename ... Args$>$ }\\\mbox{\hyperlink{classglwpp_1_1_object_a41c6ab8287461e047ea229ea3e890e87}{Object}} (const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&ctx, const I \&init, const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ Args $>$ \&... args)
+\item 
+virtual \mbox{\hyperlink{classglwpp_1_1_object_abdb5e813724c4f1297c38adf9807cdf7}{$\sim$\+Object}} ()=0
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ \mbox{\hyperlink{classglwpp_1_1_object_a7ce537276366906c7a399b11919cef01}{\+\_\+get\+Ptr}} ()
+\item 
+{\footnotesize template$<$typename T $>$ }\\const \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ \mbox{\hyperlink{classglwpp_1_1_object_a5f7454f4e4fbbd24b6f36e0e88591214}{\+\_\+get\+Ptr}} () const
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \mbox{\hyperlink{classglwpp_1_1_object_a64c8a02223e037343e029e74fe215ef4}{\+\_\+get\+Vop}} ()
+\item 
+{\footnotesize template$<$typename T $>$ }\\const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ \mbox{\hyperlink{classglwpp_1_1_object_a563a0cd9dd30442db0819b312dbcf9d9}{\+\_\+get\+Vop}} () const
+\item 
+{\footnotesize template$<$typename T , auto M, typename ... Args$>$ }\\bool \mbox{\hyperlink{classglwpp_1_1_object_a64ccbfc87c0123dac512a2ac6e892150}{\+\_\+execute\+Method}} (const Args \&... args)
+\item 
+{\footnotesize template$<$typename T , auto M, typename ... Args$>$ }\\bool \mbox{\hyperlink{classglwpp_1_1_object_a442ebe9cc285a86285017a5bc823b4bb}{\+\_\+execute\+Method}} (const Args \&... args) const
+\item 
+{\footnotesize template$<$typename T , auto M, typename R , typename ... Args$>$ }\\bool \mbox{\hyperlink{classglwpp_1_1_object_aadd45be4aed7a6e9bf9dfed8105b4466}{\+\_\+execute\+Getter}} (\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ R $>$ \&dst, const Args \&... args)
+\item 
+{\footnotesize template$<$typename T , auto M, typename R , typename ... Args$>$ }\\bool \mbox{\hyperlink{classglwpp_1_1_object_a2998e16e1e9a5c560018d636741e3d8d}{\+\_\+execute\+Getter}} (\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ R $>$ \&dst, const Args \&... args) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$auto F, typename ... Args$>$ }\\static bool \mbox{\hyperlink{classglwpp_1_1_object_a1aec5a6389df62e77fb2e99517dbcb37}{\+\_\+execute}} (\mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ weak\+\_\+ctx, const Args \&... args)
+\item 
+{\footnotesize template$<$typename ... Args\+In$>$ }\\static auto \mbox{\hyperlink{classglwpp_1_1_object_a937fa67e44845d22557864a2de107187}{\+\_\+unpack\+Args}} (const std\+::tuple$<$ Args\+In... $>$ \&args)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_object_a41c6ab8287461e047ea229ea3e890e87}\label{classglwpp_1_1_object_a41c6ab8287461e047ea229ea3e890e87}} 
+\index{glwpp::Object@{glwpp::Object}!Object@{Object}}
+\index{Object@{Object}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{Object()}{Object()}}
+{\footnotesize\ttfamily template$<$typename I , typename ... Args$>$ \\
+glwpp\+::\+Object\+::\+Object (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ \&}]{ctx,  }\item[{const I \&}]{init,  }\item[{const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ Args $>$ \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_abdb5e813724c4f1297c38adf9807cdf7}\label{classglwpp_1_1_object_abdb5e813724c4f1297c38adf9807cdf7}} 
+\index{glwpp::Object@{glwpp::Object}!````~Object@{$\sim$Object}}
+\index{````~Object@{$\sim$Object}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{$\sim$Object()}{~Object()}}
+{\footnotesize\ttfamily glwpp\+::\+Object\+::$\sim$\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classglwpp_1_1_object_a1aec5a6389df62e77fb2e99517dbcb37}\label{classglwpp_1_1_object_a1aec5a6389df62e77fb2e99517dbcb37}} 
+\index{glwpp::Object@{glwpp::Object}!\_execute@{\_execute}}
+\index{\_execute@{\_execute}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_execute()}{\_execute()}}
+{\footnotesize\ttfamily template$<$auto F, typename ... Args$>$ \\
+static bool glwpp\+::\+Object\+::\+\_\+execute (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$}]{weak\+\_\+ctx,  }\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_aadd45be4aed7a6e9bf9dfed8105b4466}\label{classglwpp_1_1_object_aadd45be4aed7a6e9bf9dfed8105b4466}} 
+\index{glwpp::Object@{glwpp::Object}!\_executeGetter@{\_executeGetter}}
+\index{\_executeGetter@{\_executeGetter}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_executeGetter()}{\_executeGetter()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , auto M, typename R , typename ... Args$>$ \\
+bool glwpp\+::\+Object\+::\+\_\+execute\+Getter (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ R $>$ \&}]{dst,  }\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a2998e16e1e9a5c560018d636741e3d8d}\label{classglwpp_1_1_object_a2998e16e1e9a5c560018d636741e3d8d}} 
+\index{glwpp::Object@{glwpp::Object}!\_executeGetter@{\_executeGetter}}
+\index{\_executeGetter@{\_executeGetter}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_executeGetter()}{\_executeGetter()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , auto M, typename R , typename ... Args$>$ \\
+bool glwpp\+::\+Object\+::\+\_\+execute\+Getter (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ R $>$ \&}]{dst,  }\item[{const Args \&...}]{args }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a64ccbfc87c0123dac512a2ac6e892150}\label{classglwpp_1_1_object_a64ccbfc87c0123dac512a2ac6e892150}} 
+\index{glwpp::Object@{glwpp::Object}!\_executeMethod@{\_executeMethod}}
+\index{\_executeMethod@{\_executeMethod}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_executeMethod()}{\_executeMethod()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , auto M, typename ... Args$>$ \\
+bool glwpp\+::\+Object\+::\+\_\+execute\+Method (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a442ebe9cc285a86285017a5bc823b4bb}\label{classglwpp_1_1_object_a442ebe9cc285a86285017a5bc823b4bb}} 
+\index{glwpp::Object@{glwpp::Object}!\_executeMethod@{\_executeMethod}}
+\index{\_executeMethod@{\_executeMethod}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_executeMethod()}{\_executeMethod()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , auto M, typename ... Args$>$ \\
+bool glwpp\+::\+Object\+::\+\_\+execute\+Method (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a7ce537276366906c7a399b11919cef01}\label{classglwpp_1_1_object_a7ce537276366906c7a399b11919cef01}} 
+\index{glwpp::Object@{glwpp::Object}!\_getPtr@{\_getPtr}}
+\index{\_getPtr@{\_getPtr}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_getPtr()}{\_getPtr()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ glwpp\+::\+Object\+::\+\_\+get\+Ptr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a5f7454f4e4fbbd24b6f36e0e88591214}\label{classglwpp_1_1_object_a5f7454f4e4fbbd24b6f36e0e88591214}} 
+\index{glwpp::Object@{glwpp::Object}!\_getPtr@{\_getPtr}}
+\index{\_getPtr@{\_getPtr}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_getPtr()}{\_getPtr()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const \mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ T $>$ glwpp\+::\+Object\+::\+\_\+get\+Ptr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a64c8a02223e037343e029e74fe215ef4}\label{classglwpp_1_1_object_a64c8a02223e037343e029e74fe215ef4}} 
+\index{glwpp::Object@{glwpp::Object}!\_getVop@{\_getVop}}
+\index{\_getVop@{\_getVop}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_getVop()}{\_getVop()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ glwpp\+::\+Object\+::\+\_\+get\+Vop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a563a0cd9dd30442db0819b312dbcf9d9}\label{classglwpp_1_1_object_a563a0cd9dd30442db0819b312dbcf9d9}} 
+\index{glwpp::Object@{glwpp::Object}!\_getVop@{\_getVop}}
+\index{\_getVop@{\_getVop}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_getVop()}{\_getVop()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const \mbox{\hyperlink{classglwpp_1_1_val}{Val}}$<$ T $>$ glwpp\+::\+Object\+::\+\_\+get\+Vop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a937fa67e44845d22557864a2de107187}\label{classglwpp_1_1_object_a937fa67e44845d22557864a2de107187}} 
+\index{glwpp::Object@{glwpp::Object}!\_unpackArgs@{\_unpackArgs}}
+\index{\_unpackArgs@{\_unpackArgs}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{\_unpackArgs()}{\_unpackArgs()}}
+{\footnotesize\ttfamily template$<$typename ... Args\+In$>$ \\
+static auto glwpp\+::\+Object\+::\+\_\+unpack\+Args (\begin{DoxyParamCaption}\item[{const std\+::tuple$<$ Args\+In... $>$ \&}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_ab9a17a788dd16886afb15464a140b30e}\label{classglwpp_1_1_object_ab9a17a788dd16886afb15464a140b30e}} 
+\index{glwpp::Object@{glwpp::Object}!executeCustomCode@{executeCustomCode}}
+\index{executeCustomCode@{executeCustomCode}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{executeCustomCode()}{executeCustomCode()}}
+{\footnotesize\ttfamily template$<$auto F, typename ... Args$>$ \\
+bool glwpp\+::\+Object\+::execute\+Custom\+Code (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_abfc964ef6639e7cdcd27e7bf2649cc6a}\label{classglwpp_1_1_object_abfc964ef6639e7cdcd27e7bf2649cc6a}} 
+\index{glwpp::Object@{glwpp::Object}!getId@{getId}}
+\index{getId@{getId}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily void glwpp\+::\+Object\+::get\+Id (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classglwpp_1_1_ptr}{Ptr}}$<$ \mbox{\hyperlink{namespaceglwpp_1_1gl_a022cc6012263e43fb82b9da9c19e0772}{gl\+::\+UInt}} $>$}]{dst }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}\label{classglwpp_1_1_object_a9e71c8a4a70aec98bd427ef963e72a08}} 
+\index{glwpp::Object@{glwpp::Object}!getWCtx@{getWCtx}}
+\index{getWCtx@{getWCtx}!glwpp::Object@{glwpp::Object}}
+\doxysubsubsection{\texorpdfstring{getWCtx()}{getWCtx()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceglwpp_adb9311c7c05abfa88168c90e3caaa977}{wptr}}$<$ \mbox{\hyperlink{classglwpp_1_1_context}{Context}} $>$ glwpp\+::\+Object\+::get\+WCtx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/glwpp/gl/obj/\mbox{\hyperlink{obj_2_object_8hpp}{Object.\+hpp}}\end{DoxyCompactItemize}
