@@ -1,33 +1,35 @@
 #include "glwpp/gl/obj_v2/Object.hpp"
 
+#include "glad/gl.h"
+
 using namespace glwpp;
 using namespace glwpp::gl;
 using namespace glwpp::gl::v2;
-
-Object::~Object(){
-}
 
 Val<const UInt> Object::id() const {
     return Val<const UInt>(_id);
 }
 
-sptr<UInt> Object::_make_id(const wptr<Context>& wctx, Deleter deleter) const {
-    return sptr<UInt>(new UInt(0), [wctx, deleter](UInt* id){
-        auto ctx = wctx.lock();
-        if (!ctx || *id == 0){
-            delete id;
-            return;
+void Object::_printDebug(const SrcLoc& loc){
+#ifdef GLWPP_DEBUG
+    Enum err = glGetError();
+    while (err != GL_NO_ERROR){
+        std::string err_name;
+        switch (err){
+            case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM"; break;
+            case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE"; break;
+            case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION"; break;
+            case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW"; break;
+            case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW"; break;
+            case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY"; break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+            case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST"; break;
+            default: err_name = "UNKNOWN";
         }
 
-        if (ctx->getThreadId() == std::this_thread::get_id()){
-            deleter(*id);
-            delete id;
-        } else {
-            ctx->onRun.push([deleter, id](){
-                deleter(*id);
-                delete id;
-            });
-        }
-        return;
-    });
+        std::cout << loc.to_string() << std::endl
+                  << " Err: " << err_name << "(" << err << ")" << std::endl;
+        err = glGetError();
+    }
+#endif
 }

@@ -15,6 +15,7 @@
 #include "glwpp/ctx/FreeType/Font.hpp"
 
 #include "glwpp/gl/obj_v2/Buffer.hpp"
+#include "glwpp/gl/obj_v2/Val.hpp"
 
 #include "glwpp/gl/obj/Buffer.hpp"
 #include "glwpp/gl/obj/Program.hpp"
@@ -29,9 +30,6 @@
 
 #include "glad/gl.h"
 
-
-
-#include "glwpp/utils/Pointer.hpp"
 
 std::string loadTextFile(const std::string& path){
     std::ifstream t(path);
@@ -184,18 +182,37 @@ int main(int argc, char **argv){
     });
 
     {
+        using namespace glwpp::gl::v2;
+        glwpp::gl::v2::Val<void>::is_void<void>;
+        glwpp::gl::v2::Val<const void>::is_void<const void>;
+        glwpp::gl::v2::Val<int>::is_void<int>;
+
+        glwpp::sptr<int> a1(new int(3));
+        glwpp::gl::v2::Val<int> a2(a1);
+        glwpp::gl::v2::Val<const int> a3(a2);
+        glwpp::gl::v2::Val<const int> a4(a1);
+
+        glwpp::sptr<void> b1(new int);
+        glwpp::sptr<const void> b5(b1);
+        glwpp::gl::v2::Val<void> b2(b1);
+        glwpp::gl::v2::Val<const void> b3(b2);
+        glwpp::gl::v2::Val<const void> b4(b1);
+        
+        glwpp::sptr<int> c1(new int);
+        glwpp::gl::v2::Val<void> c2(c1);
+        glwpp::gl::v2::Val<const void> c3(c2);
+        glwpp::gl::v2::Val<const void> c4(c1);
+
         glwpp::gl::v2::Buffer buffer(win);
-        auto data = glwpp::sptr<void>(new int);
-        buffer.data(4, data, glwpp::gl::BufferUsage::StaticDraw);
+        glwpp::sptr<void> data(new int[4]);
+        buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
 
-        // auto res = glwpp::gl::v2::Ptr(glwpp::make_sptr<glwpp::gl::Int>(0));
-        // buffer->getParamInt(res, GL_BUFFER_MAPPED);
 
-        // auto obj = glwpp::make_sptr<glwpp::gl::v2::Buffer>(win);
-        // obj->init();
+        Val<int> i(4);
+        Val<int>::is_void<int>;
+
+        // i = 5;
     }
-    
-    glwpp::StrongPointer<int> s_int;
 
     while (running){
         win->start();
