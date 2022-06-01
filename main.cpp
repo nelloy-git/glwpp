@@ -14,7 +14,7 @@
 #include "glwpp/ctx/Context.hpp"
 // #include "glwpp/ctx/FreeType/Font.hpp"
 
-// #include "glwpp/gl/obj/Array.hpp"
+#include "glwpp/gl/obj/Array.hpp"
 #include "glwpp/gl/obj/Buffer.hpp"
 
 // #include "glwpp/model/Mesh.hpp"
@@ -175,7 +175,7 @@ int main(int argc, char **argv){
     });
 
     {
-        // glwpp::gl::Array<int> arr(win, 5);
+        glwpp::gl::Array<int> arr(win, 5);
 
         glwpp::gl::Buffer buffer(win);
         glwpp::sptr<void> data(new int[4]);

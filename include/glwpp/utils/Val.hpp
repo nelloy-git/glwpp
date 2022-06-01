@@ -44,8 +44,12 @@ public:
 
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && (std::is_const_v<V> == std::is_const_v<U>)), bool> = true>
     operator V&() const {return *_data;}
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && (std::is_const_v<V> != std::is_const_v<U>)), bool> = true>
-    operator V&() const {return const_cast<const V&>(*_data);}
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && std::is_const_v<V> && !std::is_const_v<U>), bool> = true>
+    operator V&() const {return const_cast<V&>(*_data);}
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_const_v<V> && std::is_const_v<U>), bool> = true>
+    operator V() const {return *_data;}
+    template<typename V>
+    operator V*() const {return _data.get();}
 
     // template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     // explicit operator V&() const {return *_data;}
@@ -56,12 +60,9 @@ public:
     // operator const V&() const {return *_data;}
     // operator T*() const {return _data.get();}
 
+    T* operator->() const {return _data.get();}
     template<typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
-    U* operator ->() const {return _data.get();}
-
-    Val& operator=(const Val<const T>& other){
-        *_data(*other._data); return *this;
-    }
+    U& operator*() const {return *_data;}
 
     template<typename D>
     Val<D> cast_static() const {return Val<D>(std::static_pointer_cast<D>(_data));}

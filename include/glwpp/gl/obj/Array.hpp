@@ -46,12 +46,14 @@ protected:
 
 private:
     static void _initBuffer(const Val<Buffer>& buffer,
-                            const Val<size_t> array_size, const Val<const size_t> init_size,
+                            const Val<size_t>& array_size, const Val<const size_t>& init_size,
                             const Val<const SrcLoc>& src_loc){
-        array_size = init_size;
+        // *array_size = *init_size;
 
-        sptr<void> empty;
-        buffer->storage(array_size, empty, _access, src_loc, false);
+        const Val<size_t> s(array_size);
+        // sptr<const size_t> s2(init_size);
+        sptr<void> empty = nullptr;
+        buffer->storage(s, empty, _access, src_loc, false);
 
         // sptr<T*> ptr;
         // buffer->map(std::reinterpret_pointer_cast<void*>(ptr), BufferMapAccess::WriteOnly, src_loc, false);
