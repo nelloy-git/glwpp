@@ -9,11 +9,11 @@ namespace glwpp::util {
 template<class T>
 class Val {
 public:
-    template<typename T>
-    static constexpr bool is_void = std::is_same_v<std::remove_const_t<T>, void>;
+    template<typename U>
+    static constexpr bool is_void = std::is_same_v<std::remove_const_t<U>, void>;
 
-    template<typename T>
-    static constexpr bool is_const = std::is_const_v<T>;
+    template<typename U>
+    static constexpr bool is_const = std::is_const_v<U>;
 
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     Val(const V& data){_data = make_sptr<T>(data);}
@@ -26,7 +26,7 @@ public:
 
     template<typename U>
     Val(const Val<U>& other) : _data(other._data){}
-    template<typename T = T, typename = std::enable_if_t<(!std::is_same_v<std::remove_const_t<T>, void> && std::is_const_v<T>)>>
+    template<typename U = T, typename = std::enable_if_t<(!std::is_same_v<std::remove_const_t<U>, void> && std::is_const_v<U>)>>
     Val(const Val<std::remove_const_t<T>>& other) : _data(other._data){}
 
 
@@ -42,8 +42,10 @@ public:
     // template<typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     // operator auto&() const {return *_data;}
 
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
-    operator V() const {return V(*_data);}
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && (std::is_const_v<V> == std::is_const_v<U>)), bool> = true>
+    operator V&() const {return *_data;}
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && (std::is_const_v<V> != std::is_const_v<U>)), bool> = true>
+    operator V&() const {return const_cast<const V&>(*_data);}
 
     // template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     // explicit operator V&() const {return *_data;}

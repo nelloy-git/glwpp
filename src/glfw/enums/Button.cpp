@@ -1,7 +1,7 @@
 #include "glwpp/glfw/enums/Button.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
 glwpp::Button glwpp::toButton(int glfw_button){
     switch (glfw_button){

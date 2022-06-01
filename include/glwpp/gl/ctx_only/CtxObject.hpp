@@ -1,7 +1,6 @@
 #pragma once
 
 #include <thread>
-#include <source_location>
 
 #include "glwpp/gl/types.hpp"
 #include "glwpp/utils/SrcLoc.hpp"

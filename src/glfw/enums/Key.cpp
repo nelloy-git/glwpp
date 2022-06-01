@@ -1,7 +1,7 @@
 #include "glwpp/glfw/enums/Key.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
 glwpp::Key glwpp::toKey(int glfw_key){
     switch (glfw_key){

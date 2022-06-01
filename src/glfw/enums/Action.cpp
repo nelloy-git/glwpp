@@ -1,7 +1,7 @@
 #include "glwpp/glfw/enums/Action.hpp"
 
 #define GLFW_INCLUDE_NONE
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
 glwpp::Action glwpp::toAction(int glfw_action){
     switch (glfw_action){

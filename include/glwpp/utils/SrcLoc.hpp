@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <source_location>
 
 namespace glwpp {
 
@@ -20,24 +19,20 @@ class SrcLoc {
 public:
     SrcLoc(char const* file = __builtin_FILE(), 
            std::uint_least32_t line = __builtin_LINE(),
-           std::uint_least32_t column = __builtin_COLUMN(),
            char const* function = __builtin_FUNCTION()) noexcept {
         _loc = std::make_shared<Loc>();
         _loc->file = file;
         _loc->line = line;
-        _loc->column = column;
         _loc->function = function;
         _loc->prev = nullptr;
     }
     SrcLoc(const SrcLoc& other,
            char const* file = __builtin_FILE(), 
            std::uint_least32_t line = __builtin_LINE(),
-           std::uint_least32_t column = __builtin_COLUMN(),
            char const* function = __builtin_FUNCTION()){
         _loc = std::make_shared<Loc>();
         _loc->file = file;
         _loc->line = line;
-        _loc->column = column;
         _loc->function = function;
         _loc->prev = other._loc;
     };
@@ -54,7 +49,6 @@ private:
     struct Loc {
         char const* file;
         std::uint_least32_t line;
-        std::uint_least32_t column;
         char const* function;
         std::shared_ptr<Loc> prev;
 

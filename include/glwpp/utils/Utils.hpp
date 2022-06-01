@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-
+#include <cstring>
 namespace glwpp {
 
 template<typename T>
@@ -35,7 +35,7 @@ static sptr<void> createTmpData(size_t size, const void* src = nullptr){
         data = calloc(size, sizeof(char));
     }
 
-    static auto deleter = [](void* ptr){
+    static auto deleter = [](auto* ptr){
         delete ptr;
     };
     return sptr<void>(data, deleter);

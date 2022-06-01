@@ -19,7 +19,11 @@ add_subdirectory(./3rdparty/freetype)
 add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /D_DEBUG")
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /D_DEBUG")
+else ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -fconcepts")
+endif (WIN32)
 
 include_directories(./include)
 include_directories(./3rdparty/assimp/include)

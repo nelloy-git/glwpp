@@ -18,6 +18,25 @@
             "defines": ["GLWPP_DEBUG"],
             "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",
             "cppStandard": "c++20"
+        },
+        {
+            "name": "Ubuntu",
+            "includePath": [
+                "${default}",
+                "include",
+                "3rdparty/assimp/include",
+                "3rdparty/glfw/include",
+                "3rdparty/glad/include",
+                "3rdparty/glm",
+                "3rdparty/magic_enum/include",
+                "3rdparty/googletest/googletest/include",
+                "3rdparty/freetype/include",
+                "3rdparty/thread_pool",
+                "3rdparty/VLD/include"
+            ],
+            "defines": ["GLWPP_DEBUG"],
+            "compilerPath": "/usr/bin/g++",
+            "cppStandard": "c++20"
         }
     ],
     "version": 4
