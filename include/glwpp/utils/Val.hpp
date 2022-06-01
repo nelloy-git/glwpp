@@ -1,76 +1,87 @@
 #pragma once
 
 #include <memory>
-#include <variant>
 
-#include "glwpp/utils/SrcLoc.hpp"
-// #include "glwpp/gl/types.hpp"
+#include "glwpp/utils/Utils.hpp"
 
-namespace glwpp {
+namespace glwpp::util {
 
 template<class T>
 class Val {
-    using Container = std::variant<T, T*, std::shared_ptr<T>>;
-
 public:
-    Val(const T& data){
-        if constexpr (std::is_same_v<T, SrcLoc>){
-            _data = std::make_shared<Container>(std::move(data));
-        } else {
-            _data = std::make_shared<Container>(data);
-        }
-    }
-    explicit Val(const T* const data){_data = std::make_shared<Container>(data);}
-    Val(const std::shared_ptr<T>& data){_data = std::make_shared<Container>(data);}
-    virtual ~Val(){};
+    template<typename T>
+    static constexpr bool is_void = std::is_same_v<std::remove_const_t<T>, void>;
 
-    template<class T = T, class = std::enable_if_t<std::is_same_v<T, std::string>>>
-    Val(const char* data){_data = std::make_shared<Container>(data);}
+    template<typename T>
+    static constexpr bool is_const = std::is_const_v<T>;
 
-
-    T& getVal(){
-        return _getVal(*_data);
-    }
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    Val(const V& data){_data = make_sptr<T>(data);}
     
-    const T& getVal() const {
-        return _getVal(*_data);
+    template<typename V>
+    Val(const sptr<V>& data) : _data(data){}
+    // template<typename T = T, typename = std::enable_if_t<(std::is_const_v<T>)>>
+    // Val(const sptr<std::remove_const_t<T>>& data) : _data(data){}
+
+
+    template<typename U>
+    Val(const Val<U>& other) : _data(other._data){}
+    template<typename T = T, typename = std::enable_if_t<(!std::is_same_v<std::remove_const_t<T>, void> && std::is_const_v<T>)>>
+    Val(const Val<std::remove_const_t<T>>& other) : _data(other._data){}
+
+
+    template<typename U>
+    Val(const Val<U>&& other) : _data(other._data){}
+    template<typename U = T, typename = std::enable_if_t<(!std::is_same_v<std::remove_const_t<U>, void> && std::is_const_v<U>)>>
+    Val(const Val<std::remove_const_t<U>>&& other) : _data(other._data){}
+
+
+    virtual ~Val(){};
+    
+
+    // template<typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    // operator auto&() const {return *_data;}
+
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    operator V() const {return V(*_data);}
+
+    // template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    // explicit operator V&() const {return *_data;}
+
+    // template<typename U = T, std::enable_if_t<(!is_void<U> && std::is_const_v<U>), bool> = true>
+    // operator const U&() const {return *_data;}
+    // template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    // operator const V&() const {return *_data;}
+    // operator T*() const {return _data.get();}
+
+    template<typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
+    U* operator ->() const {return _data.get();}
+
+    Val& operator=(const Val<const T>& other){
+        *_data(*other._data); return *this;
     }
 
-    T* getPtr(){
-        return _getPtr(*_data);
-    }
+    template<typename D>
+    Val<D> cast_static() const {return Val<D>(std::static_pointer_cast<D>(_data));}
 
-    const T* const getPtr() const {
-        return _getPtr(*_data);
-    }
+    template<typename D>
+    Val<D> cast_dynamic() const {return Val<D>(std::dynamic_pointer_cast<D>(_data));}
+
+    template<typename D>
+    Val<D> cast_reinterpret() const {return Val<D>(std::reinterpret_pointer_cast<D>(_data));}
 
 private:
-    std::shared_ptr<Container> _data;
-
-    static inline auto& _getVal(auto& data){
-        switch (data.index()){
-            case 0: return std::get<0>(data);
-            case 1: return *std::get<1>(data);
-            case 2: return *std::get<2>(data);
-            default: throw std::runtime_error("Val internal error");
-        }
-    }
-
-    static inline auto* _getPtr(auto& data){
-        switch (data.index()){
-            case 0: return &std::get<0>(data);
-            case 1: return std::get<1>(data);
-            case 2: return std::get<2>(data).get();
-            default: throw std::runtime_error("Val internal error");
-        }
-    }
+    sptr<T> _data;
+    
+    template<typename>
+    friend class Val;
 };
 
 template<class>
-struct is_val : std::false_type {};
+struct isVal : std::false_type {};
 
 template<class T>
-struct is_val<Val<T>> : std::true_type {
+struct isVal<Val<T>> : std::true_type {
     using type = T;
 };
 

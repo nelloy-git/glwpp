@@ -1,10 +1,10 @@
-#include "glwpp/gl/obj_v2/Object.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
 #include "glad/gl.h"
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::gl::v2;
+using namespace glwpp::util;
 
 Val<const UInt> Object::id() const {
     return Val<const UInt>(_id);

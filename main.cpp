@@ -12,21 +12,14 @@
 #include "glwpp/utils/File.hpp"
 
 #include "glwpp/ctx/Context.hpp"
-#include "glwpp/ctx/FreeType/Font.hpp"
+// #include "glwpp/ctx/FreeType/Font.hpp"
 
-#include "glwpp/gl/obj_v2/Buffer.hpp"
-#include "glwpp/gl/obj_v2/Val.hpp"
-
+// #include "glwpp/gl/obj/Array.hpp"
 #include "glwpp/gl/obj/Buffer.hpp"
-#include "glwpp/gl/obj/Program.hpp"
-#include "glwpp/gl/obj/Shader.hpp"
-#include "glwpp/gl/obj/Texture.hpp"
-#include "glwpp/gl/obj/VertexArray.hpp"
-#include "glwpp/gl/obj/Vector.hpp"
 
-#include "glwpp/model/Mesh.hpp"
+// #include "glwpp/model/Mesh.hpp"
 
-#include "glwpp/Drawer.hpp"
+// #include "glwpp/Drawer.hpp"
 
 #include "glad/gl.h"
 
@@ -65,98 +58,98 @@ static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
     win->onRun.push<&printTime, []{return true;}>();
 }
 
-glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
-    auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
-    v_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
-    win->onRun.push([v_shader](){
-        bool compiled = false;
-        v_shader.isCompiled(&compiled);
-        if (!compiled){
-            std::string log;
-            v_shader.getInfoLog(&log);
-            std::cout << "v_shader failed: " << log.c_str() << std::endl;
-        }
-    });
+// glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
+//     auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
+//     v_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
+//     win->onRun.push([v_shader](){
+//         bool compiled = false;
+//         v_shader.isCompiled(&compiled);
+//         if (!compiled){
+//             std::string log;
+//             v_shader.getInfoLog(&log);
+//             std::cout << "v_shader failed: " << log.c_str() << std::endl;
+//         }
+//     });
     
-    auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
-    f_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
-    auto compiled = glwpp::make_sptr<bool>(false);
-    f_shader.isCompiled(compiled);
-    win->onRun.push([compiled](){
-        if (!*compiled){
+//     auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
+//     f_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
+//     auto compiled = glwpp::make_sptr<bool>(false);
+//     f_shader.isCompiled(compiled);
+//     win->onRun.push([compiled](){
+//         if (!*compiled){
 
-        }
-    });
-    win->onRun.push([f_shader](){
-        bool compiled = false;
-        f_shader.isCompiled(&compiled);
-        if (!compiled){
-            std::string log;
-            f_shader.getInfoLog(&log);
-            std::cout << "f_shader failed: " << log.c_str() << std::endl;
-        }
-    });
+//         }
+//     });
+//     win->onRun.push([f_shader](){
+//         bool compiled = false;
+//         f_shader.isCompiled(&compiled);
+//         if (!compiled){
+//             std::string log;
+//             f_shader.getInfoLog(&log);
+//             std::cout << "f_shader failed: " << log.c_str() << std::endl;
+//         }
+//     });
 
-    auto prog = glwpp::Program(win);
-    prog.attach(v_shader);
-    prog.attach(f_shader);
-    prog.link();
-    win->onRun.push([prog](){
-        bool linked = false;
-        prog.isLinked(&linked);
-        if (!linked){
-            std::string log;
-            prog.getInfoLog(&log);
-            std::cout << "prog failed: " << log.c_str() << std::endl;
-        }
-    });
-    prog.use();
+//     auto prog = glwpp::Program(win);
+//     prog.attach(v_shader);
+//     prog.attach(f_shader);
+//     prog.link();
+//     win->onRun.push([prog](){
+//         bool linked = false;
+//         prog.isLinked(&linked);
+//         if (!linked){
+//             std::string log;
+//             prog.getInfoLog(&log);
+//             std::cout << "prog failed: " << log.c_str() << std::endl;
+//         }
+//     });
+//     prog.use();
 
-    return prog;
-}
+//     return prog;
+// }
 
-void enableCameraMovement(std::shared_ptr<glwpp::Context> win, glwpp::Drawer& drawer){
-    win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
-        switch (key){
-        case glwpp::Key::W: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{ 0.01, 0, 0}); break;
-        case glwpp::Key::S: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{-0.01, 0, 0}); break;
-        case glwpp::Key::A: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0, -0.01}); break;
-        case glwpp::Key::D: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0,  0.01}); break;
-        case glwpp::Key::LeftControl: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, -0.01, 0}); break;
-        case glwpp::Key::Space: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0.01, 0}); break;
+// void enableCameraMovement(std::shared_ptr<glwpp::Context> win, glwpp::Drawer& drawer){
+//     win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
+//         switch (key){
+//         case glwpp::Key::W: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{ 0.01, 0, 0}); break;
+//         case glwpp::Key::S: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{-0.01, 0, 0}); break;
+//         case glwpp::Key::A: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0, -0.01}); break;
+//         case glwpp::Key::D: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0,  0.01}); break;
+//         case glwpp::Key::LeftControl: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, -0.01, 0}); break;
+//         case glwpp::Key::Space: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0.01, 0}); break;
         
-        default: break;
-        }
-    });
-}
+//         default: break;
+//         }
+//     });
+// }
 
-void draw(const glwpp::VertexArray& vao){
-    glwpp::gl::UInt id;
-    vao.getId(&id);
+// void draw(const glwpp::VertexArray& vao){
+//     glwpp::gl::UInt id;
+//     vao.getId(&id);
 
-    glBindVertexArray(id);
-    // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0);
-    glDrawElementsInstanced(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0, 1);
+//     glBindVertexArray(id);
+//     // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0);
+//     glDrawElementsInstanced(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0, 1);
 
-    glwpp::gl::Enum err = glGetError();
-    while (err != GL_NO_ERROR){
-        std::string err_name;
-        switch (err){
-            case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
-            case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
-            case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
-            case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
-            case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
-            case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
-            case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
-            case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
-            default: err_name = "UNKNOWN";
-        }
+//     glwpp::gl::Enum err = glGetError();
+//     while (err != GL_NO_ERROR){
+//         std::string err_name;
+//         switch (err){
+//             case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
+//             case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
+//             case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
+//             case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
+//             case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
+//             case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
+//             case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
+//             case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
+//             default: err_name = "UNKNOWN";
+//         }
 
-        std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
-        err = glGetError();
-    }
-}
+//         std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
+//         err = glGetError();
+//     }
+// }
 
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
@@ -171,47 +164,22 @@ int main(int argc, char **argv){
     auto win = std::make_shared<glwpp::Context>(ctx_params);
     pushKeyPrinter(win, running);
     pushTimePrinter(win);
-    auto prog = loadProgram(win);
+    // auto prog = loadProgram(win);
 
-    glwpp::Drawer drawer(prog);
-    drawer.bindUniform(glwpp::Drawer::Uniform::Camera, "Camera");
-    enableCameraMovement(win, drawer);
+    // glwpp::Drawer drawer(prog);
+    // drawer.bindUniform(glwpp::Drawer::Uniform::Camera, "Camera");
+    // enableCameraMovement(win, drawer);
 
     win->onRun.push<[]{return true;}>([](){
         glClear(GL_COLOR_BUFFER_BIT);
     });
 
     {
-        using namespace glwpp::gl::v2;
-        glwpp::gl::v2::Val<void>::is_void<void>;
-        glwpp::gl::v2::Val<const void>::is_void<const void>;
-        glwpp::gl::v2::Val<int>::is_void<int>;
+        // glwpp::gl::Array<int> arr(win, 5);
 
-        glwpp::sptr<int> a1(new int(3));
-        glwpp::gl::v2::Val<int> a2(a1);
-        glwpp::gl::v2::Val<const int> a3(a2);
-        glwpp::gl::v2::Val<const int> a4(a1);
-
-        glwpp::sptr<void> b1(new int);
-        glwpp::sptr<const void> b5(b1);
-        glwpp::gl::v2::Val<void> b2(b1);
-        glwpp::gl::v2::Val<const void> b3(b2);
-        glwpp::gl::v2::Val<const void> b4(b1);
-        
-        glwpp::sptr<int> c1(new int);
-        glwpp::gl::v2::Val<void> c2(c1);
-        glwpp::gl::v2::Val<const void> c3(c2);
-        glwpp::gl::v2::Val<const void> c4(c1);
-
-        glwpp::gl::v2::Buffer buffer(win);
+        glwpp::gl::Buffer buffer(win);
         glwpp::sptr<void> data(new int[4]);
         buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
-
-
-        Val<int> i(4);
-        Val<int>::is_void<int>;
-
-        // i = 5;
     }
 
     while (running){
