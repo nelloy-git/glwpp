@@ -25,21 +25,21 @@ inline uptr<T> make_uptr(Args&&... args){
 
 struct EmptyObj {};
 
-static sptr<void> createTmpData(size_t size, const void* src = nullptr){
-    void* data;
+// static sptr<void> createTmpData(size_t size, const void* src = nullptr){
+//     void* data;
 
-    if (src != nullptr){
-        data = malloc(size);
-        memcpy(data, src, size);
-    } else {
-        data = calloc(size, sizeof(char));
-    }
+//     if (src != nullptr){
+//         data = malloc(size);
+//         memcpy(data, src, size);
+//     } else {
+//         data = calloc(size, sizeof(char));
+//     }
 
-    static auto deleter = [](auto* ptr){
-        delete ptr;
-    };
-    return sptr<void>(data, deleter);
-}
+//     static auto deleter = [](auto* ptr){
+//         delete ptr;
+//     };
+//     return sptr<void>(data, deleter);
+// }
 
 template<template<typename ...> typename T, typename ... OutArgs>
 inline decltype(auto) make_shared(OutArgs&& ... args){

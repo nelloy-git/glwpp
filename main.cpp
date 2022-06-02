@@ -1,4 +1,6 @@
+#ifdef WIN32
 #include <vld.h>
+#endif
 
 #include <iostream>
 #include <memory>
@@ -175,11 +177,11 @@ int main(int argc, char **argv){
     });
 
     {
-        glwpp::gl::Array<int> arr(win, 5);
+        // glwpp::gl::Array<int> arr(win, 5);
 
         glwpp::gl::Buffer buffer(win);
-        glwpp::sptr<void> data(new int[4]);
-        buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
+        // glwpp::sptr<void> data(new int[4]);
+        // buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
     }
 
     while (running){

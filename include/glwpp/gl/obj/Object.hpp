@@ -17,7 +17,8 @@ public:
     Val<const UInt> id() const;
     virtual ~Object() = 0;
     
-    bool executeInContext(bool check_ctx, const Val<const SrcLoc>& src_loc, auto&& func, auto&&... args) const {
+    template<typename F>
+    bool executeInContext(bool check_ctx, const Val<const SrcLoc>& src_loc, const F& func, auto&&... args) const {
         if (!check_ctx){
             func(args...);
             _printDebug(src_loc);
@@ -31,9 +32,16 @@ public:
             func(args...);
             _printDebug(src_loc);
         } else {
+            std::cout << "Before: " << func << std::endl;
+            ((std::cout << ',' << &args), ...);
+            std::cout << std::endl;
+
             ctx->onRun.push([func, src_loc, args...](){
+                std::cout << "After: " << func << std::endl;
+                ((std::cout << ',' << &args), ...);
+                std::cout << std::endl;
                 func(args...);
-                _printDebug(src_loc);
+                // _printDebug(src_loc);
             });
         }
         return true;
@@ -43,8 +51,9 @@ protected:
     const wptr<Context> _wctx;
     sptr<UInt> _id;
 
+    template<typename F>
     Object(const wptr<Context>& wctx, const Val<const SrcLoc>& src_loc,
-           auto&& initer, auto&& deleter, auto&&... args) :
+           const F& initer, auto&& deleter, auto&&... args) :
         _wctx(wctx){
         _id = _make_id(wctx, deleter);
         executeInContext(true, src_loc, initer, Val<UInt>(_id), args...);

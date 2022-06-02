@@ -9,10 +9,10 @@ namespace glwpp::gl {
 template<typename T>
 class Array {
 public:
-    template<typename T>
-    using Val = util::Val<T>;
+    template<typename U>
+    using Val = util::Val<U>;
 
-    Array(const wptr<Context>& wctx, const Val<const size_t>& size, const SrcLoc& src_loc = SrcLoc()) :
+    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size, const SrcLoc& src_loc = SrcLoc()) :
         _size(0),
         _buffer(make_sptr<Buffer>(wctx, src_loc)){
         _buffer->executeInContext(true, src_loc, _initBuffer, _buffer, _size, size, src_loc);
@@ -41,25 +41,22 @@ public:
     // virtual bool get(Ptr<T>& dst, const Val<size_t>& i, const SrcLoc& loc = SrcLoc()) const;
 
 protected:
-    const Val<size_t> _size;
+    const Val<SizeiPtr> _size;
     const Val<Buffer> _buffer;
 
 private:
     static void _initBuffer(const Val<Buffer>& buffer,
-                            const Val<size_t>& array_size, const Val<const size_t>& init_size,
+                            const Val<SizeiPtr>& array_size, const Val<const SizeiPtr>& init_size,
                             const Val<const SrcLoc>& src_loc){
-        // *array_size = *init_size;
-
-        const Val<size_t> s(array_size);
-        // sptr<const size_t> s2(init_size);
+        *array_size = *init_size;
         sptr<void> empty = nullptr;
-        buffer->storage(s, empty, _access, src_loc, false);
+        buffer->storage(init_size, empty, _access, src_loc, false);
 
-        // sptr<T*> ptr;
-        // buffer->map(std::reinterpret_pointer_cast<void*>(ptr), BufferMapAccess::WriteOnly, src_loc, false);
-        // for (size_t i = 0; i < *array_size; ++i){
-        //     (*ptr)[i] = T{};
-        // }
+        sptr<T> ptr;
+        buffer->map(ptr, BufferMapAccess::WriteOnly, src_loc, false);
+        for (size_t i = 0; i < *array_size; ++i){
+            (*ptr)[i] = T{};
+        }
         buffer->unmap(true, src_loc, false);
     } 
 

@@ -22,7 +22,7 @@ add_compile_definitions(GLWPP_DEBUG)
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /D_DEBUG")
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -fconcepts")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -fconcepts -pthread")
 endif (WIN32)
 
 include_directories(./include)
@@ -63,9 +63,9 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/obj_v2/Object.cpp
     src/gl/obj_v2/Buffer.cpp
 
-    src/ctx/FreeType/Font.cpp
+    # src/ctx/FreeType/Font.cpp
 
-    src/utils/event/EventStatus.cpp
+    # src/utils/event/EventStatus.cpp
 
     # src/drawer/Camera.cpp
 
@@ -101,8 +101,17 @@ target_compile_features(${PROJECT_NAME}_test PUBLIC cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME}_test
     glwpp
+)
+
+if (WIN32)
+target_link_libraries(${PROJECT_NAME}_test
     "D:\\projects\\glwpp\\3rdparty\\VLD\\lib\\Win64\\vld.lib"
 )
+else ()
+target_link_libraries(${PROJECT_NAME}_test
+    ${CMAKE_DL_LIBS}
+)
+endif (WIN32)
 
 set_property (TARGET ${PROJECT_NAME}_test
   PROPERTY
