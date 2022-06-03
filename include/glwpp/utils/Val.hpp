@@ -24,7 +24,8 @@ public:
     // Val(const sptr<std::remove_const_t<T>>& data) : _data(data){}
 
 
-    Val(const Val<T>& other) : _data(other._data){}
+    template<typename U>
+    Val(const Val<U>& other) : _data(other._data){}
     template<typename U = T, typename = std::enable_if_t<(!std::is_same_v<std::remove_const_t<U>, void> && std::is_const_v<U>)>>
     Val(const Val<std::remove_const_t<T>>& other) : _data(other._data){}
 

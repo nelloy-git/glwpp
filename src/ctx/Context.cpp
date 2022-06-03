@@ -77,12 +77,15 @@ void Context::_initGlfwWindow(){
     std::vector<std::pair<int, int>> hints = {
         {GLFW_VERSION_MAJOR, _params.gl_major_ver},
         {GLFW_VERSION_MINOR, _params.gl_minor_ver},
-        // {GLFW_REFRESH_RATE,  _params.fps},
+        {GLFW_CONTEXT_VERSION_MAJOR, _params.gl_major_ver},
+        {GLFW_CONTEXT_VERSION_MINOR, _params.gl_minor_ver},
+        {GLFW_REFRESH_RATE, _params.fps},
     };
 
     _glfw_window = std::make_unique<glfw::Window>(
         _params.width, _params.height, _params.title.c_str(), hints
     );
+    printf("%s\n", glGetString(GL_VERSION));
     
     _bindGlfwCallback<&glfw::Window::setMoveCallback>(onWinMove);
     _bindGlfwCallback<&glfw::Window::setResizeCallback>(onWinResize);

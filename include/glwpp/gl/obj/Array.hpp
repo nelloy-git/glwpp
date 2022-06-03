@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 #include "glwpp/gl/enums/BufferStorageFlag.hpp"
 #include "glwpp/gl/obj/Buffer.hpp"
@@ -12,33 +14,31 @@ public:
     template<typename U>
     using Val = util::Val<U>;
 
-    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size, const SrcLoc& src_loc = SrcLoc()) :
+    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
+          const Val<const std::optional<T>>& initial = std::nullopt,
+          const Val<const SrcLoc>& src_loc = SrcLoc{}) :
         _size(0),
         _buffer(make_sptr<Buffer>(wctx, src_loc)){
-        _buffer->executeInContext(true, src_loc, _initBuffer, _buffer, _size, size, src_loc);
-
-//     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _size,
-//                                  const size_t& size, const SrcLoc& loc){
-//         *_size = size;
-//         buffer->storage(*_size * sizeof(T), nullptr, _access, loc);
-
-//         auto ptr = static_cast<T*>(buffer->map(gl::BufferMapAccess::WriteOnly, loc));
-//         for (size_t i = 0; i < size; ++i){
-//             ptr[i] = T{};
-//         }
-//         buffer->unmap(loc);
-//     };
-//     _size = make_sptr<size_t>(0);
-//     _execute<F>(getWCtx(), _getPtr(), Ptr(_size), size, Val(loc));
+        _buffer->executeInContext(true, src_loc, _initBuffer, _buffer, _size, size, initial, src_loc);
     }
-    // Array(const wptr<Context>& wctx, const Val<size_t>& size, const Val<T>& initial, const SrcLoc& loc = SrcLoc());
     ~Array(){};
 
     operator const Val<Buffer>&(){return _buffer;}
 
-    // bool size(Ptr<size_t>& dst) const;
-    // virtual bool set(const Val<size_t>& i, const Val<T>& value, const SrcLoc& loc = SrcLoc());
-    // virtual bool get(Ptr<T>& dst, const Val<size_t>& i, const SrcLoc& loc = SrcLoc()) const;
+    inline bool size(const Val<SizeiPtr>& dst,
+              const Val<const SrcLoc>& src_loc = SrcLoc{}) const {
+        return _buffer->executeInContext(true, src_loc, _getSize, dst, Val<const SizeiPtr>(_size));
+    }
+
+    inline bool get(const Val<const size_t>& i, const Val<T>& dst,
+                    const Val<const SrcLoc>& src_loc = SrcLoc{}) const {
+        return _buffer->executeInContext(true, src_loc, _getValue, _buffer, i, dst, src_loc);
+    }
+
+    inline bool set(const Val<const size_t>& i, const Val<const T>& value,
+                    const Val<const SrcLoc>& src_loc = SrcLoc{}){
+        return _buffer->executeInContext(true, src_loc, _setValue, _buffer, i, value, src_loc);
+    }
 
 protected:
     const Val<SizeiPtr> _size;
@@ -47,19 +47,48 @@ protected:
 private:
     static void _initBuffer(const Val<Buffer>& buffer,
                             const Val<SizeiPtr>& array_size, const Val<const SizeiPtr>& init_size,
+                            const Val<const std::optional<T>>& initial,
                             const Val<const SrcLoc>& src_loc){
         *array_size = *init_size;
         sptr<void> empty = nullptr;
-        buffer->storage(init_size, empty, _access, src_loc, false);
+        buffer->storage(*init_size * sizeof(T), empty, _access, src_loc, false);
 
-        sptr<T> ptr;
-        buffer->map(ptr, BufferMapAccess::WriteOnly, src_loc, false);
+        auto s_ptr = make_sptr<T*>();
+        auto init_val = *initial ? (*initial).value() : T{};
+
+        buffer->map(std::reinterpret_pointer_cast<void*>(s_ptr), BufferMapAccess::WriteOnly, src_loc, false);
         for (size_t i = 0; i < *array_size; ++i){
-            (*ptr)[i] = T{};
+            (*s_ptr)[i] = init_val;
         }
         buffer->unmap(true, src_loc, false);
-    } 
+    }
 
+    static void _getSize(const Val<SizeiPtr>& dst,
+                         const Val<const SizeiPtr>& array_size){
+        *dst = *array_size;
+    }
+
+    static void _getValue(const Val<Buffer>& buffer,
+                          const Val<const size_t>& i, const Val<T>& dst,
+                          const Val<const SrcLoc>& src_loc){
+        auto map_ptr = make_sptr<T*>();
+        buffer->mapRange(std::reinterpret_pointer_cast<void*>(map_ptr),
+                         *i * sizeof(T), sizeof(T), _access,
+                         src_loc, false);
+        *dst = **map_ptr;
+        buffer->unmap(true, src_loc, false);
+    }
+
+    static void _setValue(const Val<Buffer>& buffer,
+                          const Val<const size_t>& i, const Val<const T>& value,
+                          const Val<const SrcLoc>& src_loc){
+        auto map_ptr = make_sptr<T*>();
+        buffer->mapRange(std::reinterpret_pointer_cast<void*>(map_ptr),
+                         *i * sizeof(T), sizeof(T), _access,
+                         src_loc, false);
+        **map_ptr = *value;
+        buffer->unmap(true, src_loc, false);
+    }
 
     static inline BitField _access = static_cast<Enum>(BufferStorageFlag::Read)
                                    | static_cast<Enum>(BufferStorageFlag::Write)

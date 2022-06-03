@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(glwpp VERSION 0.1 LANGUAGES C CXX)
 
-# if (WIN32)
-#     set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++.exe)
-#     set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc.exe)
-# else ()
-#     set(/usr/bin/g++-11)
-#     set(/usr/bin/gcc-11)
-# endif (WIN32)
+if (WIN32)
+    set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++.exe)
+    set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc.exe)
+else ()
+    # set(/usr/bin/g++-11)
+    # set(/usr/bin/gcc-11)
+endif (WIN32)
 
 enable_testing()
 
@@ -60,8 +60,9 @@ add_library (${PROJECT_NAME} STATIC
     # src/gl/obj/Texture.cpp
     # src/gl/obj/VertexArray.cpp
     
-    src/gl/obj_v2/Object.cpp
-    src/gl/obj_v2/Buffer.cpp
+    src/gl/obj/Object.cpp
+    src/gl/obj/Buffer.cpp
+    src/gl/obj/Shader.cpp
 
     # src/ctx/FreeType/Font.cpp
 

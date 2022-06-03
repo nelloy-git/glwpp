@@ -5,7 +5,6 @@
 #include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 #include "glwpp/gl/obj/Object.hpp"
 #include "glwpp/utils/SrcLoc.hpp"
-#include "glwpp/utils/Utils.hpp"
 
 namespace glwpp::gl {
 

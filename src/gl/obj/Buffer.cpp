@@ -1,126 +1,152 @@
 #include "glwpp/gl/obj/Buffer.hpp"
 
-#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
+#include "glad/gl.h"
 
 using namespace glwpp;
 using namespace glwpp::gl;
+using namespace glwpp::util;
+
+Buffer::Buffer(const wptr<Context>& wctx, const Val<const SrcLoc>& src_loc) :
+    Object(wctx, src_loc, &Buffer::_initer, &Buffer::_deleter){
+}
+
+bool Buffer::data(const Val<const SizeiPtr>& size, const Val<const void>& data, const Val<const BufferUsage>& usage,
+                  const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, glNamedBufferData, id(), size, data, usage.cast_reinterpret<const Enum>());
+}
+
+bool Buffer::storage(const Val<const SizeiPtr>& size, const Val<const void>& data, const Val<const BitField>& flags,
+                     const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, glNamedBufferStorage, id(), size, data, flags);
+}
+
+bool Buffer::bindUniformBase(const Val<const UInt>& index,
+                             const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glBindBufferBase, GL_UNIFORM_BUFFER, index, id());
+}
+
+bool Buffer::bindUniformRange(const Val<const UInt>& index, const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                              const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glBindBufferRange, GL_UNIFORM_BUFFER, index, id(), offset, size);
+}
+
+bool Buffer::bindShaderStorageBase(const Val<const UInt>& index,
+                                   const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glBindBufferBase, GL_SHADER_STORAGE_BUFFER, index, id());
+}
+
+bool Buffer::bindShaderStorageRange(const Val<const UInt>& index, const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                                    const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glBindBufferRange, GL_SHADER_STORAGE_BUFFER, index, id(), offset, size);
+}
+
+bool Buffer::getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
+                         const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), param, dst);
+}
+
+bool Buffer::getParamInt64(const Val<Int64>& dst, const Val<const Enum>& param,
+                           const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteri64v, id(), param, dst);
+}
+
+bool Buffer::getMapAccess(const Val<BufferMapAccess>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_ACCESS, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::getMapRangeAccess(const Val<BitField>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_ACCESS_FLAGS, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::isImmutable(const Val<bool>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_IMMUTABLE_STORAGE, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::isMapped(const Val<bool>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_MAPPED, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::getMapLength(const Val<Int64>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteri64v, id(), GL_BUFFER_MAP_LENGTH, dst);
+}
+
+bool Buffer::getMapOffset(const Val<Int64>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteri64v, id(), GL_BUFFER_MAP_OFFSET, dst);
+}
+
+bool Buffer::getSize(const Val<Int>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_SIZE, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::getStorageFlags(const Val<BitField>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_STORAGE_FLAGS, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::getUsage(const Val<BufferUsage>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetBufferParameteriv, id(), GL_BUFFER_USAGE, dst.cast_reinterpret<Int>());
+}
+
+bool Buffer::getSubData(const Val<void>& dst, const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                        const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetNamedBufferSubData, id(), offset, size, dst);
+}
+
+bool Buffer::setSubData(const Val<const void>& data, const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                        const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, glNamedBufferSubData, id(), offset, size, data);
+}
+
+bool Buffer::copySubDataTo(const Buffer& dst, const Val<const IntPtr>& read_offset,
+                           const Val<const IntPtr>& write_offset, const Val<const SizeiPtr>& size,
+                           const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glCopyNamedBufferSubData, id(), dst.id(), read_offset, write_offset, size);
+}
+
+bool Buffer::getMapPointer(const Val<void*>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetNamedBufferPointerv, id(), GL_BUFFER_MAP_POINTER, dst);
+}
 
 namespace {
-    CtxBuffer InitBuffer(const SrcLoc loc){
-        return CtxBuffer(loc);
-    }
+static void _glMapNamedBuffer(void** dst, GLuint buffer, GLenum access){
+    *dst = glMapNamedBuffer(buffer, access);
+};
 }
 
-Buffer::Buffer(const std::weak_ptr<Context>& weak_ctx, const SrcLoc loc) :
-    Object(weak_ctx, &InitBuffer, Val<SrcLoc>(loc)){
+bool Buffer::map(const Val<void*>& dst, const Val<const BufferMapAccess>& access, const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, &_glMapNamedBuffer, dst, id(), access.cast_reinterpret<const Enum>());
 }
 
-bool Buffer::data(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
-                  const Val<gl::BufferUsage>& usage, const SrcLoc loc){
-    return _executeMethod<CtxBuffer, &CtxBuffer::data>(size, data, usage, loc);
+namespace {
+static void _glMapNamedBufferRange(void** dst, GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access){
+    *dst = glMapNamedBufferRange(buffer, offset, length, access);
+};
 }
 
-bool Buffer::storage(const Val<gl::SizeiPtr>& size, const Ptr<void>& data,
-                     const Val<gl::BitField>& flags, const SrcLoc loc){
-    return _executeMethod<CtxBuffer, &CtxBuffer::storage>(size, data, flags, loc);
+bool Buffer::mapRange(const Val<void*>& dst, const Val<const IntPtr>& offset,
+                      const Val<const SizeiPtr>& size, const Val<const BitField>& access, 
+                      const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, &_glMapNamedBufferRange, dst, id(), offset, size, access);
 }
 
-bool Buffer::bindUniformBase(const Val<gl::UInt>& index, const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::bindUniformBase>(index, loc);
+bool Buffer::mapFlushRange(const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                           const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, glFlushMappedNamedBufferRange, id(), offset, size);
 }
 
-bool Buffer::bindUniformRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
-                              const Val<gl::SizeiPtr>& size, const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::bindUniformRange>(index, offset, size, loc);
-}
-                    
-bool Buffer::bindShaderStorageBase(const Val<gl::UInt>& index, const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::bindShaderStorageBase>(index, loc);
+namespace {
+static void _glUnmapNamedBuffer(bool* dst, GLuint buffer){
+    *dst = glUnmapNamedBuffer(buffer);
+};
 }
 
-bool Buffer::bindShaderStorageRange(const Val<gl::UInt>& index, const Val<gl::IntPtr>& offset,
-                               const Val<gl::SizeiPtr>& size, const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::bindShaderStorageRange>(index, offset, size, loc);
-}                        
-
-bool Buffer::getMapAccess(Ptr<gl::BufferMapAccess>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getMapAccess>(dst, loc);
+bool Buffer::unmap(const Val<bool>& dst, const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, &_glUnmapNamedBuffer, dst, id());
 }
 
-bool Buffer::getMapRangeAccess(Ptr<gl::BitField>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getMapRangeAccess>(dst, loc);
+void Buffer::_initer(UInt& dst){
+    glCreateBuffers(1, &dst);
 }
 
-bool Buffer::isImmutable(Ptr<bool>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::isImmutable>(dst, loc);
-}
-
-bool Buffer::isMapped(Ptr<bool>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::isMapped>(dst, loc);
-}
-
-bool Buffer::getMapLength(Ptr<gl::Int64>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getMapLength>(dst, loc);
-}
-
-bool Buffer::getMapOffset(Ptr<gl::Int64>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getMapOffset>(dst, loc);
-}
-
-bool Buffer::getSize(Ptr<gl::Int>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getSize>(dst, loc);
-}
-
-bool Buffer::getStorageFlags(Ptr<gl::BitField>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getStorageFlags>(dst, loc);
-}
-
-bool Buffer::getUsage(Ptr<gl::BufferUsage>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getUsage>(dst, loc);
-}
-
-bool Buffer::getSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                        Ptr<void>& dst, const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::getSubData>(offset, size, dst, loc);
-}
-bool Buffer::setSubData(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                        const Ptr<void>& data, const SrcLoc loc) {
-    return _executeMethod<CtxBuffer, &CtxBuffer::setSubData>(offset, size, data, loc);
-}
-
-bool Buffer::copySubDataTo(Buffer& dst, const Val<IntPtr>& read_offset,
-                           const Val<IntPtr>& write_offset, const Val<SizeiPtr>& size,
-                           const SrcLoc loc) const {
-    return _executeMethod<CtxBuffer, &CtxBuffer::copySubDataTo>(dst._getVop<CtxBuffer>(), read_offset, write_offset, size, loc);
-}
-
-bool Buffer::getMapPointer(Ptr<MapPtr>& dst, const SrcLoc loc) const {
-    return _executeGetter<CtxBuffer, &CtxBuffer::getMapPointer>(dst, loc);
-}
-
-bool Buffer::map(const Val<gl::BufferMapAccess>& access, Ptr<MapPtr>& dst, const SrcLoc loc){
-    return _executeGetter<CtxBuffer, &CtxBuffer::map>(dst, access, loc);
-}
-
-bool Buffer::mapRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                      const Val<gl::BitField>& access, Ptr<MapPtr>& dst,
-                      const SrcLoc loc){
-    return _executeGetter<CtxBuffer, &CtxBuffer::mapRange>(dst, offset, size, access, loc);
-}
-
-bool Buffer::mapFlushRange(const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-                           const SrcLoc loc){
-    return _executeMethod<CtxBuffer, &CtxBuffer::mapFlushRange>(offset, size, loc);
-}
-
-bool Buffer::unmap(Ptr<bool>& dst, const SrcLoc loc){
-    return _executeGetter<CtxBuffer, &CtxBuffer::unmap>(dst, loc);
-}
-
-Ptr<gl::CtxBuffer> Buffer::_getPtr(){
-    return Object::_getPtr<gl::CtxBuffer>();
-}
-
-Ptr<gl::CtxBuffer> Buffer::_getPtr() const {
-    return Object::_getPtr<gl::CtxBuffer>();
+void Buffer::_deleter(const UInt& id){
+    glDeleteBuffers(1, &id);
 }

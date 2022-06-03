@@ -7,9 +7,9 @@
 #include <chrono>
 #include <filesystem>
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+// #include "assimp/Importer.hpp"
+// #include "assimp/scene.h"
+// #include "assimp/postprocess.h"
 
 #include "glwpp/utils/File.hpp"
 
@@ -176,17 +176,31 @@ int main(int argc, char **argv){
         glClear(GL_COLOR_BUFFER_BIT);
     });
 
-    {
-        // glwpp::gl::Array<int> arr(win, 5);
+    glwpp::gl::Array<int> arr(win, 5);
+    auto size = glwpp::make_sptr<glwpp::gl::SizeiPtr>(0);
+    arr.size(size);
+    arr.set(0, 100);
+    auto arr_val_0 = glwpp::make_sptr<int>(0);
+    arr.get(0, arr_val_0);
+    arr.set(1, arr_val_0);
+    auto arr_val_1 = glwpp::make_sptr<int>(1);
+    arr.get(1, arr_val_1);
 
-        glwpp::gl::Buffer buffer(win);
-        // glwpp::sptr<void> data(new int[4]);
-        // buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
-    }
+    glwpp::gl::Buffer buffer(win);
+    glwpp::sptr<void> data(new int[4]);
+    buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
 
+    bool shown = false;
     while (running){
         win->start();
         win->wait();
+
+        if (!shown){
+            std::cout << "val_0: " << *arr_val_0 << std::endl;
+            std::cout << "val_1: " << *arr_val_1 << std::endl;
+            shown = true;
+        }
+
         // drawer.updateCamera();
         // for (size_t i = 0; i < scene->mNumMeshes; ++i){
         //     win->onRun.push([&prog, &meshes, i](){

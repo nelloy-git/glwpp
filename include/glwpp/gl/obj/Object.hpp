@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <typeinfo>
 
 #include "glwpp/ctx/Context.hpp"
 #include "glwpp/gl/types.hpp"
@@ -17,8 +18,7 @@ public:
     Val<const UInt> id() const;
     virtual ~Object() = 0;
     
-    template<typename F>
-    bool executeInContext(bool check_ctx, const Val<const SrcLoc>& src_loc, const F& func, auto&&... args) const {
+    bool executeInContext(bool check_ctx, const Val<const SrcLoc>& src_loc, auto&& func, auto&&... args) const {
         if (!check_ctx){
             func(args...);
             _printDebug(src_loc);
@@ -32,17 +32,11 @@ public:
             func(args...);
             _printDebug(src_loc);
         } else {
-            std::cout << "Before: " << func << std::endl;
-            ((std::cout << ',' << &args), ...);
-            std::cout << std::endl;
-
             ctx->onRun.push([func, src_loc, args...](){
-                std::cout << "After: " << func << std::endl;
-                ((std::cout << ',' << &args), ...);
-                std::cout << std::endl;
                 func(args...);
-                // _printDebug(src_loc);
+                _printDebug(src_loc);
             });
+            ctx->onRunEnd.push([src_loc, args...](){});
         }
         return true;
     }
@@ -51,12 +45,12 @@ protected:
     const wptr<Context> _wctx;
     sptr<UInt> _id;
 
-    template<typename F>
     Object(const wptr<Context>& wctx, const Val<const SrcLoc>& src_loc,
-           const F& initer, auto&& deleter, auto&&... args) :
+           auto&& initer, auto&& deleter, auto&&... args) :
         _wctx(wctx){
         _id = _make_id(wctx, deleter);
-        executeInContext(true, src_loc, initer, Val<UInt>(_id), args...);
+        executeInContext(true, src_loc, std::forward<decltype(initer)>(initer),
+                         Val<UInt>(_id), std::forward<decltype(args)>(args)...);
     }
 
     Object(const Object&) = delete;

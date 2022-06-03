@@ -1,36 +1,63 @@
 #include "glwpp/gl/obj/Shader.hpp"
 
-#include "glwpp/gl/ctx_only/CtxShader.hpp"
+#include "glad/gl.h"
 
 using namespace glwpp;
 using namespace glwpp::gl;
+using namespace glwpp::util;
+
+Shader::Shader(const wptr<Context>& wctx, const Val<const gl::ShaderType>& type,
+               const Val<const SrcLoc>& src_loc) :
+    Object(wctx, src_loc, &Shader::_initer, &Shader::_deleter, type){
+}
+
+           
+bool Shader::getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
+                         const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return executeInContext(check_ctx, src_loc, glGetShaderiv, id(), param, dst);
+}
+
+
+bool Shader::getType(const Val<gl::ShaderType> dst,
+                     const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return getParamInt(dst.cast_reinterpret<Int>(), GL_SHADER_TYPE, src_loc, check_ctx);
+}
+
+bool Shader::isCompiled(const Val<bool> dst,
+                        const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return getParamInt(dst.cast_reinterpret<Int>(), GL_COMPILE_STATUS, src_loc, check_ctx);
+}
+
+bool Shader::getSourceLength(const Val<gl::Int> dst,
+                             const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return getParamInt(dst.cast_reinterpret<Int>(), GL_SHADER_SOURCE_LENGTH, src_loc, check_ctx);
+}
+
+bool Shader::getInfoLog(const Val<std::string> dst,
+                        const Val<const SrcLoc>& src_loc, bool check_ctx) const {
+    return getParamInt(dst.cast_reinterpret<Int>(), GL_INFO_LOG_LENGTH, src_loc, check_ctx);
+}
 
 namespace {
-    CtxShader InitShader(const ShaderType& type, const SrcLoc loc){
-        return CtxShader(type, loc);
+    void _glShaderSource(const UInt& shader, const std::string& code){
+        auto c_code = code.c_str();
+        glShaderSource(shader, 1, &c_code, nullptr);
     }
 }
 
-Shader::Shader(const std::weak_ptr<Context>& weak_ctx, const Val<gl::ShaderType>& type, const SrcLoc loc) :
-    Object(weak_ctx, &InitShader, type, Val<SrcLoc>(loc)){
+bool Shader::setSource(const Val<const std::string>& code,
+                       const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, _glShaderSource, id(), code);
 }
 
-bool Shader::getType(Ptr<ShaderType> dst, const SrcLoc loc) const {
-    return _executeGetter<CtxShader, &CtxShader::getType>(dst, loc);
+bool Shader::compile(const Val<const SrcLoc>& src_loc, bool check_ctx){
+    return executeInContext(check_ctx, src_loc, glCompileShader, id());
 }
 
-bool Shader::isCompiled(Ptr<bool> dst, const SrcLoc loc) const {
-    return _executeGetter<CtxShader, &CtxShader::isCompiled>(dst, loc);
+void Shader::_initer(UInt& dst, const gl::ShaderType& type){
+    dst = glCreateShader(static_cast<Enum>(type));
 }
 
-bool Shader::getSourceLength(Ptr<Int> dst, const SrcLoc loc) const {
-    return _executeGetter<CtxShader, &CtxShader::getSourceLength>(dst, loc);
-}
-
-bool Shader::getInfoLog(Ptr<std::string> dst, const SrcLoc loc) const {
-    return _executeGetter<CtxShader, &CtxShader::getInfoLog>(dst, loc);
-}
-
-bool Shader::compile(const Val<std::string>& code, const SrcLoc loc){
-    return _executeMethod<CtxShader, &CtxShader::compile>(code, loc);
+void Shader::_deleter(const UInt& id){
+    glDeleteShader(id);
 }

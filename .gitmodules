@@ -13,8 +13,8 @@
 [submodule "3rdparty/freetype"]
 	path = 3rdparty/freetype
 	url = https://github.com/freetype/freetype.git
-[submodule ".\\3rdparty\\glm"]
-	path = .\\3rdparty\\glm
+[submodule "./3rdparty/glm"]
+	path = 3rdparty/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "3rdparty/magic_enum"]
 	path = 3rdparty/magic_enum
