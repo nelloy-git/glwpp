@@ -96,7 +96,7 @@ bool Buffer::setSubData(const Val<const void>& data, const Val<const IntPtr>& of
     return executeInContext(check_ctx, src_loc, glNamedBufferSubData, id(), offset, size, data);
 }
 
-bool Buffer::copySubDataTo(const Buffer& dst, const Val<const IntPtr>& read_offset,
+bool Buffer::copySubDataTo(Buffer& dst, const Val<const IntPtr>& read_offset,
                            const Val<const IntPtr>& write_offset, const Val<const SizeiPtr>& size,
                            const Val<const SrcLoc>& src_loc, bool check_ctx) const {
     return executeInContext(check_ctx, src_loc, glCopyNamedBufferSubData, id(), dst.id(), read_offset, write_offset, size);

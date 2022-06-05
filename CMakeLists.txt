@@ -63,6 +63,7 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/obj/Object.cpp
     src/gl/obj/Buffer.cpp
     src/gl/obj/Shader.cpp
+    src/gl/obj/Program.cpp
 
     # src/ctx/FreeType/Font.cpp
 
