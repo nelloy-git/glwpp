@@ -2,7 +2,6 @@
 
 #include <optional>
 
-#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
 #include "glwpp/gl/enums/BufferStorageFlag.hpp"
 #include "glwpp/gl/obj/Buffer.hpp"
 
@@ -24,6 +23,7 @@ public:
     ~Array(){};
 
     operator const Val<Buffer>&(){return _buffer;}
+    operator const Val<const Buffer>&() const {return _buffer;}
 
     inline bool size(const Val<SizeiPtr>& dst,
               const Val<const SrcLoc>& src_loc = SrcLoc{}) const {

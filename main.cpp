@@ -18,6 +18,7 @@
 
 #include "glwpp/gl/obj/Array.hpp"
 #include "glwpp/gl/obj/Buffer.hpp"
+#include "glwpp/gl/obj/Vector.hpp"
 
 // #include "glwpp/model/Mesh.hpp"
 
@@ -176,7 +177,7 @@ int main(int argc, char **argv){
         glClear(GL_COLOR_BUFFER_BIT);
     });
 
-    glwpp::gl::Array<int> arr(win, 5);
+    glwpp::gl::Vector<int> arr(win, 5);
     auto size = glwpp::make_sptr<glwpp::gl::SizeiPtr>(0);
     arr.size(size);
     arr.set(0, 100);
@@ -185,10 +186,14 @@ int main(int argc, char **argv){
     arr.set(1, arr_val_0);
     auto arr_val_1 = glwpp::make_sptr<int>(1);
     arr.get(1, arr_val_1);
+    arr.reserve(10);
+    arr.shape();
+    arr.push_back(3);
+    arr.pop_back(0);
 
-    glwpp::gl::Buffer buffer(win);
-    glwpp::sptr<void> data(new int[4]);
-    buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
+    // glwpp::gl::Buffer buffer(win);
+    // glwpp::sptr<void> data(new int[4]);
+    // buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
 
     bool shown = false;
     while (running){
@@ -196,8 +201,8 @@ int main(int argc, char **argv){
         win->wait();
 
         if (!shown){
-            std::cout << "val_0: " << *arr_val_0 << std::endl;
-            std::cout << "val_1: " << *arr_val_1 << std::endl;
+            // std::cout << "val_0: " << *arr_val_0 << std::endl;
+            // std::cout << "val_1: " << *arr_val_1 << std::endl;
             shown = true;
         }
 

@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include "glwpp/gl/ctx_only/CtxBuffer.hpp"
+#include "glwpp/gl/enums/BufferMapAccess.hpp"
+#include "glwpp/gl/enums/BufferUsage.hpp"
 #include "glwpp/gl/obj/Object.hpp"
-#include "glwpp/utils/SrcLoc.hpp"
 
 namespace glwpp::gl {
 

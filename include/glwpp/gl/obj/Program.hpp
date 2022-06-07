@@ -1,8 +1,7 @@
 #pragma once
 
-#include "glwpp/gl/obj/Object.hpp"
-
 #include "glwpp/gl/enums/ProgramParam.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 #include "glwpp/gl/obj/Shader.hpp"
 
 namespace glwpp::gl {

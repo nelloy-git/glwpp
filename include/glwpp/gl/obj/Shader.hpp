@@ -2,11 +2,9 @@
 
 #include <string>
 
-#include "glwpp/gl/obj/Object.hpp"
-
 #include "glwpp/gl/enums/ShaderType.hpp"
 #include "glwpp/gl/enums/ShaderParam.hpp"
-#include "glwpp/utils/SrcLoc.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
 namespace glwpp::gl {
 

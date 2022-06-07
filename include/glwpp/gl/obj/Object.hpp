@@ -16,6 +16,7 @@ public:
     using Val = util::Val<T>;
 
     Val<const UInt> id() const;
+    wptr<Context> ctx() const;
     virtual ~Object() = 0;
     
     bool executeInContext(bool check_ctx, const Val<const SrcLoc>& src_loc, auto&& func, auto&&... args) const {

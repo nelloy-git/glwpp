@@ -10,6 +10,10 @@ Val<const UInt> Object::id() const {
     return Val<const UInt>(_id);
 }
 
+wptr<Context> Object::ctx() const {
+    return _wctx;
+}
+
 void Object::_printDebug(const SrcLoc& loc){
 #ifdef GLWPP_DEBUG
     Enum err = glGetError();
