@@ -1,97 +1,125 @@
-// #pragma once
+#pragma once
 
-// #include "glwpp/gl/obj/Object.hpp"
+#include "glwpp/gl/enums/TextureBufferFormat.hpp"
+#include "glwpp/gl/enums/TextureType.hpp"
+#include "glwpp/gl/enums/TextureParam.hpp"
+#include "glwpp/gl/enums/TexturePixelData.hpp"
+#include "glwpp/gl/enums/TexturePixelFormat.hpp"
+#include "glwpp/gl/obj/Buffer.hpp"
+#include "glwpp/gl/obj/Object.hpp"
 
-// #include "glwpp/gl/ctx_only/CtxTexture.hpp"
+namespace glwpp::gl {
 
-// #include "glwpp/gl/enums/TextureBufferFormat.hpp"
-// #include "glwpp/gl/enums/TextureType.hpp"
-// #include "glwpp/gl/enums/TextureParam.hpp"
-// #include "glwpp/gl/enums/TexturePixelData.hpp"
-// #include "glwpp/gl/enums/TexturePixelFormat.hpp"
-// #include "glwpp/gl/obj/Buffer.hpp"
-// #include "glwpp/utils/SrcLoc.hpp"
+class Texture : public Object {
+public:
+    Texture(const wptr<Context>& wctx, const Val<const TextureType>& type,
+            const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-// namespace glwpp {
+    bool buffer(const Buffer& buffer, const Val<const TextureFormat>& fmt, 
+                const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool bufferRange(const Buffer& buffer, const Val<const TextureFormat>& fmt, 
+                     const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool storage1D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
+                   const Val<const Sizei>& width,
+                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool storage2D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
+                   const Val<const Sizei>& width, const Val<const Sizei>& height,
+                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool storage3D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
+                   const Val<const Sizei>& width, const Val<const Sizei>& height, const Val<const Sizei>& depth,
+                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool storageMultisample2D(const Val<const Sizei>& samples, const Val<const TextureFormat>& fmt,
+                              const Val<const Sizei>& width, const Val<const Sizei>& height,
+                              const Val<const Bool>& fixed_locations,
+                              const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    bool storageMultisample3D(const Val<const Sizei>& samples, const Val<const TextureFormat>& fmt,
+                              const Val<const Sizei>& width, const Val<const Sizei>& height, const Val<const Sizei>& depth,
+                              const Val<const Bool>& fixed_locations,
+                              const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-// class Texture : public Object {
-// public:
-//     Texture(wptr<Context> ctx, const Val<gl::TextureType>& type, const SrcLoc loc = SrcLoc());
+    bool setUnit(const Val<const UInt>& index,
+                 const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool generateMipMap(const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-//     bool buffer(const Val<gl::TextureFormat>& fmt, const Buffer& buffer,
-//                 const SrcLoc loc = SrcLoc());
-//     bool bufferRange(const Val<gl::TextureFormat>& fmt, const Buffer& buffer,
-//                      const Val<gl::IntPtr>& offset, const Val<gl::SizeiPtr>& size,
-//                      const SrcLoc loc = SrcLoc());
-//     bool storage1D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
-//                    const Val<gl::Sizei>& width,
-//                    const SrcLoc loc = SrcLoc());
-//     bool storage2D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
-//                    const Val<gl::Sizei>& width, const Val<gl::Sizei>& height,
-//                    const SrcLoc loc = SrcLoc());
-//     bool storage3D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
-//                    const Val<gl::Sizei>& width, const Val<gl::Sizei>& height, const Val<gl::Sizei>& depth,
-//                    const SrcLoc loc = SrcLoc());
-//     bool storageMultisample2D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
-//                               const Val<gl::Sizei>& width, const Val<gl::Sizei>& height,
-//                               const Val<gl::Bool>& fixed_locations,
-//                               const SrcLoc loc = SrcLoc());
-//     bool storageMultisample3D(const Val<gl::Sizei>& levels, const Val<gl::TextureFormat>& fmt,
-//                               const Val<gl::Sizei>& width, const Val<gl::Sizei>& height, const Val<gl::Sizei>& depth,
-//                               const Val<gl::Bool>& fixed_locations,
-//                               const SrcLoc loc = SrcLoc());
+    bool getImage(const Val<void>& dst, const Val<const Int>& level, const Val<const TexturePixelFormat>& fmt,
+                  const Val<const TexturePixelData>& type, const Val<const Sizei>& size,
+                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool getSubImage(const Val<void>& dst, 
+                     const Val<const Int>& level, const Val<const TexturePixelFormat>& fmt,
+                     const Val<const Int>& x, const Val<const Int>& y, const Val<const Int>& z,
+                     const Val<const Sizei>& w, const Val<const Sizei>& h, const Val<const Sizei>& d,
+                     const Val<const TexturePixelData>& type, const Val<const Sizei>& size,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
 
-//     bool setUnit(const Val<gl::UInt>& index, const SrcLoc loc = SrcLoc()) const;
-//     bool generateMipMap(const SrcLoc loc = SrcLoc());
-
-//     bool getImage(const Val<gl::Int>& level, const Val<gl::TexturePixelFormat>& fmt,
-//                   const Val<gl::TexturePixelData>& type, const Val<gl::Sizei>& size, Ptr<void>& data,
-//                   const SrcLoc loc = SrcLoc());
-//     bool getSubImage(const Val<gl::Int>& level, const Val<gl::TexturePixelFormat>& fmt,
-//                      const Val<gl::Int>& x, const Val<gl::Int>& y, const Val<gl::Int>& z,
-//                      const Val<gl::Sizei>& w, const Val<gl::Sizei>& h, const Val<gl::Sizei>& d,
-//                      const Val<gl::TexturePixelData>& type, const Val<gl::Sizei>& size, Ptr<void>& data,
-//                      const SrcLoc loc = SrcLoc());
-//     bool setSubImage1D(const Val<gl::Int>& level,
-//                        const Val<gl::Int>& x, const Val<gl::Sizei>& w,
-//                        const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
-//                        const Ptr<void>& data,
-//                        const SrcLoc loc = SrcLoc());
+    bool setSubImage1D(const Val<const void>& data,
+                       const Val<const Int>& level,
+                       const Val<const Int>& x, const Val<const Sizei>& w,
+                       const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
+                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
     
-//     bool setSubImage2D(const Val<gl::Int>& level,
-//                        const Val<gl::Int>& x, const Val<gl::Int>& y,
-//                        const Val<gl::Sizei>& w, const Val<gl::Sizei>& h,
-//                        const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
-//                        const Ptr<void>& data,
-//                        const SrcLoc loc = SrcLoc());
+    bool setSubImage2D(const Val<const void>& data,
+                       const Val<const Int>& level,
+                       const Val<const Int>& x, const Val<const Int>& y,
+                       const Val<const Sizei>& w, const Val<const Sizei>& h,
+                       const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
+                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
     
-//     bool setSubImage3D(const Val<gl::Int>& level,
-//                        const Val<gl::Int>& x, const Val<gl::Int>& y, const Val<gl::Int>& z,
-//                        const Val<gl::Sizei>& w, const Val<gl::Sizei>& h, const Val<gl::Sizei>& d,
-//                        const Val<gl::TexturePixelFormat>& fmt, const Val<gl::TexturePixelData>& type,
-//                        const Ptr<void>& data,
-//                        const SrcLoc loc = SrcLoc());
+    bool setSubImage3D(const Val<const void>& data,
+                       const Val<const Int>& level,
+                       const Val<const Int>& x, const Val<const Int>& y, const Val<const Int>& z,
+                       const Val<const Sizei>& w, const Val<const Sizei>& h, const Val<const Sizei>& d,
+                       const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
+                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-//     // =================================
-//     // Wrappers for Texture::setParam_iv
-//     // =================================
+    bool getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool setParamInt(const Val<const Int>& value, const Val<const Enum>& param,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-//     using Wrap = gl::CtxTexture::Wrap;
+    enum class Wrap : Int {
+        Clamp = 0x812F,  // GL_CLAMP_TO_EDGE,
+        Mirror = 0x8370, // GL_MIRRORED_REPEAT,
+        Repeat = 0x2901, // GL_REPEAT
+    };
 
-//     bool getWrapS(Ptr<Wrap>& dst, const SrcLoc loc = SrcLoc());
-//     bool setWrapS(const Val<Wrap>& wrap, const SrcLoc loc = SrcLoc());
-//     bool getWrapT(Ptr<Wrap>& dst, const SrcLoc loc = SrcLoc());
-//     bool setWrapT(const Val<Wrap>& wrap, const SrcLoc loc = SrcLoc());
+    bool getWrapS(const Val<Wrap> dst,
+                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool setWrapS(const Val<const Wrap> value,
+                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-//     using MinFilter = gl::CtxTexture::MinFilter;
+    bool getWrapT(const Val<Wrap> dst,
+                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool setWrapT(const Val<const Wrap> value,
+                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-//     bool getMinFilter(Ptr<MinFilter>& dst, const SrcLoc loc = SrcLoc());
-//     bool setMinFilter(const Val<MinFilter>& filter, const SrcLoc loc = SrcLoc());
+    enum class  MinFilter : Int {
+        Nearest = 0x2600, // GL_NEAREST Returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates.
+        Linear = 0x2601, // GL_LINEAR Returns the weighted average of the four texture elements that are closest to the specified texture coordinates. These can include items wrapped or repeated from other parts of a texture, depending on the values of GL_TEXTURE_WRAP_S and GL_TEXTURE_WRAP_T, and on the exact mapping.
+        NearestMipMapNearest = 0x2700, // GL_NEAREST_MIPMAP_NEAREST Chooses the mipmap that most closely matches the size of the pixel being textured and uses the GL_NEAREST criterion (the texture element closest to the specified texture coordinates) to produce a texture value.
+        LinearMipmapNearest = 0x2701, // GL_LINEAR_MIPMAP_NEAREST Chooses the mipmap that most closely matches the size of the pixel being textured and uses the GL_LINEAR criterion (a weighted average of the four texture elements that are closest to the specified texture coordinates) to produce a texture value.
+        NearestMipMapLinear = 0x2702, // GL_NEAREST_MIPMAP_LINEAR Chooses the two mipmaps that most closely match the size of the pixel being textured and uses the GL_NEAREST criterion (the texture element closest to the specified texture coordinates ) to produce a texture value from each mipmap. The final texture value is a weighted average of those two values.
+        LinearMipMapLinear = 0x2703, // GL_LINEAR_MIPMAP_LINEAR Chooses the two mipmaps that most closely match the size of the pixel being textured and uses the GL_LINEAR criterion (a weighted average of the texture elements that are closest to the specified texture coordinates) to produce a texture value from each mipmap. The final texture value is a weighted average of those two values. 
+    };
 
-//     using MagFilter = gl::CtxTexture::MagFilter;
+    bool getMinFilter(const Val<MinFilter> dst,
+                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool setMinFilter(const Val<const MinFilter> value,
+                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                      
+    enum class  MagFilter : Int {
+        Nearest = 0x2600, // GL_NEAREST Returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates.
+        Linear = 0x2601, // GL_LINEAR Returns the weighted average of the four texture elements that are closest to the specified texture coordinates. These can include items wrapped or repeated from other parts of a texture, depending on the values of GL_TEXTURE_WRAP_S and GL_TEXTURE_WRAP_T, and on the exact mapping.
+    };
 
-//     bool getMagFilter(Ptr<MagFilter>& dst, const SrcLoc loc = SrcLoc());
-//     bool setMagFilter(const Val<MagFilter>& filter, const SrcLoc loc = SrcLoc());
-// };
+    bool getMagFilter(const Val<MagFilter> dst,
+                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool setMagFilter(const Val<const MagFilter> value,
+                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
-// } // namespace glwpp
+private:
+    static void _initer(UInt& dst, const TextureType& type);
+    static void _deleter(const UInt& id);
+};
+
+} // namespace glwpp
