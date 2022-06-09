@@ -165,7 +165,7 @@ int main(int argc, char **argv){
 
     std::atomic<bool> running = true;
     auto win = std::make_shared<glwpp::Context>(ctx_params);
-    pushKeyPrinter(win, running);
+    // pushKeyPrinter(win, running);
     pushTimePrinter(win);
     // auto prog = loadProgram(win);
 

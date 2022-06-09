@@ -1,7 +1,9 @@
 #pragma once
 
-#include <memory>
 #include <cstring>
+#include <memory>
+#include <type_traits>
+
 namespace glwpp {
 
 template<typename T>
@@ -23,29 +25,29 @@ inline uptr<T> make_uptr(Args&&... args){
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
-struct EmptyObj {};
+namespace detail {
+template<typename T>
+static void tmp_deleter(T* ptr){
+    delete[] ptr;
+}
+}
 
-// static sptr<void> createTmpData(size_t size, const void* src = nullptr){
-//     void* data;
+template<typename T>
+static sptr<std::conditional_t<std::is_same_v<T, void>, void, T[]>> alloc_sptr_buffer(size_t size, const T* src = nullptr){
+    using ST = std::conditional_t<std::is_same_v<T, void>, char, T>;
 
-//     if (src != nullptr){
-//         data = malloc(size);
-//         memcpy(data, src, size);
-//     } else {
-//         data = calloc(size, sizeof(char));
-//     }
+    sptr<ST[]> data(new ST[size], detail::tmp_deleter<ST>);
 
-//     static auto deleter = [](auto* ptr){
-//         delete ptr;
-//     };
-//     return sptr<void>(data, deleter);
-// }
+    if (src != nullptr){
+        memcpy(data.get(), src, size);
+    }
 
-template<template<typename ...> typename T, typename ... OutArgs>
-inline decltype(auto) make_shared(OutArgs&& ... args){
-    using Tmp = std::remove_pointer_t<decltype(new T(args...))>;
-    return std::make_shared<Tmp>(std::forward<OutArgs>(args)...);
-};
+    if constexpr (std::is_same_v<T, void>){
+        std::reinterpret_pointer_cast<void>(data);
+    } else {
+        return data;
+    }
+}
 
 template <template<typename...> typename base, typename derived>
 struct is_base_of_template_impl

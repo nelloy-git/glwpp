@@ -21,8 +21,6 @@ namespace glwpp {
 class Mesh {
 
 public:
-    static Mesh Cube(const wptr<Context>& wctx, const MeshVertexConfig& vert_config);
-
     Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config);
     virtual ~Mesh();
 

@@ -4,11 +4,12 @@
 #include "magic_enum.hpp"
 
 using namespace glwpp;
+using namespace glwpp::model;
 
 MeshIndexData::MeshIndexData(const wptr<Context>& wctx, const aiMesh& ai_mesh) :
-    _ctx(wctx){
-    _indices = make_sptr<Buffer>(_ctx);
-    _fillIndexType(ai_mesh);
+    _type(_getIndexType(ai_mesh)),
+    _indices(new gl::Buffer(wctx)){
+
     switch(_type){
     case gl::DataType::UByte: _fillIndexBuffer<gl::DataTypeCpu_t<gl::DataType::UByte>>(ai_mesh); break;
     case gl::DataType::UShort: _fillIndexBuffer<gl::DataTypeCpu_t<gl::DataType::UShort>>(ai_mesh); break;
@@ -17,15 +18,11 @@ MeshIndexData::MeshIndexData(const wptr<Context>& wctx, const aiMesh& ai_mesh) :
     }
 }
 
-sptr<Buffer> MeshIndexData::getIndices(){
+const sptr<gl::Buffer> MeshIndexData::getIndices() const {
     return _indices;
 }
 
-const sptr<Buffer> MeshIndexData::getIndices() const {
-    return _indices;
-}
-
-void MeshIndexData::_fillIndexType(const aiMesh& ai_mesh){
+gl::DataType MeshIndexData::_getIndexType(const aiMesh& ai_mesh){
     auto faces_num = ai_mesh.mNumFaces;
     size_t index_num = faces_num * 3;
 
@@ -33,9 +30,9 @@ void MeshIndexData::_fillIndexType(const aiMesh& ai_mesh){
         throw std::runtime_error("Too many indices in mesh");
     }
 
-     _type = index_num < (1 << 8)  ? gl::DataType::UByte
-           : index_num < (1 << 16) ? gl::DataType::UShort
-           : gl::DataType::UInt;
+     return index_num < (1 << 8)  ? gl::DataType::UByte
+          : index_num < (1 << 16) ? gl::DataType::UShort
+          : gl::DataType::UInt;
 }
 
 template<typename T>
@@ -43,8 +40,7 @@ void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh){
     auto faces_num = ai_mesh.mNumFaces;
     size_t index_num = faces_num * 3;
 
-    auto tmp = createTmpData(index_num * sizeof(T));
-    auto ptr = reinterpret_cast<T*>(tmp.get());
+    auto tmp = alloc_sptr_buffer<T>(index_num);
     for (size_t i = 0; i < faces_num; ++i){
         auto &face = ai_mesh.mFaces[i];
         if (face.mNumIndices != 3){
@@ -52,7 +48,7 @@ void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh){
         }
 
         for (size_t j = 0; j < 3; ++j){
-            ptr[3 * i + j] = face.mIndices[j];
+            tmp[3 * i + j] = face.mIndices[j];
         }
     }
     _indices->storage(index_num * sizeof(T), tmp, 0);

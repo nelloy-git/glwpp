@@ -98,7 +98,8 @@
         "hash_set": "cpp",
         "stack": "cpp",
         "filesystem": "cpp",
-        "execution": "cpp"
+        "execution": "cpp",
+        "shared_mutex": "cpp"
     },
     "cmake.configureOnOpen": false
 }

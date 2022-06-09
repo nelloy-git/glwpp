@@ -75,8 +75,8 @@ add_library (${PROJECT_NAME} STATIC
 
     # src/model/Mesh.cpp
     # src/model/MeshAttributeData.cpp
-    # src/model/MeshIndexData.cpp
-    # src/model/MeshVertexConfig.cpp
+    src/model/MeshIndexData.cpp
+    src/model/MeshVertexConfig.cpp
     # src/model/MeshVertexData.cpp
     # src/model/ModelNode.cpp
 

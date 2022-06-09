@@ -1,7 +1,5 @@
 #pragma once
 
-#include <variant>
-
 #include "glm/glm.hpp"
 
 #include "glwpp/gl/obj/Buffer.hpp"

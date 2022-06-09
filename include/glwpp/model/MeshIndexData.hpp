@@ -5,22 +5,20 @@
 
 struct aiMesh;
 
-namespace glwpp {
+namespace glwpp::model {
 
 class MeshIndexData {
 public:
     MeshIndexData(const wptr<Context>& wctx, const aiMesh& ai_mesh);
     virtual ~MeshIndexData();
-    sptr<Buffer> getIndices();
-    const sptr<Buffer> getIndices() const;
+    const sptr<gl::Buffer> getIndices() const;
     const gl::DataType& getType() const;
 
 private:
-    wptr<Context> _ctx;
     gl::DataType _type;
-    sptr<Buffer> _indices; 
+    sptr<gl::Buffer> _indices; 
 
-    void _fillIndexType(const aiMesh& ai_mesh);
+    static gl::DataType _getIndexType(const aiMesh& ai_mesh);
     template<typename T>
     void _fillIndexBuffer(const aiMesh& ai_mesh);
 };
