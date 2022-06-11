@@ -4,8 +4,6 @@
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::util;
-
 
 VertexArray::VertexArray(const wptr<Context>& wctx, const Val<const SrcLoc> src_loc) :
     Object(wctx, src_loc, &VertexArray::_initer, &VertexArray::_deleter){

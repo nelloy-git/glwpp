@@ -3,9 +3,9 @@
 #include <array>
 #include <stdexcept>
 
-#include "glwpp/model/MeshAttribute.hpp"
+#include "glwpp/model/MeshEnums.hpp"
 
-namespace glwpp {
+namespace glwpp::model {
 
 static constexpr uint32_t packMeshAttributeDataValue(const float& value, size_t bits){
     uint32_t mult = (1 << bits) - 1;

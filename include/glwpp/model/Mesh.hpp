@@ -16,27 +16,23 @@ struct aiFace;
 template<class T>
 class aiVector3t;
 
-namespace glwpp {
+namespace glwpp::model {
 
 class Mesh {
 
 public:
-    Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config);
+    Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config,
+         const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~Mesh();
 
-    sptr<VertexArray> getVertexArray();
-
-    void setAttributeBindings(const EnumContainer<MeshAttribute, gl::Int>& bindings);
-    const EnumContainer<MeshAttribute, gl::Int>& getAttributeBindings() const;
+    const gl::VertexArray& getVertexArray() const;
+    const MeshIndexData& getIndexData() const;
+    const MeshVertexData& getVertexData() const;
 
 private:
-    wptr<Context> _ctx;
-    sptr<VertexArray> _vert_arr;
-
+    gl::VertexArray _vert_arr;
     MeshIndexData _index_data;
     MeshVertexData _vert_data;
-
-    EnumContainer<MeshAttribute, gl::Int> _attr_bindings;
 };
 
 } // namespace glwpp

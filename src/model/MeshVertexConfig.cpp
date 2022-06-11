@@ -3,6 +3,7 @@
 #include "magic_enum.hpp"
 
 using namespace glwpp;
+using namespace glwpp::model;
 
 MeshVertexConfig::MeshVertexConfig(){}
 

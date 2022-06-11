@@ -4,7 +4,6 @@
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::util;
 
 Shader::Shader(const wptr<Context>& wctx, const Val<const gl::ShaderType>& type,
                const Val<const SrcLoc>& src_loc) :

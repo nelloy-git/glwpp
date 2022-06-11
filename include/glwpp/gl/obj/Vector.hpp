@@ -10,7 +10,8 @@ namespace glwpp::gl {
 template<typename T>
 class Vector {
     template<typename U>
-    using Val = util::Val<U>;
+    using Val = utils::Val<U>;
+    using SrcLoc = utils::SrcLoc;
     static const SizeiPtr INIT_CAPACITY = 4;
 
 public:

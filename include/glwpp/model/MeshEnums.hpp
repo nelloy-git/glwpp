@@ -4,7 +4,7 @@
 
 #include "glwpp/gl/enums/DataType.hpp"
 
-namespace glwpp {
+namespace glwpp::model {
 
 enum class MeshAttributeSize : size_t {
     Scalar,
@@ -22,6 +22,29 @@ constexpr size_t getMeshAttributeSizeComponents(const MeshAttributeSize& size){
     default: throw std::runtime_error("Unknown MeshAttributeSize");
     }
 };
+
+enum class MeshIndexType {
+    UByte,
+    UShort,
+    UInt
+};
+
+constexpr gl::DataType getMeshIndexTypeGlType(const MeshIndexType& type){
+    switch (type){
+    case MeshIndexType::UByte: return gl::DataType::UByte;
+    case MeshIndexType::UShort: return gl::DataType::UShort;
+    case MeshIndexType::UInt: return gl::DataType::UInt;
+    default: throw std::runtime_error("Unknown MeshIndexType");
+    }
+};
+
+template<MeshIndexType T>
+struct MeshIndexTypeCpu {
+    using type = gl::DataTypeCpu_t<getMeshIndexTypeGlType(T)>;
+};
+
+template<MeshIndexType T>
+using MeshIndexTypeCpu_t = gl::DataTypeCpu_t<getMeshIndexTypeGlType(T)>;
 
 enum class MeshAttributeType {
     UInt_11_11_10,
@@ -42,7 +65,7 @@ constexpr gl::DataType getMeshAttributeTypeGlType(const MeshAttributeType& type)
     case MeshAttributeType::Float: return gl::DataType::Float;
     default: throw std::runtime_error("Unknown MeshAttributeType");
     }
-}
+};
 
 template<MeshAttributeType T>
 struct MeshAttributeTypeCpu {

@@ -10,6 +10,7 @@
 #include "glwpp/model/MeshAttributeData.hpp"
 
 using namespace glwpp;
+using namespace glwpp::model;
 
 namespace {
 
@@ -28,11 +29,10 @@ constexpr size_t _getVecComponents(){
 
 };
 
-MeshVertexData::MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh) :
-    _ctx(wctx),
-    _config(config){
-    _vertices = make_sptr<Buffer>(wctx);
-
+MeshVertexData::MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
+                               const utils::Val<const utils::SrcLoc>& src_loc) :
+    _config(config),
+    _vertices(wctx, src_loc){
     _fillAttributeStates(ai_mesh);
     _fillVertexBuffer(ai_mesh);
 }
@@ -59,56 +59,50 @@ const float& MeshVertexData::getValueMultiplier(const MeshAttribute& attribute) 
 void MeshVertexData::_fillAttributeStates(const aiMesh& ai_mesh){
     _vertex_bytes = 0;
     _vertex_count = ai_mesh.mNumVertices;
-    for (auto& attr : _attr_state.enum_values()){
-        magic_enum::enum_switch([&](auto attr){
-            auto& info = _attr_state[attr];
 
-            info.enabled = _config.isEnabled(attr) && _doAiMeshHasAttribute<attr>(ai_mesh);
-            if (!info.enabled){
-                return;
-            }
+    _attr_state.for_each([&](auto attr){
+        auto& info = _attr_state[attr];
 
-            info.byte_offset = _vertex_bytes;
-            info.value_offset = _findValueOffset<attr>(ai_mesh);
-            info.value_mult = _findValueMultiplier<attr>(ai_mesh, info.value_offset);
-            info.size = _config.getSize(attr);
-            info.compression = _config.getCompression(attr);
-            if (_config.getForcedType(attr)){
-                info.type = _config.getForcedType(attr).value();
-            } else {
-                info.type = _findOptimalType<attr>(ai_mesh, info.size, info.compression, info.value_offset, info.value_mult);    
-            }
-            _vertex_bytes += getMeshAttributeDataBytes(info.type, info.size);
-        }, attr);
-    }
+        info.enabled = _config.isEnabled(attr) && _doAiMeshHasAttribute<attr>(ai_mesh);
+        if (!info.enabled){
+            return;
+        }
+
+        info.byte_offset = _vertex_bytes;
+        info.value_offset = _findValueOffset<attr>(ai_mesh);
+        info.value_mult = _findValueMultiplier<attr>(ai_mesh, info.value_offset);
+        info.size = _config.getSize(attr);
+        info.compression = _config.getCompression(attr);
+        if (_config.getForcedType(attr)){
+            info.type = _config.getForcedType(attr).value();
+        } else {
+            info.type = _findOptimalType<attr>(ai_mesh, info.size, info.compression, info.value_offset, info.value_mult);    
+        }
+        _vertex_bytes += getMeshAttributeDataBytes(info.type, info.size);
+    });
 }
 
 void MeshVertexData::_fillVertexBuffer(const aiMesh& ai_mesh){
-    auto tmp = createTmpData(_vertex_count * _vertex_bytes);
-    char* start_ptr = reinterpret_cast<char*>(tmp.get());
+    auto tmp = utils::alloc_sptr_buffer<char>(_vertex_count * _vertex_bytes);
 
-    for (auto& attr : _attr_state.enum_values()){
+    _attr_state.for_each([&](auto attr){
         auto& info = _attr_state[attr];
         if (!info.enabled){
-            continue;
+            return;
         }
 
-        auto type = info.type;
-        auto size = info.size;
-        magic_enum::enum_switch([&](auto attr){
-            const auto arr = _getAiArray<attr>(ai_mesh);
-            char* attr_ptr = start_ptr + info.byte_offset;
+        const auto arr = _getAiArray<attr>(ai_mesh);
+        char* attr_ptr = tmp.get() + info.byte_offset;
 
-            for (size_t i = 0; i < _vertex_count; ++i){
-                auto vec = _normalize<decltype(arr[0]), glm::vec4>(arr[i], info.value_offset, info.value_mult);
-                _fillVertexBufferAttribute(attr_ptr, vec, type, size);
+        for (size_t i = 0; i < _vertex_count; ++i){
+            auto vec = _normalize<decltype(arr[0]), glm::vec4>(arr[i], info.value_offset, info.value_mult);
+            _fillVertexBufferAttribute(attr_ptr, vec, info.type, info.size);
 
-                attr_ptr += _vertex_bytes;
-            }
-        }, attr);
-    }
+            attr_ptr += _vertex_bytes;
+        }
+    });
 
-    _vertices->storage(_vertex_count * _vertex_bytes, tmp, 0);
+    _vertices.storage(_vertex_count * _vertex_bytes, tmp, 0);
 }
 
 void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,

@@ -13,6 +13,7 @@ namespace glwpp {
 
 template<class ... Args>
 class Event final {
+    using SrcLoc = utils::SrcLoc;
     using Action = std::function<void(Args...)>;
     using Condition = std::function<bool(Args...)>;
     using ActionData = std::tuple<sptr<Condition>, sptr<Action>, sptr<SrcLoc>>;

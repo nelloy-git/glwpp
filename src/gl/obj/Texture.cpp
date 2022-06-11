@@ -4,7 +4,6 @@
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::util;
 
 Texture::Texture(const wptr<Context>& wctx, const Val<const TextureType>& type,
                  const Val<const SrcLoc>& src_loc, bool check_ctx) :

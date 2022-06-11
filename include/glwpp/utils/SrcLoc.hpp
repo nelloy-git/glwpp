@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace glwpp {
+namespace glwpp::utils {
 
 #ifndef GLWPP_DEBUG
 

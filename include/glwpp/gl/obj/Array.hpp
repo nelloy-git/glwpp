@@ -11,7 +11,8 @@ template<typename T>
 class Array {
 public:
     template<typename U>
-    using Val = util::Val<U>;
+    using Val = utils::Val<U>;
+    using SrcLoc = utils::SrcLoc;
 
     Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
           const Val<const std::optional<T>>& initial = std::nullopt,

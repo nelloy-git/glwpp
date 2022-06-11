@@ -4,9 +4,8 @@
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::util;
 
-Val<const UInt> Object::id() const {
+utils::Val<const UInt> Object::id() const {
     return Val<const UInt>(_id);
 }
 

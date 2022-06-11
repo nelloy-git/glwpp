@@ -13,7 +13,8 @@ namespace glwpp::gl {
 class Object {
 public:
     template<typename T>
-    using Val = util::Val<T>;
+    using Val = utils::Val<T>;
+    using SrcLoc = utils::SrcLoc;
 
     Val<const UInt> id() const;
     wptr<Context> ctx() const;

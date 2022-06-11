@@ -25,12 +25,16 @@ inline uptr<T> make_uptr(Args&&... args){
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
+namespace utils {
+    
 namespace detail {
+
 template<typename T>
 static void tmp_deleter(T* ptr){
     delete[] ptr;
 }
-}
+
+};
 
 template<typename T>
 static sptr<std::conditional_t<std::is_same_v<T, void>, void, T[]>> alloc_sptr_buffer(size_t size, const T* src = nullptr){
@@ -47,6 +51,8 @@ static sptr<std::conditional_t<std::is_same_v<T, void>, void, T[]>> alloc_sptr_b
     } else {
         return data;
     }
+}
+
 }
 
 template <template<typename...> typename base, typename derived>

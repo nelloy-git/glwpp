@@ -4,7 +4,7 @@
 
 #include "glwpp/utils/Utils.hpp"
 
-namespace glwpp::util {
+namespace glwpp::utils {
 
 template<class T>
 class Val {

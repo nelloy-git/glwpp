@@ -5,10 +5,10 @@
 
 #include "glwpp/gl/enums/DataType.hpp"
 
-#include "glwpp/model/MeshAttribute.hpp"
+#include "glwpp/model/MeshEnums.hpp"
 #include "glwpp/utils/EnumContainer.hpp"
 
-namespace glwpp {
+namespace glwpp::model {
 
 class MeshVertexConfig {
 public:

@@ -5,6 +5,7 @@
 #include "glwpp/model/MeshAttributeData.hpp"
 
 using namespace glwpp;
+using namespace glwpp::model;
 
 // Mesh Mesh::Cube(const wptr<Context>& wctx, const MeshVertexConfig& vertex_config){
 //     static const aiVector3D vertices[8] = {
@@ -42,49 +43,45 @@ using namespace glwpp;
 //     return std::move(cube);
 // }
 
-Mesh::Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vertex_config) :
-    _ctx(wctx),
-    _index_data(wctx, ai_mesh),
-    _vert_data(wctx, vertex_config, ai_mesh){
+Mesh::Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vertex_config,
+           const utils::Val<const utils::SrcLoc>& src_loc) :
+    _vert_arr(wctx, src_loc),
+    _index_data(wctx, ai_mesh, src_loc),
+    _vert_data(wctx, vertex_config, ai_mesh, src_loc){
 
-    _vert_arr = make_sptr<VertexArray>(wctx);
-    _vert_arr->setElementBuffer(*_index_data.getIndices());
-    _vert_arr->setVertexBuffer(0, *_vert_data.getVertices(), 0, _vert_data.getBytesPerVertex());
+    _vert_arr.setElementBuffer(_index_data.getIndices(), src_loc);
+    _vert_arr.setVertexBuffer(0, _vert_data.getVertices(), 0, _vert_data.getBytesPerVertex(), src_loc);
 
-    for (auto attr : _attr_bindings.enum_values()){
+    magic_enum::enum_for_each<MeshAttribute>([&](auto attr){
+        constexpr auto index = magic_enum::enum_index<MeshAttribute>(attr).value();
+
         if (!_vert_data.isEnabled(attr)){
-            continue;
+            _vert_arr.disableAttrib(index, src_loc);
+            return;
         }
-        _vert_arr->setAttribBinding(_attr_bindings.enum_index(attr), 0);
-    }
+
+        _vert_arr.enableAttrib(index, src_loc);
+        _vert_arr.setAttribBinding(index, 0);
+
+        auto size = getMeshAttributeSizeComponents(_vert_data.getSize(attr));
+        auto type = getMeshAttributeTypeGlType(_vert_data.getType(attr));
+        auto offset = _vert_data.getByteOffset(attr);
+        _vert_arr.setAttribFormat(index, size, type, true, offset);
+    });
 }
 
 Mesh::~Mesh(){
 
 }
 
-sptr<VertexArray> Mesh::getVertexArray(){
+const gl::VertexArray& Mesh::getVertexArray() const {
     return _vert_arr;
 }
 
-void Mesh::setAttributeBindings(const EnumContainer<MeshAttribute, gl::Int>& bindings){
-    for (auto attr : _attr_bindings.enum_values()){
-        if (_attr_bindings[attr] == bindings[attr]){
-            continue;
-        }
+const MeshIndexData& Mesh::getIndexData() const {
+    return _index_data;
+}
 
-        auto attr_i = _attr_bindings.enum_index(attr);
-        if (!_vert_data.isEnabled(attr) or _attr_bindings[attr] < 0){
-            _vert_arr->disableAttrib(attr_i);
-            continue;
-        }
-
-        auto size = getMeshAttributeSizeComponents(_vert_data.getSize(attr));
-        auto type = getMeshAttributeTypeGlType(_vert_data.getType(attr));
-        auto offset = _vert_data.getByteOffset(attr);
-
-        _vert_arr->enableAttrib(attr_i);
-        _vert_arr->setAttribFormat(attr_i, size, type, true, offset);
-    }
-    _attr_bindings = bindings;
+const MeshVertexData& Mesh::getVertexData() const {
+    return _vert_data;
 }

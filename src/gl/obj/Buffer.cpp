@@ -4,7 +4,6 @@
 
 using namespace glwpp;
 using namespace glwpp::gl;
-using namespace glwpp::util;
 
 Buffer::Buffer(const wptr<Context>& wctx, const Val<const SrcLoc>& src_loc) :
     Object(wctx, src_loc, &Buffer::_initer, &Buffer::_deleter){

@@ -12,15 +12,15 @@ struct aiVector3t;
 template<class T>
 struct aiColor4t;
 
-namespace glwpp {
+namespace glwpp::model {
 
 class MeshVertexData {
 public:
-    MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh);
+    MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
+                   const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~MeshVertexData();
 
-    sptr<Buffer> getVertices();
-    const sptr<Buffer> getVertices() const;
+    const gl::Buffer& getVertices() const;
     const MeshVertexConfig& getConfig() const;
     const size_t getBytesPerVertex() const;
 
@@ -32,9 +32,8 @@ public:
     const float& getValueMultiplier(const MeshAttribute& attribute) const;
 
 private:
-    wptr<Context> _ctx;
     MeshVertexConfig _config;
-    sptr<Buffer> _vertices;
+    gl::Buffer _vertices;
 
     struct AttributeState {
         bool enabled;           // Do model have attribute

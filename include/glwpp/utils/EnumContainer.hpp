@@ -9,6 +9,8 @@ class EnumContainer {
     static constexpr size_t S = magic_enum::enum_count<E>();
 
 public:
+    using Enum = E;
+
     EnumContainer(){};
     virtual ~EnumContainer(){};
 
@@ -18,6 +20,10 @@ public:
 
     static constexpr auto enum_index(const E& enum_value){
         return magic_enum::enum_index(enum_value).value();
+    }
+
+    static constexpr void for_each(auto&& lambda){
+        magic_enum::enum_for_each<E>(lambda);
     }
 
     inline T& operator[](const E& target){
