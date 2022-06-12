@@ -6,7 +6,8 @@ namespace glwpp {
 
 template<typename E, typename T>
 class EnumContainer {
-    static constexpr size_t S = magic_enum::enum_count<E>();
+    // fix for vs linter
+    static constexpr size_t S = magic_enum::enum_count<E>() > 0 ? magic_enum::enum_count<E>() : 1;
 
 public:
     using Enum = E;

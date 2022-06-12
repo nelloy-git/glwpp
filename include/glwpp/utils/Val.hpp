@@ -6,6 +6,17 @@
 
 namespace glwpp::utils {
 
+template<typename T>
+class Val;
+
+template<typename>
+struct isVal : std::false_type {};
+
+template<typename T>
+struct isVal<Val<T>> : std::true_type {
+    using type = T;
+};
+
 template<class T>
 class Val {
 public:
@@ -19,40 +30,27 @@ public:
     using non_const = std::remove_const_t<U>;
 
 
+    template<typename V>
+    Val(const Val<V>& other) : _data(other._data){}
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     Val(const V& data){_data = make_sptr<T>(data);}
-    
 
     template<typename V>
     Val(const sptr<V>& data) : _data(data){
         if constexpr (!is_void<T>){
-            if (data.get() == nullptr){
+            if (!data){
                 throw std::logic_error("non-void glwpp::util::Val can not be nullptr");
             }
         }
     }
 
 
-    template<typename U>
-    Val(const Val<U>& other) : _data(other._data){}
-    template<typename U = T, std::enable_if_t<(!is_void<U> && is_const<U>), bool> = true>
-    Val(const Val<non_const<U>>& other) : _data(other._data){}
-
-
-    template<typename U>
-    Val(const Val<U>&& other) : _data(other._data){}
-    template<typename U = T, std::enable_if_t<(!is_void<U> && is_const<U>), bool> = true>
-    Val(const Val<non_const<U>>&& other) : _data(other._data){}
-
-
     virtual ~Val(){};
     
 
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && (std::is_const_v<V> == std::is_const_v<U>)), bool> = true>
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !(is_const<U> && !is_const<V>)), bool> = true>
     operator V&() const {return *_data;}
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && std::is_const_v<V> && !std::is_const_v<U>), bool> = true>
-    operator V&() const {return const_cast<V&>(*_data);}
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_const_v<V> && std::is_const_v<U>), bool> = true>
+    template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     operator V() const {return *_data;}
     template<typename V>
     operator V*() const {return _data.get();}
@@ -77,14 +75,6 @@ private:
     
     template<typename>
     friend class Val;
-};
-
-template<class>
-struct isVal : std::false_type {};
-
-template<class T>
-struct isVal<Val<T>> : std::true_type {
-    using type = T;
 };
 
 } // namespace glwpp

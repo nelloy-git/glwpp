@@ -7,167 +7,65 @@
 
 namespace glwpp::gl {
 
-template<typename T>
-class Array {
+namespace detail {
+
+// Just to hide implementation
+class ArrayBase {
 public:
-    template<typename U>
-    using Val = utils::Val<U>;
-    using SrcLoc = utils::SrcLoc;
-
-    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
-          const Val<const std::optional<T>>& initial = std::nullopt,
-          const Val<const SrcLoc>& src_loc = SrcLoc{}) :
-        _size(0),
-        _buffer(make_sptr<Buffer>(wctx, src_loc)){
-        _buffer->executeInContext(true, src_loc, _initBuffer, _buffer, _size, size, initial, src_loc);
-    }
-    ~Array(){};
-
-    operator const Val<Buffer>&(){return _buffer;}
-    operator const Val<const Buffer>&() const {return _buffer;}
-
-    inline bool size(const Val<SizeiPtr>& dst,
-              const Val<const SrcLoc>& src_loc = SrcLoc{}) const {
-        return _buffer->executeInContext(true, src_loc, _getSize, dst, Val<const SizeiPtr>(_size));
-    }
-
-    inline bool get(const Val<const size_t>& i, const Val<T>& dst,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}) const {
-        return _buffer->executeInContext(true, src_loc, _getValue, _buffer, i, dst, src_loc);
-    }
-
-    inline bool set(const Val<const size_t>& i, const Val<const T>& value,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}){
-        return _buffer->executeInContext(true, src_loc, _setValue, _buffer, i, value, src_loc);
-    }
-
+    virtual ~ArrayBase() = 0;
 protected:
-    const Val<SizeiPtr> _size;
-    const Val<Buffer> _buffer;
+    ArrayBase(){};
+    struct ArrayData {
+        SizeiPtr size;
+        size_t elem_size;
+    };
 
-private:
-    static void _initBuffer(const Val<Buffer>& buffer,
-                            const Val<SizeiPtr>& array_size, const Val<const SizeiPtr>& init_size,
-                            const Val<const std::optional<T>>& initial,
-                            const Val<const SrcLoc>& src_loc){
-        *array_size = *init_size;
-        sptr<void> empty = nullptr;
-        buffer->storage(*init_size * sizeof(T), empty, _access, src_loc, false);
+    static void _init(const SizeiPtr& size, const void* initial,
+                      const size_t& element_bytes,
+                      const UInt& id, ArrayData& data);
+    static void _getSize(SizeiPtr& dst,
+                         const UInt& id, ArrayData& data);
+    static void _getValue(const SizeiPtr& i, void* dst,
+                          const UInt& id, ArrayData& data);
+    static void _setValue(const SizeiPtr& i, const void* value,
+                          const UInt& id, ArrayData& data);
+};
 
-        auto s_ptr = make_sptr<T*>();
-        auto init_val = *initial ? (*initial).value() : T{};
-
-        buffer->map(std::reinterpret_pointer_cast<void*>(s_ptr), BufferMapAccess::WriteOnly, src_loc, false);
-        for (size_t i = 0; i < *array_size; ++i){
-            (*s_ptr)[i] = init_val;
-        }
-        buffer->unmap(true, src_loc, false);
-    }
-
-    static void _getSize(const Val<SizeiPtr>& dst,
-                         const Val<const SizeiPtr>& array_size){
-        *dst = *array_size;
-    }
-
-    static void _getValue(const Val<Buffer>& buffer,
-                          const Val<const size_t>& i, const Val<T>& dst,
-                          const Val<const SrcLoc>& src_loc){
-        auto map_ptr = make_sptr<T*>();
-        buffer->mapRange(std::reinterpret_pointer_cast<void*>(map_ptr),
-                         *i * sizeof(T), sizeof(T), _access,
-                         src_loc, false);
-        *dst = **map_ptr;
-        buffer->unmap(true, src_loc, false);
-    }
-
-    static void _setValue(const Val<Buffer>& buffer,
-                          const Val<const size_t>& i, const Val<const T>& value,
-                          const Val<const SrcLoc>& src_loc){
-        auto map_ptr = make_sptr<T*>();
-        buffer->mapRange(std::reinterpret_pointer_cast<void*>(map_ptr),
-                         *i * sizeof(T), sizeof(T), _access,
-                         src_loc, false);
-        **map_ptr = *value;
-        buffer->unmap(true, src_loc, false);
-    }
-
-    static inline BitField _access = static_cast<Enum>(BufferStorageFlag::Read)
-                                   | static_cast<Enum>(BufferStorageFlag::Write)
-                                   | static_cast<Enum>(BufferStorageFlag::Persistent)
-                                   | static_cast<Enum>(BufferStorageFlag::Coherent);
+inline ArrayBase::~ArrayBase(){};
 
 };
 
-// template<typename T>
-// Array<T>::Array(const wptr<Context>& wctx, const Val<size_t>& size, const SrcLoc& loc) :
-//     Buffer(wctx, loc){
-//     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _size,
-//                                  const size_t& size, const SrcLoc& loc){
-//         *_size = size;
-//         buffer->storage(*_size * sizeof(T), nullptr, _access, loc);
 
-//         auto ptr = static_cast<T*>(buffer->map(gl::BufferMapAccess::WriteOnly, loc));
-//         for (size_t i = 0; i < size; ++i){
-//             ptr[i] = T{};
-//         }
-//         buffer->unmap(loc);
-//     };
-//     _size = make_sptr<size_t>(0);
-//     _execute<F>(getWCtx(), _getPtr(), Ptr(_size), size, Val(loc));
-// };
+template<typename T>
+class Array : public detail::ArrayBase, public Buffer {
+public:
+    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
+          const Val<const std::optional<T>>& initial = std::nullopt,
+          const Val<const SrcLoc>& src_loc = SrcLoc{}) :
+        Buffer(wctx, src_loc){
+        Val<const T> init_val(*initial ? (*initial).value() : T{});
+        executeInContext(true, src_loc, &ArrayBase::_init, size, init_val, sizeof(T), id(), Val<ArrayData>(_data));
+    }
 
-// template<typename T>
-// Array<T>::Array(const wptr<Context>& wctx, const Val<size_t>& size, const Val<T>& initial, const SrcLoc& loc) :
-//     Buffer(wctx, loc){
-    // static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _size,
-    //                              const size_t& size, const SrcLoc& loc){
-    //     *_size = size;
-    //     buffer->storage(*_size * sizeof(T), nullptr, _access, loc);
+    ~Array(){};
 
-    //     auto ptr = static_cast<T*>(buffer->map(gl::BufferMapAccess::WriteOnly, loc));
-    //     for (size_t i = 0; i < size; ++i){
-    //         ptr[i] = initial;
-    //     }
-    //     buffer->unmap(loc);
-    // };
-    // _size = make_sptr<size_t>(0);
-    // _execute<F>(getWCtx(), _getPtr(), Ptr(_size), size, initial, Val(loc));
-// };
+    inline bool size(const Val<SizeiPtr>& dst,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
+        return executeInContext(check_ctx, src_loc, &ArrayBase::_getSize, dst, id(), Val<ArrayData>(_data));
+    }
 
-// template<typename T>
-// bool Array<T>::size(Ptr<size_t>& dst) const {
-//     static constexpr auto F = [](size_t* _size, size_t* dst){
-//         *dst = *_size;
-//     };
-//     return _execute<F>(getWCtx(), Ptr(_size), dst);
-// };
+    inline bool get(const Val<const SizeiPtr>& i, const Val<T>& dst,
+                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
+        return executeInContext(check_ctx, src_loc, &ArrayBase::_getValue, i, dst, id(), Val<ArrayData>(_data));
+    }
 
-// template<typename T>
-// bool Array<T>::set(const Val<size_t>& i, const Val<T>& value, const SrcLoc& loc){
-//     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _size,
-//                                  const size_t& i, const T& value, const SrcLoc& loc){
-//         if (i >= *_size){
-//             throw std::runtime_error("Out of bounds: " + std::string(loc.file_name()) + ":" + std::to_string(loc.line()));
-//         }
-//         auto p = static_cast<T*>(buffer->mapRange(i * sizeof(T), sizeof(T), _access, loc));
-//         *p = value;
-//         buffer->unmap(loc);
-//     };
-//     return _execute<F>(getWCtx(), _getPtr(), Ptr(_size), i, value, Val(loc));
-// }
+    inline bool set(const Val<const SizeiPtr>& i, const Val<const T>& value,
+                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
+        return executeInContext(check_ctx, src_loc, &ArrayBase::_setValue, i, value, id(), Val<ArrayData>(_data));
+    }
 
-// template<typename T>
-// bool Array<T>::get(Ptr<T>& dst, const Val<size_t>& i, const SrcLoc& loc) const {
-//     static constexpr auto F = [](gl::CtxBuffer* buffer, size_t* _size,
-//                                  T* dst, const size_t& i, const SrcLoc& loc){
-//         if (i >= *_size){
-//             throw std::runtime_error("Out of bounds: " + std::string(loc.file_name()) + ":" + std::to_string(loc.line()));
-//         }
-//         auto p = static_cast<T*>(buffer->mapRange(i * sizeof(T), sizeof(T), _access, loc));
-//         *dst = *p;
-//         buffer->unmap(loc);
-//     };
-//     return _execute<F>(getWCtx(), _getPtr(), Ptr(_size), dst, i, Val(loc));
-// }
+protected:
+    sptr<ArrayData> _data;
+};
 
 }

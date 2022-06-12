@@ -33,7 +33,6 @@ public:
 private:
     struct AttributeConfig {
         bool enabled = false;
-        gl::UInt loc = 0;
         std::optional<MeshAttributeType> forced_type;
         MeshAttributeSize size = MeshAttributeSize::Scalar;
         double compress = 1.0;

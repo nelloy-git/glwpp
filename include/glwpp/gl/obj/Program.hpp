@@ -11,84 +11,54 @@ public:
     Program(const wptr<Context>& wctx,
             const Val<const SrcLoc> src_loc = SrcLoc{});
             
-    bool getParamInt(
-        const Val<Int>& dst, const Val<const Enum>& param,
-        const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true
-    ) const;
+    bool getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
+                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
 
-    bool isLinked(
-        const Val<bool> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool isLinked(const Val<bool> dst,
+                  const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool isValidated(
-        const Val<bool> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool isValidated(const Val<bool> dst,
+                     const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getAttachedShadersCount(
-        const Val<Int> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getAttachedShadersCount(const Val<Int> dst,
+                                 const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getActiveAttributesCount(
-        const Val<Int> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getActiveAttributesCount(const Val<Int> dst,
+                                  const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getActiveAttributeMaxNameLength(
-        const Val<Int> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getActiveAttributeMaxNameLength(const Val<Int> dst,
+                                         const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getActiveUniformsCount(
-        const Val<Int> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getActiveUniformsCount(const Val<Int> dst,
+                                const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getActiveUniformMaxNameLength(
-        const Val<Int> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getActiveUniformMaxNameLength(const Val<Int> dst,
+                                       const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getInfoLog(
-        const Val<std::string> dst,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getInfoLog(const Val<std::string> dst,
+                    const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
 
-    bool getAttributeLocation(
-        const Val<Int> dst, const Val<const std::string>& name,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getAttributeLocation(const Val<Int> dst, const Val<const std::string>& name,
+                              const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getUniformLocation(
-        const Val<Int> dst, const Val<const std::string>& name,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getUniformLocation(const Val<Int> dst, const Val<const std::string>& name,
+                            const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool getUniformBlockIndex(
-        const Val<UInt>& dst, const Val<const std::string>& name,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool getUniformBlockIndex(const Val<UInt>& dst, const Val<const std::string>& name,
+                              const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
 
-    bool attach(
-        const Shader& shader,
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    );
+    bool attach(const Shader& shader,
+                const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true);
 
-    bool link(
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    );
+    bool link(const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true);
 
-    bool validate(
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool validate(const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
 
-    bool use(
-        const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true
-    ) const;
+    bool use(const Val<const SrcLoc> src_loc = SrcLoc{}, const bool check_ctx = true) const;
+
+    bool bindAttributeLocation();
 
     bool setUniform1F(
         const Val<const Int>& unif_loc, const Val<const Float>& data, const Val<const Sizei>& count = 1,

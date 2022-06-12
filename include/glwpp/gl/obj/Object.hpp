@@ -38,7 +38,6 @@ public:
                 func(args...);
                 _printDebug(src_loc);
             });
-            ctx->onRunEnd.push([src_loc, args...](){});
         }
         return true;
     }
@@ -55,9 +54,6 @@ protected:
                          Val<UInt>(_id), std::forward<decltype(args)>(args)...);
     }
 
-    Object(const Object&) = delete;
-    Object(const Object&&) = delete;
-
 private:
     sptr<UInt> _make_id(const wptr<Context>& wctx, auto&& deleter) const {
         return sptr<UInt>(new UInt(0), [wctx, deleter](UInt* id){
@@ -69,13 +65,12 @@ private:
 
             if (ctx->getThreadId() == std::this_thread::get_id()){
                 deleter(*id);
-                delete id;
             } else {
-                ctx->onRun.push([deleter, id](){
-                    deleter(*id);
-                    delete id;
+                ctx->onRun.push([deleter, id = *id](){
+                    deleter(id);
                 });
             }
+            delete id;
             return;
         });
     }

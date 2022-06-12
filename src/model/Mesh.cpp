@@ -53,7 +53,7 @@ Mesh::Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexCon
     _vert_arr.setVertexBuffer(0, _vert_data.getVertices(), 0, _vert_data.getBytesPerVertex(), src_loc);
 
     magic_enum::enum_for_each<MeshAttribute>([&](auto attr){
-        constexpr auto index = magic_enum::enum_index<MeshAttribute>(attr).value();
+        constexpr gl::UInt index = magic_enum::enum_index<MeshAttribute>(attr).value();
 
         if (!_vert_data.isEnabled(attr)){
             _vert_arr.disableAttrib(index, src_loc);

@@ -22,12 +22,12 @@ public:
 
     const gl::Buffer& getVertices() const;
     const MeshVertexConfig& getConfig() const;
-    const size_t getBytesPerVertex() const;
+    const gl::UInt getBytesPerVertex() const;
 
     const bool& isEnabled(const MeshAttribute& attribute) const;
     const MeshAttributeType& getType(const MeshAttribute& attribute) const;
     const MeshAttributeSize& getSize(const MeshAttribute& attribute) const;
-    const size_t& getByteOffset(const MeshAttribute& attribute) const;
+    const gl::UInt& getByteOffset(const MeshAttribute& attribute) const;
     const glm::vec4& getValueOffset(const MeshAttribute& attribute) const;
     const float& getValueMultiplier(const MeshAttribute& attribute) const;
 
@@ -41,13 +41,13 @@ private:
         MeshAttributeSize size;
         float compression;
 
-        size_t byte_offset;     // gl memory relative offset of attribute in vertex
+        gl::UInt byte_offset;     // gl memory relative offset of attribute in vertex
         glm::vec4 value_offset; // all attribute values are normalized [0, 1]. can be used to restore original values in shader
         float value_mult;       // all attribute values are normalized [0, 1]. can be used to restore original values in shader
     };
 
-    size_t _vertex_bytes;
-    size_t _vertex_count;
+    gl::UInt _vertex_bytes;
+    gl::UInt _vertex_count;
 
     EnumContainer<MeshAttribute, AttributeState> _attr_state;
 

@@ -4,8 +4,9 @@
 #include "glm/glm.hpp"
 
 using namespace glwpp;
+using namespace glwpp::utils;
 
-Drawer::Drawer(const Program& program) :
+Drawer::Drawer(const gl::Program& program) :
     _program(program),
     camera(program.getWCtx()){
     // camera.setPosition({0, 0, 0});
@@ -23,6 +24,14 @@ Drawer::Drawer(const Program& program) :
 
 Drawer::~Drawer(){
 }
+
+bool Drawer::bindMeshAttributes(const Val<const MeshAttributeBindings>& bindings,
+                                const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
+
+}
+
+bool bindMeshAttribute(const Val<model::MeshAttribute>& attr, const Val<std::string>& name,
+                        const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
 
 void Drawer::bindMeshAttribute(const MeshAttribute& attr, const std::string& name){
     _program.getAttributeLocation(_attr_binding[attr], name);

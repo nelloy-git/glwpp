@@ -157,7 +157,7 @@ static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
     ctx_params.gl_major_ver = 4;
-    ctx_params.gl_minor_ver = 5;
+    ctx_params.gl_minor_ver = 6;
     ctx_params.width = 640;
     ctx_params.height = 480;
     ctx_params.fps = 60;
@@ -165,7 +165,7 @@ int main(int argc, char **argv){
 
     std::atomic<bool> running = true;
     auto win = std::make_shared<glwpp::Context>(ctx_params);
-    // pushKeyPrinter(win, running);
+    pushKeyPrinter(win, running);
     pushTimePrinter(win);
     // auto prog = loadProgram(win);
 
@@ -186,10 +186,10 @@ int main(int argc, char **argv){
     arr.set(1, arr_val_0);
     auto arr_val_1 = glwpp::make_sptr<int>(1);
     arr.get(1, arr_val_1);
-    arr.reserve(10);
-    arr.shape();
-    arr.push_back(3);
-    arr.pop_back(0);
+    // arr.reserve(10);
+    // arr.shape();
+    // arr.push_back(3);
+    // arr.pop_back(0);
 
     // glwpp::gl::Buffer buffer(win);
     // glwpp::sptr<void> data(new int[4]);

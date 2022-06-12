@@ -13,7 +13,7 @@ enum class MeshAttributeSize : size_t {
     Vec4
 };
 
-constexpr size_t getMeshAttributeSizeComponents(const MeshAttributeSize& size){
+constexpr gl::UInt getMeshAttributeSizeComponents(const MeshAttributeSize& size){
     switch(size){
     case MeshAttributeSize::Scalar: return 1;
     case MeshAttributeSize::Vec2: return 2;
