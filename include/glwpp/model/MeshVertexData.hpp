@@ -22,7 +22,8 @@ public:
 
     const gl::Buffer& getVertices() const;
     const MeshVertexConfig& getConfig() const;
-    const gl::UInt getBytesPerVertex() const;
+    const gl::UInt& getBytesPerVertex() const;
+    const gl::UInt& getVertexCount() const;
 
     const bool& isEnabled(const MeshAttribute& attribute) const;
     const MeshAttributeType& getType(const MeshAttribute& attribute) const;

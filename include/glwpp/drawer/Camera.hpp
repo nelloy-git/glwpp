@@ -14,7 +14,7 @@ public:
     Camera(const Camera& other) = default;
     virtual ~Camera();
 
-    const gl::Buffer& getBuffer() const;
+    const gl::Buffer& buffer() const;
     void apply();
 
     glm::vec3 pos = {0, 0, 0};

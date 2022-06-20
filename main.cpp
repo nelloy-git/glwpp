@@ -7,25 +7,63 @@
 #include <chrono>
 #include <filesystem>
 
-// #include "assimp/Importer.hpp"
-// #include "assimp/scene.h"
-// #include "assimp/postprocess.h"
-
 #include "glwpp/utils/File.hpp"
 
 #include "glwpp/ctx/Context.hpp"
-// #include "glwpp/ctx/FreeType/Font.hpp"
-
-#include "glwpp/gl/obj/Array.hpp"
-#include "glwpp/gl/obj/Buffer.hpp"
-#include "glwpp/gl/obj/Vector.hpp"
-
-// #include "glwpp/model/Mesh.hpp"
-
-// #include "glwpp/Drawer.hpp"
+#include "glwpp/Drawer.hpp"
+#include "glwpp/Model.hpp"
 
 #include "glad/gl.h"
 
+using namespace glwpp;
+using namespace glwpp::utils;
+
+void pushClear(std::shared_ptr<Context>& ctx){
+    ctx->onRun.push<[]{return true;}>([](){
+        glClear(GL_COLOR_BUFFER_BIT);
+    });
+}
+
+void pushKeyPrinter(std::shared_ptr<Context>& ctx, std::atomic<bool>& is_running){
+    ctx->onKey.push<[]{return true;}>([&is_running](const Key& key){
+        std::cout << "Key: " << char(key) << std::endl;
+        if (key == Key::Escape){
+            is_running = false;
+        }
+    });
+}
+
+static void pushTimePrinter(std::shared_ptr<Context>& ctx){
+    ctx->onRun.push<[]{return true;}>([](const std::chrono::microseconds& time){
+        static int total_time = 0;
+        static int counter = 0;
+
+        total_time += time.count();
+        ++counter;
+
+        if (total_time > 1000000){
+            std::cout << "Time(us): " << (double)total_time / counter << std::endl;
+            total_time = 0;
+            counter = 0;
+        }
+    });
+}
+
+sptr<Context> initContext(std::atomic<bool>& is_running){
+    Context::Parameters ctx_params;
+    ctx_params.gl_major_ver = 4;
+    ctx_params.gl_minor_ver = 6;
+    ctx_params.width = 640;
+    ctx_params.height = 480;
+    ctx_params.fps = 60;
+    ctx_params.title = "Noname";
+
+    auto ctx = make_sptr<Context>(ctx_params);
+    pushClear(ctx);
+    pushKeyPrinter(ctx, is_running);
+    pushTimePrinter(ctx);
+    return ctx;
+}
 
 std::string loadTextFile(const std::string& path){
     std::ifstream t(path);
@@ -34,107 +72,97 @@ std::string loadTextFile(const std::string& path){
     return buffer.str();
 }
 
-void pushKeyPrinter(std::shared_ptr<glwpp::Context> win, std::atomic<bool> &running){
-    win->onKey.push([&running](const glwpp::Key& key){
-        std::cout << "Key: " << char(key) << std::endl;
-        if (key == glwpp::Key::Escape){
-            running = false;
+sptr<Drawer> initDrawer(std::shared_ptr<Context> ctx){
+    auto v_shader = make_sptr<gl::Shader>(ctx, gl::ShaderType::Vertex);
+    v_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
+    v_shader->compile();
+    ctx->onRun.push([v_shader](){
+        Val<bool> compiled(false);
+        v_shader->isCompiled(compiled);
+        if (!*compiled){
+            Val<std::string> log("");
+            v_shader->getInfoLog(log);
+            std::cout << "v_shader failed: " << log->c_str() << std::endl;
         }
-    }, []{return true;});
-}
-
-void printTime(const std::chrono::microseconds& time){
-    static int total_time = 0;
-    static int counter = 0;
-
-    total_time += time.count();
-    ++counter;
-
-    if (total_time > 1000000){
-        std::cout << "Time(us): " << (double)total_time / counter << std::endl;
-        total_time = 0;
-        counter = 0;
-    }
-}
-
-static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
-    win->onRun.push<&printTime, []{return true;}>();
-}
-
-// glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
-//     auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
-//     v_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
-//     win->onRun.push([v_shader](){
-//         bool compiled = false;
-//         v_shader.isCompiled(&compiled);
-//         if (!compiled){
-//             std::string log;
-//             v_shader.getInfoLog(&log);
-//             std::cout << "v_shader failed: " << log.c_str() << std::endl;
-//         }
-//     });
+    });
     
-//     auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
-//     f_shader.compile(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
-//     auto compiled = glwpp::make_sptr<bool>(false);
-//     f_shader.isCompiled(compiled);
-//     win->onRun.push([compiled](){
-//         if (!*compiled){
+    auto f_shader = make_sptr<gl::Shader>(ctx, gl::ShaderType::Fragment);
+    f_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
+    f_shader->compile();
+    ctx->onRun.push([f_shader](){
+        Val<bool> compiled(false);
+        f_shader->isCompiled(compiled);
+        if (!*compiled){
+            Val<std::string> log("");
+            f_shader->getInfoLog(log);
+            std::cout << "f_shader failed: " << log->c_str() << std::endl;
+        }
+    });
 
-//         }
-//     });
-//     win->onRun.push([f_shader](){
-//         bool compiled = false;
-//         f_shader.isCompiled(&compiled);
-//         if (!compiled){
-//             std::string log;
-//             f_shader.getInfoLog(&log);
-//             std::cout << "f_shader failed: " << log.c_str() << std::endl;
-//         }
-//     });
+    auto drawer = make_sptr<Drawer>(ctx);
+    drawer->attach(*v_shader);
+    drawer->attach(*f_shader);
+    drawer->link();
+    ctx->onRun.push([drawer](){
+        Val<bool> linked(false);
+        drawer->isLinked(linked);
+        if (!*linked){
+            Val<std::string> log("");
+            drawer->getInfoLog(log);
+            std::cout << "drawer failed: " << log->c_str() << std::endl;
+        }
+    });
+    drawer->use();
 
-//     auto prog = glwpp::Program(win);
-//     prog.attach(v_shader);
-//     prog.attach(f_shader);
-//     prog.link();
-//     win->onRun.push([prog](){
-//         bool linked = false;
-//         prog.isLinked(&linked);
-//         if (!linked){
-//             std::string log;
-//             prog.getInfoLog(&log);
-//             std::cout << "prog failed: " << log.c_str() << std::endl;
-//         }
-//     });
-//     prog.use();
+    Drawer::MeshAttributeBindings attr;
+    attr[model::MeshAttribute::Position] = "vPos";
+    drawer->bindMeshAttributes(attr);
 
-//     return prog;
-// }
+    Drawer::UniformBlockBindings unif;
+    unif[DrawerUniformBlock::Camera] = "Camera";
+    drawer->bindUniformBlocks(unif);
 
-// void enableCameraMovement(std::shared_ptr<glwpp::Context> win, glwpp::Drawer& drawer){
-//     win->onKey.push<[]{return true;}>([&drawer](const glwpp::Key& key){
-//         switch (key){
-//         case glwpp::Key::W: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{ 0.01, 0, 0}); break;
-//         case glwpp::Key::S: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{-0.01, 0, 0}); break;
-//         case glwpp::Key::A: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0, -0.01}); break;
-//         case glwpp::Key::D: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0,  0.01}); break;
-//         case glwpp::Key::LeftControl: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, -0.01, 0}); break;
-//         case glwpp::Key::Space: drawer.camera.setPosition(drawer.camera.getPosition() + glm::vec3{0, 0.01, 0}); break;
+    return drawer;
+}
+
+sptr<Model> initModel(std::shared_ptr<Context> ctx, const std::string& path){
+    model::MeshVertexConfig vert_config;
+    vert_config.enable(model::MeshAttribute::Position, true);
+    vert_config.setCompression(model::MeshAttribute::Position, 0);
+    vert_config.setSize(model::MeshAttribute::Position, model::MeshAttributeSize::Vec3);
+
+    auto model =  make_sptr<Model>(ctx, path, vert_config);
+    if (model->getError()){
+        std::cout << "model failed: " << model->getError().value().c_str() << std::endl;
+    }
+
+    return model;
+}
+
+void enableCameraMovement(std::shared_ptr<Context> ctx, Drawer& drawer){
+    ctx->onKey.push<[]{return true;}>([&drawer](const Key& key){
+        switch (key){
+        case Key::W: drawer.camera().pos += glm::vec3{0.01, 0, 0}; break;
+        case Key::S: drawer.camera().pos += glm::vec3{-0.01, 0, 0}; break;
+        case Key::A: drawer.camera().pos += glm::vec3{0, 0, -0.01}; break;
+        case Key::D: drawer.camera().pos += glm::vec3{0, 0,  0.01}; break;
+        case Key::LeftControl: drawer.camera().pos += glm::vec3{0, -0.01, 0}; break;
+        case Key::Space: drawer.camera().pos += glm::vec3{0, 0.01, 0}; break;
         
-//         default: break;
-//         }
-//     });
-// }
+        default: break;
+        }
+    });
+}
 
-// void draw(const glwpp::VertexArray& vao){
-//     glwpp::gl::UInt id;
+// void draw(const VertexArray& vao){
+//     gl::UInt id;
 //     vao.getId(&id);
 
 //     glBindVertexArray(id);
 //     // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0);
 //     glDrawElementsInstanced(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0, 1);
 
-//     glwpp::gl::Enum err = glGetError();
+//     gl::Enum err = glGetError();
 //     while (err != GL_NO_ERROR){
 //         std::string err_name;
 //         switch (err){
@@ -155,73 +183,50 @@ static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
 // }
 
 int main(int argc, char **argv){
-    glwpp::Context::Parameters ctx_params;
-    ctx_params.gl_major_ver = 4;
-    ctx_params.gl_minor_ver = 6;
-    ctx_params.width = 640;
-    ctx_params.height = 480;
-    ctx_params.fps = 60;
-    ctx_params.title = "Noname";
+    std::atomic<bool> is_running = true;
+    auto ctx = initContext(is_running);
+    auto drawer = initDrawer(ctx);
+    auto model = initModel(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models-nonbsd\\3D\\mar_rifle_a.3d");
 
-    std::atomic<bool> running = true;
-    auto win = std::make_shared<glwpp::Context>(ctx_params);
-    pushKeyPrinter(win, running);
-    pushTimePrinter(win);
-    // auto prog = loadProgram(win);
+    enableCameraMovement(ctx, *drawer);
 
-    // glwpp::Drawer drawer(prog);
-    // drawer.bindUniform(glwpp::Drawer::Uniform::Camera, "Camera");
-    // enableCameraMovement(win, drawer);
-
-    win->onRun.push<[]{return true;}>([](){
-        glClear(GL_COLOR_BUFFER_BIT);
-    });
-
-    glwpp::gl::Vector<int> arr(win, 5);
-    auto size = glwpp::make_sptr<glwpp::gl::SizeiPtr>(0);
-    arr.size(size);
-    arr.set(0, 100);
-    auto arr_val_0 = glwpp::make_sptr<int>(0);
-    arr.get(0, arr_val_0);
-    arr.set(1, arr_val_0);
-    auto arr_val_1 = glwpp::make_sptr<int>(1);
-    arr.get(1, arr_val_1);
-    // arr.reserve(10);
-    // arr.shape();
-    // arr.push_back(3);
-    // arr.pop_back(0);
-
-    // glwpp::gl::Buffer buffer(win);
-    // glwpp::sptr<void> data(new int[4]);
-    // buffer.data(4, data, glwpp::gl::BufferUsage::DynamicDraw);
-
-    bool shown = false;
-    while (running){
-        win->start();
-        win->wait();
-
-        if (!shown){
-            // std::cout << "val_0: " << *arr_val_0 << std::endl;
-            // std::cout << "val_1: " << *arr_val_1 << std::endl;
-            shown = true;
+    ctx->onRun.push<[]{return true;}>([model](){
+        for (auto& mesh : model->getMeshes()){
+            mesh.getVertexArray().draw(gl::DrawMode::Triangles, mesh.getVertexData().getVertexCount(), getMeshIndexTypeGlType(mesh.getIndexData().getType()), 1, utils::SrcLoc{}, false);
         }
 
-        // drawer.updateCamera();
-        // for (size_t i = 0; i < scene->mNumMeshes; ++i){
-        //     win->onRun.push([&prog, &meshes, i](){
-        //         glwpp::gl::Int loc;
-        //         auto values = &meshes[i].getValueOffset(glwpp::MeshAttribute::Position);
-        //         prog.getUniformLocation(&loc, "offset");
-        //         // prog.setUniform3F(loc, reinterpret_cast<const glwpp::gl::Float*>(values), 1);
 
-        //         prog.getUniformLocation(&loc, "mult");
-        //         prog.setUniform1F(loc, &meshes[i].getValueMultiplicator(glwpp::MeshAttribute::Position));
 
-        //         // std::cout << std::get<0>(*values) << ", " << std::get<1>(*values) << ", " << std::get<2>(*values) << std::endl;
-        //         // std::cout << meshes[i].getValueMultiplicator(glwpp::MeshAttribute::Position) << std::endl;
-        //     });
-        //     meshes[i].getVAO()->draw(glwpp::gl::DrawMode::Triangles, 3 * scene->mMeshes[i]->mNumFaces, glwpp::gl::DataType::UByte, 1);
+        // gl::UInt id;
+        // vao.getId(&id);
+
+        // glBindVertexArray(id);
+        // // glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0);
+        // glDrawElementsInstanced(GL_TRIANGLES, 12, GL_UNSIGNED_BYTE, 0, 1);
+
+        // gl::Enum err = glGetError();
+        // while (err != GL_NO_ERROR){
+        //     std::string err_name;
+        //     switch (err){
+        //         case GL_INVALID_ENUM: err_name = "GL_INVALID_ENUM";
+        //         case GL_INVALID_VALUE: err_name = "GL_INVALID_VALUE";
+        //         case GL_INVALID_OPERATION: err_name = "GL_INVALID_OPERATION";
+        //         case GL_STACK_OVERFLOW: err_name = "GL_STACK_OVERFLOW";
+        //         case GL_STACK_UNDERFLOW: err_name = "GL_STACK_UNDERFLOW";
+        //         case GL_OUT_OF_MEMORY: err_name = "GL_OUT_OF_MEMORY";
+        //         case GL_INVALID_FRAMEBUFFER_OPERATION: err_name = "GL_INVALID_FRAMEBUFFER_OPERATION";
+        //         case GL_CONTEXT_LOST: err_name = "GL_CONTEXT_LOST";
+        //         default: err_name = "UNKNOWN";
+        //     }
+
+        //     std::cout << " Err: " << err_name << "(" << err << ")" << std::endl;
+        //     err = glGetError();
         // }
+    });
+
+    while (is_running){
+        ctx->start();
+        ctx->wait();
     };
 }
 

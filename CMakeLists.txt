@@ -46,19 +46,7 @@ add_library (${PROJECT_NAME} STATIC
     src/glfw/enums/Mod.cpp
     src/glfw/Window.cpp
 
-    # src/gl/ctx_only/CtxObject.cpp
-    # src/gl/ctx_only/CtxBuffer.cpp
-    # src/gl/ctx_only/CtxProgram.cpp
-    # src/gl/ctx_only/CtxShader.cpp
-    # src/gl/ctx_only/CtxTexture.cpp
-    # src/gl/ctx_only/CtxVertexArray.cpp
 
-    # src/gl/obj/Object.cpp
-    # src/gl/obj/Buffer.cpp
-    # src/gl/obj/Program.cpp
-    # src/gl/obj/Shader.cpp
-    # src/gl/obj/Texture.cpp
-    # src/gl/obj/VertexArray.cpp
     
     src/gl/obj/Object.cpp
     src/gl/obj/Array.cpp
@@ -69,20 +57,17 @@ add_library (${PROJECT_NAME} STATIC
     src/gl/obj/Vector.cpp
     src/gl/obj/VertexArray.cpp
 
-    # src/ctx/FreeType/Font.cpp
-
-    # src/utils/event/EventStatus.cpp
-
-    src/drawer/Camera.cpp
+    
 
     src/model/Mesh.cpp
     src/model/MeshAttributeData.cpp
     src/model/MeshIndexData.cpp
     src/model/MeshVertexConfig.cpp
     src/model/MeshVertexData.cpp
-    # src/model/ModelNode.cpp
+    src/Model.cpp
 
-    # src/Drawer.cpp
+    src/drawer/Camera.cpp
+    src/Drawer.cpp
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

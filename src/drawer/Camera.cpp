@@ -15,7 +15,7 @@ Camera::~Camera(){
 }
 
 
-const gl::Buffer& Camera::getBuffer() const {
+const gl::Buffer& Camera::buffer() const {
     return _buffer;
 }
 

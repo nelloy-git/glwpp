@@ -42,7 +42,8 @@ public:
     Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
           const Val<const std::optional<T>>& initial = std::nullopt,
           const Val<const SrcLoc>& src_loc = SrcLoc{}) :
-        Buffer(wctx, src_loc){
+        Buffer(wctx, src_loc),
+        _data(new ArrayData){
         Val<const T> init_val(*initial ? (*initial).value() : T{});
         executeInContext(true, src_loc, &ArrayBase::_init, size, init_val, sizeof(T), id(), Val<ArrayData>(_data));
     }

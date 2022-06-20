@@ -40,12 +40,36 @@ MeshVertexData::MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig
 MeshVertexData::~MeshVertexData(){
 }
 
+const gl::Buffer& MeshVertexData::getVertices() const {
+    return _vertices;
+}
+
+const MeshVertexConfig& MeshVertexData::getConfig() const {
+    return _config;
+}
+
+const gl::UInt& MeshVertexData::getBytesPerVertex() const {
+    return _vertex_bytes;
+}
+
+const gl::UInt& MeshVertexData::getVertexCount() const {
+    return _vertex_count;
+}
+
 const bool& MeshVertexData::isEnabled(const MeshAttribute& attribute) const {
     return _attr_state[attribute].enabled;
 }
 
 const MeshAttributeType& MeshVertexData::getType(const MeshAttribute& attribute) const {
     return _attr_state[attribute].type;
+}
+
+const MeshAttributeSize& MeshVertexData::getSize(const MeshAttribute& attribute) const {
+    return _attr_state[attribute].size;
+}
+
+const gl::UInt& MeshVertexData::getByteOffset(const MeshAttribute& attribute) const {
+    return _attr_state[attribute].byte_offset;
 }
 
 const glm::vec4& MeshVertexData::getValueOffset(const MeshAttribute& attribute) const {

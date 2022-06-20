@@ -20,6 +20,13 @@ const gl::Buffer& MeshIndexData::getIndices() const {
     return _indices;
 }
 
+const MeshIndexType& MeshIndexData::getType() const {
+    return _type;
+}
+
+MeshIndexData::~MeshIndexData(){
+}
+
 MeshIndexType MeshIndexData::_getIndexType(const aiMesh& ai_mesh){
     auto faces_num = ai_mesh.mNumFaces;
     size_t index_num = faces_num * 3;

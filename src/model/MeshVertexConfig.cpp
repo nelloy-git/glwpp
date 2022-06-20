@@ -5,7 +5,11 @@
 using namespace glwpp;
 using namespace glwpp::model;
 
-MeshVertexConfig::MeshVertexConfig(){}
+MeshVertexConfig::MeshVertexConfig(){
+}
+
+MeshVertexConfig::~MeshVertexConfig(){
+}
 
 const bool& MeshVertexConfig::isEnabled(const MeshAttribute& attribute) const {
     return _attr_cfg[attribute].enabled;
