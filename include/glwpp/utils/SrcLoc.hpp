@@ -31,10 +31,18 @@ public:
            std::uint_least32_t line = __builtin_LINE(),
            char const* function = __builtin_FUNCTION()){
         _loc = std::make_shared<Loc>();
-        _loc->file = file;
-        _loc->line = line;
-        _loc->function = function;
-        _loc->prev = other._loc;
+
+        if (ends_with(std::string(file), "xutility") && line == 158){
+            _loc->file = other._loc->file;
+            _loc->line = other._loc->line;
+            _loc->function = other._loc->function;
+            _loc->prev = other._loc->prev;
+        } else {
+            _loc->file = file;
+            _loc->line = line;
+            _loc->function = function;
+            _loc->prev = other._loc;
+        }
     };
     SrcLoc(const SrcLoc&& other) : _loc(other._loc){};
 
@@ -61,6 +69,11 @@ private:
         }
     };
     std::shared_ptr<Loc> _loc;
+
+    static inline bool ends_with(const std::string& value, const std::string& ending){
+        if (ending.size() > value.size()) return false;
+        return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+    }
 };
 
 #endif

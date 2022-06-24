@@ -140,12 +140,12 @@ void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
         switch (size){
         case S::Vec3: reinterpret_cast<MeshAttributeData<T::UInt_11_11_10, S::Vec3>*>(dst)->set(vec); break;
         default: throw std::logic_error("Invalid MeshAttributeSize for UInt_11_11_10");
-    };
+    }; break;
     case T::UInt_10_10_10_2:
         switch (size){
         case S::Vec4: reinterpret_cast<MeshAttributeData<T::UInt_10_10_10_2, S::Vec4>*>(dst)->set(vec); break;
         default: throw std::logic_error("Invalid MeshAttributeSize for UInt_10_10_10_2");
-    };
+    }; break;
     case T::UByte:
         switch (size){
         case S::Scalar: reinterpret_cast<MeshAttributeData<T::UByte, S::Scalar>*>(dst)->set(vec); break;
@@ -153,7 +153,7 @@ void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
         case S::Vec3: reinterpret_cast<MeshAttributeData<T::UByte, S::Vec3>*>(dst)->set(vec); break;
         case S::Vec4: reinterpret_cast<MeshAttributeData<T::UByte, S::Vec4>*>(dst)->set(vec); break;
         default: throw std::logic_error("Invalid MeshAttributeSize for UByte");
-    };
+    }; break;
     case T::UShort:
         switch (size){
         case S::Scalar: reinterpret_cast<MeshAttributeData<T::UShort, S::Scalar>*>(dst)->set(vec); break;
@@ -161,7 +161,7 @@ void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
         case S::Vec3: reinterpret_cast<MeshAttributeData<T::UShort, S::Vec3>*>(dst)->set(vec); break;
         case S::Vec4: reinterpret_cast<MeshAttributeData<T::UShort, S::Vec4>*>(dst)->set(vec); break;
         default: throw std::logic_error("Invalid MeshAttributeSize for UShort");
-    };
+    }; break;
     case T::Float:
         switch (size){
         case S::Scalar: reinterpret_cast<MeshAttributeData<T::Float, S::Scalar>*>(dst)->set(vec); break;
@@ -169,7 +169,7 @@ void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
         case S::Vec3: reinterpret_cast<MeshAttributeData<T::Float, S::Vec3>*>(dst)->set(vec); break;
         case S::Vec4: reinterpret_cast<MeshAttributeData<T::Float, S::Vec4>*>(dst)->set(vec); break;
         default: throw std::logic_error("Invalid MeshAttributeSize for Float");
-    };
+    }; break;
     
     default:
         switch (size){
@@ -178,7 +178,7 @@ void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
         case S::Vec3: throw std::logic_error("Invalid MeshAttributeType for Vec3");
         case S::Vec4: throw std::logic_error("Invalid MeshAttributeType for Vec4");
         default: throw std::logic_error("Invalid MeshAttributeType and MeshAttributeSize");
-    };
+    }; break;
     }
 }
 

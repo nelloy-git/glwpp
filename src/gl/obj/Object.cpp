@@ -31,7 +31,7 @@ void Object::_printDebug(const SrcLoc& loc){
         }
 
         std::cout << loc.to_string() << std::endl
-                  << " Err: " << err_name << "(" << err << ")" << std::endl;
+                  << "\tErr: " << err_name << "(" << err << ")" << std::endl;
         err = glGetError();
     }
 #endif

@@ -92,10 +92,10 @@ enum class MeshAttribute : size_t {
     Color_1,
     Color_2,
     Color_3,
-    Color_4,
-    Color_5,
-    Color_6,
-    Color_7
+    // Color_4,
+    // Color_5,
+    // Color_6,
+    // Color_7
 };
 
 } // namespace glwpp

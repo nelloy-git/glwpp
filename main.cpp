@@ -20,7 +20,7 @@ using namespace glwpp::utils;
 
 void pushClear(std::shared_ptr<Context>& ctx){
     ctx->onRun.push<[]{return true;}>([](){
-        glClear(GL_COLOR_BUFFER_BIT);
+        // glClear(GL_COLOR_BUFFER_BIT);
     });
 }
 
@@ -55,7 +55,7 @@ sptr<Context> initContext(std::atomic<bool>& is_running){
     ctx_params.gl_minor_ver = 6;
     ctx_params.width = 640;
     ctx_params.height = 480;
-    ctx_params.fps = 60;
+    ctx_params.fps = 0;
     ctx_params.title = "Noname";
 
     auto ctx = make_sptr<Context>(ctx_params);
@@ -151,6 +151,10 @@ void enableCameraMovement(std::shared_ptr<Context> ctx, Drawer& drawer){
         
         default: break;
         }
+
+        std::cout << "Camera {" << drawer.camera().pos.x << ", "
+                                << drawer.camera().pos.y << ", "
+                                << drawer.camera().pos.z << "}" << std::endl;
     });
 }
 
@@ -186,13 +190,29 @@ int main(int argc, char **argv){
     std::atomic<bool> is_running = true;
     auto ctx = initContext(is_running);
     auto drawer = initDrawer(ctx);
-    auto model = initModel(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models-nonbsd\\3D\\mar_rifle_a.3d");
+    auto model = initModel(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models\\OBJ\\spider.obj");
 
     enableCameraMovement(ctx, *drawer);
 
     ctx->onRun.push<[]{return true;}>([model](){
+        static bool shown = false;
+
         for (auto& mesh : model->getMeshes()){
-            mesh.getVertexArray().draw(gl::DrawMode::Triangles, mesh.getVertexData().getVertexCount(), getMeshIndexTypeGlType(mesh.getIndexData().getType()), 1, utils::SrcLoc{}, false);
+            mesh.getVertexArray().draw(gl::DrawMode::Triangles, 3 * mesh.getVertexData().getVertexCount(), getMeshIndexTypeGlType(mesh.getIndexData().getType()), 1, utils::SrcLoc{}, false);
+        }
+
+        if (!shown){
+            std::cout << "Meshes: " << model->getMeshes().size() << std::endl;
+
+            for (int i = 0; i < model->getMeshes().size(); ++i){
+                auto& mesh = model->getMeshes()[i];
+
+                std::cout << "Mesh " << i << std::endl;
+                std::cout << "\tVertices: " << mesh.getVertexData().getVertexCount() << std::endl;
+                std::cout << "\tVertex type: " << static_cast<unsigned int>(getMeshIndexTypeGlType(mesh.getIndexData().getType())) << std::endl;
+            }
+
+            shown = true;
         }
 
 

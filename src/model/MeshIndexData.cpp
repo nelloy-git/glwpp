@@ -28,10 +28,12 @@ MeshIndexData::~MeshIndexData(){
 }
 
 MeshIndexType MeshIndexData::_getIndexType(const aiMesh& ai_mesh){
+    const auto max_num = std::numeric_limits<MeshIndexTypeCpu_t<MeshIndexType::UInt>>::max();
+
     auto faces_num = ai_mesh.mNumFaces;
     size_t index_num = faces_num * 3;
 
-    if (index_num > std::numeric_limits<MeshIndexTypeCpu_t<MeshIndexType::UInt>>::infinity()){
+    if (index_num > max_num){
         throw std::runtime_error("Too many indices in mesh");
     }
 

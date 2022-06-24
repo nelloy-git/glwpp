@@ -57,8 +57,8 @@ bool Model::_loadMeshes(const aiScene& ai_scene,
             return false;
         }
 
-
-        // _meshes.emplace_back(wctx, *ai_mesh, vert_config);
+        // model::Mesh mesh(wctx, *ai_mesh, vert_config);
+        _meshes.emplace_back(wctx, *ai_mesh, vert_config);
     }
 
     return true;

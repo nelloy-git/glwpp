@@ -11,12 +11,12 @@ VertexArray::VertexArray(const wptr<Context>& wctx, const Val<const SrcLoc> src_
 
 bool VertexArray::getParamInt(const Val<Int> dst, const Val<const UInt>& index, const Val<const Enum> param,
                               const Val<const SrcLoc> src_loc, bool check_ctx) const {
-    return executeInContext(check_ctx, src_loc, glGetVertexArrayIndexediv, id(), index, param, dst);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glGetVertexArrayIndexediv, id(), index, param, dst);
 }
 
 bool VertexArray::getParamInt64(const Val<Int64> dst, const Val<const UInt>& index, const Val<const Enum> param,
                                 const Val<const SrcLoc> src_loc, bool check_ctx) const {
-    return executeInContext(check_ctx, src_loc, glGetVertexArrayIndexed64iv, id(), index, param, dst);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glGetVertexArrayIndexed64iv, id(), index, param, dst);
 }
 
 bool VertexArray::isAttribEnabled(const Val<bool>& dst, const Val<const UInt>& index, 
@@ -71,41 +71,41 @@ bool VertexArray::getAttribBindingOffset(const Val<Int64>& dst, const Val<const 
 
 bool VertexArray::enableAttrib(const Val<const UInt>& index, 
                                const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glEnableVertexArrayAttrib, id(), index);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glEnableVertexArrayAttrib, id(), index);
 }
 
 bool VertexArray::disableAttrib(const Val<const UInt>& index, 
                                 const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glDisableVertexArrayAttrib, id(), index);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glDisableVertexArrayAttrib, id(), index);
 }
 
 bool VertexArray::setAttribBinding(const Val<const UInt>& index, const Val<const UInt>& binding, 
                                    const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glVertexArrayAttribBinding, id(), index, binding);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glVertexArrayAttribBinding, id(), index, binding);
 }
 
 bool VertexArray::setAttribFormat(const Val<const UInt>& index, const Val<const Int>& size,
                                   const Val<const DataType>& type, const Val<const bool>& normalized,
                                   const Val<const UInt>& relative_offset, 
                                   const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glVertexArrayAttribFormat, id(), index, size,
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glVertexArrayAttribFormat, id(), index, size,
                             type.cast_reinterpret<const Enum>(), normalized.cast_reinterpret<const Int>(), relative_offset);
 }
 
 bool VertexArray::setBindingDivisor(const Val<const UInt>& binding, const Val<const UInt>& divisor, 
                                     const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glVertexArrayBindingDivisor, id(), binding, divisor);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glVertexArrayBindingDivisor, id(), binding, divisor);
 }
 
 bool VertexArray::setElementBuffer(const Buffer& buffer, 
                                    const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glVertexArrayElementBuffer, id(), buffer.id());
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glVertexArrayElementBuffer, id(), buffer.id());
 }
 
 bool VertexArray::setVertexBuffer(const Val<const UInt>& binding, const Buffer& buffer,
                                   const Val<const IntPtr>& offset, const Val<const Sizei>& stride, 
                                   const Val<const SrcLoc> src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, glVertexArrayVertexBuffer, id(), binding, buffer.id(), offset, stride);
+    return executeInContext(check_ctx, SrcLoc{src_loc}, glVertexArrayVertexBuffer, id(), binding, buffer.id(), offset, stride);
 }
 
 namespace {
@@ -120,7 +120,7 @@ void _glVertexArrayDrawElementsInstanced(const UInt& id, const Enum& mode, const
 bool VertexArray::draw(const Val<const DrawMode>& mode, const Val<const Sizei>& vertex_count,
                        const Val<const DataType>& index_type, const Val<const Sizei>& instances, 
                        const Val<const SrcLoc> src_loc, bool check_ctx) const {
-    return executeInContext(check_ctx, src_loc, _glVertexArrayDrawElementsInstanced, id(),
+    return executeInContext(check_ctx, SrcLoc{src_loc}, _glVertexArrayDrawElementsInstanced, id(),
                             mode.cast_reinterpret<const Enum>(), vertex_count,
                             index_type.cast_reinterpret<const Enum>(), instances);
 }
