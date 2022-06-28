@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <string_view>
 
 #include "glwpp/gl/enums/DataType.hpp"
 
@@ -34,6 +35,15 @@ constexpr gl::DataType getMeshIndexTypeGlType(const MeshIndexType& type){
     case MeshIndexType::UByte: return gl::DataType::UByte;
     case MeshIndexType::UShort: return gl::DataType::UShort;
     case MeshIndexType::UInt: return gl::DataType::UInt;
+    default: throw std::runtime_error("Unknown MeshIndexType");
+    }
+};
+
+constexpr std::string_view getMeshIndexTypeString(const MeshIndexType& type){
+    switch (type){
+    case MeshIndexType::UByte: return {"UByte"};
+    case MeshIndexType::UShort: return {"UShort"};
+    case MeshIndexType::UInt: return {"UInt"};
     default: throw std::runtime_error("Unknown MeshIndexType");
     }
 };

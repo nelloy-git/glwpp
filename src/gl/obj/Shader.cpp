@@ -32,9 +32,18 @@ bool Shader::getSourceLength(const Val<gl::Int> dst,
     return getParamInt(dst.cast_reinterpret<Int>(), GL_SHADER_SOURCE_LENGTH, src_loc, check_ctx);
 }
 
+namespace {
+    void _glInfoLog(const UInt& shader, std::string& dst){
+        Int length;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+        dst.reserve(length);
+        glGetShaderInfoLog(shader, length, &length, dst.data());
+    }
+}
+
 bool Shader::getInfoLog(const Val<std::string> dst,
                         const Val<const SrcLoc>& src_loc, bool check_ctx) const {
-    return getParamInt(dst.cast_reinterpret<Int>(), GL_INFO_LOG_LENGTH, src_loc, check_ctx);
+    return executeInContext(check_ctx, src_loc, _glInfoLog, id(), dst);
 }
 
 namespace {

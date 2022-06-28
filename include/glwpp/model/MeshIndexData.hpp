@@ -13,11 +13,13 @@ public:
                   const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~MeshIndexData();
     const gl::Buffer& getIndices() const;
+    const gl::UInt& getIndexCount() const;
     const MeshIndexType& getType() const;
 
 private:
     MeshIndexType _type;
     gl::Buffer _indices; 
+    gl::UInt _index_count;
 
     static MeshIndexType _getIndexType(const aiMesh& ai_mesh);
     template<typename T>

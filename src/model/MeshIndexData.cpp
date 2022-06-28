@@ -20,6 +20,10 @@ const gl::Buffer& MeshIndexData::getIndices() const {
     return _indices;
 }
 
+const gl::UInt& MeshIndexData::getIndexCount() const {
+    return _index_count;
+}
+
 const MeshIndexType& MeshIndexData::getType() const {
     return _type;
 }
@@ -46,9 +50,9 @@ template<typename T>
 void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh,
                                      const utils::Val<const utils::SrcLoc>& src_loc){
     auto faces_num = ai_mesh.mNumFaces;
-    size_t index_num = faces_num * 3;
+    _index_count = faces_num * 3;
 
-    auto tmp = utils::alloc_sptr_buffer<T>(index_num);
+    auto tmp = utils::alloc_sptr_buffer<T>(_index_count);
     for (size_t i = 0; i < faces_num; ++i){
         auto &face = ai_mesh.mFaces[i];
         if (face.mNumIndices != 3){
@@ -59,5 +63,5 @@ void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh,
             tmp[3 * i + j] = face.mIndices[j];
         }
     }
-    _indices.storage(index_num * sizeof(T), tmp, 0, src_loc);
+    _indices.storage(_index_count * sizeof(T), tmp, 0, src_loc);
 }

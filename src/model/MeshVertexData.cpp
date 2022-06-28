@@ -190,7 +190,7 @@ Out MeshVertexData::_normalize(const In& vec, const glm::vec4& value_offset, con
     Out res;
     for (size_t i = 0; i < Out_S; ++i){
         if (i < In_S){
-            res[i] = (vec[i] - value_offset[i]) * value_mult;
+            res[i] = (vec[i] - value_offset[i]) / value_mult;
         } else {
             res[i] = 0;
         }

@@ -56,7 +56,7 @@ Mesh::Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexCon
         constexpr gl::UInt index = magic_enum::enum_index<MeshAttribute>(attr).value();
 
         if (!_vert_data.isEnabled(attr)){
-            std::cout << "Index: "<< index << std::endl;
+            // std::cout << "Index: "<< index << std::endl;
             _vert_arr.disableAttrib(index, src_loc);
             return;
         }

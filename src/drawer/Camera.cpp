@@ -28,3 +28,13 @@ void Camera::apply(){
     }
     _buffer.set(0, mat);
 }
+
+// TODO angles
+void Camera::applyLookAt(const glm::vec3& dst){
+    auto mat = glm::lookAt(pos, dst, _up);
+    if (use_perspective){
+        auto proj_mat = glm::perspectiveFov(fov, static_cast<float>(width), static_cast<float>(height), near_z, far_z);
+        mat = proj_mat * mat;
+    }
+    _buffer.set(0, mat);
+}

@@ -16,6 +16,7 @@ public:
 
     const gl::Buffer& buffer() const;
     void apply();
+    void applyLookAt(const glm::vec3& dst);
 
     glm::vec3 pos = {0, 0, 0};
     float yaw = 0;
@@ -24,7 +25,7 @@ public:
 
     bool use_perspective = true;
     float fov = 2 * 3.14159265359 / 3;
-    float near_z = 0.1;
+    float near_z = 0.01;
     float far_z = 100;
     int width = 640;
     int height = 480;

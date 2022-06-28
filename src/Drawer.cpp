@@ -58,8 +58,12 @@ void Drawer::_bindUniformBlocks(const Val<const UniformBlockBindings>& bindings,
 
         auto unif_index = data.uniform_block_bindings.enum_index(unif);
         auto loc = glGetUniformBlockIndex(id, name.c_str());
+        glUniformBlockBinding(id, loc, unif_index);
         const gl::Buffer& buffer = _getUniformBlockBuffer<unif>(data);
-        glUniformBlockBinding(id, loc, *buffer.id());
+        buffer.bindUniformBase((gl::UInt)unif_index);
+
+        std::cout << "Loc: " << loc << std::endl;
+        std::cout << "Buffer: " << *buffer.id() << std::endl;
     });
 }
 
