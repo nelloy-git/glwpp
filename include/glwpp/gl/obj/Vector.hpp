@@ -7,108 +7,167 @@
 
 namespace glwpp::gl {
 
-namespace detail {
-
-class VectorBase {
-public:
-    virtual ~VectorBase() = 0;
-protected:
-    static const SizeiPtr INIT_CAPACITY = 4;
-    static const SizeiPtr MULT_CAPACITY = 2;
-
-    VectorBase(){};
-    struct VectorData {
-        SizeiPtr capacity;
-        SizeiPtr size;
-        size_t elem_size;
-        BufferUsage usage;
-    };
-
-    static void _init(const SizeiPtr& size, const void* initial,
-                      const size_t& elem_size, const BufferUsage& usage,
-                      const UInt& id, VectorData& data);
-    static void _getSize(SizeiPtr& dst,
-                         const UInt& id, VectorData& data);
-    static void _getCapacity(SizeiPtr& dst,
-                             const UInt& id, VectorData& data);
-    static void _reserve(const SizeiPtr& capacity,
-                         const UInt& id, VectorData& data);
-    static void _shape(const UInt& id, VectorData& data);
-    static void _getValue(const SizeiPtr& i, void* dst, 
-                          const UInt& id, VectorData& data);
-    static void _setValue(const SizeiPtr& i, const void* value,
-                          const UInt& id, VectorData& data);
-    static void _pushBack(const void* value,
-                          const UInt& id, VectorData& data);
-    static void _popBack(void* dst,
-                         const UInt& id, VectorData& data);
-};
-
-inline VectorBase::~VectorBase(){};
-
-};
-
 template<typename T>
-class Vector : public detail::VectorBase, public Buffer {
-    template<typename U>
-    using Val = utils::Val<U>;
-    using SrcLoc = utils::SrcLoc;
-
+class Vector : public Buffer {
 public:
-    Vector(const wptr<Context>& wctx,
-           const Val<const SizeiPtr>& size = 0,
-           const Val<const BufferUsage>& usage = BufferUsage::DynamicDraw,
-           const Val<const std::optional<T>>& initial = std::nullopt,
-           const Val<const SrcLoc>& src_loc = SrcLoc{}) :
-        Buffer(wctx, src_loc),
-        _data(new VectorData){
-        Val<const T> init_val(*initial ? (*initial).value() : T{});
-        executeInContext(true, src_loc, VectorBase::_init, size, init_val, sizeof(T), usage, id(), Val<VectorData>(_data));
+    static sptr<Vector> make(const sptr<Context>& ctx,
+                             const Val<const UInt>& size,
+                             const Val<const BufferUsage>& usage,
+                             const Val<const T>& initial,
+                             const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        auto self = sptr<Vector>(new Vector(ctx, size, usage, initial, src_loc));
+        static const Val<T*> empty(nullptr);
+        self->data(*self->_capacity * sizeof(T), empty, self->_usage);
+        for (UInt i = 0; i < *self->_size; ++i){
+            self->set(i, initial, src_loc);
+        }
+        return self;
     }
+
     ~Vector(){};
 
-    inline bool size(const Val<SizeiPtr>& dst,
-              const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
-        return executeInContext(check_ctx, src_loc, &VectorBase::_getSize, dst, id(), Val<VectorData>(_data));
+    bool getSize(const Val<UInt>& dst,
+                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const {
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::getSize, dst, src_loc);
+        }
+
+        *dst = _size;
+        debug(src_loc);
+        return true;
     }
 
-    inline bool capacity(const Val<SizeiPtr>& dst,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
-        return executeInContext(check_ctx, src_loc, &VectorBase::_getCapacity, dst, id(), Val<VectorData>(_data));
+    bool getCapacity(const Val<UInt>& dst,
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const {
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::getCapacity, dst, src_loc);
+        }
+
+        *dst = _capacity;
+        debug(src_loc);
+        return true;
     }
 
-    inline bool get(const Val<const SizeiPtr>& i, const Val<T>& dst,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
-        return executeInContext(check_ctx, src_loc, &VectorBase::_getValue, i, dst, id(), Val<VectorData>(_data));
+    bool get(const Val<const UInt>& i, const Val<T>& dst,
+             const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const {
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::get, i, dst, src_loc);
+        }
+
+        if (i >= _size){
+            throw std::out_of_range("glwpp::gl::Vector");
+        }
+
+        getSubData(dst, *i * sizeof(T), sizeof(T), src_loc);
+        debug(src_loc);
+        return true;
     }
 
-    inline bool set(const Val<const SizeiPtr>& i, const Val<const T>& value,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &VectorBase::_setValue, i, value, id(), Val<VectorData>(_data));
+    bool set(const Val<const UInt>& i, const Val<const T>& value,
+             const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::get, i, value, src_loc);
+        }
+
+        if (i >= _size){
+            throw std::out_of_range("glwpp::gl::Vector");
+        }
+
+        setSubData(value, *i * sizeof(T), sizeof(T), src_loc);
+        debug(src_loc);
+        return true;
     }
 
-    inline bool reserve(const Val<const SizeiPtr> capacity,
-                        const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &VectorBase::_reserve, capacity, id(), Val<VectorData>(_data));
+    bool reserve(const Val<const UInt> capacity,
+                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::reserve, capacity, src_loc);
+        }
+
+        if (*capacity <= _capacity){
+            return true;
+        }
+
+        Buffer tmp(getContext().lock(), src_loc);
+        tmp.data(_size * sizeof(T), nullptr, BufferUsage::StreamCopy, src_loc);
+        tmp.copySubData(shared_from_this(), 0, 0, _size * sizeof(T), src_loc);
+
+        _capacity = *capacity;
+        data(_capacity * sizeof(T), nullptr, _usage, src_loc);
+        copySubData(tmp, 0, 0, _size * sizeof(T), src_loc);
+
+        debug(src_loc);
+        return true;
     }
 
-    inline bool shape(const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &VectorBase::_shape, id(), Val<VectorData>(_data));
+    bool shape(const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::shape, src_loc);
+        }
+
+        Buffer tmp(getContext().lock(), src_loc);
+        tmp.data(_size * sizeof(T), nullptr, BufferUsage::StreamCopy, src_loc);
+        tmp.copySubData(shared_from_this(), 0, 0, _size * sizeof(T), src_loc);
+
+        _capacity = _size;
+        data(_size * sizeof(T), nullptr, _usage, src_loc);
+        copySubData(tmp, 0, 0, _size * sizeof(T), src_loc);
+
+        debug(src_loc);
+        return true;
     }
 
-    inline bool push_back(const Val<const std::optional<T>>& value,
-                          const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &VectorBase::_shape, value, id(), Val<VectorData>(_data));
+    bool pushBack(const Val<const std::optional<T>>& value,
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::pushBack, value, src_loc);
+        }
+
+        if (_size == _capacity){
+            reserve(2 * *_size, src_loc);
+        }
+
+        set(_size, value, src_loc);
+        ++_size;
+        debug(src_loc);
+        return true;
     }
 
-    inline bool pop_back(const Val<T>& dst,
-                         const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &VectorBase::_shape, dst, id(), Val<VectorData>(_data));
+    bool popBack(const Val<T>& dst,
+                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+            return executeMethodInContext(&Vector::popBack, dst, src_loc);
+        }
+
+        if (_size == 0){
+            throw std::out_of_range("glwpp::gl::Vector");
+        }
+        
+        get(*_size - 1, dst, src_loc);
+        --_size;
+        debug(src_loc);
+        return true;
     }
 
 protected:
-    sptr<VectorData> _data;
+    Vector(const sptr<Context>& ctx,
+           const Val<const UInt>& size,
+           const Val<const BufferUsage>& usage,
+           const Val<const T>& initial,
+           const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) :
+        Buffer(ctx, src_loc),
+        _size(size),
+        _capacity(*size < 4 ? 4 : size),
+        _usage(usage){
+    }
 
+private:
+    // Hide parent's make
+    using Buffer::make;
+
+    UInt _size;
+    UInt _capacity;
+    BufferUsage _usage;
 };
 
 }

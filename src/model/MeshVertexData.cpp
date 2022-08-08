@@ -29,10 +29,10 @@ constexpr size_t _getVecComponents(){
 
 };
 
-MeshVertexData::MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
-                               const utils::Val<const utils::SrcLoc>& src_loc) :
+MeshVertexData::MeshVertexData(const sptr<Context>& ctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
+                               const Val<const utils::SrcLoc>& src_loc) :
     _config(config),
-    _vertices(wctx, src_loc){
+    _vertices(gl::Buffer::make(ctx, src_loc)){
     _fillAttributeStates(ai_mesh);
     _fillVertexBuffer(ai_mesh);
 }
@@ -40,7 +40,7 @@ MeshVertexData::MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig
 MeshVertexData::~MeshVertexData(){
 }
 
-const gl::Buffer& MeshVertexData::getVertices() const {
+const sptr<gl::Buffer>& MeshVertexData::getVertices() const {
     return _vertices;
 }
 
@@ -126,7 +126,7 @@ void MeshVertexData::_fillVertexBuffer(const aiMesh& ai_mesh){
         }
     });
 
-    _vertices.storage(_vertex_count * _vertex_bytes, tmp, 0);
+    _vertices->storage(_vertex_count * _vertex_bytes, tmp, 0);
 }
 
 void MeshVertexData::_fillVertexBufferAttribute(void* dst, const glm::vec4& vec,
@@ -188,7 +188,7 @@ Out MeshVertexData::_normalize(const In& vec, const glm::vec4& value_offset, con
     static constexpr size_t Out_S = _getVecComponents<Out>();
 
     Out res;
-    for (size_t i = 0; i < Out_S; ++i){
+    for (unsigned int i = 0; i < Out_S; ++i){
         if (i < In_S){
             res[i] = (vec[i] - value_offset[i]) / value_mult;
         } else {
@@ -205,8 +205,8 @@ glm::vec4 MeshVertexData::_findValueOffset(const aiMesh& ai_mesh) const {
     const size_t S = std::is_same_v<decltype(arr), aiVector3D*> ? 3 : 4;
     glm::vec4 offset(inf, inf, inf, inf);
 
-    for (size_t i = 0; i < ai_mesh.mNumVertices; ++i){
-        for (size_t j = 0; j < S; ++j){
+    for (unsigned int i = 0; i < ai_mesh.mNumVertices; ++i){
+        for (unsigned int j = 0; j < S; ++j){
             offset[j] = std::min(offset[j], arr[i][j]);    
         }
     }
@@ -217,10 +217,10 @@ template<MeshAttribute A>
 float MeshVertexData::_findValueMultiplier(const aiMesh& ai_mesh, const glm::vec4& value_offset){
     auto arr = _getAiArray<A>(ai_mesh);
     const size_t S = std::is_same_v<decltype(arr), aiVector3D*> ? 3 : 4;
-    float max = -std::numeric_limits<float>::infinity();
+    float max = std::numeric_limits<float>::min();
 
-    for (size_t i = 0; i < ai_mesh.mNumVertices; ++i){
-        for (size_t j = 0; j < S; ++j){
+    for (unsigned int i = 0; i < ai_mesh.mNumVertices; ++i){
+        for (unsigned int j = 0; j < S; ++j){
             max = std::max(max, arr[i][j] - value_offset[j]);    
         }
     }
@@ -228,7 +228,7 @@ float MeshVertexData::_findValueMultiplier(const aiMesh& ai_mesh, const glm::vec
 }
 
 template<MeshAttribute A>
-MeshAttributeType MeshVertexData::_findOptimalType(const aiMesh& ai_mesh, const MeshAttributeSize& size, const float& compression,
+MeshAttributeType MeshVertexData::_findOptimalType(const aiMesh& ai_mesh, const MeshAttributeSize& size, const double& compression,
                                                    const glm::vec4& value_offset, const float& value_mult){
     constexpr auto nextType = [](const MeshAttributeType& type, const MeshAttributeSize& size){
         switch (type){
@@ -243,12 +243,12 @@ MeshAttributeType MeshVertexData::_findOptimalType(const aiMesh& ai_mesh, const 
     };
 
     constexpr auto isCompessable = [](const MeshAttributeType& type, const auto& original,
-                                      const float& compression, const glm::vec4& value_offset, const float& value_mult){
+                                      const double& compression, const glm::vec4& value_offset, const float& value_mult){
         static constexpr size_t S = _getVecComponents<decltype(original)>();
 
         auto normed = _normalize(original, value_offset, value_mult);
-        for (size_t i = 0; i < S; ++i){
-            size_t bits;
+        for (unsigned int i = 0; i < S; ++i){
+            unsigned int bits;
             switch (type){
             case MeshAttributeType::UByte: bits = 8; break;
             case MeshAttributeType::UInt_11_11_10: bits = i < 2 ? 11 : 10; break;

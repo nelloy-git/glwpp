@@ -10,14 +10,10 @@ layout (std140) uniform Camera {
     mat4 camera_mat;
 };
 
-struct MeshData {
-    vec4 offset[16];
-    float mult[16];
+uniform int node_n;
+layout (std140) uniform Model {
+    mat4 transform[];
 };
-
-layout (std140) uniform Mesh {
-    MeshData[];
-}
 
 out vec2 vertOutTex;
 

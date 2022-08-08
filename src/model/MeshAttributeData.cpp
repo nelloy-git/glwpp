@@ -5,7 +5,7 @@
 template<glwpp::model::MeshAttributeType T, glwpp::model::MeshAttributeSize S>
 using Attr = glwpp::model::MeshAttributeData<T, S>;
 
-size_t glwpp::model::getMeshAttributeDataBytes(const MeshAttributeType& type, const MeshAttributeSize& size){
+unsigned int glwpp::model::getMeshAttributeDataBytes(const MeshAttributeType& type, const MeshAttributeSize& size){
     using namespace magic_enum;
     using T = MeshAttributeType;
     using S = MeshAttributeSize;

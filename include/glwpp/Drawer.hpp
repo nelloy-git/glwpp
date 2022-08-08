@@ -17,27 +17,24 @@ enum class DrawerUniformBlock {
 
 class Drawer : public gl::Program {
 public:
-    template<typename T>
-    using Val = utils::Val<T>;
-    using SrcLoc = utils::SrcLoc;
     using MeshAttributeBindings = EnumContainer<model::MeshAttribute, std::string>;
     using UniformBlockBindings = EnumContainer<DrawerUniformBlock, std::string>;
 
-    Drawer(const wptr<Context>& wctx,
-           const Val<const SrcLoc> src_loc = SrcLoc{});
+    static sptr<Drawer> make(const sptr<Context>& ctx,
+                             const Val<const utils::SrcLoc> src_loc = utils::SrcLoc{});
     virtual ~Drawer();
 
     Camera& camera();
     const Camera& camera() const;
 
-    bool bindMeshAttributes(const utils::Val<const MeshAttributeBindings>& bindings,
-                            const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}, bool check_ctx = true);
+    bool bindMeshAttributes(const Val<const MeshAttributeBindings>& bindings,
+                            const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
-    bool bindUniformBlocks(const utils::Val<const UniformBlockBindings>& bindings,
-                           const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}, bool check_ctx = true);
+    bool bindUniformBlocks(const Val<const UniformBlockBindings>& bindings,
+                           const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
-    // bool bindMeshAttribute(const utils::Val<model::MeshAttribute>& attr, const utils::Val<std::string>& name,
-    //                        const utils::Val<const utils::SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    // bool bindMeshAttribute(const Val<model::MeshAttribute>& attr, const Val<std::string>& name,
+    //                        const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     // void bindUniform(const Uniform& uniform, const std::string& name);
     // void bindUniform(const Uniform& uniform, const gl::Int& location);
 
@@ -47,28 +44,17 @@ public:
     // void setValueOffset();
     // void setVertexOffset();
 
+protected:
+    Drawer(const sptr<Context>& ctx,
+           const Val<const utils::SrcLoc> src_loc);
 
 private:
-    struct DrawerData {
-        DrawerData(const wptr<Context>& wctx,
-                   const Val<const SrcLoc> src_loc = SrcLoc{}) :
-            camera(wctx, src_loc){
-        };
-
-        Camera camera;
-        MeshAttributeBindings attr_bindings;
-        UniformBlockBindings uniform_block_bindings;
-    };
-    sptr<DrawerData> _data;
-
-    static void _bindMeshAttributes(const MeshAttributeBindings& bindings,
-                                    const gl::UInt& id, DrawerData& data);
-                                    
-    static void _bindUniformBlocks(const utils::Val<const UniformBlockBindings>& bindings,
-                                   const gl::UInt& id, DrawerData& data);
+    Camera _camera;
+    MeshAttributeBindings _attr_bindings;
+    UniformBlockBindings _uniform_block_bindings;
 
     template<DrawerUniformBlock U>
-    static const gl::Buffer& _getUniformBlockBuffer(DrawerData& data);
+    const sptr<gl::Buffer> _getUniformBlockBuffer();
 
     // EnumContainer<model::MeshAttribute, sptr<gl::Int>> _attr_binding;
     // EnumContainer<Uniform, gl::Int> _uniform_binding;

@@ -10,27 +10,35 @@ namespace glwpp::gl {
 
 class Shader : public Object {
 public:
-    Shader(const wptr<Context>& wctx, const Val<const gl::ShaderType>& type,
-           const Val<const SrcLoc>& src_loc = SrcLoc{});
+    static sptr<Shader> make(const sptr<Context>& ctx, const Val<const gl::ShaderType>& type,
+                             const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
            
     bool getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
 
-    bool getType(const Val<gl::ShaderType> dst,
-                 const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
-    bool isCompiled(const Val<bool> dst,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
-    bool getSourceLength(const Val<gl::Int> dst,
-                         const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
-    bool getInfoLog(const Val<std::string> dst,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool getType(const Val<gl::ShaderType>& dst,
+                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+    bool isCompiled(const Val<bool>& dst,
+                    const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+    bool getSourceLength(const Val<gl::Int>& dst,
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+    bool getInfoLog(const Val<std::string>& dst,
+                    const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
 
     bool setSource(const Val<const std::string>& code,
-                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
-    bool compile(const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                   const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    bool compile(const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+
+protected:
+    Shader(const sptr<Context>& wctx, const Val<const gl::ShaderType>& type,
+           const Val<const utils::SrcLoc>& src_loc);
 
 private:
-    static void _initer(UInt& dst, const gl::ShaderType& type);
+    // Hide ContextObject::make
+    using Object::make;
+
+    static void _initer(const Val<UInt>& dst, const Val<const gl::ShaderType>& type,
+                        const Val<const utils::SrcLoc>& src_loc);
     static void _deleter(const UInt& id);
 };
 

@@ -8,6 +8,9 @@
 #include "GLFW/glfw3.h"
 
 #include <iostream>
+
+#include "glwpp/utils/FuncWrapper.hpp"
+
 using namespace glwpp;
 
 Context::Context(const Parameters &params) :
@@ -39,11 +42,11 @@ Context::~Context(){
 }
 
 bool Context::start(){
-    static std::function<void(std::chrono::microseconds)> event = [this](std::chrono::microseconds dt){
+    static auto event = expand_func<const std::chrono::microseconds&>([this](){
         glfwPollEvents();
         _glfw_window->swapBuffers();
         _gl_thread->paused = true;
-    };
+    });
     static std::function<void()> clear = [this](){
         onRunEnd.emit(this);
     };

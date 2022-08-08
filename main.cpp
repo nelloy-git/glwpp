@@ -13,6 +13,8 @@
 #include "glwpp/Drawer.hpp"
 #include "glwpp/Model.hpp"
 
+#include "glwpp/gl/obj/Array.hpp"
+
 #include "glad/gl.h"
 
 using namespace glwpp;
@@ -36,7 +38,7 @@ void pushKeyPrinter(std::shared_ptr<Context>& ctx, std::atomic<bool>& is_running
 
 static void pushTimePrinter(std::shared_ptr<Context>& ctx){
     ctx->onRun.push<[]{return true;}>([](const std::chrono::microseconds& time){
-        static int total_time = 0;
+        static long long total_time = 0;
         static int counter = 0;
 
         total_time += time.count();
@@ -74,7 +76,7 @@ std::string loadTextFile(const std::string& path){
 }
 
 sptr<Drawer> initDrawer(std::shared_ptr<Context> ctx){
-    auto v_shader = make_sptr<gl::Shader>(ctx, gl::ShaderType::Vertex);
+    auto v_shader = gl::Shader::make(ctx, gl::ShaderType::Vertex);
     v_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
     v_shader->compile();
     ctx->onRun.push([v_shader](){
@@ -87,7 +89,7 @@ sptr<Drawer> initDrawer(std::shared_ptr<Context> ctx){
         }
     });
     
-    auto f_shader = make_sptr<gl::Shader>(ctx, gl::ShaderType::Fragment);
+    auto f_shader = gl::Shader::make(ctx, gl::ShaderType::Fragment);
     f_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
     f_shader->compile();
     ctx->onRun.push([f_shader](){
@@ -100,7 +102,7 @@ sptr<Drawer> initDrawer(std::shared_ptr<Context> ctx){
         }
     });
 
-    auto drawer = make_sptr<Drawer>(ctx);
+    auto drawer = Drawer::make(ctx);
     drawer->attach(*v_shader);
     drawer->attach(*f_shader);
     drawer->link();
@@ -139,24 +141,24 @@ sptr<Model> initModel(std::shared_ptr<Context> ctx, const std::string& path){
     return model;
 }
 
-void enableCameraMovement(std::shared_ptr<Context> ctx, Drawer& drawer){
-    static const float vel = 0.1;
-    ctx->onKey.push<[]{return true;}>([&drawer](const Key& key){
+void enableCameraMovement(std::shared_ptr<Context> ctx, sptr<Drawer> drawer){
+    static const float vel = float(0.1);
+    ctx->onKey.push<[]{return true;}>([drawer](const Key& key){
         switch (key){
-        case Key::W: drawer.camera().pos += glm::vec3{vel, 0, 0}; break;
-        case Key::S: drawer.camera().pos += glm::vec3{-vel, 0, 0}; break;
-        case Key::A: drawer.camera().pos += glm::vec3{0, 0, -vel}; break;
-        case Key::D: drawer.camera().pos += glm::vec3{0, 0,  vel}; break;
-        case Key::LeftControl: drawer.camera().pos += glm::vec3{0, -vel, 0}; break;
-        case Key::Space: drawer.camera().pos += glm::vec3{0, vel, 0}; break;
+        case Key::W: drawer->camera().pos += glm::vec3{vel, 0, 0}; break;
+        case Key::S: drawer->camera().pos += glm::vec3{-vel, 0, 0}; break;
+        case Key::A: drawer->camera().pos += glm::vec3{0, 0, -vel}; break;
+        case Key::D: drawer->camera().pos += glm::vec3{0, 0,  vel}; break;
+        case Key::LeftControl: drawer->camera().pos += glm::vec3{0, -vel, 0}; break;
+        case Key::Space: drawer->camera().pos += glm::vec3{0, vel, 0}; break;
         
         default: break;
         }
 
-        drawer.camera().apply();
-        std::cout << "Camera {" << drawer.camera().pos.x << ", "
-                                << drawer.camera().pos.y << ", "
-                                << drawer.camera().pos.z << "}" << std::endl;
+        drawer->camera().apply();
+        std::cout << "Camera {" << drawer->camera().pos.x << ", "
+                                << drawer->camera().pos.y << ", "
+                                << drawer->camera().pos.z << "}" << std::endl;
     });
 }
 
@@ -188,20 +190,43 @@ void enableCameraMovement(std::shared_ptr<Context> ctx, Drawer& drawer){
 //     }
 // }
 
+// #include "glwpp/gl/Name.hpp"
+
 int main(int argc, char **argv){
     std::atomic<bool> is_running = true;
     auto ctx = initContext(is_running);
     auto drawer = initDrawer(ctx);
     auto model = initModel(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\3rdparty\\assimp\\test\\models\\OBJ\\spider.obj");
 
-    enableCameraMovement(ctx, *drawer);
+
+    // auto name = gl::Object::make(ctx, [](Val<gl::UInt>){}, [](gl::UInt){});
+    
+
+    enableCameraMovement(ctx, drawer);
     drawer->camera().pos = {-1, -1, 0};
     drawer->camera().far_z = 10000;
     drawer->camera().apply();
 
+    auto transforms = glwpp::gl::Array<glm::mat4>::make1(ctx, gl::UInt(model->getNodes().size()), glm::mat4(1.0));
     ctx->onRun.push<[]{return true;}>([=](){
+
+        for (unsigned int i = 0; i < model->getNodes().size(); ++i){
+            auto& node = model->getNodes()[i];
+
+            glm::mat4 t = node->mat;
+            if (!node->parent.expired()){
+                t = node->parent.lock()->mat * t;
+            }
+
+            transforms->set(i, t);
+        }
+
+
         for (auto& mesh : model->getMeshes()){
-            mesh.getVertexArray().draw(gl::DrawMode::Triangles, mesh.getIndexData().getIndexCount(), getMeshIndexTypeGlType(mesh.getIndexData().getType()), 1, utils::SrcLoc{}, false);
+            mesh->getVertexArray()->draw(gl::DrawMode::Triangles,
+                                         mesh->getIndexData().getIndexCount(),
+                                         getMeshIndexTypeGlType(mesh->getIndexData().getType()),
+                                         1);
         }
 
         static bool shown = false;
@@ -212,12 +237,12 @@ int main(int argc, char **argv){
                 auto& mesh = model->getMeshes()[i];
 
                 std::cout << "Mesh " << i << std::endl;
-                std::cout << "\tMult: " << mesh.getVertexData().getValueMultiplier(model::MeshAttribute::Position) << std::endl;
-                std::cout << "\tIndices: " << mesh.getIndexData().getIndexCount() << std::endl;
-                std::cout << "\tIndex type: " << getMeshIndexTypeString(mesh.getIndexData().getType()).data() << std::endl;
+                std::cout << "\tMult: " << mesh->getVertexData().getValueMultiplier(model::MeshAttribute::Position) << std::endl;
+                std::cout << "\tIndices: " << mesh->getIndexData().getIndexCount() << std::endl;
+                std::cout << "\tIndex type: " << getMeshIndexTypeString(mesh->getIndexData().getType()).data() << std::endl;
 
                 auto vert_0 = make_sptr<int>(0);
-                mesh.getVertexData().getVertices().getSubData(vert_0, 0, sizeof(int));
+                mesh->getVertexData().getVertices()->getSubData(vert_0, 0, sizeof(int));
                 std::cout << "\t(int)Vertex[0]: " << *vert_0 << std::endl;
             }
 

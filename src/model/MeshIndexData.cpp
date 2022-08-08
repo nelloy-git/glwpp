@@ -6,17 +6,17 @@
 using namespace glwpp;
 using namespace glwpp::model;
 
-MeshIndexData::MeshIndexData(const wptr<Context>& wctx, const aiMesh& ai_mesh,
-                             const utils::Val<const utils::SrcLoc>& src_loc) :
+MeshIndexData::MeshIndexData(const sptr<Context>& ctx, const aiMesh& ai_mesh,
+                             const Val<const utils::SrcLoc>& src_loc) :
     _type(_getIndexType(ai_mesh)),
-    _indices(wctx, src_loc){
+    _indices(gl::Buffer::make(ctx, src_loc)){
 
     magic_enum::enum_switch([&](auto type){
         _fillIndexBuffer<MeshIndexTypeCpu_t<type>>(ai_mesh, src_loc);
     }, _type);
 }
 
-const gl::Buffer& MeshIndexData::getIndices() const {
+const sptr<gl::Buffer>& MeshIndexData::getIndices() const {
     return _indices;
 }
 
@@ -48,7 +48,7 @@ MeshIndexType MeshIndexData::_getIndexType(const aiMesh& ai_mesh){
 
 template<typename T>
 void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh,
-                                     const utils::Val<const utils::SrcLoc>& src_loc){
+                                     const Val<const utils::SrcLoc>& src_loc){
     auto faces_num = ai_mesh.mNumFaces;
     _index_count = faces_num * 3;
 
@@ -63,5 +63,5 @@ void MeshIndexData::_fillIndexBuffer(const aiMesh& ai_mesh,
             tmp[3 * i + j] = face.mIndices[j];
         }
     }
-    _indices.storage(_index_count * sizeof(T), tmp, 0, src_loc);
+    _indices->storage(_index_count * sizeof(T), tmp, 0, src_loc);
 }

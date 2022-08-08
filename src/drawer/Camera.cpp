@@ -6,16 +6,15 @@
 using namespace glwpp;
 using namespace glwpp::utils;
 
-Camera::Camera(const wptr<Context>& wctx,
+Camera::Camera(const sptr<Context>& ctx,
                const Val<const SrcLoc>& src_loc) :
-    _buffer(wctx, 1, glm::mat4(1.0), src_loc){
+    _buffer(gl::Struct<glm::mat4>::make1(ctx, glm::mat4(1.F), src_loc)){
 }
 
 Camera::~Camera(){
 }
 
-
-const gl::Buffer& Camera::buffer() const {
+const sptr<gl::Struct<glm::mat4>>& Camera::buffer() const {
     return _buffer;
 }
 
@@ -26,7 +25,7 @@ void Camera::apply(){
         auto proj_mat = glm::perspectiveFov(fov, static_cast<float>(width), static_cast<float>(height), near_z, far_z);
         mat = proj_mat * mat;
     }
-    _buffer.set(0, mat);
+    _buffer->set(mat);
 }
 
 // TODO angles
@@ -36,5 +35,5 @@ void Camera::applyLookAt(const glm::vec3& dst){
         auto proj_mat = glm::perspectiveFov(fov, static_cast<float>(width), static_cast<float>(height), near_z, far_z);
         mat = proj_mat * mat;
     }
-    _buffer.set(0, mat);
+    _buffer->set(mat);
 }

@@ -12,70 +12,70 @@ namespace glwpp::gl {
 
 class Texture : public Object {
 public:
-    Texture(const wptr<Context>& wctx, const Val<const TextureType>& type,
-            const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+    static sptr<Texture> make(const sptr<Context>& ctx, const Val<const TextureType>& type,
+                              const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
-    bool buffer(const Buffer& buffer, const Val<const TextureFormat>& fmt, 
-                const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
-    bool bufferRange(const Buffer& buffer, const Val<const TextureFormat>& fmt, 
+    bool buffer(const Val<const Buffer>& buffer, const Val<const TextureFormat>& fmt, 
+                const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    bool bufferRange(const Val<const Buffer>& buffer, const Val<const TextureFormat>& fmt, 
                      const Val<const IntPtr>& offset, const Val<const SizeiPtr>& size,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool storage1D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
                    const Val<const Sizei>& width,
-                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                   const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool storage2D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
                    const Val<const Sizei>& width, const Val<const Sizei>& height,
-                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                   const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool storage3D(const Val<const Sizei>& levels, const Val<const TextureFormat>& fmt,
                    const Val<const Sizei>& width, const Val<const Sizei>& height, const Val<const Sizei>& depth,
-                   const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                   const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool storageMultisample2D(const Val<const Sizei>& samples, const Val<const TextureFormat>& fmt,
                               const Val<const Sizei>& width, const Val<const Sizei>& height,
                               const Val<const Bool>& fixed_locations,
-                              const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                              const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool storageMultisample3D(const Val<const Sizei>& samples, const Val<const TextureFormat>& fmt,
                               const Val<const Sizei>& width, const Val<const Sizei>& height, const Val<const Sizei>& depth,
                               const Val<const Bool>& fixed_locations,
-                              const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                              const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     bool setUnit(const Val<const UInt>& index,
-                 const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
-    bool generateMipMap(const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+    bool generateMipMap(const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     bool getImage(const Val<void>& dst, const Val<const Int>& level, const Val<const TexturePixelFormat>& fmt,
                   const Val<const TexturePixelData>& type, const Val<const Sizei>& size,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getSubImage(const Val<void>& dst, 
                      const Val<const Int>& level, const Val<const TexturePixelFormat>& fmt,
                      const Val<const Int>& x, const Val<const Int>& y, const Val<const Int>& z,
                      const Val<const Sizei>& w, const Val<const Sizei>& h, const Val<const Sizei>& d,
                      const Val<const TexturePixelData>& type, const Val<const Sizei>& size,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
 
     bool setSubImage1D(const Val<const void>& data,
                        const Val<const Int>& level,
                        const Val<const Int>& x, const Val<const Sizei>& w,
                        const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
-                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     
     bool setSubImage2D(const Val<const void>& data,
                        const Val<const Int>& level,
                        const Val<const Int>& x, const Val<const Int>& y,
                        const Val<const Sizei>& w, const Val<const Sizei>& h,
                        const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
-                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     
     bool setSubImage3D(const Val<const void>& data,
                        const Val<const Int>& level,
                        const Val<const Int>& x, const Val<const Int>& y, const Val<const Int>& z,
                        const Val<const Sizei>& w, const Val<const Sizei>& h, const Val<const Sizei>& d,
                        const Val<const TexturePixelFormat>& fmt, const Val<const TexturePixelData>& type,
-                       const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     bool getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool setParamInt(const Val<const Int>& value, const Val<const Enum>& param,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     enum class Wrap : Int {
         Clamp = 0x812F,  // GL_CLAMP_TO_EDGE,
@@ -84,14 +84,14 @@ public:
     };
 
     bool getWrapS(const Val<Wrap> dst,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool setWrapS(const Val<const Wrap> value,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     bool getWrapT(const Val<Wrap> dst,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool setWrapT(const Val<const Wrap> value,
-                  const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     enum class  MinFilter : Int {
         Nearest = 0x2600, // GL_NEAREST Returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates.
@@ -103,9 +103,9 @@ public:
     };
 
     bool getMinFilter(const Val<MinFilter> dst,
-                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool setMinFilter(const Val<const MinFilter> value,
-                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
                       
     enum class  MagFilter : Int {
         Nearest = 0x2600, // GL_NEAREST Returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates.
@@ -113,12 +113,20 @@ public:
     };
 
     bool getMagFilter(const Val<MagFilter> dst,
-                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const;
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool setMagFilter(const Val<const MagFilter> value,
-                      const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true);
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+
+protected:
+    Texture(const sptr<Context>& ctx, const Val<const TextureType>& type,
+            const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
 private:
-    static void _initer(UInt& dst, const TextureType& type);
+    // Hide parent's make
+    using Object::make;
+
+    static void _initer(const Val<UInt>& dst, const Val<const TextureType>& type,
+                        const Val<const utils::SrcLoc>& src_loc);
     static void _deleter(const UInt& id);
 };
 

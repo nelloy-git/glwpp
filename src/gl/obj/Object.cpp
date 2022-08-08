@@ -5,15 +5,14 @@
 using namespace glwpp;
 using namespace glwpp::gl;
 
-utils::Val<const UInt> Object::id() const {
-    return Val<const UInt>(_id);
+Object::~Object(){
 }
 
-wptr<Context> Object::ctx() const {
-    return _wctx;
-}
+const Val<const UInt> Object::id() const {
+    return _id;
+};
 
-void Object::_printDebug(const SrcLoc& loc){
+void Object::debug(const utils::SrcLoc& src_loc){
 #ifdef GLWPP_DEBUG
     Enum err = glGetError();
     while (err != GL_NO_ERROR){
@@ -30,8 +29,7 @@ void Object::_printDebug(const SrcLoc& loc){
             default: err_name = "UNKNOWN";
         }
 
-        std::cout << loc.to_string() << std::endl
-                  << "\tErr: " << err_name << "(" << err << ")" << std::endl;
+        ContextObject::debug(err_name + "(" + std::to_string(err) + ")", src_loc);
         err = glGetError();
     }
 #endif

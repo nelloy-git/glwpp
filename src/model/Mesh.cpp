@@ -7,7 +7,7 @@
 using namespace glwpp;
 using namespace glwpp::model;
 
-// Mesh Mesh::Cube(const wptr<Context>& wctx, const MeshVertexConfig& vertex_config){
+// Mesh Mesh::Cube(const sptr<Context>& ctx, const MeshVertexConfig& vertex_config){
 //     static const aiVector3D vertices[8] = {
 //         {0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
 //         {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}
@@ -38,36 +38,36 @@ using namespace glwpp::model;
 //         memcpy(faces[i].mIndices, faces_data[i], sizeof(faces_data[i]));
 //     }
 
-//     Mesh cube(wctx, ai_mesh, vertex_config);
+//     Mesh cube(ctx, ai_mesh, vertex_config);
 
 //     return std::move(cube);
 // }
 
-Mesh::Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vertex_config,
-           const utils::Val<const utils::SrcLoc>& src_loc) :
-    _vert_arr(wctx, src_loc),
-    _index_data(wctx, ai_mesh, src_loc),
-    _vert_data(wctx, vertex_config, ai_mesh, src_loc){
+Mesh::Mesh(const sptr<Context>& ctx, const aiMesh& ai_mesh, const MeshVertexConfig& vertex_config,
+           const Val<const utils::SrcLoc>& src_loc) :
+    _vert_arr(gl::VertexArray::make(ctx, src_loc)),
+    _index_data(ctx, ai_mesh, src_loc),
+    _vert_data(ctx, vertex_config, ai_mesh, src_loc){
 
-    _vert_arr.setElementBuffer(_index_data.getIndices(), src_loc);
-    _vert_arr.setVertexBuffer(0, _vert_data.getVertices(), 0, _vert_data.getBytesPerVertex(), src_loc);
+    _vert_arr->setElementBuffer(_index_data.getIndices(), src_loc);
+    _vert_arr->setVertexBuffer(0, _vert_data.getVertices(), 0, _vert_data.getBytesPerVertex(), src_loc);
 
     magic_enum::enum_for_each<MeshAttribute>([&](auto attr){
-        constexpr gl::UInt index = magic_enum::enum_index<MeshAttribute>(attr).value();
+        constexpr auto index = gl::UInt(magic_enum::enum_index<MeshAttribute>(attr).value());
 
         if (!_vert_data.isEnabled(attr)){
             // std::cout << "Index: "<< index << std::endl;
-            _vert_arr.disableAttrib(index, src_loc);
+            _vert_arr->disableAttrib(index, src_loc);
             return;
         }
 
-        _vert_arr.enableAttrib(index, src_loc);
-        _vert_arr.setAttribBinding(index, 0);
+        _vert_arr->enableAttrib(index, src_loc);
+        _vert_arr->setAttribBinding(index, 0);
 
         auto size = getMeshAttributeSizeComponents(_vert_data.getSize(attr));
         auto type = getMeshAttributeTypeGlType(_vert_data.getType(attr));
         auto offset = _vert_data.getByteOffset(attr);
-        _vert_arr.setAttribFormat(index, size, type, true, offset);
+        _vert_arr->setAttribFormat(index, size, type, true, offset);
     });
 }
 
@@ -75,7 +75,7 @@ Mesh::~Mesh(){
 
 }
 
-const gl::VertexArray& Mesh::getVertexArray() const {
+const sptr<gl::VertexArray>& Mesh::getVertexArray() const {
     return _vert_arr;
 }
 

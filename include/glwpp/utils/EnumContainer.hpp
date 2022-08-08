@@ -43,11 +43,11 @@ private:
         auto list = magic_enum::enum_values<E>();
 
         using Under = std::underlying_type_t<E>;
-        Under min = std::numeric_limits<Under>::infinity();
-        Under max = -std::numeric_limits<Under>::infinity();
+        Under min = std::numeric_limits<Under>::max();
+        Under max = std::numeric_limits<Under>::min();
 
         for (size_t i = 0; i < list.size(); ++i){
-            int val = static_cast<Under>(list[i]);
+            Under val = static_cast<Under>(list[i]);
             max = max > val ? max : val;
             min = min < val ? min : val;
 

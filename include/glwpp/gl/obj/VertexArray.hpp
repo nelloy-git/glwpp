@@ -9,60 +9,66 @@ namespace glwpp::gl {
 
 class VertexArray : public Object {
 public:
-    VertexArray(const wptr<Context>& wctx,
-                const Val<const SrcLoc> src_loc = SrcLoc{});
+    static sptr<VertexArray> make(const sptr<Context>& ctx,
+                                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
-    bool getParamInt(const Val<Int> dst, const Val<const UInt>& index, const Val<const Enum> param,
-                     const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
-    bool getParamInt64(const Val<Int64> dst, const Val<const UInt>& index, const Val<const Enum> param,
-                       const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+    bool getParamInt(const Val<Int>& dst, const Val<const UInt>& index, const Val<const Enum>& param,
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+    bool getParamInt64(const Val<Int64>& dst, const Val<const UInt>& index, const Val<const Enum>& param,
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     
     bool isAttribEnabled(const Val<bool>& dst, const Val<const UInt>& index, 
-                         const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribSize(const Val<Int>& dst, const Val<const UInt>& index, 
-                       const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribStride(const Val<Int>& dst, const Val<const UInt>& index, 
-                         const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribType(const Val<DataType>& dst, const Val<const UInt>& index, 
-                       const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool isAttribNormalized(const Val<bool>& dst, const Val<const UInt>& index, 
-                            const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                            const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool isAttribInteger(const Val<bool>& dst, const Val<const UInt>& index, 
-                         const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool isAttribLong(const Val<bool>& dst, const Val<const UInt>& index, 
-                      const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribDivisor(const Val<Int>& dst, const Val<const UInt>& index, 
-                          const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                          const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribRelativeOffset(const Val<Int>& dst, const Val<const UInt>& index, 
-                                 const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                                 const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     bool getAttribBindingOffset(const Val<Int64>& dst, const Val<const UInt>& index, 
-                                const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+                                const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
     
     bool enableAttrib(const Val<const UInt>& index, 
-                      const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                      const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool disableAttrib(const Val<const UInt>& index, 
-                       const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                       const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool setAttribBinding(const Val<const UInt>& index, const Val<const UInt>& binding, 
-                          const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                          const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool setAttribFormat(const Val<const UInt>& index, const Val<const Int>& size,
                          const Val<const DataType>& type, const Val<const bool>& normalized,
                          const Val<const UInt>& relative_offset, 
-                         const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     bool setBindingDivisor(const Val<const UInt>& binding, const Val<const UInt>& divisor, 
-                           const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                           const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
-    bool setElementBuffer(const Buffer& buffer, 
-                          const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
-    bool setVertexBuffer(const Val<const UInt>& binding, const Buffer& buffer,
+    bool setElementBuffer(const Val<const Buffer>& buffer, 
+                          const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    bool setVertexBuffer(const Val<const UInt>& binding, const Val<const Buffer>& buffer,
                          const Val<const IntPtr>& offset, const Val<const Sizei>& stride, 
-                         const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true);
+                         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
     bool draw(const Val<const DrawMode>& mode, const Val<const Sizei>& vertex_count,
               const Val<const DataType>& index_type, const Val<const Sizei>& instances, 
-              const Val<const SrcLoc> src_loc = SrcLoc{}, bool check_ctx = true) const;
+              const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const;
+protected:
+    VertexArray(const sptr<Context>& ctx,
+                const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
 
 private:
-    static void _initer(UInt& dst);
+    // Hide parent's make
+    using Object::make;
+
+    static void _initer(const Val<UInt>& dst, const Val<const utils::SrcLoc>& src_loc);
     static void _deleter(const UInt& id);
 };
     

@@ -8,19 +8,19 @@
 
 struct aiMesh;
 template<class T>
-struct aiVector3t;
+class aiVector3t;
 template<class T>
-struct aiColor4t;
+class aiColor4t;
 
 namespace glwpp::model {
 
 class MeshVertexData {
 public:
-    MeshVertexData(const wptr<Context>& wctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
-                   const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    MeshVertexData(const sptr<Context>& ctx, const MeshVertexConfig& config, const aiMesh& ai_mesh,
+                   const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~MeshVertexData();
 
-    const gl::Buffer& getVertices() const;
+    const sptr<gl::Buffer>& getVertices() const;
     const MeshVertexConfig& getConfig() const;
     const gl::UInt& getBytesPerVertex() const;
     const gl::UInt& getVertexCount() const;
@@ -34,16 +34,16 @@ public:
 
 private:
     MeshVertexConfig _config;
-    gl::Buffer _vertices;
+    sptr<gl::Buffer> _vertices;
 
     struct AttributeState {
         bool enabled;           // Do model have attribute
         MeshAttributeType type;
         MeshAttributeSize size;
-        float compression;
+        double compression;
 
         gl::UInt byte_offset;     // gl memory relative offset of attribute in vertex
-        glm::vec4 value_offset; // all attribute values are normalized [0, 1]. can be used to restore original values in shader
+        glm::vec4 value_offset;  // all attribute values are normalized [0, 1]. can be used to restore original values in shader
         float value_mult;       // all attribute values are normalized [0, 1]. can be used to restore original values in shader
     };
 
@@ -67,7 +67,7 @@ private:
     static float _findValueMultiplier(const aiMesh& ai_mesh, const glm::vec4& value_offset);
     
     template<MeshAttribute A>
-    static MeshAttributeType _findOptimalType(const aiMesh& ai_mesh, const MeshAttributeSize& size, const float& compression,
+    static MeshAttributeType _findOptimalType(const aiMesh& ai_mesh, const MeshAttributeSize& size, const double& compression,
                                               const glm::vec4& value_offset, const float& value_mult);
 
     template<MeshAttribute A>

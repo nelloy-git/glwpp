@@ -4,7 +4,7 @@
 
 #include "glwpp/utils/Utils.hpp"
 
-namespace glwpp::utils {
+namespace glwpp {
 
 template<typename T>
 class Val;
@@ -49,7 +49,7 @@ public:
     
 
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !(is_const<U> && !is_const<V>)), bool> = true>
-    operator V&() const {return *_data;}
+    operator V&&() const {return *_data;}
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
     operator V() const {return *_data;}
     template<typename V>

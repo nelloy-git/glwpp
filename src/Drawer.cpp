@@ -7,70 +7,78 @@
 using namespace glwpp;
 using namespace glwpp::utils;
 
-Drawer::Drawer(const wptr<Context>& wctx,
+sptr<Drawer> Drawer::make(const sptr<Context>& ctx,
+                          const Val<const SrcLoc> src_loc){
+    return sptr<Drawer>(new Drawer(ctx, src_loc));
+}
+
+Drawer::Drawer(const sptr<Context>& ctx,
                const Val<const SrcLoc> src_loc) :
-    Program(wctx, src_loc),
-    _data(new DrawerData(wctx, src_loc)){
+    Program(ctx, src_loc),
+    _camera(ctx, src_loc){
 }
 
 Drawer::~Drawer(){
 }
 
 Camera& Drawer::camera(){
-    return _data->camera;
+    return _camera;
 }
 
 const Camera& Drawer::camera() const {
-    return _data->camera;
+    return _camera;
 }
 
 bool Drawer::bindMeshAttributes(const Val<const MeshAttributeBindings>& bindings,
-                                const Val<const SrcLoc>& src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, &Drawer::_bindMeshAttributes, bindings, id(), Val<DrawerData>(_data));
+                                const Val<const SrcLoc>& src_loc){
+    if (!isContextThread()){
+        return executeMethodInContext(&Drawer::bindMeshAttributes, bindings, src_loc);
+    }
+
+    _attr_bindings.for_each([&](auto attr){
+        auto& name = (*bindings)[attr];
+        if (_attr_bindings[attr] == name){
+            return;
+        }
+
+        auto attr_index = gl::UInt(_attr_bindings.enum_index(attr));
+        glBindAttribLocation(id(), attr_index, name.data());
+        _attr_bindings[attr] = name;
+    });
+    link();
+
+    return true;
 }
 
 bool Drawer::bindUniformBlocks(const Val<const UniformBlockBindings>& bindings,
-                               const Val<const SrcLoc>& src_loc, bool check_ctx){
-    return executeInContext(check_ctx, src_loc, &Drawer::_bindUniformBlocks, bindings, id(), Val<DrawerData>(_data));
-}
+                               const Val<const SrcLoc>& src_loc){
+    if (!isContextThread()){
+        return executeMethodInContext(&Drawer::bindUniformBlocks, bindings, src_loc);
+    }
 
-void Drawer::_bindMeshAttributes(const MeshAttributeBindings& bindings,
-                                 const gl::UInt& id, DrawerData& data){
-    data.attr_bindings.for_each([&](auto attr){
-        if (data.attr_bindings[attr] == bindings[attr]){
-            return;
-        }
-
-        auto attr_index = data.attr_bindings.enum_index(attr);
-        glBindAttribLocation(id, attr_index, bindings[attr].data());
-        data.attr_bindings[attr] = bindings[attr];
-    });
-    glLinkProgram(id);
-}
-
-void Drawer::_bindUniformBlocks(const Val<const UniformBlockBindings>& bindings,
-                                const gl::UInt& id, DrawerData& data){
-    data.uniform_block_bindings.for_each([&](auto unif){
+    _uniform_block_bindings.for_each([&](auto unif){
         auto name = (*bindings)[unif];
-        if (data.uniform_block_bindings[unif] == name){
+        if (_uniform_block_bindings[unif] == name){
             return;
         }
 
-        auto unif_index = data.uniform_block_bindings.enum_index(unif);
-        auto loc = glGetUniformBlockIndex(id, name.c_str());
-        glUniformBlockBinding(id, loc, unif_index);
-        const gl::Buffer& buffer = _getUniformBlockBuffer<unif>(data);
-        buffer.bindUniformBase((gl::UInt)unif_index);
+        auto unif_index = gl::UInt(_uniform_block_bindings.enum_index(unif));
+        auto loc = glGetUniformBlockIndex(id(), name.c_str());
+        glUniformBlockBinding(id(), loc, unif_index);
+        const auto& buffer = _getUniformBlockBuffer<unif>();
+        buffer->bindUniformBase((gl::UInt)unif_index);
 
         std::cout << "Loc: " << loc << std::endl;
-        std::cout << "Buffer: " << *buffer.id() << std::endl;
+        std::cout << "Buffer: " << *buffer->id() << std::endl;
     });
+
+    return true;
 }
 
 template<DrawerUniformBlock U>
-const gl::Buffer& Drawer::_getUniformBlockBuffer(DrawerData& data){
+const sptr<gl::Buffer> Drawer::_getUniformBlockBuffer(){
     if constexpr (U == DrawerUniformBlock::Camera){
-        return data.camera.buffer();
+        return _camera.buffer();
     } else {
         throw std::runtime_error("Unknown DrawerUniformBlock");
     }

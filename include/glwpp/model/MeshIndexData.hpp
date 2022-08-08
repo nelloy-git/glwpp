@@ -9,22 +9,22 @@ namespace glwpp::model {
 
 class MeshIndexData {
 public:
-    MeshIndexData(const wptr<Context>& wctx, const aiMesh& ai_mesh,
-                  const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    MeshIndexData(const sptr<Context>& ctx, const aiMesh& ai_mesh,
+                  const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~MeshIndexData();
-    const gl::Buffer& getIndices() const;
+    const sptr<gl::Buffer>& getIndices() const;
     const gl::UInt& getIndexCount() const;
     const MeshIndexType& getType() const;
 
 private:
     MeshIndexType _type;
-    gl::Buffer _indices; 
+    sptr<gl::Buffer> _indices; 
     gl::UInt _index_count;
 
     static MeshIndexType _getIndexType(const aiMesh& ai_mesh);
     template<typename T>
     void _fillIndexBuffer(const aiMesh& ai_mesh,
-                          const utils::Val<const utils::SrcLoc>& src_loc);
+                          const Val<const utils::SrcLoc>& src_loc);
 };
 
 } // namespace glwpp

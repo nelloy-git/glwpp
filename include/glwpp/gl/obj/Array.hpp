@@ -7,66 +7,76 @@
 
 namespace glwpp::gl {
 
-namespace detail {
-
-// Just to hide implementation
-class ArrayBase {
-public:
-    virtual ~ArrayBase() = 0;
-protected:
-    ArrayBase(){};
-    struct ArrayData {
-        SizeiPtr size;
-        size_t elem_size;
-    };
-
-    static void _init(const SizeiPtr& size, const void* initial,
-                      const size_t& element_bytes,
-                      const UInt& id, ArrayData& data);
-    static void _getSize(SizeiPtr& dst,
-                         const UInt& id, ArrayData& data);
-    static void _getValue(const SizeiPtr& i, void* dst,
-                          const UInt& id, ArrayData& data);
-    static void _setValue(const SizeiPtr& i, const void* value,
-                          const UInt& id, ArrayData& data);
-};
-
-inline ArrayBase::~ArrayBase(){};
-
-};
-
-
 template<typename T>
-class Array : public detail::ArrayBase, public Buffer {
+class Array : public Buffer {
 public:
-    Array(const wptr<Context>& wctx, const Val<const SizeiPtr>& size,
-          const Val<const std::optional<T>>& initial = std::nullopt,
-          const Val<const SrcLoc>& src_loc = SrcLoc{}) :
-        Buffer(wctx, src_loc),
-        _data(new ArrayData){
-        Val<const T> init_val(*initial ? (*initial).value() : T{});
-        executeInContext(true, src_loc, &ArrayBase::_init, size, init_val, sizeof(T), id(), Val<ArrayData>(_data));
-    }
+    static sptr<Array> make1(const sptr<Context>& ctx, const Val<const UInt>& size,
+                             const Val<const T>& initial,
+                             const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        auto self = sptr<Array>(new Array(ctx, size, initial, src_loc));
+        static const Val<T*> empty(nullptr);
+        self->storage(self->_size * sizeof(T), empty, _access, src_loc);
+        for (UInt i = 0; i < self->_size; ++i){
+            self->set(i, initial, src_loc);
+        }
+        return self;
+    };
 
     ~Array(){};
 
-    inline bool size(const Val<SizeiPtr>& dst,
-                     const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
-        return executeInContext(check_ctx, src_loc, &ArrayBase::_getSize, dst, id(), Val<ArrayData>(_data));
+    inline bool size(const Val<UInt>& dst,
+                     const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const {
+        if (!isContextThread()){
+        return executeMethodInContext(&Array::size, dst, src_loc);
+        }
+
+        *dst = _size;
+        return true;
     }
 
-    inline bool get(const Val<const SizeiPtr>& i, const Val<T>& dst,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true) const {
-        return executeInContext(check_ctx, src_loc, &ArrayBase::_getValue, i, dst, id(), Val<ArrayData>(_data));
+    inline bool get(const Val<const UInt>& i, const Val<T>& dst,
+                    const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}) const {
+        if (!isContextThread()){
+        return executeMethodInContext(&Array::get, i, dst, src_loc);
+        }
+
+        Val<T*> mapped;
+        mapRange(mapped, *i * sizeof(T), sizeof(T), _access, src_loc);
+        *dst = *mapped;
+        unmap(true, src_loc);
+        return true;
     }
 
-    inline bool set(const Val<const SizeiPtr>& i, const Val<const T>& value,
-                    const Val<const SrcLoc>& src_loc = SrcLoc{}, bool check_ctx = true){
-        return executeInContext(check_ctx, src_loc, &ArrayBase::_setValue, i, value, id(), Val<ArrayData>(_data));
+    inline bool set(const Val<const UInt>& i, const Val<const T>& value,
+                    const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{}){
+        if (!isContextThread()){
+        return executeMethodInContext(&Array::set, i, value, src_loc);
+        }
+
+        Val<void*> mapped(nullptr);
+        mapRange(mapped, *i * sizeof(T), sizeof(T), _access, src_loc);
+        auto mapped_struct = mapped.cast_reinterpret<T*>();
+        **mapped_struct = *value;
+        unmap(true, src_loc);
+        return true;
     }
 
 protected:
-    sptr<ArrayData> _data;
+    Array(const sptr<Context>& ctx, const Val<const UInt>& size,
+          const Val<const T>& initial, const Val<const utils::SrcLoc>& src_loc) :
+        Buffer(ctx, src_loc),
+        _size(size){
+    }
+
+private:
+    // Hide parent's make
+    using Buffer::make;
+
+    UInt _size;
+    static inline BitField _access = static_cast<Enum>(BufferStorageFlag::Read)
+                                   | static_cast<Enum>(BufferStorageFlag::Write)
+                                   | static_cast<Enum>(BufferStorageFlag::Persistent)
+                                   | static_cast<Enum>(BufferStorageFlag::Coherent);
 };
 
 }

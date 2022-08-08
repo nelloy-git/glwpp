@@ -21,16 +21,16 @@ namespace glwpp::model {
 class Mesh {
 
 public:
-    Mesh(const wptr<Context>& wctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config,
-         const utils::Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
+    Mesh(const sptr<Context>& ctx, const aiMesh& ai_mesh, const MeshVertexConfig& vert_config,
+         const Val<const utils::SrcLoc>& src_loc = utils::SrcLoc{});
     virtual ~Mesh();
 
-    const gl::VertexArray& getVertexArray() const;
+    const sptr<gl::VertexArray>& getVertexArray() const;
     const MeshIndexData& getIndexData() const;
     const MeshVertexData& getVertexData() const;
 
 private:
-    gl::VertexArray _vert_arr;
+    sptr<gl::VertexArray> _vert_arr;
     MeshIndexData _index_data;
     MeshVertexData _vert_data;
 };

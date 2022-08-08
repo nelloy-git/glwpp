@@ -20,7 +20,7 @@ add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
 if (WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /D_DEBUG")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /W3 /D_DEBUG")
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -fconcepts -pthread")
 endif (WIN32)
@@ -39,6 +39,7 @@ add_library (${PROJECT_NAME} STATIC
     3rdparty/glad/src/gl.c
 
     src/ctx/Context.cpp
+    src/ctx/ContextObject.cpp
     
     src/glfw/enums/Action.cpp
     src/glfw/enums/Button.cpp
@@ -49,12 +50,10 @@ add_library (${PROJECT_NAME} STATIC
 
     
     src/gl/obj/Object.cpp
-    src/gl/obj/Array.cpp
     src/gl/obj/Buffer.cpp
     src/gl/obj/Shader.cpp
     src/gl/obj/Program.cpp
     src/gl/obj/Texture.cpp
-    src/gl/obj/Vector.cpp
     src/gl/obj/VertexArray.cpp
 
     

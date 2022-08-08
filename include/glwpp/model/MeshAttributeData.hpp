@@ -7,24 +7,24 @@
 
 namespace glwpp::model {
 
-static constexpr uint32_t packMeshAttributeDataValue(const float& value, size_t bits){
+static constexpr uint32_t packMeshAttributeDataValue(const float& value, unsigned int bits){
     uint32_t mult = (1 << bits) - 1;
     return ((uint32_t)(value * mult)) & mult;
 };
 
-static constexpr float unpackMeshAttributeDataValue(const uint32_t& value, size_t bits){
+static constexpr float unpackMeshAttributeDataValue(const uint32_t& value, unsigned int bits){
     uint32_t mult = (1 << bits) - 1;
     return (float)value / (float)mult;
 };
 
-size_t getMeshAttributeDataBytes(const MeshAttributeType& T, const MeshAttributeSize& S);
+unsigned int getMeshAttributeDataBytes(const MeshAttributeType& T, const MeshAttributeSize& S);
 
 template<MeshAttributeType T, MeshAttributeSize S>
 class MeshAttributeData final {
 public:
     using ComponentType = MeshAttributeTypeCpu_t<T>;
 
-    static constexpr size_t Components = S == MeshAttributeSize::Scalar ? 1 
+    static constexpr unsigned int Components = S == MeshAttributeSize::Scalar ? 1 
                                          : S == MeshAttributeSize::Vec2 ? 2
                                          : S == MeshAttributeSize::Vec3 ? 3
                                          : S == MeshAttributeSize::Vec4 ? 4

@@ -85,7 +85,7 @@ struct MeshAttributeTypeCpu {
 template<MeshAttributeType T>
 using MeshAttributeTypeCpu_t = gl::DataTypeCpu_t<getMeshAttributeTypeGlType(T)>;
 
-enum class MeshAttribute : size_t {
+enum class MeshAttribute : unsigned int {
     Position = 0,
     Normal,
     Tangent,
