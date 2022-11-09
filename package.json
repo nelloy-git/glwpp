@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "cmake-js": "^6.3.2"
+  }
+}

@@ -11,8 +11,8 @@ layout (std140) uniform Camera {
 };
 
 uniform int node_n;
-layout (std140) uniform Model {
-    mat4 transform[];
+layout (std140) uniform MeshTransform {
+    mat4 transform[500];
 };
 
 out vec2 vertOutTex;
@@ -25,7 +25,7 @@ void main(){
     // gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);
     
     // vec3 pos = mult[vPosN] * (vPos + offset[vPosN].xyz);
-    gl_Position = camera_mat * vec4(pos, 1.0);
+    gl_Position = camera_mat * transform[node_n] * vec4(pos, 1.0);
 
     vertOutTex = mult[vTexN] * (vTex + offset[vTexN].xy);
 }
