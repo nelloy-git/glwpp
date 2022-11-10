@@ -4,7 +4,7 @@
             "name": "Ubuntu",
             "includePath": [
                 "${default}",
-                "include",
+                "src",
                 "3rdparty/assimp/include",
                 "3rdparty/glfw/include",
                 "3rdparty/glad/include",

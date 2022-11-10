@@ -29,7 +29,7 @@ public:
     EXPORT const std::thread::id& getGlThreadId() const;
 
     using ms = std::chrono::milliseconds;
-    EXPORT InterfaceGl& GL();
+    EXPORT Interface& GL();
     EXPORT Event<Context*, const ms&>& getOnStartEvent();
     EXPORT Event<Context*, const ms&>& getOnRunEvent();
 
@@ -65,8 +65,8 @@ private:
     std::chrono::steady_clock::time_point _last_start_time;
     std::chrono::steady_clock::time_point _last_finish_time;
 
-    InterfaceGlInner _gl_inner;
-    InterfaceGlOuter _gl_outer;
+    InterfaceInner _gl_inner;
+    InterfaceOuter _gl_outer;
     Event<Context*, const ms&> _on_start_gl;
     Event<Context*, const ms&> _on_run_gl;
     Event<Context*, const ms&> _on_finish_gl;

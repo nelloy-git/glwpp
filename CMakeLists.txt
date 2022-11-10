@@ -27,6 +27,7 @@ else ()
 endif (WIN32)
 
 include_directories(./src)
+include_directories(./src/gl)
 include_directories(./3rdparty/assimp/include)
 include_directories(./3rdparty/glad/include)
 include_directories(./3rdparty/glfw/include)
@@ -55,8 +56,8 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property (TARGET ${PROJECT_NAME}
   PROPERTY
-    # Enable C++23 standard compliance
-    CXX_STANDARD 23
+    # Enable C++20 standard compliance
+    CXX_STANDARD 20
 )
 
 # Main test

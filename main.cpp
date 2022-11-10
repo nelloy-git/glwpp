@@ -17,10 +17,10 @@ int main(int argc, char **argv){
     
 
     auto id = std::make_shared<unsigned int[]>(1);
-    // ctx->GL().CreateBuffers(std::make_shared<int>(1), id);
+    ctx->GL().CreateBuffers(std::make_shared<int>(1), id);
     
     ctx->getOnStartEvent().addActionQueued([](glwpp::Context* ctx, const glwpp::Context::ms& us){
-        std::cout << us.count() << std::endl;
+        // std::cout << us.count() << std::endl;
         return true;
     });
 

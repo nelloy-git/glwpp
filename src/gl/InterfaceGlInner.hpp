@@ -5,10 +5,12 @@
 
 namespace glwpp {
 
-class InterfaceGlInner : public InterfaceGl {
+namespace GL {
+
+class InterfaceInner : public Interface {
 public:
-    InterfaceGlInner(Context* ctx, std::function<void(GLsrc)> debug);
-    ~InterfaceGlInner();
+    InterfaceInner(Context& ctx, std::function<void(GLsrc)> debug);
+    ~InterfaceInner();
 
     EXPORT void ActiveShaderProgram(GLuint pipeline, GLuint program, GLsrc src_loc = SrcLoc{});
     EXPORT void ActiveTexture(GLenum texture, GLsrc src_loc = SrcLoc{});
@@ -673,4 +675,6 @@ public:
 
 };
 
-}
+} // namespace GL
+
+} // namespace glwpp

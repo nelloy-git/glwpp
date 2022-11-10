@@ -4,7 +4,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "gl/InterfaceGLInner.hpp"
+#include "gl/InterfaceGlInner.hpp"
 #include "utils/GlobalThreadPool.hpp"
 
 using namespace glwpp;
@@ -17,8 +17,8 @@ std::atomic<unsigned int>& Context::_glfwWindowsCounter(){
 Context::Context(const Parameters& params) :
     _gl_thread(new BS::thread_pool(1)),
 
-    _gl_inner(this, [](const SrcLoc& src_loc){}),
-    _gl_outer(this, [](const SrcLoc& src_loc){}),
+    _gl_inner(*this, [](const SrcLoc& src_loc){}),
+    _gl_outer(*this, [](const SrcLoc& src_loc){}),
     _on_start_gl(_gl_thread),
     _on_run_gl(_gl_thread),
     _on_finish_gl(_gl_thread),
@@ -85,8 +85,8 @@ void Context::_initGl(const Parameters& params){
     ++_glfwWindowsCounter();
 
     std::vector<std::pair<int, int>> hints = {
-        // {GLFW_VERSION_MAJOR, 4},
-        // {GLFW_VERSION_MINOR, 6},
+        // {GLFW_VERSION_MAJOR, 3},
+        // {GLFW_VERSION_MINOR, 0},
         {GLFW_CONTEXT_VERSION_MAJOR, 4},
         {GLFW_CONTEXT_VERSION_MINOR, 6},
         {GLFW_REFRESH_RATE, params.fps},

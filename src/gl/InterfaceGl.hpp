@@ -13,61 +13,63 @@ namespace glwpp {
 
 class Context;
 
-class InterfaceGl {
+namespace GL {
+
+using GLsizei = const std::shared_ptr<int>&;
+using GLsizeiArr = const std::shared_ptr<int[]>&;
+using GLintptr = const std::shared_ptr<khronos_intptr_t>&;
+using GLintptrArr = const std::shared_ptr<khronos_intptr_t[]>&;
+using GLboolean = const std::shared_ptr<unsigned char>&;
+using GLbooleanArr = const std::shared_ptr<unsigned char[]>&;
+using GLbooleanRes = std::shared_ptr<unsigned char>;
+using GLushort = const std::shared_ptr<khronos_uint16_t>&;
+using GLushortArr = const std::shared_ptr<khronos_uint16_t[]>&;
+using GLshort = const std::shared_ptr<khronos_int16_t>&;
+using GLshortArr = const std::shared_ptr<khronos_int16_t[]>&;
+using GLint = const std::shared_ptr<int>&;
+using GLintArr = const std::shared_ptr<int[]>&;
+using GLintRes = std::shared_ptr<int>;
+using GLuint = const std::shared_ptr<unsigned int>&;
+using GLuintArr = const std::shared_ptr<unsigned int[]>&;
+using GLuintRes = std::shared_ptr<unsigned int>;
+using GLint64 = const std::shared_ptr<khronos_int64_t>&;
+using GLint64Arr = const std::shared_ptr<khronos_int64_t[]>&;
+using GLuint64 = const std::shared_ptr<khronos_uint64_t>&;
+using GLuint64Arr = const std::shared_ptr<khronos_uint64_t[]>&;
+using GLbitfield = const std::shared_ptr<unsigned int>&;
+using GLbitfieldArr = const std::shared_ptr<unsigned int[]>&;
+using GLenum = const std::shared_ptr<unsigned int>&;
+using GLenumArr = const std::shared_ptr<unsigned int[]>&;
+using GLenumRes = std::shared_ptr<unsigned int>;
+using GLchar = const std::shared_ptr<char>&;
+using GLcharArr = const std::shared_ptr<char[]>&;
+using GLcharArrRes = std::shared_ptr<char[]>;
+using GLbyte = const std::shared_ptr<khronos_int8_t>&;
+using GLbyteArr = const std::shared_ptr<khronos_int8_t[]>&;
+using GLubyte = const std::shared_ptr<khronos_uint8_t>&;
+using GLubyteArr = const std::shared_ptr<khronos_uint8_t[]>&;
+using GLubyteArrRes = std::shared_ptr<khronos_uint8_t[]>;
+using GLsizeiptr = const std::shared_ptr<khronos_ssize_t>&;
+using GLsizeiptrArr = const std::shared_ptr<khronos_ssize_t[]>&;
+using GLfloat = const std::shared_ptr<khronos_float_t>&;
+using GLfloatArr = const std::shared_ptr<khronos_float_t[]>&;
+using GLdouble = const std::shared_ptr<double>&;
+using GLdoubleArr = const std::shared_ptr<double[]>&;
+using GLsync = const std::shared_ptr<__GLsync*>&;
+using GLsyncRes = std::shared_ptr<__GLsync*>;
+using GLdata = const std::shared_ptr<void>&;
+using GLdataPtr = const std::shared_ptr<void*>&;
+using GLsrc = const SrcLoc&;
+
+class Interface {
 public:
-    InterfaceGl(Context* ctx, const std::function<void(const SrcLoc&)> debug) :
-        _ctx(ctx),
+    Interface(Context& ctx, const std::function<void(const SrcLoc&)> debug) :
+        _ctx(&ctx),
         _debug(debug){
     }
-    InterfaceGl(const InterfaceGl&) = delete;
-    InterfaceGl(const InterfaceGl&&) = delete;
-    ~InterfaceGl(){};
-
-    using GLsizei = const std::shared_ptr<int>&;
-    using GLsizeiArr = const std::shared_ptr<int[]>&;
-    using GLintptr = const std::shared_ptr<khronos_intptr_t>&;
-    using GLintptrArr = const std::shared_ptr<khronos_intptr_t[]>&;
-    using GLboolean = const std::shared_ptr<unsigned char>&;
-    using GLbooleanArr = const std::shared_ptr<unsigned char[]>&;
-    using GLbooleanRes = std::shared_ptr<unsigned char>;
-    using GLushort = const std::shared_ptr<khronos_uint16_t>&;
-    using GLushortArr = const std::shared_ptr<khronos_uint16_t[]>&;
-    using GLshort = const std::shared_ptr<khronos_int16_t>&;
-    using GLshortArr = const std::shared_ptr<khronos_int16_t[]>&;
-    using GLint = const std::shared_ptr<int>&;
-    using GLintArr = const std::shared_ptr<int[]>&;
-    using GLintRes = std::shared_ptr<int>;
-    using GLuint = const std::shared_ptr<unsigned int>&;
-    using GLuintArr = const std::shared_ptr<unsigned int[]>&;
-    using GLuintRes = std::shared_ptr<unsigned int>;
-    using GLint64 = const std::shared_ptr<khronos_int64_t>&;
-    using GLint64Arr = const std::shared_ptr<khronos_int64_t[]>&;
-    using GLuint64 = const std::shared_ptr<khronos_uint64_t>&;
-    using GLuint64Arr = const std::shared_ptr<khronos_uint64_t[]>&;
-    using GLbitfield = const std::shared_ptr<unsigned int>&;
-    using GLbitfieldArr = const std::shared_ptr<unsigned int[]>&;
-    using GLenum = const std::shared_ptr<unsigned int>&;
-    using GLenumArr = const std::shared_ptr<unsigned int[]>&;
-    using GLenumRes = std::shared_ptr<unsigned int>;
-    using GLchar = const std::shared_ptr<char>&;
-    using GLcharArr = const std::shared_ptr<char[]>&;
-    using GLcharArrRes = std::shared_ptr<char[]>;
-    using GLbyte = const std::shared_ptr<khronos_int8_t>&;
-    using GLbyteArr = const std::shared_ptr<khronos_int8_t[]>&;
-    using GLubyte = const std::shared_ptr<khronos_uint8_t>&;
-    using GLubyteArr = const std::shared_ptr<khronos_uint8_t[]>&;
-    using GLubyteArrRes = std::shared_ptr<khronos_uint8_t[]>;
-    using GLsizeiptr = const std::shared_ptr<khronos_ssize_t>&;
-    using GLsizeiptrArr = const std::shared_ptr<khronos_ssize_t[]>&;
-    using GLfloat = const std::shared_ptr<khronos_float_t>&;
-    using GLfloatArr = const std::shared_ptr<khronos_float_t[]>&;
-    using GLdouble = const std::shared_ptr<double>&;
-    using GLdoubleArr = const std::shared_ptr<double[]>&;
-    using GLsync = const std::shared_ptr<__GLsync*>&;
-    using GLsyncRes = std::shared_ptr<__GLsync*>;
-    using GLdata = const std::shared_ptr<void>&;
-    using GLdataPtr = const std::shared_ptr<void*>&;
-    using GLsrc = const SrcLoc&;
+    Interface(const Interface&) = delete;
+    Interface(const Interface&&) = delete;
+    ~Interface(){};
 
     virtual void ActiveShaderProgram(GLuint pipeline, GLuint program, GLsrc src_loc = SrcLoc{}) = 0;
     virtual void ActiveTexture(GLenum texture, GLsrc src_loc = SrcLoc{}) = 0;
@@ -735,5 +737,7 @@ protected:
     Context* _ctx;
     const std::function<void(const SrcLoc&)> _debug;
 };
+
+}; // namespace GL 
 
 } // namespace glwpp
