@@ -2,8 +2,8 @@
 
 #include "BS_thread_pool.hpp"
 
-#include "gl/InterfaceGlInner.hpp"
-#include "gl/InterfaceGlOuter.hpp"
+#include "gl/InterfaceInner.hpp"
+#include "gl/InterfaceOuter.hpp"
 #include "utils/Event.hpp"
 #include "utils/Export.hpp"
 

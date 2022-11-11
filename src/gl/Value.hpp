@@ -8,6 +8,7 @@ namespace GL {
 
 template<typename T>
 class Value {
+public:
     Value(const T& value) :
         _ptr(new T(value)){
     }
@@ -18,6 +19,14 @@ class Value {
     
     Value(const std::shared_ptr<T>&& ptr) :
         _ptr(ptr){
+    }
+
+    T& operator*() const {
+        return *_ptr;
+    }
+
+    auto get() const {
+        return _ptr.get();
     }
 
     operator std::shared_ptr<T>(){

@@ -8,12 +8,12 @@ namespace glwpp {
 
 namespace GL {
 
-class Buffer {
+class Object {
 public:
-    Buffer(Context& ctx);
-    Buffer(const Buffer&) = delete;
-    Buffer(const Buffer&&) = delete;
-    ~Buffer();
+    Object(Context& ctx, const Value<>& id);
+    Object(const Object&) = delete;
+    Object(const Object&&) = delete;
+    ~Object();
 
 private:
     GLuintRes _id;

@@ -4,7 +4,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "gl/InterfaceGlInner.hpp"
+#include "gl/InterfaceInner.hpp"
 #include "utils/GlobalThreadPool.hpp"
 
 using namespace glwpp;

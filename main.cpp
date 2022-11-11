@@ -3,7 +3,7 @@
 #endif
 
 #include "Context.hpp"
-#include "gl/InterfaceGl.hpp"
+#include "gl/Interface.hpp"
 
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
