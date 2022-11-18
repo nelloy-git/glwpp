@@ -2,8 +2,8 @@
 
 #include "BS_thread_pool.hpp"
 
-#include "gl/InterfaceInner.hpp"
-#include "gl/InterfaceOuter.hpp"
+#include "gl/GlDirect.hpp"
+#include "gl/GlIndirect.hpp"
 #include "utils/Event.hpp"
 #include "utils/Export.hpp"
 
@@ -25,11 +25,32 @@ public:
     EXPORT Context(const Parameters& params);
     virtual ~Context();
 
+
     EXPORT std::future<void> run();
     EXPORT const std::thread::id& getGlThreadId() const;
 
+    enum class IsGlThread {
+        True,
+        False,
+        Unknown
+    };
+
+    template<IsGlThread status = IsGlThread::Unknown>
+    EXPORT GL::Gl& gl(){
+        if constexpr (status == IsGlThread::True){
+            return _gl_direct;
+        } else if constexpr (status == IsGlThread::False){
+            return _gl_indirect;
+        } else {
+            if (std::this_thread::get_id() == _gl_thread_id){
+                return _gl_direct;
+            } else {
+                return _gl_indirect;
+            }
+        }
+    }
+
     using ms = std::chrono::milliseconds;
-    EXPORT Interface& GL();
     EXPORT Event<Context*, const ms&>& getOnStartEvent();
     EXPORT Event<Context*, const ms&>& getOnRunEvent();
 
@@ -65,8 +86,8 @@ private:
     std::chrono::steady_clock::time_point _last_start_time;
     std::chrono::steady_clock::time_point _last_finish_time;
 
-    InterfaceInner _gl_inner;
-    InterfaceOuter _gl_outer;
+    GL::GlDirect _gl_direct;
+    GL::GlIndirect _gl_indirect;
     Event<Context*, const ms&> _on_start_gl;
     Event<Context*, const ms&> _on_run_gl;
     Event<Context*, const ms&> _on_finish_gl;

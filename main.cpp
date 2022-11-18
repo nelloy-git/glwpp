@@ -3,7 +3,7 @@
 #endif
 
 #include "Context.hpp"
-#include "gl/Interface.hpp"
+#include "gl_object/Buffer.hpp"
 
 int main(int argc, char **argv){
     glwpp::Context::Parameters ctx_params;
@@ -14,17 +14,27 @@ int main(int argc, char **argv){
 
     auto ctx = std::make_shared<glwpp::Context>(ctx_params);
 
+    glwpp::GL::Buffer buffer(ctx);
+    buffer.setData(4, glwpp::GL::Value<void>(4), ctx->gl().DYNAMIC_DRAW());
+    buffer.map(ctx->gl().READ_WRITE());
+    auto is_mapped = buffer.isMapped();
     
-
-    auto id = std::make_shared<unsigned int[]>(1);
-    ctx->GL().CreateBuffers(std::make_shared<int>(1), id);
-    
-    ctx->getOnStartEvent().addActionQueued([](glwpp::Context* ctx, const glwpp::Context::ms& us){
+    ctx->getOnRunEvent().addActionQueued([ctx](glwpp::Context*, const glwpp::Context::ms& us){
+        glwpp::GL::Buffer buffer(ctx);
+        std::cout << "ID inner: " << *buffer.id() << std::endl;
         // std::cout << us.count() << std::endl;
         return true;
     });
 
+    bool done = false;
     while(true){
         ctx->run().wait();
+        if (!done){
+            std::cout << "ID: " << *buffer.id() << std::endl;
+            std::cout << (int)*is_mapped << std::endl;
+            done = true;
+        }
+
+        // std::cout << *buffer.id() << std::endl;
     }
 }

@@ -4,7 +4,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
-#include "gl/InterfaceInner.hpp"
+#include "gl/GlBase.hpp"
 #include "utils/GlobalThreadPool.hpp"
 
 using namespace glwpp;
@@ -14,18 +14,33 @@ std::atomic<unsigned int>& Context::_glfwWindowsCounter(){
     return counter;
 }
 
+namespace {
+    void debugGl(const SrcLoc& src_loc){
+        while (auto err = glGetError()){
+            std::string s_err = "UNKNOWN";
+            switch (err){
+            case GL_INVALID_ENUM: s_err = "GL_INVALID_ENUM"; break;
+            case GL_INVALID_OPERATION : s_err = "GL_INVALID_OPERATION "; break;
+            case GL_OUT_OF_MEMORY : s_err = "GL_OUT_OF_MEMORY "; break;            
+            default: break;
+            }
+            std::cout << "ERROR " << s_err.c_str() << " " << err << std::endl << src_loc.to_string().c_str() << std::endl;
+        }
+    }
+}
+
 Context::Context(const Parameters& params) :
     _gl_thread(new BS::thread_pool(1)),
 
-    _gl_inner(*this, [](const SrcLoc& src_loc){}),
-    _gl_outer(*this, [](const SrcLoc& src_loc){}),
-    _on_start_gl(_gl_thread),
-    _on_run_gl(_gl_thread),
-    _on_finish_gl(_gl_thread),
-
     _init_time(std::chrono::steady_clock::now()),
     _last_start_time(std::chrono::steady_clock::now()),
-    _last_finish_time(std::chrono::steady_clock::now()){
+    _last_finish_time(std::chrono::steady_clock::now()),
+
+    _gl_direct(&debugGl),
+    _gl_indirect(*this, &debugGl),
+    _on_start_gl(_gl_thread),
+    _on_run_gl(_gl_thread),
+    _on_finish_gl(_gl_thread){
 
     _gl_thread->submit([this, &params](){
         try {
@@ -58,14 +73,6 @@ std::future<void> Context::run(){
 
 const std::thread::id& Context::getGlThreadId() const {
     return _gl_thread_id;
-}
-
-InterfaceGl& Context::GL(){
-    if (std::this_thread::get_id() == _gl_thread_id){
-        return _gl_inner;
-    } else {
-        return _gl_outer;
-    }
 }
 
 Event<Context*, const Context::ms&>& Context::getOnStartEvent(){

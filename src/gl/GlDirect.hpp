@@ -1,17 +1,25 @@
 #pragma once
 
-#include "gl/Interface.hpp"
-#include "utils/Export.hpp"
+#include "gl/GlBase.hpp"
+
+struct __GLsync;
 
 namespace glwpp {
 
+class Context;
+
 namespace GL {
 
-class InterfaceInner : public Interface {
+class GlDirect : public Gl {
 public:
-    InterfaceInner(Context& ctx, std::function<void(const SrcLoc&)> debug);
-    ~InterfaceInner();
+    GlDirect(const std::function<void(const SrcLoc&)>& debug);
+    GlDirect(const GlDirect&) = delete;
+    GlDirect(const GlDirect&&) = delete;
+    ~GlDirect();
 
+    EXPORT void debug(const SrcLoc& src_loc);
+    EXPORT void callSimple(const std::function<void(Gl&)>& func);
+    
     EXPORT void ActiveShaderProgram(const GLuint& pipeline, const GLuint& program, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ActiveTexture(const GLenum& texture, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void AttachShader(const GLuint& program, const GLuint& shader, const SrcLoc& src_loc = SrcLoc{});
@@ -19,14 +27,14 @@ public:
     EXPORT void BeginQuery(const GLenum& target, const GLuint& id, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BeginQueryIndexed(const GLenum& target, const GLuint& index, const GLuint& id, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BeginTransformFeedback(const GLenum& primitiveMode, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void BindAttribLocation(const GLuint& program, const GLuint& index, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void BindAttribLocation(const GLuint& program, const GLuint& index, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindBuffer(const GLenum& target, const GLuint& buffer, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindBufferBase(const GLenum& target, const GLuint& index, const GLuint& buffer, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindBufferRange(const GLenum& target, const GLuint& index, const GLuint& buffer, const GLintptr& offset, const GLsizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindBuffersBase(const GLenum& target, const GLuint& first, const GLsizei& count, const GLuintArr& buffers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindBuffersRange(const GLenum& target, const GLuint& first, const GLsizei& count, const GLuintArr& buffers, const GLintptrArr& offsets, const GLsizeiptrArr& sizes, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void BindFragDataLocation(const GLuint& program, const GLuint& color, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void BindFragDataLocationIndexed(const GLuint& program, const GLuint& colorNumber, const GLuint& index, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void BindFragDataLocation(const GLuint& program, const GLuint& color, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void BindFragDataLocationIndexed(const GLuint& program, const GLuint& colorNumber, const GLuint& index, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindFramebuffer(const GLenum& target, const GLuint& framebuffer, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindImageTexture(const GLuint& unit, const GLuint& texture, const GLint& level, const GLboolean& layered, const GLint& layer, const GLenum& access, const GLenum& format, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BindImageTextures(const GLuint& first, const GLsizei& count, const GLuintArr& textures, const SrcLoc& src_loc = SrcLoc{});
@@ -55,8 +63,8 @@ public:
     EXPORT void BufferData(const GLenum& target, const GLsizeiptr& size, const GLdata& data, const GLenum& usage, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BufferStorage(const GLenum& target, const GLsizeiptr& size, const GLdata& data, const GLbitfield& flags, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void BufferSubData(const GLenum& target, const GLintptr& offset, const GLsizeiptr& size, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void CheckFramebufferStatus(const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void CheckNamedFramebufferStatus(const GLuint& framebuffer, const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLenum CheckFramebufferStatus(const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLenum CheckNamedFramebufferStatus(const GLuint& framebuffer, const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ClampColor(const GLenum& target, const GLenum& clamp, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void Clear(const GLbitfield& mask, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ClearBufferData(const GLenum& target, const GLenum& internalformat, const GLenum& format, const GLenum& type, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
@@ -77,7 +85,7 @@ public:
     EXPORT void ClearStencil(const GLint& s, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ClearTexImage(const GLuint& texture, const GLint& level, const GLenum& format, const GLenum& type, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ClearTexSubImage(const GLuint& texture, const GLint& level, const GLint& xoffset, const GLint& yoffset, const GLint& zoffset, const GLsizei& width, const GLsizei& height, const GLsizei& depth, const GLenum& format, const GLenum& type, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void ClientWaitSync(const GLsync& sync, const GLbitfield& flags, const GLuint64& timeout, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLenum ClientWaitSync(const GLsync& sync, const GLbitfield& flags, const GLuint64& timeout, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ClipControl(const GLenum& origin, const GLenum& depth, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ColorMask(const GLboolean& red, const GLboolean& green, const GLboolean& blue, const GLboolean& alpha, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ColorMaski(const GLuint& index, const GLboolean& r, const GLboolean& g, const GLboolean& b, const GLboolean& a, const SrcLoc& src_loc = SrcLoc{});
@@ -103,20 +111,20 @@ public:
     EXPORT void CopyTextureSubImage2D(const GLuint& texture, const GLint& level, const GLint& xoffset, const GLint& yoffset, const GLint& x, const GLint& y, const GLsizei& width, const GLsizei& height, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CopyTextureSubImage3D(const GLuint& texture, const GLint& level, const GLint& xoffset, const GLint& yoffset, const GLint& zoffset, const GLint& x, const GLint& y, const GLsizei& width, const GLsizei& height, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateBuffers(const GLsizei& n, const GLuintArr& dst, const SrcLoc& src_loc = SrcLoc{});
-
     EXPORT void CreateFramebuffers(const GLsizei& n, const GLuintArr& framebuffers, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuintRes CreateProgram(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint CreateProgram(const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateProgramPipelines(const GLsizei& n, const GLuintArr& pipelines, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateQueries(const GLenum& target, const GLsizei& n, const GLuintArr& ids, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateRenderbuffers(const GLsizei& n, const GLuintArr& renderbuffers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateSamplers(const GLsizei& n, const GLuintArr& samplers, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuintRes CreateShader(const GLenum& type, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint CreateShader(const GLenum& type, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint CreateShaderProgramv(const GLenum& type, const GLsizei& count, const GLstringArr& strings, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateTextures(const GLenum& target, const GLsizei& n, const GLuintArr& textures, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateTransformFeedbacks(const GLsizei& n, const GLuintArr& ids, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CreateVertexArrays(const GLsizei& n, const GLuintArr& arrays, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void CullFace(const GLenum& mode, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void DebugMessageControl(const GLenum& source, const GLenum& type, const GLenum& severity, const GLsizei& count, const GLuintArr& ids, const GLboolean& enabled, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void DebugMessageInsert(const GLenum& source, const GLenum& type, const GLuint& id, const GLenum& severity, const GLsizei& length, const GLcharArr& buf, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void DebugMessageInsert(const GLenum& source, const GLenum& type, const GLuint& id, const GLenum& severity, const GLsizei& length, const GLstring& buf, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void DeleteBuffers(const GLsizei& n, const GLuintArr& buffers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void DeleteFramebuffers(const GLsizei& n, const GLuintArr& framebuffers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void DeleteProgram(const GLuint& program, const SrcLoc& src_loc = SrcLoc{});
@@ -169,7 +177,7 @@ public:
     EXPORT void EndQuery(const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void EndQueryIndexed(const GLenum& target, const GLuint& index, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void EndTransformFeedback(const SrcLoc& src_loc = SrcLoc{});
-    EXPORT const GLsyncRes& FenceSync(const GLenum& condition, const GLbitfield& flags, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLsync FenceSync(const GLenum& condition, const GLbitfield& flags, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void Finish(const SrcLoc& src_loc = SrcLoc{});
     EXPORT void Flush(const SrcLoc& src_loc = SrcLoc{});
     EXPORT void FlushMappedBufferRange(const GLenum& target, const GLintptr& offset, const GLsizeiptr& length, const SrcLoc& src_loc = SrcLoc{});
@@ -194,17 +202,17 @@ public:
     EXPORT void GenerateMipmap(const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GenerateTextureMipmap(const GLuint& texture, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetActiveAtomicCounterBufferiv(const GLuint& program, const GLuint& bufferIndex, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveAttrib(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLint& size, const GLenum& type, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveSubroutineName(const GLuint& program, const GLenum& shadertype, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveSubroutineUniformName(const GLuint& program, const GLenum& shadertype, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveAttrib(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLint& size, const GLenum& type, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveSubroutineName(const GLuint& program, const GLenum& shadertype, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveSubroutineUniformName(const GLuint& program, const GLenum& shadertype, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetActiveSubroutineUniformiv(const GLuint& program, const GLenum& shadertype, const GLuint& index, const GLenum& pname, const GLintArr& values, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveUniform(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLint& size, const GLenum& type, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveUniformBlockName(const GLuint& program, const GLuint& uniformBlockIndex, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& uniformBlockName, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveUniform(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLint& size, const GLenum& type, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveUniformBlockName(const GLuint& program, const GLuint& uniformBlockIndex, const GLsizei& bufSize, const GLsizei& length, const GLstring& uniformBlockName, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetActiveUniformBlockiv(const GLuint& program, const GLuint& uniformBlockIndex, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetActiveUniformName(const GLuint& program, const GLuint& uniformIndex, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& uniformName, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetActiveUniformName(const GLuint& program, const GLuint& uniformIndex, const GLsizei& bufSize, const GLsizei& length, const GLstring& uniformName, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetActiveUniformsiv(const GLuint& program, const GLsizei& uniformCount, const GLuintArr& uniformIndices, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetAttachedShaders(const GLuint& program, const GLsizei& maxCount, const GLsizeiArr& count, const GLuintArr& shaders, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetAttribLocation(const GLuint& program, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetAttribLocation(const GLuint& program, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetBooleani_v(const GLenum& target, const GLuint& index, const GLbooleanArr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetBooleanv(const GLenum& pname, const GLbooleanArr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetBufferParameteri64v(const GLenum& target, const GLenum& pname, const GLint64Arr& params, const SrcLoc& src_loc = SrcLoc{});
@@ -214,17 +222,17 @@ public:
     EXPORT void GetCompressedTexImage(const GLenum& target, const GLint& level, const GLdata& img, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetCompressedTextureImage(const GLuint& texture, const GLint& level, const GLsizei& bufSize, const GLdata& pixels, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetCompressedTextureSubImage(const GLuint& texture, const GLint& level, const GLint& xoffset, const GLint& yoffset, const GLint& zoffset, const GLsizei& width, const GLsizei& height, const GLsizei& depth, const GLsizei& bufSize, const GLdata& pixels, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuintRes GetDebugMessageLog(const GLuint& count, const GLsizei& bufSize, const GLenumArr& sources, const GLenumArr& types, const GLuintArr& ids, const GLenumArr& severities, const GLsizei& lengths, const GLcharArr& messageLog, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint GetDebugMessageLog(const GLuint& count, const GLsizei& bufSize, const GLenumArr& sources, const GLenumArr& types, const GLuintArr& ids, const GLenumArr& severities, const GLsizei& lengths, const GLstring& messageLog, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetDoublei_v(const GLenum& target, const GLuint& index, const GLdoubleArr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetDoublev(const GLenum& pname, const GLdoubleArr& data, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT const GLenumRes& GetError(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLenum GetError(const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetFloati_v(const GLenum& target, const GLuint& index, const GLfloatArr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetFloatv(const GLenum& pname, const GLfloatArr& data, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetFragDataIndex(const GLuint& program, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetFragDataLocation(const GLuint& program, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetFragDataIndex(const GLuint& program, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetFragDataLocation(const GLuint& program, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetFramebufferAttachmentParameteriv(const GLenum& target, const GLenum& attachment, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetFramebufferParameteriv(const GLenum& target, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT const GLenumRes& GetGraphicsResetStatus(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLenum GetGraphicsResetStatus(const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetInteger64i_v(const GLenum& target, const GLuint& index, const GLint64Arr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetInteger64v(const GLenum& pname, const GLint64Arr& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetIntegeri_v(const GLenum& target, const GLuint& index, const GLintArr& data, const SrcLoc& src_loc = SrcLoc{});
@@ -239,18 +247,18 @@ public:
     EXPORT void GetNamedFramebufferAttachmentParameteriv(const GLuint& framebuffer, const GLenum& attachment, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetNamedFramebufferParameteriv(const GLuint& framebuffer, const GLenum& pname, const GLintArr& param, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetNamedRenderbufferParameteriv(const GLuint& renderbuffer, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetObjectLabel(const GLenum& identifier, const GLuint& name, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& label, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetObjectPtrLabel(const GLdata& ptr, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& label, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetObjectLabel(const GLenum& identifier, const GLuint& name, const GLsizei& bufSize, const GLsizei& length, const GLstring& label, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetObjectPtrLabel(const GLdata& ptr, const GLsizei& bufSize, const GLsizei& length, const GLstring& label, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetPointerv(const GLenum& pname, const GLdataPtr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramBinary(const GLuint& program, const GLsizei& bufSize, const GLsizei& length, const GLenumArr& binaryFormat, const GLdata& binary, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetProgramInfoLog(const GLuint& program, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& infoLog, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetProgramInfoLog(const GLuint& program, const GLsizei& bufSize, const GLsizei& length, const GLstring& infoLog, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramInterfaceiv(const GLuint& program, const GLenum& programInterface, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetProgramPipelineInfoLog(const GLuint& pipeline, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& infoLog, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetProgramPipelineInfoLog(const GLuint& pipeline, const GLsizei& bufSize, const GLsizei& length, const GLstring& infoLog, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramPipelineiv(const GLuint& pipeline, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuintRes GetProgramResourceIndex(const GLuint& program, const GLenum& programInterface, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetProgramResourceLocation(const GLuint& program, const GLenum& programInterface, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetProgramResourceLocationIndex(const GLuint& program, const GLenum& programInterface, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetProgramResourceName(const GLuint& program, const GLenum& programInterface, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint GetProgramResourceIndex(const GLuint& program, const GLenum& programInterface, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetProgramResourceLocation(const GLuint& program, const GLenum& programInterface, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetProgramResourceLocationIndex(const GLuint& program, const GLenum& programInterface, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetProgramResourceName(const GLuint& program, const GLenum& programInterface, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramResourceiv(const GLuint& program, const GLenum& programInterface, const GLuint& index, const GLsizei& propCount, const GLenumArr& props, const GLsizei& count, const GLsizei& length, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramStageiv(const GLuint& program, const GLenum& shadertype, const GLenum& pname, const GLintArr& values, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetProgramiv(const GLuint& program, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
@@ -269,14 +277,14 @@ public:
     EXPORT void GetSamplerParameterIuiv(const GLuint& sampler, const GLenum& pname, const GLuintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetSamplerParameterfv(const GLuint& sampler, const GLenum& pname, const GLfloatArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetSamplerParameteriv(const GLuint& sampler, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetShaderInfoLog(const GLuint& shader, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& infoLog, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetShaderInfoLog(const GLuint& shader, const GLsizei& bufSize, const GLsizei& length, const GLstring& infoLog, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetShaderPrecisionFormat(const GLenum& shadertype, const GLenum& precisiontype, const GLintArr& range, const GLintArr& precision, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetShaderSource(const GLuint& shader, const GLsizei& bufSize, const GLsizei& length, const GLcharArr& source, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetShaderSource(const GLuint& shader, const GLsizei& bufSize, const GLsizei& length, const GLstring& source, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetShaderiv(const GLuint& shader, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT const GLubyteArrRes& GetString(const GLenum& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT const GLubyteArrRes& GetStringi(const GLenum& name, const GLuint& index, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuintRes GetSubroutineIndex(const GLuint& program, const GLenum& shadertype, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetSubroutineUniformLocation(const GLuint& program, const GLenum& shadertype, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLstring GetString(const GLenum& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLstring GetStringi(const GLenum& name, const GLuint& index, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint GetSubroutineIndex(const GLuint& program, const GLenum& shadertype, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetSubroutineUniformLocation(const GLuint& program, const GLenum& shadertype, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetSynciv(const GLsync& sync, const GLenum& pname, const GLsizei& count, const GLsizei& length, const GLintArr& values, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTexImage(const GLenum& target, const GLint& level, const GLenum& format, const GLenum& type, const GLdata& pixels, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTexLevelParameterfv(const GLenum& target, const GLint& level, const GLenum& pname, const GLfloatArr& params, const SrcLoc& src_loc = SrcLoc{});
@@ -293,12 +301,12 @@ public:
     EXPORT void GetTextureParameterfv(const GLuint& texture, const GLenum& pname, const GLfloatArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTextureParameteriv(const GLuint& texture, const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTextureSubImage(const GLuint& texture, const GLint& level, const GLint& xoffset, const GLint& yoffset, const GLint& zoffset, const GLsizei& width, const GLsizei& height, const GLsizei& depth, const GLenum& format, const GLenum& type, const GLsizei& bufSize, const GLdata& pixels, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void GetTransformFeedbackVarying(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLsizeiArr& size, const GLenumArr& type, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void GetTransformFeedbackVarying(const GLuint& program, const GLuint& index, const GLsizei& bufSize, const GLsizei& length, const GLsizeiArr& size, const GLenumArr& type, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTransformFeedbacki64_v(const GLuint& xfb, const GLenum& pname, const GLuint& index, const GLint64Arr& param, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTransformFeedbacki_v(const GLuint& xfb, const GLenum& pname, const GLuint& index, const GLintArr& param, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetTransformFeedbackiv(const GLuint& xfb, const GLenum& pname, const GLintArr& param, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLuint GetUniformBlockIndex(const GLuint& program, const GLcharArr& uniformBlockName, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT GLint GetUniformLocation(const GLuint& program, const GLcharArr& name, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLuint GetUniformBlockIndex(const GLuint& program, const GLstring& uniformBlockName, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLint GetUniformLocation(const GLuint& program, const GLstring& name, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetUniformSubroutineuiv(const GLenum& shadertype, const GLint& location, const GLuintArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetUniformdv(const GLuint& program, const GLint& location, const GLdoubleArr& params, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void GetUniformfv(const GLuint& program, const GLint& location, const GLfloatArr& params, const SrcLoc& src_loc = SrcLoc{});
@@ -346,6 +354,10 @@ public:
     EXPORT void LineWidth(const GLfloat& width, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void LinkProgram(const GLuint& program, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void LogicOp(const GLenum& opcode, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLdataPtr MapBuffer(const GLenum& target, const GLenum& access, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLdataPtr MapBufferRange(const GLenum& target, const GLintptr& offset, const GLsizeiptr& length, const GLbitfield& access, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLdataPtr MapNamedBuffer(const GLuint& buffer, const GLenum& access, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT GLdataPtr MapNamedBufferRange(const GLuint& buffer, const GLintptr& offset, const GLsizeiptr& length, const GLbitfield& access, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void MemoryBarrier(const GLbitfield& barriers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void MemoryBarrierByRegion(const GLbitfield& barriers, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void MinSampleShading(const GLfloat& value, const SrcLoc& src_loc = SrcLoc{});
@@ -368,8 +380,8 @@ public:
     EXPORT void NamedFramebufferTextureLayer(const GLuint& framebuffer, const GLenum& attachment, const GLuint& texture, const GLint& level, const GLint& layer, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void NamedRenderbufferStorage(const GLuint& renderbuffer, const GLenum& internalformat, const GLsizei& width, const GLsizei& height, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void NamedRenderbufferStorageMultisample(const GLuint& renderbuffer, const GLsizei& samples, const GLenum& internalformat, const GLsizei& width, const GLsizei& height, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void ObjectLabel(const GLenum& identifier, const GLuint& name, const GLsizei& length, const GLcharArr& label, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void ObjectPtrLabel(const GLdata& ptr, const GLsizei& length, const GLcharArr& label, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void ObjectLabel(const GLenum& identifier, const GLuint& name, const GLsizei& length, const GLstring& label, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void ObjectPtrLabel(const GLdata& ptr, const GLsizei& length, const GLstring& label, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void PatchParameterfv(const GLenum& pname, const GLfloatArr& values, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void PatchParameteri(const GLenum& pname, const GLint& value, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void PauseTransformFeedback(const SrcLoc& src_loc = SrcLoc{});
@@ -438,7 +450,7 @@ public:
     EXPORT void ProgramUniformMatrix4x3dv(const GLuint& program, const GLint& location, const GLsizei& count, const GLboolean& transpose, const GLdoubleArr& value, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ProgramUniformMatrix4x3fv(const GLuint& program, const GLint& location, const GLsizei& count, const GLboolean& transpose, const GLfloatArr& value, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ProvokingVertex(const GLenum& mode, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void PushDebugGroup(const GLenum& source, const GLuint& id, const GLsizei& length, const GLcharArr& message, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void PushDebugGroup(const GLenum& source, const GLuint& id, const GLsizei& length, const GLstring& message, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void QueryCounter(const GLuint& id, const GLenum& target, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ReadBuffer(const GLenum& src, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ReadPixels(const GLint& x, const GLint& y, const GLsizei& width, const GLsizei& height, const GLenum& format, const GLenum& type, const GLdata& pixels, const SrcLoc& src_loc = SrcLoc{});
@@ -460,8 +472,9 @@ public:
     EXPORT void ScissorIndexed(const GLuint& index, const GLint& left, const GLint& bottom, const GLsizei& width, const GLsizei& height, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ScissorIndexedv(const GLuint& index, const GLintArr& v, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ShaderBinary(const GLsizei& count, const GLuintArr& shaders, const GLenum& binaryFormat, const GLdata& binary, const GLsizei& length, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void ShaderSource(const GLuint& shader, const GLsizei& count, const GLstringArr& strings, const GLintArr& lengths, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void ShaderStorageBlockBinding(const GLuint& program, const GLuint& storageBlockIndex, const GLuint& storageBlockBinding, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void SpecializeShader(const GLuint& shader, const GLcharArr& pEntryPoint, const GLuint& numSpecializationConstants, const GLuintArr& pConstantIndex, const GLuintArr& pConstantValue, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void SpecializeShader(const GLuint& shader, const GLstring& pEntryPoint, const GLuint& numSpecializationConstants, const GLuintArr& pConstantIndex, const GLuintArr& pConstantValue, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void StencilFunc(const GLenum& func, const GLint& ref, const GLuint& mask, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void StencilFuncSeparate(const GLenum& face, const GLenum& func, const GLint& ref, const GLuint& mask, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void StencilMask(const GLuint& mask, const SrcLoc& src_loc = SrcLoc{});
@@ -662,19 +675,16 @@ public:
     EXPORT void ViewportIndexedfv(const GLuint& index, const GLfloatArr& v, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void WaitSync(const GLsync& sync, const GLbitfield& flags, const GLuint64& timeout, const SrcLoc& src_loc = SrcLoc{});
 
-
-    // EXPORT GLuintRes CreateShaderProgramv(const GLenum& type, const GLsizei& count, const GLchar& *const* strings, const SrcLoc& src_loc = SrcLoc{});
     // EXPORT void DebugMessageCallback(const GLDEBUGPROC& callback, const GLdata& userParam, const SrcLoc& src_loc = SrcLoc{});
     // EXPORT void GetUniformIndices(const GLuint& program, const GLsizei& uniformCount, const GLchar& *const* uniformNames, const GLuintArr& uniformIndices, const SrcLoc& src_loc = SrcLoc{});
     // EXPORT void ShaderSource(const GLuint& shader, const GLsizei& count, const GLchar& *const* string, const GLintArr& length, const SrcLoc& src_loc = SrcLoc{});
     // EXPORT void TransformFeedbackVaryings(const GLuint& program, const GLsizei& count, const GLchar& *const* varyings, const GLenum& bufferMode, const SrcLoc& src_loc = SrcLoc{});
-    // EXPORT void* MapBuffer(const GLenum& target, const GLenum& access, const SrcLoc& src_loc = SrcLoc{});
-    // EXPORT void* MapBufferRange(const GLenum& target, const GLintptr& offset, const GLsizeiptr& length, const GLbitfield& access, const SrcLoc& src_loc = SrcLoc{});
-    // EXPORT void* MapNamedBuffer(const GLuint& buffer, const GLenum& access, const SrcLoc& src_loc = SrcLoc{});
-    // EXPORT void* MapNamedBufferRange(const GLuint& buffer, const GLintptr& offset, const GLsizeiptr& length, const GLbitfield& access, const SrcLoc& src_loc = SrcLoc{});
 
+private:
+    template<auto F, typename ... Args>
+    inline auto _callGL(const SrcLoc& src_loc, Args... args);
 };
 
-} // namespace GL
+}; // namespace GL 
 
 } // namespace glwpp
