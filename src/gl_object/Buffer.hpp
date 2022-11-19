@@ -8,45 +8,43 @@ namespace GL {
 
 class Buffer : public Object {
 public:
-    Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{});
     Buffer(const Buffer&) = delete;
     Buffer(const Buffer&&) = delete;
-    ~Buffer();
+    EXPORT ~Buffer();
 
-    void setData(const GLsizeiptr& size, const GLdata& data, const GLenum& usage, const SrcLoc& src_loc = SrcLoc{});
-    void clearData(const GLenum& internalformat, const GLenum& format, const GLenum& type, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
-    void setStorage(const GLsizeiptr& size, const GLdata& data, const GLbitfield& flags, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void setData(const Sizeiptr& size, const Data& data, const Enum& usage, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void clearData(const Enum& internalformat, const Enum& format, const Enum& type, const Data& data, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void setStorage(const Sizeiptr& size, const Data& data, const Bitfield& flags, const SrcLoc& src_loc = SrcLoc{});
 
-    void setSubData(const GLintptr& offset, const GLsizeiptr& size, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
-    void getSubData(const GLintptr& offset, const GLsizeiptr& size, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
-    void copySubDataFrom(const Buffer& readBuffer, const GLintptr& readOffset, const GLintptr& writeOffset, const GLsizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
-    void clearSubData(const GLenum& internalformat, const GLintptr& offset, const GLsizeiptr& size, const GLenum& format, const GLenum& type, const GLdata& data, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void setSubData(const Intptr& offset, const Sizeiptr& size, const Data& data, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void getSubData(const Intptr& offset, const Sizeiptr& size, const Data& data, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void copySubDataFrom(const Buffer& readBuffer, const Intptr& readOffset, const Intptr& writeOffset, const Sizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void clearSubData(const Enum& internalformat, const Intptr& offset, const Sizeiptr& size, const Enum& format, const Enum& type, const Data& data, const SrcLoc& src_loc = SrcLoc{});
 
-    void bindBase(const GLenum& target, const GLuint& index, const SrcLoc& src_loc = SrcLoc{});
-    void bindRange(const GLenum& target, const GLuint& index, const GLintptr& offset, const GLsizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void bindBase(const Enum& target, const Uint& index, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void bindRange(const Enum& target, const Uint& index, const Intptr& offset, const Sizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
     
-    void getPointerv(const GLenum& pname, const GLdataPtr& params, const SrcLoc& src_loc = SrcLoc{});
-    GLdataPtr map(const GLenum& access, const SrcLoc& src_loc = SrcLoc{});
-    GLdataPtr mapRange(const GLintptr& offset, const GLsizeiptr& length, const GLbitfield& access, const SrcLoc& src_loc = SrcLoc{});
-    GLboolean unmap(const SrcLoc& src_loc = SrcLoc{});
-    void flushRange(const GLintptr& offset, const GLsizeiptr& length, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void getPointerv(const Enum& pname, const DataPtr& params, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT DataPtr map(const Enum& access, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT DataPtr mapRange(const Intptr& offset, const Sizeiptr& length, const Bitfield& access, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Boolean unmap(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void flushRange(const Intptr& offset, const Sizeiptr& length, const SrcLoc& src_loc = SrcLoc{});
 
-    void getParameteriv(const GLenum& pname, const GLintArr& params, const SrcLoc& src_loc = SrcLoc{});
-    GLenum getMapAccess(const SrcLoc& src_loc = SrcLoc{});
-    GLbitfield getMapRangeAccess(const SrcLoc& src_loc = SrcLoc{});
-    GLboolean isImmutableStorage(const SrcLoc& src_loc = SrcLoc{});
-    GLboolean isMapped(const SrcLoc& src_loc = SrcLoc{});
-    GLint getSize(const SrcLoc& src_loc = SrcLoc{});
-    GLbitfield getStorageFlags(const SrcLoc& src_loc = SrcLoc{});
-    GLenum getUsage(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Enum getMapAccess(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Bitfield getMapRangeAccess(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Boolean isImmutableStorage(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Boolean isMapped(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Int getSize(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Bitfield getStorageFlags(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Enum getUsage(const SrcLoc& src_loc = SrcLoc{});
 
-    void getParameteri64v(const GLenum& pname, const GLint64Arr& params, const SrcLoc& src_loc = SrcLoc{});
-    GLint64 getMapLength(const SrcLoc& src_loc = SrcLoc{});
-    GLint64 getMapOffset(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Int64 getMapLength(const SrcLoc& src_loc = SrcLoc{});
+    EXPORT Int64 getMapOffset(const SrcLoc& src_loc = SrcLoc{});
 
 private:
-    static GLuint _initId(Gl& gl, const SrcLoc& src_loc);
-    static void _freeId(Gl& gl, const GLuint& id, const SrcLoc& src_loc);
+    static unsigned int _initId(Gl& gl, const SrcLoc& src_loc);
+    static void _freeId(Gl& gl, const Uint& id, const SrcLoc& src_loc);
 
 };
 

@@ -8,7 +8,7 @@ namespace GL {
 
 class Object {
 public:
-    Object(const std::shared_ptr<Context>& ctx, const GLuint& id) :
+    Object(const std::shared_ptr<Context>& ctx, const Uint& id) :
         _wctx(ctx),
         _p_ctx(ctx.get()),
         _ctx_thread_id(ctx->getGlThreadId()),
@@ -18,7 +18,7 @@ public:
     Object(const Object&&) = delete;
     ~Object(){};
 
-    const GLuint& id() const {
+    const Uint& id() const {
         return _id;
     }
 
@@ -57,7 +57,7 @@ private:
     std::weak_ptr<Context> _wctx;
     Context* _p_ctx;
     std::thread::id _ctx_thread_id;
-    GLuint _id;
+    Uint _id;
 
 };
 
