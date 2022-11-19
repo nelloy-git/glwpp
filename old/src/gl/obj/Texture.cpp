@@ -118,7 +118,6 @@ bool Texture::getImage(const Val<void>& dst, const Val<const Int>& level, const 
         return executeMethodInContext(&Texture::getImage, dst, level, fmt, type, size, src_loc);
     }
     
-
     glGetTextureImage(id(), level, fmt.cast_reinterpret<const Enum>(),
                       type.cast_reinterpret<const Enum>(), size, dst);
     return true;

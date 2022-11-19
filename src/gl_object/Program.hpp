@@ -19,23 +19,19 @@ public:
     void validate(const SrcLoc& src_loc = SrcLoc{});
     void use(const SrcLoc& src_loc = SrcLoc{});
 
-    GLint getAttribLocation(const String& name, const SrcLoc& src_loc = SrcLoc{});
-    void bindAttribLocation(const GLuint& attr_index, const String& name, const SrcLoc& src_loc = SrcLoc{});
-    GLint getUniformLocation(const String& name, const SrcLoc& src_loc = SrcLoc{});
-    GLuint getUniformBlockIndex(const String& name, const SrcLoc& src_loc = SrcLoc{});
+    Int getAttribLocation(const String& name, const SrcLoc& src_loc = SrcLoc{});
+    void bindAttribLocation(const Uint& attr_index, const String& name, const SrcLoc& src_loc = SrcLoc{});
+    Int getUniformLocation(const String& name, const SrcLoc& src_loc = SrcLoc{});
+    Uint getUniformBlockIndex(const String& name, const SrcLoc& src_loc = SrcLoc{});
 
-    GLboolean isLinked(const SrcLoc& src_loc = SrcLoc{});
-    GLboolean isValidated(const SrcLoc& src_loc = SrcLoc{});
-    GLint getAttachedShadersCount(const SrcLoc& src_loc = SrcLoc{});
-    GLint getActiveAttributesCount(const SrcLoc& src_loc = SrcLoc{});
-    GLint getActiveAttributeMaxNameLength(const SrcLoc& src_loc = SrcLoc{});
-    GLint getActiveUniformsCount(const SrcLoc& src_loc = SrcLoc{});
-    GLint getActiveUniformMaxNameLength(const SrcLoc& src_loc = SrcLoc{});
+    Boolean isLinked(const SrcLoc& src_loc = SrcLoc{});
+    Boolean isValidated(const SrcLoc& src_loc = SrcLoc{});
+    Int getAttachedShadersCount(const SrcLoc& src_loc = SrcLoc{});
+    Int getActiveAttributesCount(const SrcLoc& src_loc = SrcLoc{});
+    Int getActiveAttributeMaxNameLength(const SrcLoc& src_loc = SrcLoc{});
+    Int getActiveUniformsCount(const SrcLoc& src_loc = SrcLoc{});
+    Int getActiveUniformMaxNameLength(const SrcLoc& src_loc = SrcLoc{});
     String getInfoLog(const SrcLoc& src_loc = SrcLoc{});
-
-private:
-    static GLuint _initId(Gl& gl, const SrcLoc& src_loc);
-    static void _freeId(Gl& gl, const GLuint& id, const SrcLoc& src_loc);
 
 };
 

@@ -6,11 +6,18 @@ using namespace glwpp;
 using namespace GL;
 
 Buffer::Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc) :
-    Object(ctx, ctx->gl().call(&Buffer::_initId, src_loc)){
+    Object(ctx, ctx->gl().call([](Gl& gl, const SrcLoc& src_loc){
+        unsigned int dst;
+        glCreateBuffers(1, &dst);
+        gl.debug(src_loc);
+        return dst;
+    }, src_loc)){
 }
 
 Buffer::~Buffer(){
-    _callGLCustom(&Buffer::_freeId, id(), SrcLoc{});
+    _callGLCustom([](Gl& gl, const Uint& id){
+        glDeleteBuffers(1, id.get());
+    }, id());
 }
 
 
@@ -160,16 +167,4 @@ GL::Int64 Buffer::getMapOffset(const SrcLoc& src_loc){
         gl.debug(src_loc);
         return dst;
     }, id(), src_loc);
-}
-
-unsigned int Buffer::_initId(Gl& gl, const SrcLoc& src_loc){
-    unsigned int dst;
-    glCreateBuffers(1, &dst);
-    gl.debug(src_loc);
-    return dst;
-}
-
-void Buffer::_freeId(Gl& gl, const Uint& id, const SrcLoc& src_loc){
-    glDeleteBuffers(1, id.get());
-    gl.debug(src_loc);
 }

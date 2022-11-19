@@ -42,10 +42,6 @@ public:
     EXPORT Int64 getMapLength(const SrcLoc& src_loc = SrcLoc{});
     EXPORT Int64 getMapOffset(const SrcLoc& src_loc = SrcLoc{});
 
-private:
-    static unsigned int _initId(Gl& gl, const SrcLoc& src_loc);
-    static void _freeId(Gl& gl, const Uint& id, const SrcLoc& src_loc);
-
 };
 
 } // namespace GL
