@@ -6,12 +6,9 @@ namespace glwpp {
 
 namespace GL {
 
-class Buffer : public Object {
+class BufferBase : public Object {
 public:
-    EXPORT Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{});
-    Buffer(const Buffer&) = delete;
-    Buffer(const Buffer&&) = delete;
-    EXPORT ~Buffer();
+    EXPORT ~BufferBase();
 
     EXPORT void setData(const Sizeiptr& size, const Data& data, const Enum& usage, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void clearData(const Enum& internalformat, const Enum& format, const Enum& type, const Data& data, const SrcLoc& src_loc = SrcLoc{});
@@ -19,7 +16,7 @@ public:
 
     EXPORT void setSubData(const Intptr& offset, const Sizeiptr& size, const Data& data, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void getSubData(const Intptr& offset, const Sizeiptr& size, const Data& data, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT void copySubDataFrom(const Buffer& readBuffer, const Intptr& readOffset, const Intptr& writeOffset, const Sizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
+    EXPORT void copySubDataFrom(const BufferBase& readBuffer, const Intptr& readOffset, const Intptr& writeOffset, const Sizeiptr& size, const SrcLoc& src_loc = SrcLoc{});
     EXPORT void clearSubData(const Enum& internalformat, const Intptr& offset, const Sizeiptr& size, const Enum& format, const Enum& type, const Data& data, const SrcLoc& src_loc = SrcLoc{});
 
     EXPORT void bindBase(const Enum& target, const Uint& index, const SrcLoc& src_loc = SrcLoc{});
@@ -42,6 +39,21 @@ public:
     EXPORT Int64 getMapLength(const SrcLoc& src_loc = SrcLoc{});
     EXPORT Int64 getMapOffset(const SrcLoc& src_loc = SrcLoc{});
 
+protected:
+    BufferBase(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc);
+
+};
+
+class Buffer : public BufferBase, public SharedObject<Buffer> {
+public:
+    EXPORT static std::shared_ptr<Buffer> New(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{}){
+        return std::shared_ptr<Buffer>(new Buffer(ctx, src_loc));
+    }
+
+protected:
+    Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc) : 
+        BufferBase(ctx, src_loc){
+    }
 };
 
 } // namespace GL

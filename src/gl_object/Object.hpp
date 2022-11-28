@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/SharedObject.hpp"
 #include "Context.hpp"
 
 namespace glwpp {
@@ -8,14 +9,6 @@ namespace GL {
 
 class Object {
 public:
-    Object(const std::shared_ptr<Context>& ctx, const Uint& id) :
-        _wctx(ctx),
-        _p_ctx(ctx.get()),
-        _ctx_thread_id(ctx->getGlThreadId()),
-        _id(id){
-    }
-    Object(const Object&) = delete;
-    Object(const Object&&) = delete;
     ~Object(){};
 
     const Uint& id() const {
@@ -23,6 +16,13 @@ public:
     }
 
 protected:
+    Object(const std::shared_ptr<Context>& ctx, const Uint& id) :
+        _wctx(ctx),
+        _p_ctx(ctx.get()),
+        _ctx_thread_id(ctx->getGlThreadId()),
+        _id(id){
+    }
+
     template<auto F, typename ... Args>
     auto _callGL(Args... args){
         if (std::this_thread::get_id() == _ctx_thread_id){

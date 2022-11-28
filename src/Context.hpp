@@ -25,6 +25,7 @@ public:
     EXPORT Context(const Parameters& params);
     virtual ~Context();
 
+    const std::shared_ptr<GLFWwindow>& getGlfw();
 
     EXPORT std::future<void> run();
     EXPORT const std::thread::id& getGlThreadId() const;

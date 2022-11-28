@@ -53,12 +53,17 @@ Context::Context(const Parameters& params) :
     _on_start_gl.addActionQueued([window = _window](){
         glfwPollEvents();
         glfwSwapBuffers(window.get());
+        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         return true;
     });
     
 }
 
 Context::~Context(){
+}
+
+const std::shared_ptr<GLFWwindow>& Context::getGlfw(){
+    return _window;
 }
 
 std::future<void> Context::run(){
@@ -95,7 +100,7 @@ void Context::_initGl(const Parameters& params){
         // {GLFW_VERSION_MAJOR, 3},
         // {GLFW_VERSION_MINOR, 0},
         {GLFW_CONTEXT_VERSION_MAJOR, 4},
-        {GLFW_CONTEXT_VERSION_MINOR, 6},
+        {GLFW_CONTEXT_VERSION_MINOR, 1},
         {GLFW_REFRESH_RATE, params.fps},
     };
 
@@ -115,6 +120,7 @@ void Context::_initGl(const Parameters& params){
     );
     glfwSetWindowUserPointer(_window.get(), this);
     glfwMakeContextCurrent(_window.get());
+    glfwSwapInterval(1); // Enable vsync
     
     auto ver = gladLoadGL(glfwGetProcAddress);
     if (ver == 0){

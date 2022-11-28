@@ -8,6 +8,9 @@ namespace GL {
 
 template<typename T>
 class Value {
+    template<typename U>
+    friend class Value;
+
     template<typename V>
     static constexpr bool is_void = std::is_same_v<std::remove_const_t<V>, void>;
 
@@ -32,6 +35,11 @@ public:
     template<typename U = T, std::enable_if_t<(is_void<U>), bool> = true>
     Value(const size_t& bytes) :
         _ptr(new char[bytes]){
+    }
+
+    template<typename V, typename U = T, std::enable_if_t<(is_void<U>), bool> = true>
+    Value(const Value<V>& other) :
+        _ptr(std::reinterpret_pointer_cast<void>(other._ptr)){
     }
 
     Value(const std::shared_ptr<T>& ptr) :

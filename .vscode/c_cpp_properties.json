@@ -32,7 +32,8 @@
                 "3rdparty/googletest/googletest/include",
                 "3rdparty/freetype/include",
                 "3rdparty/thread_pool",
-                "3rdparty/VLD/include"
+                "3rdparty/VLD/include",
+                "3rdparty/imgui"
             ],
             "defines": ["GLWPP_DEBUG"],
             "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",

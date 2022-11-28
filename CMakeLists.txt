@@ -37,9 +37,20 @@ include_directories(./3rdparty/thread_pool)
 include_directories(./3rdparty/VLD/include)
 link_directories(./3rdparty/VLD/lib/Win64)
 include_directories(./3rdparty/freetype/include)
+include_directories(3rdparty/imgui)
+
+add_library(imgui SHARED
+    3rdparty/imgui/imgui_demo.cpp
+    3rdparty/imgui/imgui_draw.cpp
+    3rdparty/imgui/imgui_tables.cpp
+    3rdparty/imgui/imgui_widgets.cpp
+    3rdparty/imgui/imgui.cpp
+
+    3rdparty/imgui/backends/imgui_impl_glfw.cpp
+    3rdparty/imgui/backends/imgui_impl_opengl3.cpp
+)
 
 file(GLOB_RECURSE SRC_FILES "src/**.cpp")
-
 add_library (${PROJECT_NAME} SHARED
     3rdparty/glad/src/gl.c
 
@@ -52,6 +63,7 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     assimp
     freetype
+    imgui
 )
 
 set_property (TARGET ${PROJECT_NAME}
