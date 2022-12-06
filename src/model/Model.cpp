@@ -6,7 +6,7 @@
 
 using namespace glwpp;
 
-Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path, const SrcLoc& src_loc){
+Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path){
     static auto ai_process_flags = aiProcess_CalcTangentSpace 
                                  | aiProcess_Triangulate
                                  | aiProcess_JoinIdenticalVertices
@@ -20,7 +20,7 @@ Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path,
         return;
     }
 
-    if (!_loadMeshes(ctx, *ai_scene, src_loc)){
+    if (!_loadMeshes(ctx, *ai_scene)){
         return;
     }
 }
@@ -28,7 +28,7 @@ Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path,
 Model::~Model(){
 }
 
-bool Model::_loadMeshes(const std::shared_ptr<Context>& ctx, const aiScene& ai_scene, const SrcLoc& src_loc){
+bool Model::_loadMeshes(const std::shared_ptr<Context>& ctx, const aiScene& ai_scene){
     if (ai_scene.mNumMeshes == 0){
         loading_error = "No meshes found";
         return false;
@@ -41,7 +41,7 @@ bool Model::_loadMeshes(const std::shared_ptr<Context>& ctx, const aiScene& ai_s
             return false;
         }
 
-        meshes.emplace_back(ctx, *ai_mesh, src_loc);
+        meshes.emplace_back(ctx, *ai_mesh);
     }
 
     return true;

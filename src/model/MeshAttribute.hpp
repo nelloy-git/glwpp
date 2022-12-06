@@ -3,9 +3,9 @@
 #include "gl_object/Buffer.hpp"
 
 template<typename T>
-struct aiVector3t;
+class aiVector3t;
 template<typename T>
-struct aiColor4t;
+class aiColor4t;
 
 namespace glwpp {
 
@@ -15,12 +15,13 @@ public:
         Float
     };
 
-    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiVector3t<float>* ai_vector, const SrcLoc& src_loc = SrcLoc{});
-    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiColor4t<float>* ai_color, const SrcLoc& src_loc = SrcLoc{});
-    ~MeshAttribute();
+    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiVector3t<float>* ai_vectors);
+    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiColor4t<float>* ai_colors);
+    virtual ~MeshAttribute();
 
     const Type type;
     const unsigned int components;
+    const GLsizei stride;
     std::shared_ptr<GL::Buffer> buffer;
 };
 

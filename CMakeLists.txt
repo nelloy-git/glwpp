@@ -39,16 +39,16 @@ link_directories(./3rdparty/VLD/lib/Win64)
 include_directories(./3rdparty/freetype/include)
 include_directories(3rdparty/imgui)
 
-add_library(imgui SHARED
-    3rdparty/imgui/imgui_demo.cpp
-    3rdparty/imgui/imgui_draw.cpp
-    3rdparty/imgui/imgui_tables.cpp
-    3rdparty/imgui/imgui_widgets.cpp
-    3rdparty/imgui/imgui.cpp
+# add_library(imgui SHARED
+#     3rdparty/imgui/imgui_demo.cpp
+#     3rdparty/imgui/imgui_draw.cpp
+#     3rdparty/imgui/imgui_tables.cpp
+#     3rdparty/imgui/imgui_widgets.cpp
+#     3rdparty/imgui/imgui.cpp
 
-    3rdparty/imgui/backends/imgui_impl_glfw.cpp
-    3rdparty/imgui/backends/imgui_impl_opengl3.cpp
-)
+#     3rdparty/imgui/backends/imgui_impl_glfw.cpp
+#     3rdparty/imgui/backends/imgui_impl_opengl3.cpp
+# )
 
 file(GLOB_RECURSE SRC_FILES "src/**.cpp")
 add_library (${PROJECT_NAME} SHARED
@@ -63,7 +63,7 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     assimp
     freetype
-    imgui
+    # imgui
 )
 
 set_property (TARGET ${PROJECT_NAME}
@@ -75,6 +75,15 @@ set_property (TARGET ${PROJECT_NAME}
 # Main test
 
 add_executable(${PROJECT_NAME}_test
+    3rdparty/imgui/imgui_demo.cpp
+    3rdparty/imgui/imgui_draw.cpp
+    3rdparty/imgui/imgui_tables.cpp
+    3rdparty/imgui/imgui_widgets.cpp
+    3rdparty/imgui/imgui.cpp
+
+    3rdparty/imgui/backends/imgui_impl_glfw.cpp
+    3rdparty/imgui/backends/imgui_impl_opengl3.cpp
+
     main.cpp
 )
 # target_compile_features(${PROJECT_NAME}_test PUBLIC cxx_std_20)

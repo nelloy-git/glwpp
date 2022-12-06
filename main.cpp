@@ -1,6 +1,8 @@
 #ifdef WIN32
-#include <vld.h>
+// #include <vld.h>
 #endif
+
+// #include "glad/gl.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -8,17 +10,9 @@
 
 #include "Context.hpp"
 #include "model/Model.hpp"
+#include "utils/Metrics.hpp"
 
-int main(int argc, char **argv){
-    glwpp::Context::Parameters ctx_params;
-    ctx_params.width = 640;
-    ctx_params.height = 480;
-    ctx_params.fps = 60;
-    ctx_params.title = "Noname";
-
-    auto ctx = std::make_shared<glwpp::Context>(ctx_params);
-
-
+void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
     ctx->getOnRunEvent().addActionQueued([](glwpp::Context* ctx){
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -35,12 +29,14 @@ int main(int argc, char **argv){
         if (!ImGui_ImplGlfw_InitForOpenGL(ctx->getGlfw().get(), true) || !ImGui_ImplOpenGL3_Init("#version 130")){
             std::cout << "ImGui error" << std::endl;
         }
-
         return false;
     });
 
-    bool show_demo_window = true;
-    ctx->getOnRunEvent().addActionQueued([&show_demo_window](){
+    glwpp::Metrics::inst()["ImGui::Render"].value_period() = std::chrono::seconds(1);
+    glwpp::Metrics::inst()["ImGui::Render"].max_values() = 10;
+
+    auto show_demo_window = new bool(true);
+    ctx->getOnRunEvent().addActionQueued([show_demo_window](glwpp::Context* ctx, const std::chrono::milliseconds& dt){
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -53,28 +49,15 @@ int main(int argc, char **argv){
         ImGui::NewFrame();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        ImGui::ShowDemoWindow(&show_demo_window);
+        ImGui::ShowDemoWindow(show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            // ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            // ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::Begin("Metrics");                          // Create a window called "Hello, world!" and append into it.
+            // ImGui::Text("FPS: %0.1f (%.1fms)", 1000 / glwpp::Metrics::inst()["ImGui::Render"].getAvg(), glwpp::Metrics::inst()["ImGui::Render"].getAvg());
+            for (auto& pair : glwpp::Metrics::inst().getLast()){
+                ImGui::Text("%s: %.1f (%d)", pair.first.c_str(), pair.second.value, pair.second.count);
+            }
             ImGui::End();
         }
 
@@ -89,15 +72,34 @@ int main(int argc, char **argv){
         // }
 
         // Rendering
-        // std::cout << "ImGui render" << std::endl;
         ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glwpp::Metrics::inst()["ImGui::Render"] += static_cast<double>(dt.count());
+
         return true;
     });
+}
 
-    // glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
-    // if (book_model.loading_error.has_value()){
-    //     std::cout << book_model.loading_error.value().c_str() << std::endl;
-    // }
+int main(int argc, char **argv){
+    glwpp::Context::Parameters ctx_params;
+    ctx_params.width = 1280;
+    ctx_params.height = 1024;
+    ctx_params.fps = 60;
+    ctx_params.title = "Noname";
+
+    auto ctx = std::make_shared<glwpp::Context>(ctx_params);
+    add_imgui(ctx);
+
+#ifdef WIN32
+    glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
+#else
+    glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
+#endif
+
+
+    if (book_model.loading_error.has_value()){
+        std::cout << book_model.loading_error.value().c_str() << std::endl;
+    }
 
     bool done = false;
     while(true){
@@ -106,6 +108,6 @@ int main(int argc, char **argv){
             done = true;
         }
 
-        // std::cout << *buffer.id() << std::endl;
+        // std::cout << glwpp::Metrics::inst()["ImGui::Render"].getLast().value << std::endl;
     }
 }

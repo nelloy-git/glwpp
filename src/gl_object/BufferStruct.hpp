@@ -7,38 +7,50 @@
 namespace glwpp::GL {
 
 template<typename T>
-class BufferStruct : public BufferBase, public SharedObject<BufferStruct<T>> {
+class BufferStruct : public detail::BufferBase, public SharedObject<BufferStruct<T>> {
 public:
-    EXPORT static std::shared_ptr<BufferStruct<T>> New(const std::shared_ptr<Context>& ctx, const Value<T>& initial, const SrcLoc& src_loc = SrcLoc{}){
+    EXPORT static std::shared_ptr<BufferStruct<T>> New(const std::shared_ptr<Context>& ctx, const Value<T>& initial, const SrcLoc src_loc = SrcLoc{}){
         return std::shared_ptr<BufferStruct<T>>(new BufferStruct<T>(ctx, initial, src_loc));
     }
-    EXPORT ~BufferStruct(){};
+    EXPORT virtual ~BufferStruct(){};
 
-    EXPORT Value<T> getValue(const SrcLoc& src_loc = SrcLoc{}) const {
-        return _callGLCustom([](Gl& gl, const std::shared_ptr<BufferStruct<T>>& self, const SrcLoc& src_loc){
-            T* result = malloc(sizeof(T));
-            auto mapped = self->map(Gl::READ_ONLY(), src_loc);
-            memcpy(result, *mapped, sizeof(T));
-            self->unmap(src_loc);
-            return *result;
-        }, this->shared_from_this(), src_loc);
+    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    EXPORT Value<T> getValue(const SrcLoc src_loc = SrcLoc{}) const {
+        Value<T> dst(std::shared_ptr<T>((T*)malloc(sizeof(T))));
+        if (*_mapped){
+            memcpy(dst.get(), *_mapped, sizeof(T));
+        } else {
+            _addCallCustom<is_gl_thread>(src_loc,[](Context& ctx, const Value<const BufferStruct<T>>& self, const Value<T>& dst){
+                memcpy(dst.get(), *self->_mapped, sizeof(T));
+            }, Value(this->shared_from_this()), dst);
+        }
+        return dst;
     }
 
-    EXPORT void setValue(const Value<T>& value, const SrcLoc& src_loc = SrcLoc{}){
-        return _callGLCustom([](Gl& gl, const std::shared_ptr<BufferStruct<T>>& self, const Value<T>& value, const SrcLoc& src_loc){
-            auto mapped = self->map(Gl::WRITE_ONLY(), src_loc);
-            memcpy(*mapped, value.get(), sizeof(T));
-            self->unmap(src_loc);
-        }, this->shared_from_this(), value, src_loc);
+    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    EXPORT void setValue(const Value<const T>& value, const SrcLoc src_loc = SrcLoc{}){
+        if (*_mapped){
+            memcpy(*_mapped, value.get(), sizeof(T));
+        } else {
+            _addCallCustom<is_gl_thread>(src_loc, [](Context& ctx, const Value<const BufferStruct<T>>& self, const Value<const T>& value){
+                memcpy(*self->_mapped, value.get(), sizeof(T));
+            }, Value(this->shared_from_this()), value);
+        }
     }
 
 protected:
     BufferStruct(const std::shared_ptr<Context>& ctx,
-                 const Value<T>& initial,
-                 const SrcLoc& src_loc) :
+                 const Value<const T>& initial,
+                 const SrcLoc src_loc) :
         BufferBase(ctx, src_loc){
-        setStorage(sizeof(T), initial, Gl::MAP_READ_BIT() | Gl::MAP_WRITE_BIT(), src_loc);
+        static const ConstBitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
+        static const ConstEnum map_flag(GL_READ_WRITE);
+
+        setStorage(sizeof(T), initial, storage_flags);
+        _mapped = map(map_flag);
     }
+
+    DataPtr _mapped;
 };
 
 }

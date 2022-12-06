@@ -35,9 +35,9 @@
                 "3rdparty/VLD/include",
                 "3rdparty/imgui"
             ],
-            "defines": ["GLWPP_DEBUG"],
+            "defines": ["GLWPP_DEBUG", "GLAD_GL_IMPLEMENTATION"],
             "compilerPath": "D:\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64\\cl.exe",
-            "cppStandard": "c++20"
+            "cppStandard": "c++23"
         }
     ],
     "version": 4
