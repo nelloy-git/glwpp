@@ -187,6 +187,7 @@ void Context::_initGl(const Parameters& params){
         gl.DebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
     
+    gl.ClearColor(0.2f, 0.9f, 0.2f, 1.f);
     gl.Clear(GL_COLOR_BUFFER_BIT);
     
     glfwSetWindowPosCallback(_window.get(), [](GLFWwindow* window, int x, int y){

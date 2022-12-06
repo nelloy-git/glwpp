@@ -8,6 +8,9 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+
 #include "Context.hpp"
 #include "model/Model.hpp"
 #include "utils/Metrics.hpp"
@@ -23,7 +26,7 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
 
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();
-        //ImGui::StyleColorsLight();
+        // ImGui::StyleColorsLight();
 
         // Setup Platform/Renderer backends
         if (!ImGui_ImplGlfw_InitForOpenGL(ctx->getGlfw().get(), true) || !ImGui_ImplOpenGL3_Init("#version 130")){
@@ -56,7 +59,7 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
             ImGui::Begin("Metrics");                          // Create a window called "Hello, world!" and append into it.
             // ImGui::Text("FPS: %0.1f (%.1fms)", 1000 / glwpp::Metrics::inst()["ImGui::Render"].getAvg(), glwpp::Metrics::inst()["ImGui::Render"].getAvg());
             for (auto& pair : glwpp::Metrics::inst().getLast()){
-                ImGui::Text("%s: %.1f (%d)", pair.first.c_str(), pair.second.value, pair.second.count);
+                ImGui::Text("%s: %.1f (%zu)", pair.first.c_str(), pair.second.value, pair.second.count);
             }
             ImGui::End();
         }
@@ -73,6 +76,9 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
 
         // Rendering
         ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(ctx->getGlfw().get(), &display_w, &display_h);
+        ctx->gl.Viewport(0, 0, display_w, display_h);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glwpp::Metrics::inst()["ImGui::Render"] += static_cast<double>(dt.count());
 

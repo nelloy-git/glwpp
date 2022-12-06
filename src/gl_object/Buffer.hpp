@@ -97,7 +97,7 @@ public:
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT Bitfield getMapRangeAccess(const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_BUFFER_ACCESS_FLAGS);
-        return _getParamiAs<GLbitfield::type, is_gl_thread>(pname, src_loc.add());
+        return _getParamiAs<Bitfield::type, is_gl_thread>(pname, src_loc.add());
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>

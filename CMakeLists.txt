@@ -20,6 +20,8 @@ add_subdirectory(./3rdparty/freetype)
 add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
+add_compile_definitions(IMGUI_IMPL_OPENGL_DEBUG)
+
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /Zi /W3 /D_DEBUG /bigobj")
 else ()
@@ -38,6 +40,7 @@ include_directories(./3rdparty/VLD/include)
 link_directories(./3rdparty/VLD/lib/Win64)
 include_directories(./3rdparty/freetype/include)
 include_directories(3rdparty/imgui)
+include_directories(3rdparty/imgui/backends)
 
 # add_library(imgui SHARED
 #     3rdparty/imgui/imgui_demo.cpp
@@ -90,6 +93,7 @@ add_executable(${PROJECT_NAME}_test
 
 target_link_libraries(${PROJECT_NAME}_test
     ${PROJECT_NAME}
+    dl
 )
 
 # if (WIN32)

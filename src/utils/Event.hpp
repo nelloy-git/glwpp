@@ -14,6 +14,14 @@
 #include "utils/GlobalThreadPool.hpp"
 #include "utils/SrcLoc.hpp"
 
+#ifndef __GLWPP_FUNCTION_NAME__
+    #ifdef WIN32   //WINDOWS
+        #define __GLWPP_FUNCTION_NAME__ __FUNCTION__  
+    #else          //*NIX
+        #define __GLWPP_FUNCTION_NAME__ __func__ 
+    #endif
+#endif
+
 namespace glwpp {
 
 namespace detail {
@@ -150,7 +158,7 @@ public:
     EXPORT std::future<void> emitNow(const Args&... args, const SrcLoc& src_loc = SrcLoc{});
 
     // EXPORT std::future<void> setBeforeEmitStartQueued(const auto& callback);
-    EXPORT std::future<void> setBeforeActionCallback(const std::optional<BeforeActionCallback>& callback){
+    EXPORT void setBeforeActionCallback(const std::optional<BeforeActionCallback>& callback){
         _inner->setBeforeActionCallback(callback);
     }
 
@@ -181,7 +189,7 @@ inline std::pair<typename Event<Args...>::ID, std::future<void>>
 Event<Args...>::addActionQueued(const auto& action,
                                 const SrcLoc& src_loc){
     using Expanded = decltype(expand_func<Args...>(action));
-    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>, __FUNCTION__": wrong function signature. Must return bool");
+    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>); //, __PRETTY_FUNCTION__": wrong function signature. Must return bool");
 
     auto id = _getUniqId();
     auto promise = std::make_shared<std::promise<void>>();
@@ -200,7 +208,7 @@ inline std::pair<typename Event<Args...>::ID, std::future<void>>
 Event<Args...>::addActionNow(const auto& action,
                              const SrcLoc& src_loc){
     using Expanded = decltype(expand_func<Args...>(action));
-    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>, __FUNCTION__": wrong function signature. Must return bool");
+    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>); //, __PRETTY_FUNCTION__ ": wrong function signature. Must return bool");
 
     auto id = _getUniqId();
     auto promise = std::make_shared<std::promise<void>>();
@@ -233,6 +241,7 @@ Event<Args...>::delActionNow(const ID& id){
         bool found = inner->removeAction(id);
         promise->set_value(found);
     });
+    return promise->get_future();
 }
 
 template<typename ... Args>
@@ -244,7 +253,6 @@ Event<Args...>::emitQueued(const Args&... args,
         inner->emitActions(args...);
         promise->set_value();
     });
-
     return promise->get_future();
 }
 
