@@ -12,28 +12,39 @@ namespace glwpp {
 
 class MeshVertexArray {
 public:
+    template<typename T>
+    struct Attributes {
+        T position;
+        std::optional<T>& normal;
+        std::optional<T>& tangent;
+        std::optional<T>& bitangent;
+        std::array<std::optional<T>, 8>& texture_coord;
+        std::array<std::optional<T>, 8>& color;
+    };
+
     MeshVertexArray(const std::shared_ptr<Context>& ctx,
                     const MeshIndices& indices,
-                    const MeshAttribute& position,
-                    const std::optional<MeshAttribute>& normal,
-                    const std::optional<MeshAttribute>& tangent,
-                    const std::optional<MeshAttribute>& bitangent,
-                    const std::array<std::optional<MeshAttribute>, 8>& texture_coord,
-                    const std::array<std::optional<MeshAttribute>, 8>& color);
+                    const Attributes<MeshAttribute>& buffers,
+                    const SrcLoc src_loc = SrcLoc{});
     virtual ~MeshVertexArray();
 
     std::shared_ptr<GL::VertexArray> vao;
 
-    void bindAttributes();
-
-    static constexpr GLuint POSITION_BINDING = 0;
-    static constexpr GLuint NORMAL_BINDING = 1;
-    static constexpr GLuint TANGENT_BINDING = 2;
-    static constexpr GLuint BITANGENT_BINDING = 3;
-    static constexpr std::array<GLuint, 8> TEXTURE_BINDING = {4, 5, 6, 7, 8, 9, 10, 11};
-    static constexpr std::array<GLuint, 8> COLOR_BINDING = {12, 13, 14, 15, 16, 17, 18, 19};
+    void bindAttributes(const Attributes<int>& bindings, const SrcLoc src_loc = SrcLoc{});
 
 private:
+    template<typename T, void(MeshVertexArray::*F)(const GL::ConstUint&, const T&, const SrcLoc src_loc)>
+    void _iterateAttributes(const Attributes<T>& attr_data, const SrcLoc src_loc);
+
+    void _linkBuffer(const GL::ConstUint& index, const MeshAttribute& attr_buffer, const SrcLoc src_loc);
+    void _bindAttribute(const GL::ConstUint& index, const int& binding, const SrcLoc src_loc);
+
+    static const GL::ConstUint POSITION_INDEX;
+    static const GL::ConstUint NORMAL_INDEX;
+    static const GL::ConstUint TANGENT_INDEX;
+    static const GL::ConstUint BITANGENT_INDEX;
+    static const std::array<GL::ConstUint, 8> TEXTURE_INDEX;
+    static const std::array<GL::ConstUint, 8> COLOR_INDEX;
 };
 
 } // namespace glwpp

@@ -91,10 +91,16 @@ add_executable(${PROJECT_NAME}_test
 )
 # target_compile_features(${PROJECT_NAME}_test PUBLIC cxx_std_20)
 
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME}_test
+        ${PROJECT_NAME}
+    )
+else()
 target_link_libraries(${PROJECT_NAME}_test
     ${PROJECT_NAME}
     dl
 )
+endif (WIN32)
 
 # if (WIN32)
 # target_link_libraries(${PROJECT_NAME}_test

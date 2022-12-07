@@ -10,27 +10,27 @@ namespace detail {
 class VertexArrayBase : public Object {
 public:
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void enableAttrib(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void enableAttrib(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::EnableVertexArrayAttrib>(src_loc, id(), index);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void disableAttrib(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void disableAttrib(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::DisableVertexArrayAttrib>(src_loc, id(), index);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setAttribBinding(const Uint& index, const Uint& binding, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setAttribBinding(const ConstUint& index, const ConstUint& binding, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayAttribBinding>(src_loc, id(), index, binding);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setAttribFormat(const Uint& index, const Int& size, const Enum& type, const Boolean& normalized, const Uint& relative_offset, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setAttribFormat(const ConstUint& index, const ConstInt& size, const ConstEnum& type, const ConstBoolean& normalized, const ConstUint& relative_offset, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayAttribFormat>(src_loc, id(), index, size, type, normalized, relative_offset);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setBindingDivisor(const Uint& binding, const Uint& divisor, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setBindingDivisor(const ConstUint& binding, const ConstUint& divisor, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayBindingDivisor>(src_loc, id(), binding, divisor);
     }
     
@@ -40,61 +40,61 @@ public:
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setVertexBuffer(const Uint& binding, const BufferBase& buffer, const Intptr& offset, const Sizei& stride, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setVertexBuffer(const ConstUint& binding, const BufferBase& buffer, const ConstIntptr& offset, const ConstSizei& stride, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayVertexBuffer>(src_loc, id(), binding, buffer.id(), offset, stride);
     }
 
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Boolean isAttribEnabled(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Boolean isAttribEnabled(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_ENABLED);
         return _getAttribParamiAs<Boolean::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Int getAttribSize(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Int getAttribSize(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_SIZE);
         return _getAttribParamiAs<Int::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Int getAttribStride(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Int getAttribStride(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_STRIDE);
         return _getAttribParamiAs<Int::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Enum getAttribType(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Enum getAttribType(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_TYPE);
         return _getAttribParamiAs<Enum::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Boolean isAttribNormalized(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Boolean isAttribNormalized(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_NORMALIZED);
         return _getAttribParamiAs<Boolean::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Boolean isAttribInteger(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Boolean isAttribInteger(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_INTEGER);
         return _getAttribParamiAs<Boolean::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Boolean isAttribLong(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Boolean isAttribLong(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_LONG);
         return _getAttribParamiAs<Boolean::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Int getAttribDivisor(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Int getAttribDivisor(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_VERTEX_ATTRIB_ARRAY_DIVISOR);
         return _getAttribParamiAs<Int::type, is_gl_thread>(index, pname, src_loc);
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT Int64 getAttribBindingOffset(const Uint& index, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT Int64 getAttribBindingOffset(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
         static const ConstEnum pname(GL_ACTIVE_UNIFORMS);
         return _getAttribParami64As<Int64::type, is_gl_thread>(index, pname, src_loc);
     }

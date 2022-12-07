@@ -34,6 +34,7 @@ using Ushort = Value<GLushort>;
 using UshortArr = Value<GLushort[]>;
 
 using Int = Value<GLint>;
+using ConstInt = Value<const GLint>;
 using IntArr = Value<GLint[]>;
 
 using Uint = Value<GLuint>;
