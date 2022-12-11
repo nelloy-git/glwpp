@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <typeinfo>
 #include <type_traits>
 
@@ -9,7 +10,10 @@
 
 #include "utils/Event.hpp"
 #include "utils/Export.hpp"
+#include "utils/Metrics.hpp"
 #include "utils/Value.hpp"
+
+#include "GLapi.hpp"
 
 struct GLFWwindow;
 
@@ -60,6 +64,10 @@ public:
     auto addCallCustom(const SrcLoc& src_loc, const auto& func, const auto&... args){
         static_assert(std::is_invocable_v<decltype(func), Context&, decltype(args)...>, "function must be invokable with (Contexn&, args...)");
         static_assert(is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
+        
+#ifdef GLWPP_DEBUG
+        Metrics::inst()[src_loc.to_string_last()] += 1;
+#endif
 
         if constexpr (is_gl_thread == IsGlThread::True){
             return _addCallCustomFromGlThread(src_loc, func, args...);
@@ -78,6 +86,11 @@ public:
     auto addCallGl(const SrcLoc& src_loc, const auto&... args){
         static_assert(std::is_invocable_v<decltype(gl.*F), decltype(args)...>, "F must be callable member of GladGlContext");
         static_assert(is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
+        
+#ifdef GLWPP_DEBUG
+        Metrics::inst()[src_loc.to_string_last()] += 1;
+        Metrics::inst()[std::string(gladMemberName<F>())] += 1;
+#endif
 
         if constexpr (is_gl_thread == IsGlThread::True){
             return _addCallGlFromGlThread<F>(src_loc, args...);
@@ -193,6 +206,46 @@ private:
         }
     }
 
+    template <typename TObject, typename TMember>
+    static constexpr auto HashMemberPtr(TMember TObject::* memberPtr){
+        char buf[sizeof(memberPtr)];
+        auto p = (std::ptrdiff_t)(memberPtr);
+        // __builtin_memcpy(&buf, &memberPtr, sizeof(memberPtr));
+        // std::memcpy(&buf, &memberPtr, sizeof(memberPtr));
+        return std::hash<std::string_view>{}(std::string_view(buf, sizeof(buf)));
+    };
+
+    template<typename TObject_1, typename TMember_1, typename TObject_2, typename TMember_2>
+    static constexpr bool is_same_members(TMember_1 TObject_1::* ptr_1, TMember_2 TObject_2::* ptr_2){
+        if constexpr (std::is_same_v<TObject_1, TObject_2> && std::is_same_v<TMember_1, TMember_2>){
+            return ptr_1 == ptr_2;
+        }
+        return false;
+    }
+
+    template <auto GladGLContext::*F>
+    static constexpr std::string_view gladMemberName(){
+        GLapi c;
+        // c.Accum();
+
+        if constexpr (is_same_members(F, &GladGLContext::GetNamedBufferParameteriv)){
+            return "GetNamedBufferParameteriv";
+        }
+        return "Unknown";
+
+
+
+        // if constexpr (std::is_same_v<TMember, decltype(GladGLContext::GetNamedBufferParameteriv)>){
+        //     return "GetNamedBufferParameteriv";
+        // }
+        // return "Unknown";
+    }
+
+#ifdef GLWPP_DEBUG
+    static const std::string_view getGladGLContextMemberName(const auto GladGLContext::*F){
+
+    }
+#endif
 
     // template<auto setter, class ... Args>
     // void _bindGlfwCallback(Event<Context*, Args...> &event){

@@ -105,7 +105,7 @@ public:
                 repeat = func(args...);
             } catch (const std::exception& e) {
                 std::cout << "ERROR: " << e.what() << std::endl;
-                std::cout << add_src_loc.to_string().c_str() << std::endl;
+                std::cout << add_src_loc.to_string_full().c_str() << std::endl;
             }
 
             if (repeat){

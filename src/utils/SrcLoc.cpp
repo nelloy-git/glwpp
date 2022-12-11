@@ -5,23 +5,27 @@ using namespace glwpp;
 #ifdef GLWPP_DEBUG
 
 struct SrcLoc::Loc {
-    char const* file;
+    std::string file;
     std::uint_least32_t line;
-    char const* function;
+    std::string function;
     std::shared_ptr<Loc> prev;
 
-    inline std::string to_string() const {
-        auto str = std::string(file) + ":" + std::to_string(line); // + "\t" + std::string(function);
+    inline std::string to_string_full(bool print_funcs, const std::string& func_sep) const {
+        auto str = to_string_last(print_funcs, func_sep);
         if (prev){
-            str += "\n" + prev->to_string();
+            str += "\n" + prev->to_string_full(print_funcs, func_sep);
         }
         return str;
     }
+
+    inline std::string to_string_last(bool print_funcs, const std::string& func_sep) const {
+        return std::string(function) + "\t\t" + std::string(file) + ":" + std::to_string(line);
+    }
 };
 
-SrcLoc::SrcLoc(char const* file, 
+SrcLoc::SrcLoc(const std::string& file, 
                std::uint_least32_t line,
-               char const* function){
+               const std::string& function){
     _loc = std::make_shared<Loc>();
     _loc->file = file;
     _loc->line = line;
@@ -30,9 +34,9 @@ SrcLoc::SrcLoc(char const* file,
 };
 
 SrcLoc::SrcLoc(const SrcLoc& other,
-               char const* file, 
+               const std::string& file, 
                std::uint_least32_t line,
-               char const* function){
+               const std::string& function){
     _loc = std::make_shared<Loc>();
     _loc->file = file;
     _loc->line = line;
@@ -49,9 +53,9 @@ SrcLoc::SrcLoc(const SrcLoc&& other) :
 };
 
 
-SrcLoc& SrcLoc::add(char const* file, 
+SrcLoc& SrcLoc::add(const std::string& file, 
                     std::uint_least32_t line,
-                    char const* function){
+                    const std::string& function){
     auto loc = std::make_shared<Loc>();
     loc->prev = _loc;
     _loc = loc;
@@ -61,9 +65,9 @@ SrcLoc& SrcLoc::add(char const* file,
     return *this;
 }
 
-const SrcLoc& SrcLoc::add(char const* file, 
+const SrcLoc& SrcLoc::add(const std::string& file, 
                           std::uint_least32_t line,
-                          char const* function) const {
+                          const std::string& function) const {
     auto prev = std::make_shared<Loc>();
     *prev = *_loc;
     _loc->file = file;
@@ -73,7 +77,7 @@ const SrcLoc& SrcLoc::add(char const* file,
     return *this;
 }
 
-char const* SrcLoc::file_name() const {
+const std::string& SrcLoc::file_name() const {
     return _loc->file;
 }
 
@@ -81,12 +85,16 @@ uint_least32_t SrcLoc::line() const {
     return _loc->line;
 }
 
-char const* SrcLoc::function_name() const {
+const std::string& SrcLoc::function_name() const {
     return _loc->function;
 }
 
-std::string SrcLoc::to_string() const {
-    return _loc->to_string();
+std::string SrcLoc::to_string_full(bool print_funcs, const std::string& func_sep) const {
+    return _loc->to_string_full(print_funcs, func_sep);
+}
+
+std::string SrcLoc::to_string_last(bool print_funcs, const std::string& func_sep) const {
+    return _loc->to_string_last(print_funcs, func_sep);
 }
 
 #else
@@ -99,7 +107,7 @@ SrcLoc::SrcLoc(const SrcLoc&& other){};
 SrcLoc& SrcLoc::add(){return *this;}
 const SrcLoc& SrcLoc::add() const {return *this;}
 
-char const* SrcLoc::file_name() const {
+const std::string& SrcLoc::file_name() const {
     return "GLWPP_DEBUG is not defined";
 }
 
@@ -107,7 +115,7 @@ uint_least32_t SrcLoc::line() const {
     return 0;
 }
 
-char const* SrcLoc::function_name() const {
+const std::string& SrcLoc::function_name() const {
     return "GLWPP_DEBUG is not defined";
 }
 

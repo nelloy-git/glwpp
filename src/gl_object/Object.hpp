@@ -75,12 +75,13 @@ using DataPtr = Value<void*>;
 
 using Sync = Value<__GLsync*>;
 
+template<typename T>
 class Object {
 public:
     virtual ~Object() = 0;
 
-    const ConstUint& id() const {
-        return _id;
+    inline auto& getData() const {
+        return _gl_data;
     }
 
     std::shared_ptr<Context> lockCtx(){
@@ -88,12 +89,33 @@ public:
     }
 
 protected:
-    Object(const std::shared_ptr<Context>& ctx, const ConstUint& id) :
+    using Deleter = std::function<void(std::weak_ptr<Context>, T*, const SrcLoc&)>;
+    struct DeleterObj {
+        DeleterObj(const std::shared_ptr<Context>& ctx, const Deleter& deleter, const SrcLoc& src_loc) :
+            _wctx(ctx),
+            _deleter(deleter){
+            _src_loc = src_loc;
+        }
+
+        void operator()(T* gl_data){
+            _deleter(_wctx, gl_data, _src_loc);
+        }
+
+    private:
+        const Deleter _deleter;
+        std::weak_ptr<Context> _wctx;
+        SrcLoc _src_loc;
+    };
+
+    Object(const std::shared_ptr<Context>& ctx, T& init_gl_data, const Deleter& deleter, const SrcLoc& src_loc = SrcLoc{}) :
         _wctx(ctx),
         _p_ctx(ctx.get()),
         _ctx_thread_id(ctx->getGlThreadId()),
-        _id(id){
-    }
+        _gl_data(std::shared_ptr<T>(new T(init_gl_data), 
+                 DeleterObj(ctx, deleter, SrcLoc(src_loc, src_loc.file_name(), src_loc.line(), (std::string(src_loc.function_name()) + "::~GL").c_str())))){
+    };
+    Object(const Object&) = delete;
+    Object& operator=(const Object&) = delete;
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     auto _addCallCustom(const SrcLoc& src_loc, const auto& func, const auto&... args){
@@ -129,18 +151,17 @@ private:
     std::weak_ptr<Context> _wctx;
     Context* _p_ctx;
     std::thread::id _ctx_thread_id;
-    ConstUint _id;
+    const glwpp::Value<T> _gl_data;
 
     auto _addCallCustomFromGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
         return _p_ctx->addCallCustom<Context::IsGlThread::True>(src_loc, func, args...);
     }
 
     auto _addCallCustomFromNonGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
-        auto ctx = _wctx.lock();
-        if (!ctx){
-            throw std::runtime_error("Object's context is destroyed.");
+        if (auto ctx = _wctx.lock()){
+            return ctx->addCallCustom<Context::IsGlThread::False>(src_loc, func, args...);
         }
-        return ctx->addCallCustom<Context::IsGlThread::False>(src_loc, func, args...);
+        throw std::runtime_error("Object's context is destroyed.");
     }
 
     template<auto F>
@@ -150,17 +171,32 @@ private:
 
     template<auto F>
     auto _addCallGlFromNonGlThread(const SrcLoc& src_loc, const auto&... args){
-        auto ctx = _wctx.lock();
-        if (!ctx){
-            throw std::runtime_error("Object's context is destroyed.");
+        if (auto ctx = _wctx.lock()){
+            return ctx->addCallGl<F, Context::IsGlThread::False>(src_loc, args...);
         }
-        return ctx->addCallGl<F, Context::IsGlThread::False>(src_loc, args...);
+        throw std::runtime_error("Object's context is destroyed.");
     }
 
 };
 
-inline Object::~Object(){
+template<typename T>
+inline Object<T>::~Object(){
 }
+
+class ObjectHandle : public Object<GLuint> {
+public:
+    ObjectHandle(const std::shared_ptr<Context>& ctx, GLuint init_gl_data, const Deleter& deleter, const SrcLoc& src_loc = SrcLoc{}) :
+        Object<GLuint>(ctx, init_gl_data, deleter, src_loc){
+    };
+
+    inline ConstUint id(){
+        return getData();
+    }
+
+protected:
+    using Object<GLuint>::getData;
+
+};
 
 } // namespace GL
 

@@ -12,25 +12,25 @@ namespace glwpp  {
 class SrcLoc {
     struct Loc;
 public:
-    EXPORT SrcLoc(char const* file = __builtin_FILE(), 
+    EXPORT SrcLoc(const std::string& file = __builtin_FILE(), 
                   std::uint_least32_t line = __builtin_LINE(),
-                  char const* function = __builtin_FUNCTION());
+                  const std::string&  function = __builtin_FUNCTION());
 
     EXPORT SrcLoc(const SrcLoc& other,
-                  char const* file = __builtin_FILE(), 
+                  const std::string&  file = __builtin_FILE(), 
                   std::uint_least32_t line = __builtin_LINE(),
-                  char const* function = __builtin_FUNCTION());
+                  const std::string&  function = __builtin_FUNCTION());
 
     EXPORT SrcLoc(SrcLoc&& other);
     EXPORT SrcLoc(const SrcLoc&& other);
 
-    EXPORT SrcLoc& add(char const* file = __builtin_FILE(), 
+    EXPORT SrcLoc& add(const std::string& file = __builtin_FILE(), 
                        std::uint_least32_t line = __builtin_LINE(),
-                       char const* function = __builtin_FUNCTION());
+                       const std::string& function = __builtin_FUNCTION());
 
-    EXPORT const SrcLoc& add(char const* file = __builtin_FILE(), 
+    EXPORT const SrcLoc& add(const std::string& file = __builtin_FILE(), 
                              std::uint_least32_t line = __builtin_LINE(),
-                             char const* function = __builtin_FUNCTION()) const;
+                             const std::string& function = __builtin_FUNCTION()) const;
 
     EXPORT SrcLoc& operator=(const SrcLoc& other){
         _loc = other._loc;
@@ -42,10 +42,11 @@ public:
         return *this;
     }
 
-    EXPORT char const* file_name() const;
+    EXPORT const std::string& file_name() const;
     EXPORT std::uint_least32_t line() const;
-    EXPORT char const* function_name() const;
-    EXPORT std::string to_string() const;
+    EXPORT const std::string& function_name() const;
+    EXPORT std::string to_string_full(bool print_funcs = true, const std::string& func_sep = "\t") const;
+    EXPORT std::string to_string_last(bool print_funcs = true, const std::string& func_sep = "\t") const;
 
 private:
     std::shared_ptr<Loc> _loc;

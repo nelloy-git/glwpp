@@ -7,7 +7,7 @@ namespace glwpp::GL {
 
 namespace detail {
 
-class VertexArrayBase : public Object {
+class VertexArrayBase : public ObjectHandle {
 public:
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void enableAttrib(const ConstUint& index, const SrcLoc src_loc = SrcLoc{}){
@@ -35,12 +35,12 @@ public:
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setElementBuffer(const BufferBase& buffer, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setElementBuffer(const Buffer& buffer, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayElementBuffer>(src_loc, id(), buffer.id());
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    EXPORT void setVertexBuffer(const ConstUint& binding, const BufferBase& buffer, const ConstIntptr& offset, const ConstSizei& stride, const SrcLoc src_loc = SrcLoc{}){
+    EXPORT void setVertexBuffer(const ConstUint& binding, const Buffer& buffer, const ConstIntptr& offset, const ConstSizei& stride, const SrcLoc src_loc = SrcLoc{}){
         return _addCallGl<&GladGLContext::VertexArrayVertexBuffer>(src_loc, id(), binding, buffer.id(), offset, stride);
     }
 
@@ -109,13 +109,13 @@ public:
     }
 
 protected:
-    EXPORT VertexArrayBase(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc) :
-        Object(ctx, ctx->addCallCustom(src_loc, [](Context& ctx){
-            unsigned int dst;
-            ctx.gl.CreateVertexArrays(1, &dst);
-            return dst;
-        })){
-    }
+    // EXPORT VertexArrayBase(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc) :
+    //     ObjectHandle(ctx, ctx->addCallCustom(src_loc, [](Context& ctx){
+    //         unsigned int dst;
+    //         ctx.gl.CreateVertexArrays(1, &dst);
+    //         return dst;
+    //     })){
+    // }
     
     template<typename T, Context::IsGlThread is_gl_thread>
     inline T _getAttribParamiAs(const ConstUint& index, const ConstEnum& pname, const SrcLoc src_loc){
@@ -135,16 +135,16 @@ protected:
 
 } // namespace detail
 
-class VertexArray : public detail::VertexArrayBase, public SharedObject<VertexArray> {
-public:
-    EXPORT static std::shared_ptr<VertexArray> New(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc = SrcLoc{}){
-        return std::shared_ptr<VertexArray>(new VertexArray(ctx, src_loc));
-    }
+// class VertexArray : public detail::VertexArrayBase, public SharedObject<VertexArray> {
+// public:
+//     EXPORT static std::shared_ptr<VertexArray> New(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc = SrcLoc{}){
+//         return std::shared_ptr<VertexArray>(new VertexArray(ctx, src_loc));
+//     }
 
-protected:
-    EXPORT VertexArray(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc) : 
-        VertexArrayBase(ctx, src_loc){
-    }
-};
+// protected:
+//     EXPORT VertexArray(const std::shared_ptr<Context>& ctx, const SrcLoc src_loc) : 
+//         VertexArrayBase(ctx, src_loc){
+//     }
+// };
 
 } // namespace glwpp::GL

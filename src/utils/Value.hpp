@@ -58,7 +58,7 @@ public:
         _ptr(ptr){
     }
     
-    Value(const std::shared_ptr<T>&& ptr) :
+    Value(std::shared_ptr<T>&& ptr) :
         _ptr(ptr){
     }
 
@@ -98,6 +98,10 @@ public:
     Value<U> reinterpret(){
         return Value<U>(std::reinterpret_pointer_cast<U>(_ptr));
     }
+
+    const std::shared_ptr<T>& get_shared(){
+        return _ptr;
+    } 
 
 private:
     std::shared_ptr<T> _ptr;

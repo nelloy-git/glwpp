@@ -28,7 +28,7 @@ public:
                     const SrcLoc src_loc = SrcLoc{});
     virtual ~MeshVertexArray();
 
-    std::shared_ptr<GL::VertexArray> vao;
+    // std::shared_ptr<GL::VertexArray> vao;
 
     void bindAttributes(const Attributes<int>& bindings, const SrcLoc src_loc = SrcLoc{});
 

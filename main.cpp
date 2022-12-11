@@ -15,6 +15,8 @@
 #include "model/Model.hpp"
 #include "utils/Metrics.hpp"
 
+#include "gl_object/Buffer.hpp"
+
 void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
     ctx->getOnRunEvent().addActionQueued([](glwpp::Context* ctx){
         // Setup Dear ImGui context
@@ -95,23 +97,30 @@ int main(int argc, char **argv){
 
     auto ctx = std::make_shared<glwpp::Context>(ctx_params);
     add_imgui(ctx);
-
-#ifdef WIN32
-    glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
-#else
-    glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
-#endif
-
-
-    if (book_model.loading_error.has_value()){
-        std::cout << book_model.loading_error.value().c_str() << std::endl;
+    {
+        glwpp::GL::Buffer buf(ctx);
+        auto a = buf.getMapAccess();
     }
+    
+
+
+// #ifdef WIN32
+//     glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
+// #else
+//     glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
+// #endif
+
+
+    // if (book_model.loading_error.has_value()){
+    //     std::cout << book_model.loading_error.value().c_str() << std::endl;
+    // }
 
     bool done = false;
     while(true){
         ctx->run().wait();
         if (!done){
             done = true;
+            // std::cout << *buf.id() << std::endl;
         }
 
         // std::cout << glwpp::Metrics::inst()["ImGui::Render"].getLast().value << std::endl;
