@@ -4,6 +4,29 @@
 
 namespace glwpp {
 
+namespace detail {
+
+class ValueBase {
+    template<typename V>
+    struct MakeHelper {
+        using type = std::remove_reference_t<V>;
+    };
+
+    template<typename V>
+    struct MakeHelper<Value<V>> {
+        using type = std::remove_reference_t<V>;
+    };
+
+public:
+    template<typename V>
+    static auto make(V&& val){
+        return glwpp::Value<MakeHelper<V>::type>(val);
+    }
+
+};
+
+}; // namespace detail
+
 template <class, template <class, class...> class>
 struct is_instance : public std::false_type {};
 
@@ -11,7 +34,7 @@ template <class...Ts, template <class, class...> class U>
 struct is_instance<U<Ts...>, U> : public std::true_type {};
 
 template<typename T>
-class Value {
+class Value : detail::ValueBase {
     template<typename U>
     friend class Value;
 
@@ -22,7 +45,8 @@ class Value {
     static constexpr bool is_value = is_instance<std::remove_const_t<std::remove_reference_t<V>>, Value>::value;
 
 public:
-    using type = T;
+    using type = typename T;
+    static_assert(!is_value<T>, "Value<Value<...>> is not allowed");
 
     template<typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
     Value() :

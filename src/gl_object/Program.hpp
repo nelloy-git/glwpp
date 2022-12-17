@@ -11,22 +11,22 @@ class ProgramBase : public Object {
 public:
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void attach(const ShaderBase& shader){
-        return _addCallGl<&GladGLContext::AttachShader>(id(), shader.id());
+        return _addCallGl<&GLapi::AttachShader>(id(), shader.id());
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void link(){
-        return _addCallGl<&GladGLContext::LinkProgram>(id());
+        return _addCallGl<&GLapi::LinkProgram>(id());
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void validate(){
-        return _addCallGl<&GladGLContext::ValidateProgram>(id());
+        return _addCallGl<&GLapi::ValidateProgram>(id());
     }
     
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void use(){
-        return _addCallGl<&GladGLContext::UseProgram>(id());
+        return _addCallGl<&GLapi::UseProgram>(id());
     }
 
 
@@ -120,7 +120,7 @@ public:
 
     EXPORT virtual ~ProgramBase(){
         if (auto ctx = lockCtx()){
-            _addCallGl<&GladGLContext::DeleteProgram>(id());
+            _addCallGl<&GLapi::DeleteProgram>(id());
         }
     }
 
@@ -134,7 +134,7 @@ protected:
     template<typename T, Context::IsGlThread is_gl_thread>
     inline T _getParamiAs(const ConstEnum& pname){
         Int dst;
-        _addCallGl<&GladGLContext::GetProgramiv, is_gl_thread>(id(), pname, dst);
+        _addCallGl<&GLapi::GetProgramiv, is_gl_thread>(id(), pname, dst);
         return dst.reinterpret<T>();
     }
 

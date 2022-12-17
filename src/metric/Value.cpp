@@ -17,10 +17,10 @@ void Value::operator+=(double val){
     _value += val;
 }
 
-size_t Value::count(){
+size_t Value::count() const {
     return _count.load();
 }
 
-double Value::value(){
+double Value::value() const {
     return _value.load();
 }

@@ -4,7 +4,6 @@
 #include "GLFW/glfw3.h"
 
 #include "utils/GlobalThreadPool.hpp"
-#include "utils/Metrics.hpp"
 
 using namespace glwpp;
 
@@ -170,7 +169,7 @@ void Context::_initGl(const Parameters& params){
     glfwMakeContextCurrent(_window.get());
     glfwSwapInterval(0); // Enable vsync
     
-    auto ver = gladLoadGLContext(&gl, glfwGetProcAddress);
+    auto ver = gl.loadGladGLContext(glfwGetProcAddress);
     if (ver == 0){
         throw std::runtime_error("Failed to initialize OpenGL context.");
     }

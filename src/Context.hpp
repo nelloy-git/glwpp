@@ -6,11 +6,8 @@
 
 #include "BS_thread_pool.hpp"
 
-#include "glad/gl.h"
-
 #include "utils/Event.hpp"
 #include "utils/Export.hpp"
-#include "utils/Metrics.hpp"
 #include "utils/Value.hpp"
 
 #include "GLapi.hpp"
@@ -19,19 +16,37 @@ struct GLFWwindow;
 
 namespace glwpp {
 
+namespace detail {
+
 template<typename T, typename... Ts>
 constexpr bool contains()
 { return std::disjunction_v<std::is_same<T, Ts>...>; }
 
+template<typename ... Ts>
+static constexpr bool is_values(){
+    return std::conjunction_v<is_instance<std::remove_const_t<std::remove_reference_t<Ts>>, Value>...>;
+}
+
+template<typename V>
+struct ValueHelper {
+    using type = std::remove_reference_t<V>;
+};
+
+template<typename V>
+struct ValueHelper<Value<V>> {
+    using type = std::remove_reference_t<V>;
+};
+
+template<typename V>
+static auto Val(V val){
+    return glwpp::Value<ValueHelper<V>::type>(val);
+}
+
+};
+
 class Context {
     const std::shared_ptr<BS::thread_pool> _gl_thread;
     std::thread::id _gl_thread_id;
-
-    template<typename ... Ts>
-    static constexpr bool is_values(){
-        return std::conjunction_v<is_instance<std::remove_const_t<std::remove_reference_t<Ts>>, Value>...>;
-    }
-
 
 public:
     struct Parameters {
@@ -44,7 +59,8 @@ public:
     EXPORT Context(const Parameters& params);
     virtual ~Context();
 
-    GladGLContext gl;
+    GLapi gl;
+
     EXPORT const std::shared_ptr<GLFWwindow>& getGlfw();
 
     EXPORT std::future<void> run();
@@ -61,76 +77,47 @@ public:
     };
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    auto addCallCustom(const SrcLoc& src_loc, const auto& func, const auto&... args){
-        static_assert(std::is_invocable_v<decltype(func), Context&, decltype(args)...>, "function must be invokable with (Contexn&, args...)");
-        static_assert(is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
-        
-#ifdef GLWPP_DEBUG
-        Metrics::inst()[src_loc.to_string_last()] += 1;
-#endif
+    inline auto addCallCustom(auto&& func, auto&&... args){
+        static_assert(std::is_invocable_v<decltype(func), Context&, decltype(args)...>, "function must be invokable with (Context&, args...)");
+        using R = std::invoke_result_t<decltype(func), Context&, decltype(args)...>;
 
         if constexpr (is_gl_thread == IsGlThread::True){
-            return _addCallCustomFromGlThread(src_loc, func, args...);
+            return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
         } else if constexpr (is_gl_thread == IsGlThread::False){
-            return _addCallCustomFromNonGlThread(src_loc, func, args...);
+            return _addCallCustomFromNonGlThread(detail::Val(func), detail::Val(args)...);
         } else {
             if (std::this_thread::get_id() == _gl_thread_id){
-                return _addCallCustomFromGlThread(src_loc, func, args...);
+                return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
             } else {
-                return _addCallCustomFromNonGlThread(src_loc, func, args...);
+                return _addCallCustomFromNonGlThread(detail::Val(func), detail::Val(args)...);
             }
         }
     }
 
-    template<auto GladGLContext::*F, Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    auto addCallGl(const SrcLoc& src_loc, const auto&... args){
-        static_assert(std::is_invocable_v<decltype(gl.*F), decltype(args)...>, "F must be callable member of GladGlContext");
-        static_assert(is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
-        
-#ifdef GLWPP_DEBUG
-        Metrics::inst()[src_loc.to_string_last()] += 1;
-        Metrics::inst()[std::string(gladMemberName<F>())] += 1;
-#endif
+    template<auto F, Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    inline auto addCallGl(auto&&... args){
+        static_assert(std::is_invocable_v<decltype(F), GLapi&, decltype(args)...>, "F must be callable member of GLapi");
 
         if constexpr (is_gl_thread == IsGlThread::True){
-            return _addCallGlFromGlThread<F>(src_loc, args...);
+            return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
         } else if constexpr (is_gl_thread == IsGlThread::False){
-            return _addCallGlFromNonGlThread<F>(src_loc, args...);
+            return _addCallGlFromNonGlThread<F>(detail::Val(args)...);
         } else {
             if (std::this_thread::get_id() == _gl_thread_id){
-                return _addCallGlFromGlThread<F>(src_loc, args...);
+                return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
             } else {
-                return _addCallGlFromNonGlThread<F>(src_loc, args...);
+                return _addCallGlFromNonGlThread<F>(detail::Val(args)...);
             }
         }
     }
 
-    // Event<Context*> onDetsroy;
-
-    // Non-gl thread
-    // Event<Context*, int, int> onWindowMove;
-    // Event<Context*, int, int> onWinResize;
-    // Event<Context*> onWinClose;
-    // Event<Context*> onWinRefresh;
-    // Event<Context*, bool> onWinIconify;
-    // Event<Context*, bool> onWinMaximize;
-    // Event<Context*, float, float> onWinScale;
-    // Event<Context*, int, int> onFramebufferResize;
-
-    // Event<Context*, bool> onCursorFocus;
-    // Event<Context*, bool> onCursorEnter;
-    // Event<Context*, double, double> onCursorMove;
-    // Event<Context*, Button, Action, ModFlags> onCursorButton;
-    // Event<Context*, double, double> onCursorScroll;
-
-    // const std::shared_ptr<Event<const std::shared_ptr<Context>, const int, const int, const int, const int>> onKey;
-    // Event<Context*, unsigned int, ModFlags> onChar;
 protected:
     
 private:
     static std::atomic<unsigned int>& _glfwWindowsCounter();
 
     std::shared_ptr<GLFWwindow> _window;
+    std::unique_ptr<GLapi> _gl;
 
     Parameters _params;
     std::chrono::steady_clock::time_point _init_time;
@@ -145,115 +132,63 @@ private:
 
     void _initGl(const Parameters& params);
 
-    auto _addCallCustomFromGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
+    inline auto _addCallCustomFromGlThread(auto&& func, auto&&... args){
         using R = std::invoke_result_t<decltype(func), Context&, decltype(args)...>;
         if constexpr (std::is_same_v<R, void>){
-            func(*this, args...);
+            func(*this, std::forward<decltype(args)>(args)...);
         } else {
-            return Value<R>(func(*this, args...));
+            return Value<R>(func(*this, std::forward<decltype(args)>(args)...));
         }
     }
 
-    auto _addCallCustomFromNonGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
-        using R = std::invoke_result_t<decltype(func), Context&, decltype(args)...>;
+    inline auto _addCallCustomFromNonGlThread(auto&& func, auto&&... args){
+        static_assert(detail::is_values<decltype(func)>(), "function must be glwpp::Value<F>");
+        static_assert(detail::is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
+
+        using R = std::invoke_result_t<decltype(*func), Context&, decltype(args)...>;
         if constexpr (std::is_same_v<R, void>){
             auto pair = getOnRunEvent().addActionQueued([func, args...](Context* ctx, const ms&){
-                func(*ctx, args...);
+                (*func)(*ctx, args...);
                 return false;
             });
         } else {
             Value<std::remove_const_t<R>> result;
             auto pair = getOnRunEvent().addActionQueued([result, func, args...](Context *ctx, const ms&){
-                *result = func(*ctx, args...);
+                *result = (*func)(*ctx, args...);
                 return false;
             });
             return result;
         }
     }
 
-    template<auto GladGLContext::*F>
-    auto _addCallGlFromGlThread(const SrcLoc& src_loc, const auto&... args){
-        using R = std::invoke_result_t<decltype(gl.*F), decltype(args)...>;
+    template<auto F>
+    inline auto _addCallGlFromGlThread(auto&&... args){
+        using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
         if constexpr (std::is_same_v<R, void>){
-            (gl.*F)(args...);
+            (gl.*F)(std::forward<decltype(args)>(args)...);
         } else {
-            return Value<R>((gl.*F)(args...));
+            return Value<R>((gl.*F)(std::forward<decltype(args)>(args)...));
         }
     }
 
-    template<class T, typename U>
-    constexpr static std::ptrdiff_t member_offset(U T::* member){
-        return reinterpret_cast<std::ptrdiff_t>(&(reinterpret_cast<T const volatile*>(nullptr)->*member));
-    }
-
-    template<auto GladGLContext::*F>
-    auto _addCallGlFromNonGlThread(const SrcLoc& src_loc, const auto&... args){
-        using R = std::invoke_result_t<decltype(gl.*F), decltype(args)...>;
+    template<auto F>
+    inline auto _addCallGlFromNonGlThread(auto&&... args){
+        static_assert(detail::is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
+        using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
         if constexpr (std::is_same_v<R, void>){
-            auto pair = getOnRunEvent().addActionQueued([src_loc = std::move(src_loc), args...](Context* ctx, const ms&){
-                ctx->_last_src_loc = src_loc;
+            auto pair = getOnRunEvent().addActionQueued([args...](Context* ctx, const ms&){
                 (ctx->gl.*F)(args...);
                 return false;
             });
         } else {
             Value<std::remove_const_t<R>> result;
-            auto pair = getOnRunEvent().addActionQueued([src_loc = std::move(src_loc), result, args...](Context *ctx, const ms&){
-                ctx->_last_src_loc = src_loc;
+            auto pair = getOnRunEvent().addActionQueued([result, args...](Context *ctx, const ms&){
                 *result = (ctx->gl.*F)(args...);
                 return false;
             });
             return result;
         }
     }
-
-    template <typename TObject, typename TMember>
-    static constexpr auto HashMemberPtr(TMember TObject::* memberPtr){
-        char buf[sizeof(memberPtr)];
-        auto p = (std::ptrdiff_t)(memberPtr);
-        // __builtin_memcpy(&buf, &memberPtr, sizeof(memberPtr));
-        // std::memcpy(&buf, &memberPtr, sizeof(memberPtr));
-        return std::hash<std::string_view>{}(std::string_view(buf, sizeof(buf)));
-    };
-
-    template<typename TObject_1, typename TMember_1, typename TObject_2, typename TMember_2>
-    static constexpr bool is_same_members(TMember_1 TObject_1::* ptr_1, TMember_2 TObject_2::* ptr_2){
-        if constexpr (std::is_same_v<TObject_1, TObject_2> && std::is_same_v<TMember_1, TMember_2>){
-            return ptr_1 == ptr_2;
-        }
-        return false;
-    }
-
-    template <auto GladGLContext::*F>
-    static constexpr std::string_view gladMemberName(){
-        GLapi c;
-        // c.Accum();
-
-        if constexpr (is_same_members(F, &GladGLContext::GetNamedBufferParameteriv)){
-            return "GetNamedBufferParameteriv";
-        }
-        return "Unknown";
-
-
-
-        // if constexpr (std::is_same_v<TMember, decltype(GladGLContext::GetNamedBufferParameteriv)>){
-        //     return "GetNamedBufferParameteriv";
-        // }
-        // return "Unknown";
-    }
-
-#ifdef GLWPP_DEBUG
-    static const std::string_view getGladGLContextMemberName(const auto GladGLContext::*F){
-
-    }
-#endif
-
-    // template<auto setter, class ... Args>
-    // void _bindGlfwCallback(Event<Context*, Args...> &event){
-    //     std::function<void(glfw::Window*, Args...)> func = [this, &event](glfw::Window*, Args... args){
-    //         event.emit(this, args...);
-    //     };
-    //     (this->_glfw_window.get()->*setter)(func);
-    // };
 };
 
 } // namespace nglpmt

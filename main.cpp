@@ -13,11 +13,13 @@
 
 #include "Context.hpp"
 #include "model/Model.hpp"
-#include "utils/Metrics.hpp"
 
 #include "gl_object/Buffer.hpp"
 
 void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
+    auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
+    ctx->gl.setMetricsCategory(gl_metrics);
+
     ctx->getOnRunEvent().addActionQueued([](glwpp::Context* ctx){
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -37,11 +39,11 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
         return false;
     });
 
-    glwpp::Metrics::inst()["ImGui::Render"].value_period() = std::chrono::seconds(1);
-    glwpp::Metrics::inst()["ImGui::Render"].max_values() = 10;
+    // glwpp::Metrics::inst()["ImGui::Render"].value_period() = std::chrono::seconds(1);
+    // glwpp::Metrics::inst()["ImGui::Render"].max_values() = 10;
 
     auto show_demo_window = new bool(true);
-    ctx->getOnRunEvent().addActionQueued([show_demo_window](glwpp::Context* ctx, const std::chrono::milliseconds& dt){
+    ctx->getOnRunEvent().addActionQueued([show_demo_window, gl_metrics](glwpp::Context* ctx, const std::chrono::milliseconds& dt){
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -59,10 +61,16 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
             ImGui::Begin("Metrics");                          // Create a window called "Hello, world!" and append into it.
-            // ImGui::Text("FPS: %0.1f (%.1fms)", 1000 / glwpp::Metrics::inst()["ImGui::Render"].getAvg(), glwpp::Metrics::inst()["ImGui::Render"].getAvg());
-            for (auto& pair : glwpp::Metrics::inst().getLast()){
-                ImGui::Text("%s: %.1f (%zu)", pair.first.c_str(), pair.second.value, pair.second.count);
+
+            auto all_names = gl_metrics->getAllNames();
+            std::sort(all_names.begin(), all_names.end());
+            for (auto& name : all_names){
+                ImGui::Text("%s: %d", name.c_str(), (*gl_metrics)[name].getTotal().first);
             }
+            // ImGui::Text("FPS: %0.1f (%.1fms)", 1000 / glwpp::Metrics::inst()["ImGui::Render"].getAvg(), glwpp::Metrics::inst()["ImGui::Render"].getAvg());
+            // for (auto& pair : glwpp::Metrics::inst().getLast()){
+            //     ImGui::Text("%s: %.1f (%zu)", pair.first.c_str(), pair.second.value, pair.second.count);
+            // }
             ImGui::End();
         }
 
@@ -82,7 +90,7 @@ void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
         glfwGetFramebufferSize(ctx->getGlfw().get(), &display_w, &display_h);
         ctx->gl.Viewport(0, 0, display_w, display_h);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glwpp::Metrics::inst()["ImGui::Render"] += static_cast<double>(dt.count());
+        // glwpp::Metrics::inst()["ImGui::Render"] += static_cast<double>(dt.count());
 
         return true;
     });
@@ -97,23 +105,16 @@ int main(int argc, char **argv){
 
     auto ctx = std::make_shared<glwpp::Context>(ctx_params);
     add_imgui(ctx);
-    {
-        glwpp::GL::Buffer buf(ctx);
-        auto a = buf.getMapAccess();
+
+#ifdef WIN32
+    glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
+#else
+    glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
+#endif
+
+    if (book_model.loading_error.has_value()){
+        std::cout << book_model.loading_error.value().c_str() << std::endl;
     }
-    
-
-
-// #ifdef WIN32
-//     glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
-// #else
-//     glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
-// #endif
-
-
-    // if (book_model.loading_error.has_value()){
-    //     std::cout << book_model.loading_error.value().c_str() << std::endl;
-    // }
 
     bool done = false;
     while(true){

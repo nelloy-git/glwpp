@@ -11,13 +11,13 @@ public:
     EXPORT Value(const std::chrono::high_resolution_clock::time_point& ts);
     EXPORT Value(const Value&) = default;
     EXPORT Value(Value&&) = default;
-    EXPORT ~Value();
+    EXPORT virtual ~Value();
     
     EXPORT void operator+=(double val);
 
     const std::chrono::high_resolution_clock::time_point ts;
-    EXPORT size_t count();
-    EXPORT double value();
+    EXPORT size_t count() const;
+    EXPORT double value() const;
 
 private:
     std::atomic<size_t> _count;

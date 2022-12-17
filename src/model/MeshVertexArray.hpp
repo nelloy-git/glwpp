@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <optional>
 
 #include "gl_object/VertexArray.hpp"
 
@@ -24,11 +23,11 @@ public:
 
     MeshVertexArray(const std::shared_ptr<Context>& ctx,
                     const MeshIndices& indices,
-                    const Attributes<MeshAttribute>& buffers,
+                    const Attributes<MeshAttribute*>& buffers,
                     const SrcLoc src_loc = SrcLoc{});
     virtual ~MeshVertexArray();
 
-    // std::shared_ptr<GL::VertexArray> vao;
+    GL::VertexArray vao;
 
     void bindAttributes(const Attributes<int>& bindings, const SrcLoc src_loc = SrcLoc{});
 
@@ -36,7 +35,7 @@ private:
     template<typename T, void(MeshVertexArray::*F)(const GL::ConstUint&, const T&, const SrcLoc src_loc)>
     void _iterateAttributes(const Attributes<T>& attr_data, const SrcLoc src_loc);
 
-    void _linkBuffer(const GL::ConstUint& index, const MeshAttribute& attr_buffer, const SrcLoc src_loc);
+    void _linkBuffer(const GL::ConstUint& index, MeshAttribute* const& attr_buffer, const SrcLoc src_loc);
     void _bindAttribute(const GL::ConstUint& index, const int& binding, const SrcLoc src_loc);
 
     static const GL::ConstUint POSITION_INDEX;

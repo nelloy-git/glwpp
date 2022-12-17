@@ -24,7 +24,7 @@ public:
     const unsigned int components;
     const bool normalized;
     const GLsizei stride;
-    std::shared_ptr<GL::Buffer> buffer;
+    GL::Buffer buffer;
 };
 
 } // namespace glwpp

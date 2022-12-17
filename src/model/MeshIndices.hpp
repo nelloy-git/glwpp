@@ -16,7 +16,7 @@ public:
     virtual ~MeshIndices();
     
     const Type type;
-    std::shared_ptr<GL::Buffer> buffer;
+    GL::Buffer buffer;
 
 };
 

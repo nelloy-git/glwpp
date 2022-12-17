@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <optional>
 
 #include "Context.hpp"
 #include "model/MeshAttribute.hpp"
@@ -27,20 +26,22 @@ public:
     };
 
     Mesh(const std::shared_ptr<Context>& ctx, const aiMesh& ai_mesh);
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
     virtual ~Mesh();
 
     MeshIndices indices;
     MeshAttribute position;
-    std::optional<MeshAttribute> normal;
-    std::optional<MeshAttribute> tangent;
-    std::optional<MeshAttribute> bitangent;
-    std::array<std::optional<MeshAttribute>, 8> texture_coord;
-    std::array<std::optional<MeshAttribute>, 8> color;
+    std::unique_ptr<MeshAttribute> normal;
+    std::unique_ptr<MeshAttribute> tangent;
+    std::unique_ptr<MeshAttribute> bitangent;
+    std::array<std::unique_ptr<MeshAttribute>, 8> texture_coord;
+    std::array<std::unique_ptr<MeshAttribute>, 8> color;
 
     void bindAllAttributes(const AllAttributes<int>& bindings, const SrcLoc src_loc = SrcLoc{});
 
 private:
-    // GL::VertexArray _vao;
+    GL::VertexArray _vao;
 
     template<typename T, void(MeshVertexArray::*F)(const GL::ConstUint&, const T&, const SrcLoc src_loc)>
     void _iterateAllAttributes(const AllAttributes<T>& attr_data, const SrcLoc src_loc);

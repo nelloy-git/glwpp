@@ -20,7 +20,7 @@ public:
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void compile(){
-       return _callGL<&GladGLContext::CompileShader>(id());
+       return _callGL<&GLapi::CompileShader>(id());
     }
 
 
@@ -59,7 +59,7 @@ public:
 
     EXPORT virtual ~ShaderBase(){
         if (auto ctx = lockCtx()){
-            _addCallGl<&GladGLContext::DeleteShader>(id());
+            _addCallGl<&GLapi::DeleteShader>(id());
         }
     }
 
@@ -73,7 +73,7 @@ protected:
     template<typename T, Context::IsGlThread is_gl_thread>
     inline T _getParamiAs(const ConstEnum& pname){
         Int dst;
-        _addCallGl<&GladGLContext::GetShaderiv, is_gl_thread>(id(), pname, dst);
+        _addCallGl<&GLapi::GetShaderiv, is_gl_thread>(id(), pname, dst);
         return dst.reinterpret<T>();
     }
 

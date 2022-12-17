@@ -7,10 +7,17 @@
 namespace glwpp::GL {
 
 template<typename T>
-class BufferStruct : public detail::BufferBase, public SharedObject<BufferStruct<T>> {
+class BufferStruct : public Buffer {
 public:
-    EXPORT static std::shared_ptr<BufferStruct<T>> New(const std::shared_ptr<Context>& ctx, const Value<T>& initial, const SrcLoc src_loc = SrcLoc{}){
-        return std::shared_ptr<BufferStruct<T>>(new BufferStruct<T>(ctx, initial, src_loc));
+    EXPORT BufferStruct(const std::shared_ptr<Context>& ctx,
+                 const Value<const T>& initial,
+                 const SrcLoc src_loc) :
+        Buffer(ctx, src_loc){
+        static const ConstBitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
+        static const ConstEnum map_flag(GL_READ_WRITE);
+
+        setStorage(sizeof(T), initial, storage_flags);
+        _mapped = map(map_flag);
     }
     EXPORT virtual ~BufferStruct(){};
 
@@ -39,17 +46,6 @@ public:
     }
 
 protected:
-    BufferStruct(const std::shared_ptr<Context>& ctx,
-                 const Value<const T>& initial,
-                 const SrcLoc src_loc) :
-        BufferBase(ctx, src_loc){
-        static const ConstBitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
-        static const ConstEnum map_flag(GL_READ_WRITE);
-
-        setStorage(sizeof(T), initial, storage_flags);
-        _mapped = map(map_flag);
-    }
-
     DataPtr _mapped;
 };
 

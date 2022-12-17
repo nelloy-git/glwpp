@@ -78,6 +78,8 @@ using Sync = Value<__GLsync*>;
 template<typename T>
 class Object {
 public:
+    Object(const Object&) = delete;
+    Object& operator=(const Object&) = delete;
     virtual ~Object() = 0;
 
     inline auto& getData() const {
@@ -86,6 +88,36 @@ public:
 
     std::shared_ptr<Context> lockCtx(){
         return _wctx.lock();
+    }
+
+    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    inline auto addCallCustom(auto&& func, auto&&... args){
+        if constexpr (is_gl_thread == Context::IsGlThread::True){
+            return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
+        } else if constexpr (is_gl_thread == Context::IsGlThread::False){
+            return _addCallCustomFromNonGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
+        } else {
+            if (std::this_thread::get_id() == _ctx_thread_id){
+                return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
+            } else {
+                return _addCallCustomFromNonGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
+            }
+        }
+    }
+
+    template<auto F, Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    inline auto addCallGl(auto&&... args){
+        if constexpr (is_gl_thread == Context::IsGlThread::True){
+            return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
+        } else if constexpr (is_gl_thread == Context::IsGlThread::False){
+            return _addCallGlFromNonGlThread<F>(std::forward<decltype(args)>(args)...);
+        } else {
+            if (std::this_thread::get_id() == _ctx_thread_id){
+                return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
+            } else {
+                return _addCallGlFromNonGlThread<F>(std::forward<decltype(args)>(args)...);
+            }
+        }
     }
 
 protected:
@@ -114,38 +146,6 @@ protected:
         _gl_data(std::shared_ptr<T>(new T(init_gl_data), 
                  DeleterObj(ctx, deleter, SrcLoc(src_loc, src_loc.file_name(), src_loc.line(), (std::string(src_loc.function_name()) + "::~GL").c_str())))){
     };
-    Object(const Object&) = delete;
-    Object& operator=(const Object&) = delete;
-
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    auto _addCallCustom(const SrcLoc& src_loc, const auto& func, const auto&... args){
-        if constexpr (is_gl_thread == Context::IsGlThread::True){
-            return _addCallCustomFromGlThread(src_loc, func, args...);
-        } else if constexpr (is_gl_thread == Context::IsGlThread::False){
-            return _addCallCustomFromNonGlThread(src_loc, func, args...);
-        } else {
-            if (std::this_thread::get_id() == _ctx_thread_id){
-                return _addCallCustomFromGlThread(src_loc, func, args...);
-            } else {
-                return _addCallCustomFromNonGlThread(src_loc, func, args...);
-            }
-        }
-    }
-
-    template<auto F, Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
-    auto _addCallGl(const SrcLoc& src_loc, const auto&... args){
-        if constexpr (is_gl_thread == Context::IsGlThread::True){
-            return _addCallGlFromGlThread<F>(src_loc, args...);
-        } else if constexpr (is_gl_thread == Context::IsGlThread::False){
-            return _addCallGlFromNonGlThread<F>(src_loc, args...);
-        } else {
-            if (std::this_thread::get_id() == _ctx_thread_id){
-                return _addCallGlFromGlThread<F>(src_loc, args...);
-            } else {
-                return _addCallGlFromNonGlThread<F>(src_loc, args...);
-            }
-        }
-    }
 
 private:
     std::weak_ptr<Context> _wctx;
@@ -153,26 +153,26 @@ private:
     std::thread::id _ctx_thread_id;
     const glwpp::Value<T> _gl_data;
 
-    auto _addCallCustomFromGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
-        return _p_ctx->addCallCustom<Context::IsGlThread::True>(src_loc, func, args...);
+    inline auto _addCallCustomFromGlThread(auto&& func, auto&&... args){
+        return _p_ctx->addCallCustom<Context::IsGlThread::True>(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
     }
 
-    auto _addCallCustomFromNonGlThread(const SrcLoc& src_loc, const auto& func, const auto&... args){
+    inline auto _addCallCustomFromNonGlThread(auto&& func, auto&&... args){
         if (auto ctx = _wctx.lock()){
-            return ctx->addCallCustom<Context::IsGlThread::False>(src_loc, func, args...);
+            return ctx->addCallCustom<Context::IsGlThread::False>(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
         }
         throw std::runtime_error("Object's context is destroyed.");
     }
 
     template<auto F>
-    auto _addCallGlFromGlThread(const SrcLoc& src_loc, const auto&... args){
-        return _p_ctx->addCallGl<F, Context::IsGlThread::True>(src_loc, args...);
+    inline auto _addCallGlFromGlThread(auto&&... args){
+        return _p_ctx->addCallGl<F, Context::IsGlThread::True>(std::forward<decltype(args)>(args)...);
     }
 
     template<auto F>
-    auto _addCallGlFromNonGlThread(const SrcLoc& src_loc, const auto&... args){
+    inline auto _addCallGlFromNonGlThread(auto&&... args){
         if (auto ctx = _wctx.lock()){
-            return ctx->addCallGl<F, Context::IsGlThread::False>(src_loc, args...);
+            return ctx->addCallGl<F, Context::IsGlThread::False>(std::forward<decltype(args)>(args)...);
         }
         throw std::runtime_error("Object's context is destroyed.");
     }
@@ -182,21 +182,6 @@ private:
 template<typename T>
 inline Object<T>::~Object(){
 }
-
-class ObjectHandle : public Object<GLuint> {
-public:
-    ObjectHandle(const std::shared_ptr<Context>& ctx, GLuint init_gl_data, const Deleter& deleter, const SrcLoc& src_loc = SrcLoc{}) :
-        Object<GLuint>(ctx, init_gl_data, deleter, src_loc){
-    };
-
-    inline ConstUint id(){
-        return getData();
-    }
-
-protected:
-    using Object<GLuint>::getData;
-
-};
 
 } // namespace GL
 

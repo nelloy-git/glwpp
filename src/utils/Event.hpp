@@ -91,13 +91,13 @@ public:
         for (auto& pair : active){
             const ID& id = pair.first;
             const std::function<bool(Args...)>& func = pair.second->func;
-            const SrcLoc& add_src_loc = pair.second->src_loc;
+            const SrcLoc& src_loc = pair.second->src_loc;
 
             bool repeat = false;
             {
                 std::lock_guard lg_cb(lock_callbacks);
                 if (before_action_callback){
-                    before_action_callback.value()(add_src_loc, func, args...);
+                    before_action_callback.value()(src_loc, func, args...);
                 }
             }
 
@@ -105,7 +105,7 @@ public:
                 repeat = func(args...);
             } catch (const std::exception& e) {
                 std::cout << "ERROR: " << e.what() << std::endl;
-                std::cout << add_src_loc.to_string_full().c_str() << std::endl;
+                std::cout << src_loc.to_string_full().c_str() << std::endl;
             }
 
             if (repeat){
