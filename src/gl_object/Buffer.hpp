@@ -10,7 +10,7 @@ class Buffer : public ObjectHandle {
 public:
     EXPORT Buffer(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{}) :
         ObjectHandle(ctx, 0, &Buffer::_free, src_loc.add()){
-        addCallGl<&GLapi::CreateBuffers>(1, getData(), src_loc.add());
+        addCallGl<&GLapi::CreateBuffers>(1, data(), src_loc.add());
     }
     EXPORT virtual ~Buffer(){}
 
@@ -152,11 +152,13 @@ public:
 
 private:
     static void _free(std::weak_ptr<Context> wctx, const GLuint* id_ptr, const SrcLoc& src_loc){
+        static constexpr auto F = [](Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
+            ctx.gl.DeleteBuffers(1, id_ptr, src_loc);
+            delete id_ptr;
+        };
+
         if (auto ctx = wctx.lock()){
-            ctx->addCallCustom([](Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
-                ctx.gl.DeleteBuffers(1, id_ptr, src_loc);
-                delete id_ptr;
-            }, id_ptr, src_loc);
+            ctx->addCallGl<F>(id_ptr, src_loc);
         } else {
             delete id_ptr;
         }

@@ -13,7 +13,7 @@ public:
     Camera(const Camera& other) = default;
     virtual ~Camera();
 
-    const std::shared_ptr<GL::BufferStruct<glm::mat4>> buffer;
+    GL::BufferStruct<glm::mat4> buffer;
 
     void apply();
     void applyLookAt(const glm::vec3& dst);
@@ -26,7 +26,7 @@ public:
     bool use_perspective = true;
     float fov = float(2 * 3.14159265359 / 3);
     float near_z = float(0.01);
-    float far_z = 100;
+    float far_z = 10000;
     int width = 640;
     int height = 480;
 

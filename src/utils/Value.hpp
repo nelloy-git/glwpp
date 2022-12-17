@@ -4,29 +4,6 @@
 
 namespace glwpp {
 
-namespace detail {
-
-class ValueBase {
-    template<typename V>
-    struct MakeHelper {
-        using type = std::remove_reference_t<V>;
-    };
-
-    template<typename V>
-    struct MakeHelper<Value<V>> {
-        using type = std::remove_reference_t<V>;
-    };
-
-public:
-    template<typename V>
-    static auto make(V&& val){
-        return glwpp::Value<MakeHelper<V>::type>(val);
-    }
-
-};
-
-}; // namespace detail
-
 template <class, template <class, class...> class>
 struct is_instance : public std::false_type {};
 
@@ -34,7 +11,7 @@ template <class...Ts, template <class, class...> class U>
 struct is_instance<U<Ts...>, U> : public std::true_type {};
 
 template<typename T>
-class Value : detail::ValueBase {
+class Value {
     template<typename U>
     friend class Value;
 
@@ -47,6 +24,12 @@ class Value : detail::ValueBase {
 public:
     using type = typename T;
     static_assert(!is_value<T>, "Value<Value<...>> is not allowed");
+    
+    template<typename U = T, std::enable_if_t<(std::is_same_v<U, const void>), bool> = true>
+    static const Value<const void>& Null(){
+        static const Value<const void> null_value(static_cast<const void*>(nullptr));
+        return null_value;
+    }
 
     template<typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
     Value() :
@@ -56,6 +39,11 @@ public:
     template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
     Value(const V& value) :
         _ptr(new U(value)){
+    }
+
+    template<typename V, typename Del, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
+    Value(const V& value, const Del& del) :
+        _ptr(new U(value), del){
     }
 
     template<typename U = T, std::enable_if_t<(!is_void<U> && std::is_array_v<U>), bool> = true>
@@ -78,12 +66,9 @@ public:
         _ptr(std::reinterpret_pointer_cast<U>(other._ptr)){
     }
 
-    Value(const std::shared_ptr<T>& ptr) :
-        _ptr(ptr){
-    }
-    
-    Value(std::shared_ptr<T>&& ptr) :
-        _ptr(ptr){
+    Value<T>& operator=(const Value<T>& other){
+        _ptr = other._ptr;
+        return *this;
     }
 
     template<typename V = T, std::enable_if_t<(!is_void<V>), bool> = true>
@@ -129,6 +114,11 @@ public:
 
 private:
     std::shared_ptr<T> _ptr;
+
+    template<typename U = T, std::enable_if_t<(std::is_same_v<U, const void>), bool> = true>
+    Value(U* ptr) :
+        _ptr(ptr){
+    }
 
 };
 

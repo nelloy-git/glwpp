@@ -44,7 +44,7 @@ static auto Val(V val){
 
 };
 
-class Context {
+class Context : public std::enable_shared_from_this<Context> {
     const std::shared_ptr<BS::thread_pool> _gl_thread;
     std::thread::id _gl_thread_id;
 
@@ -96,8 +96,6 @@ public:
 
     template<auto F, Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     inline auto addCallGl(auto&&... args){
-        static_assert(std::is_invocable_v<decltype(F), GLapi&, decltype(args)...>, "F must be callable member of GLapi");
-
         if constexpr (is_gl_thread == IsGlThread::True){
             return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
         } else if constexpr (is_gl_thread == IsGlThread::False){
@@ -127,8 +125,6 @@ private:
     Event<Context*, const ms&> _on_start_gl;
     Event<Context*, const ms&> _on_run_gl;
     Event<Context*, const ms&> _on_finish_gl;
-
-    SrcLoc _last_src_loc;
 
     void _initGl(const Parameters& params);
 
@@ -163,30 +159,91 @@ private:
 
     template<auto F>
     inline auto _addCallGlFromGlThread(auto&&... args){
-        using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
-        if constexpr (std::is_same_v<R, void>){
-            (gl.*F)(std::forward<decltype(args)>(args)...);
+        static constexpr bool first_is_gl_api = std::is_invocable_v<decltype(F), GLapi&, decltype(args)...>;
+        static constexpr bool first_is_context = std::is_invocable_v<decltype(F), Context&, decltype(args)...>;
+
+        if constexpr (first_is_gl_api){
+            using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
+            if constexpr (std::is_member_function_pointer_v<decltype(F)>){
+                if constexpr (std::is_same_v<R, void>){
+                    (gl.*F)(std::forward<decltype(args)>(args)...);
+                } else {
+                    return Value<R>((gl.*F)(std::forward<decltype(args)>(args)...));
+                }
+            } else {
+                if constexpr (std::is_same_v<R, void>){
+                    F(gl, std::forward<decltype(args)>(args)...);
+                } else {
+                    return Value<R>(F(gl, std::forward<decltype(args)>(args)...));
+                }
+            }
+        } else if constexpr (first_is_context){
+            using R = std::invoke_result_t<decltype(F), Context&, decltype(args)...>;
+            if constexpr (std::is_same_v<R, void>){
+                F(*this, std::forward<decltype(args)>(args)...);
+            } else {
+                return Value<R>(F(*this, std::forward<decltype(args)>(args)...));
+            }
         } else {
-            return Value<R>((gl.*F)(std::forward<decltype(args)>(args)...));
+            static_assert(false, "F must be callable member of glwpp::GLapi or callable F(GLapi&, ...) or F(Context&, ...)");
         }
     }
 
     template<auto F>
     inline auto _addCallGlFromNonGlThread(auto&&... args){
+        static constexpr bool first_is_gl_api = std::is_invocable_v<decltype(F), GLapi&, decltype(args)...>;
+        static constexpr bool first_is_context = std::is_invocable_v<decltype(F), Context&, decltype(args)...>;
+        
         static_assert(detail::is_values<decltype(args)...>(), "arguments must be glwpp::Value<T>");
-        using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
-        if constexpr (std::is_same_v<R, void>){
-            auto pair = getOnRunEvent().addActionQueued([args...](Context* ctx, const ms&){
-                (ctx->gl.*F)(args...);
-                return false;
-            });
+        
+        if constexpr (first_is_gl_api){
+            using R = std::invoke_result_t<decltype(F), GLapi&, decltype(args)...>;
+            if constexpr (std::is_member_function_pointer_v<decltype(F)>){
+                if constexpr (std::is_same_v<R, void>){
+                    auto pair = getOnRunEvent().addActionQueued([args...](Context* ctx, const ms&){
+                        (ctx->gl.*F)(args...);
+                        return false;
+                    });
+                } else {
+                    Value<std::remove_const_t<R>> result;
+                    auto pair = getOnRunEvent().addActionQueued([result, args...](Context *ctx, const ms&){
+                        *result = (ctx->gl.*F)(args...);
+                        return false;
+                    });
+                    return result;
+                }
+            } else {
+                if constexpr (std::is_same_v<R, void>){
+                    auto pair = getOnRunEvent().addActionQueued([args...](Context* ctx, const ms&){
+                        F(ctx->gl, args...);
+                        return false;
+                    });
+                } else {
+                    Value<std::remove_const_t<R>> result;
+                    auto pair = getOnRunEvent().addActionQueued([result, args...](Context *ctx, const ms&){
+                        *result = F(ctx->gl, args...);
+                        return false;
+                    });
+                    return result;
+                }
+            }
+        } else if constexpr (first_is_context){
+            using R = std::invoke_result_t<decltype(F), Context&, decltype(args)...>;
+            if constexpr (std::is_same_v<R, void>){
+                auto pair = getOnRunEvent().addActionQueued([args...](Context* ctx, const ms&){
+                    F(*ctx, args...);
+                    return false;
+                });
+            } else {
+                Value<std::remove_const_t<R>> result;
+                auto pair = getOnRunEvent().addActionQueued([result, args...](Context *ctx, const ms&){
+                    *result = F(*ctx, args...);
+                    return false;
+                });
+                return result;
+            }
         } else {
-            Value<std::remove_const_t<R>> result;
-            auto pair = getOnRunEvent().addActionQueued([result, args...](Context *ctx, const ms&){
-                *result = (ctx->gl.*F)(args...);
-                return false;
-            });
-            return result;
+            static_assert(false, "F must be callable member of glwpp::GLapi or callable F(GLapi&, ...) or F(Context&, ...)");
         }
     }
 };

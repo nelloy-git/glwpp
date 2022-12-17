@@ -7,46 +7,47 @@
 namespace glwpp::GL {
 
 template<typename T>
-class BufferStruct : public Buffer {
+class BufferStruct : protected Object<void*> {
 public:
     EXPORT BufferStruct(const std::shared_ptr<Context>& ctx,
-                 const Value<const T>& initial,
-                 const SrcLoc src_loc) :
-        Buffer(ctx, src_loc){
+                        const Value<const T>& initial,
+                        const SrcLoc& src_loc = SrcLoc{}) :
+        Object(ctx, nullptr, Object::DEFAULT_DELETER, src_loc),
+        _buffer(ctx, src_loc){
         static const ConstBitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
         static const ConstEnum map_flag(GL_READ_WRITE);
 
-        setStorage(sizeof(T), initial, storage_flags);
-        _mapped = map(map_flag);
+        _buffer.setStorage(sizeof(T), initial, storage_flags, src_loc);
+        auto& map = data();
+        map = _buffer.map(map_flag, src_loc);
     }
     EXPORT virtual ~BufferStruct(){};
 
+    const Buffer& buffer() const {
+        return _buffer;
+    }
+
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT Value<T> getValue(const SrcLoc src_loc = SrcLoc{}) const {
-        Value<T> dst(std::shared_ptr<T>((T*)malloc(sizeof(T))));
-        if (*_mapped){
-            memcpy(dst.get(), *_mapped, sizeof(T));
-        } else {
-            _addCallCustom<is_gl_thread>(src_loc,[](Context& ctx, const Value<const BufferStruct<T>>& self, const Value<T>& dst){
-                memcpy(dst.get(), *self->_mapped, sizeof(T));
-            }, Value(this->shared_from_this()), dst);
-        }
+        static constexpr auto F = [](GLapi& ctx, void* map, T& dst){
+            memcpy(&dst, map, sizeof(T));
+        };
+
+        Value<T> dst;
+        addCallGl<F, is_gl_thread>(data(), dst);
         return dst;
     }
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     EXPORT void setValue(const Value<const T>& value, const SrcLoc src_loc = SrcLoc{}){
-        if (*_mapped){
-            memcpy(*_mapped, value.get(), sizeof(T));
-        } else {
-            _addCallCustom<is_gl_thread>(src_loc, [](Context& ctx, const Value<const BufferStruct<T>>& self, const Value<const T>& value){
-                memcpy(*self->_mapped, value.get(), sizeof(T));
-            }, Value(this->shared_from_this()), value);
-        }
+        static constexpr auto F = [](GLapi& ctx, void* map, const T& value){
+            memcpy(map, &value, sizeof(T));
+        };
+        return addCallGl<F, is_gl_thread>(data(), value);
     }
 
-protected:
-    DataPtr _mapped;
+private:
+    Buffer _buffer;
 };
 
 }

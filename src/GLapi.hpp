@@ -14,6 +14,7 @@ class GLapi {
 private:
     std::unique_ptr<GladGLContext> _glad_context;
     std::shared_ptr<Metrics::Category> _metrics;
+    std::unique_ptr<SrcLoc> _last_src_loc;
 
     template<auto M>
     auto _call(const SrcLoc& src_loc, const std::string_view& name, auto&&... args) const;
@@ -24,6 +25,7 @@ public:
 
     int loadGladGLContext(GLADloadfunc load);
 
+    EXPORT const SrcLoc& getLastSrcLoc() const;
     EXPORT void setMetricsCategory(const std::shared_ptr<Metrics::Category>& category);
 
     EXPORT void Accum(GLenum op, GLfloat value, const SrcLoc& src_loc = SrcLoc{}) const;
@@ -510,14 +512,14 @@ public:
     EXPORT void Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat * points, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void Map2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble * points, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void Map2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat * points, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapBuffer (GLenum target, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapBufferRange (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
+    EXPORT void* MapBuffer (GLenum target, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
+    EXPORT void* MapBufferRange (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void MapGrid1d(GLint un, GLdouble u1, GLdouble u2, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void MapGrid1f(GLint un, GLfloat u1, GLfloat u2, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapNamedBuffer (GLuint buffer, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapNamedBufferRange (GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
+    EXPORT void* MapNamedBuffer (GLuint buffer, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
+    EXPORT void* MapNamedBufferRange (GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void Materialf(GLenum face, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void Materialfv(GLenum face, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
     EXPORT void Materiali(GLenum face, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;

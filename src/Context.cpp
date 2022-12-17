@@ -31,7 +31,7 @@ static void APIENTRY glDebugOutput(GLenum source,
                                    GLsizei length, 
                                    const char *message, 
                                    const void *userParam){
-    auto& last_src_loc = *static_cast<const SrcLoc*>(userParam);
+    auto& gl = *static_cast<const GLapi*>(userParam);
                                 
     // ignore non-significant error/warning codes
     if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
@@ -66,7 +66,7 @@ static void APIENTRY glDebugOutput(GLenum source,
         case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
         case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
     } std::cout << std::endl;
-    std::cout << last_src_loc.to_string_full().c_str() << std::endl;
+    std::cout << gl.getLastSrcLoc().to_string_full().c_str() << std::endl;
     std::cout << std::endl;
 }
 }
@@ -182,7 +182,7 @@ void Context::_initGl(const Parameters& params){
         std::cout << "glDebugOutput enabled" << std::endl;
         gl.Enable(GL_DEBUG_OUTPUT);
         gl.Enable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
-        gl.DebugMessageCallback(glDebugOutput, &_last_src_loc);
+        gl.DebugMessageCallback(glDebugOutput, &gl);
         gl.DebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
     

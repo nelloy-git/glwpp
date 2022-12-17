@@ -9,7 +9,7 @@ class VertexArray : public ObjectHandle {
 public:
     VertexArray(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{}) :
         ObjectHandle(ctx, 0, &VertexArray::_free, src_loc.add()){
-        addCallGl<&GLapi::CreateVertexArrays>(1, getData(), src_loc.add());
+        addCallGl<&GLapi::CreateVertexArrays>(1, data(), src_loc.add());
     }
     EXPORT virtual ~VertexArray(){}
 

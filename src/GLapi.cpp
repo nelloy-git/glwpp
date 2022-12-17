@@ -7,6 +7,7 @@ using namespace glwpp;
 
 template<auto M>
 auto GLapi::_call(const SrcLoc& src_loc, const std::string_view& name, auto&&... args) const {
+    *_last_src_loc = src_loc;
     if (_metrics){
         (*_metrics)[name.data()]++;
     }
@@ -14,7 +15,8 @@ auto GLapi::_call(const SrcLoc& src_loc, const std::string_view& name, auto&&...
 }
 
 GLapi::GLapi() :
-    _glad_context(new GladGLContext){
+    _glad_context(new GladGLContext),
+    _last_src_loc(new SrcLoc{}){
 }
 
 GLapi::~GLapi(){
@@ -22,6 +24,10 @@ GLapi::~GLapi(){
 
 int GLapi::loadGladGLContext(GLADloadfunc load){
     return gladLoadGLContext(_glad_context.get(), load);
+}
+
+const SrcLoc& GLapi::getLastSrcLoc() const {
+    return *_last_src_loc;
 }
 
 void GLapi::setMetricsCategory(const std::shared_ptr<Metrics::Category>& category){
@@ -1357,6 +1363,10 @@ void GLapi::LinkProgram(GLuint program, const SrcLoc& src_loc) const {
 
 void GLapi::LogicOp(GLenum opcode, const SrcLoc& src_loc) const {
     return _call<&GladGLContext::LogicOp>(src_loc, "LogicOp", opcode);
+}
+
+void* GLapi::MapNamedBuffer(GLuint buffer, GLenum access, const SrcLoc& src_loc) const {
+    return _call<&GladGLContext::MapNamedBuffer>(src_loc, "MapNamedBuffer", buffer, access);
 }
 
 void GLapi::MemoryBarrier(GLbitfield barriers, const SrcLoc& src_loc) const {
