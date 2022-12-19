@@ -24,46 +24,32 @@ class Value {
 public:
     using type = typename T;
     static_assert(!is_value<T>, "Value<Value<...>> is not allowed");
-    
-    template<typename U = T, std::enable_if_t<(std::is_same_v<U, const void>), bool> = true>
-    static const Value<const void>& Null(){
-        static const Value<const void> null_value(static_cast<const void*>(nullptr));
-        return null_value;
-    }
 
-    template<typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
     Value() :
-        _ptr(new U){
+        _ptr(new T){
     }
 
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
+    Value(const T& value) :
+        _ptr(new T(value)){
+    }
+
+    template<typename V, std::enable_if_t<(!is_value<V>), bool> = true>
     Value(const V& value) :
-        _ptr(new U(value)){
+        _ptr(new T(value)){
     }
 
-    template<typename V, typename Del, typename U = T, std::enable_if_t<(!is_void<U> && !std::is_array_v<U>), bool> = true>
-    Value(const V& value, const Del& del) :
-        _ptr(new U(value), del){
+    template<typename V, typename Del, std::enable_if_t<(!is_value<V>), bool> = true>
+    Value(const V& value, const Del& del) : 
+        _ptr(new T(value), del){
     }
 
-    template<typename U = T, std::enable_if_t<(!is_void<U> && std::is_array_v<U>), bool> = true>
-    Value(const size_t& size) :
-        _ptr(new std::remove_extent_t<U>[size]){
-    }
-
-    template<typename U = T, std::enable_if_t<(is_void<U>), bool> = true>
-    Value(const size_t& bytes) :
-        _ptr(new char[bytes]){
-    }
-
-    template<typename V, typename U = T, std::enable_if_t<(!is_void<U>), bool> = true>
-    Value(const Value<V>& other) :
+    Value(const Value<T>& other) :
         _ptr(other._ptr){
     }
 
-    template<typename V, typename U = T, std::enable_if_t<(is_void<U>), bool> = true>
+    template<typename V>
     Value(const Value<V>& other) :
-        _ptr(std::reinterpret_pointer_cast<U>(other._ptr)){
+        _ptr(other._ptr){
     }
 
     Value<T>& operator=(const Value<T>& other){
@@ -80,22 +66,11 @@ public:
         return _ptr.get();
     }
 
-    operator std::shared_ptr<T>(){
-        return _ptr;
-    }
-
-    template<typename U = T>
-    operator std::enable_if_t<(!is_void<U> && !is_value<U>), U>&() const {
+    operator T&() const {
         return *_ptr;
     }
 
-    template<typename U = T>
-    operator std::enable_if_t<(!is_void<U> && !is_value<U>), U*>() const {
-        return _ptr.get();
-    }
-
-    template<typename U = T>
-    operator std::enable_if_t<(is_void<U>), U*>() const {
+    operator T*() const {
         return _ptr.get();
     }
 
@@ -108,18 +83,88 @@ public:
         return Value<U>(std::reinterpret_pointer_cast<U>(_ptr));
     }
 
-    const std::shared_ptr<T>& get_shared(){
-        return _ptr;
-    } 
-
 private:
     std::shared_ptr<T> _ptr;
+};
 
-    template<typename U = T, std::enable_if_t<(std::is_same_v<U, const void>), bool> = true>
-    Value(U* ptr) :
+template<>
+class Value<const void> {
+    template<typename U>
+    friend class Value;
+
+public:
+    using type = const void;
+
+    static const Value<const void>& Nullptr(){
+        static const Value<const void> null_value;
+        return null_value;
+    }
+
+    static Value<const void> Alloc(const size_t& bytes){
+        return Value<const void>(malloc(bytes));
+    }
+
+    template<typename V>
+    Value(const V& value) :
+        _ptr(std::make_shared<V>(value)){
+    }
+
+    template<typename V>
+    Value(const Value<V>& other) :
+        _ptr(other._ptr){
+    }
+    
+    operator const void*() const {
+        return _ptr.get();
+    }
+
+    inline const void* get() const {
+        return _ptr.get();
+    }
+
+private:
+    Value(){};
+
+    Value(const void* ptr) :
         _ptr(ptr){
     }
 
+    std::shared_ptr<const void> _ptr;
+};
+
+template<>
+class Value<void> {
+    template<typename U>
+    friend class Value;
+
+public:
+    using type = void;
+
+    static Value<void> Alloc(const size_t& bytes){
+        return Value<void>(malloc(bytes));
+    }
+
+    inline void* get() const {
+        return _ptr.get();
+    }
+
+    template<typename V>
+    Value(const Value<V>& other) :
+        _ptr(other._ptr){
+    }
+    
+    operator void*() const {
+        return _ptr.get();
+    }
+
+private:
+    Value(){};
+
+    Value(void* ptr) :
+        _ptr(ptr){
+    }
+
+    std::shared_ptr<void> _ptr;
 };
 
 } // namespace glwpp

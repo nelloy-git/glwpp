@@ -108,13 +108,17 @@ int main(int argc, char **argv){
     add_imgui(ctx);
 
     glwpp::GL::BufferVector<int> v(ctx);
-    auto s = v.size();
     // v.pop_back();
     v.push_back(3);
     // v.pop_back();
-    v.reserve(50);
+    // auto a = ctx->addition(10, v.size());
+    v.reserve(ctx->multiplication(10, v.size()));
     v.push_back(3);
-    v.shape();
+    v.reserve(ctx->multiplication(10, v.size()));
+    // v.shape();
+    auto cap = v.capacity();
+
+    auto d = v.get(0);
 
 #ifdef WIN32
     glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
@@ -133,8 +137,8 @@ int main(int argc, char **argv){
         ctx->run().wait();
         if (!done){
             done = true;
-            std::cout << (int)*v.size() << std::endl;
             std::cout << *cap << std::endl;
+            std::cout << *d << std::endl;
             // std::cout << *buf.id() << std::endl;
         }
 

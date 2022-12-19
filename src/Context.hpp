@@ -28,18 +28,16 @@ static constexpr bool is_values(){
 }
 
 template<typename V>
-struct ValueHelper {
-    using type = std::remove_reference_t<V>;
-};
+constexpr bool is_val = is_instance<std::remove_const_t<std::remove_reference_t<V>>, Value>::value;
 
-template<typename V>
-struct ValueHelper<Value<V>> {
-    using type = std::remove_reference_t<V>;
-};
+template<typename V, std::enable_if_t<(is_val<V>), bool> = true>
+static auto Val(const V& val){
+    return glwpp::Value<std::remove_reference_t<V>::type>(val);
+}
 
-template<typename V>
-static auto Val(V val){
-    return glwpp::Value<ValueHelper<V>::type>(val);
+template<typename V, std::enable_if_t<(!is_val<V>), bool> = true>
+static auto Val(const V& val){
+    return glwpp::Value<std::remove_reference_t<V>>(val);
 }
 
 };
@@ -84,12 +82,12 @@ public:
         if constexpr (is_gl_thread == IsGlThread::True){
             return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
         } else if constexpr (is_gl_thread == IsGlThread::False){
-            return _addCallCustomFromNonGlThread(detail::Val(func), detail::Val(args)...);
+            return _addCallCustomFromNonGlThread(Value(func), Value(args)...);
         } else {
             if (std::this_thread::get_id() == _gl_thread_id){
                 return _addCallCustomFromGlThread(std::forward<decltype(func)>(func), std::forward<decltype(args)>(args)...);
             } else {
-                return _addCallCustomFromNonGlThread(detail::Val(func), detail::Val(args)...);
+                return _addCallCustomFromNonGlThread(Value(func), Value(args)...);
             }
         }
     }
@@ -99,14 +97,24 @@ public:
         if constexpr (is_gl_thread == IsGlThread::True){
             return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
         } else if constexpr (is_gl_thread == IsGlThread::False){
-            return _addCallGlFromNonGlThread<F>(detail::Val(args)...);
+            return _addCallGlFromNonGlThread<F>(Value(args)...);
         } else {
             if (std::this_thread::get_id() == _gl_thread_id){
                 return _addCallGlFromGlThread<F>(std::forward<decltype(args)>(args)...);
             } else {
-                return _addCallGlFromNonGlThread<F>(detail::Val(args)...);
+                return _addCallGlFromNonGlThread<F>(Value(args)...);
             }
         }
+    }
+
+    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    inline auto addition(auto&&... args){
+        return addCallGl<[](GLapi&, auto&&... args){return (args + ...);}>(std::forward<decltype(args)>(args)...);
+    }
+
+    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    inline auto multiplication(auto&&... args){
+        return addCallGl<[](GLapi&, auto&&... args){return (args * ...);}>(std::forward<decltype(args)>(args)...);
     }
 
 protected:

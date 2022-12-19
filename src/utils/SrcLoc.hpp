@@ -22,22 +22,17 @@ public:
                   const std::string&  function = __builtin_FUNCTION());
 
     EXPORT SrcLoc(SrcLoc&& other);
-    EXPORT SrcLoc(const SrcLoc&& other);
 
-    EXPORT SrcLoc& add(const std::string& file = __builtin_FILE(), 
-                       std::uint_least32_t line = __builtin_LINE(),
-                       const std::string& function = __builtin_FUNCTION());
-
-    EXPORT const SrcLoc& add(const std::string& file = __builtin_FILE(), 
-                             std::uint_least32_t line = __builtin_LINE(),
-                             const std::string& function = __builtin_FUNCTION()) const;
+    EXPORT SrcLoc add(const std::string& file = __builtin_FILE(), 
+                      std::uint_least32_t line = __builtin_LINE(),
+                      const std::string& function = __builtin_FUNCTION()) const;
 
     EXPORT SrcLoc& operator=(const SrcLoc& other){
         _loc = other._loc;
         return *this;
     }
 
-    EXPORT SrcLoc& operator=(const SrcLoc&& other){
+    EXPORT SrcLoc& operator=(SrcLoc&& other){
         _loc = other._loc;
         return *this;
     }

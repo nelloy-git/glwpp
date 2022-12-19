@@ -24,11 +24,11 @@ class BufferVector : protected Object<detail::BufferVectorData> {
 
 public:
     EXPORT BufferVector(const std::shared_ptr<Context>& ctx,
-                        const ConstEnum& usage = GL_DYNAMIC_DRAW,
+                        const ConstEnum& usage = GL_DYNAMIC_READ,
                         const SrcLoc& src_loc = SrcLoc{}) :
-        Object(ctx, detail::BufferVectorData{0, INIT_CAPACITY, 0}, Object::DEFAULT_DELETER, src_loc),
+        Object(ctx, detail::BufferVectorData{0, INIT_CAPACITY, 0}, &Object::DEFAULT_DELETER, src_loc),
         _buffer(new Buffer(ctx, src_loc)){
-        _buffer->setData(INIT_CAPACITY * sizeof(T), Value<const void>::Null(), usage, src_loc.add());
+        _buffer->setData(INIT_CAPACITY * sizeof(T), Value<const void>::Nullptr(), usage, src_loc.add());
         addCallGl<[](Context&, detail::BufferVectorData& data, const GLenum& usage){data.usage = usage;}>(data(), usage);
     }
     EXPORT virtual ~BufferVector(){};
@@ -39,7 +39,9 @@ public:
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     Value<const size_t> size() const {
-        return addCallGl<[](GLapi&, const detail::BufferVectorData& data){return data.size;}, is_gl_thread>(data());
+        return addCallGl<[](GLapi&, const detail::BufferVectorData& data){
+            return data.size;
+        }, is_gl_thread>(data());
     }
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
@@ -49,7 +51,7 @@ public:
 
     template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
     Value<T> get(const Value<const size_t>& i, const SrcLoc& src_loc = SrcLoc{}){
-        Value<void> dst;
+        Value<T> dst;
         _buffer->getSubData<is_gl_thread>(i * sizeof(T), sizeof(T), dst, src_loc.add());
         return dst;
     }
@@ -89,22 +91,20 @@ private:
         }
 
         Buffer tmp(ctx.shared_from_this(), src_loc);
-        tmp.setData<Context::IsGlThread::True>(data.capacity * sizeof(T), Value<const void>::Null(), GL_STATIC_COPY, src_loc);
+        tmp.setData<Context::IsGlThread::True>(data.capacity * sizeof(T), Value<const void>::Nullptr(), GL_STREAM_COPY, src_loc);
         tmp.copySubData<Context::IsGlThread::True>(*buffer, 0, 0, data.capacity * sizeof(T), src_loc);
 
-        buffer->setData<Context::IsGlThread::True>(capacity * sizeof(T), Value<const void>::Null(), data.usage, src_loc);
+        buffer->setData<Context::IsGlThread::True>(capacity * sizeof(T), Value<const void>::Nullptr(), data.usage, src_loc);
         buffer->copySubData<Context::IsGlThread::True>(tmp, 0, 0, data.capacity * sizeof(T), src_loc);
         data.capacity = capacity;
-
-        std::cout << "cap: " << data.capacity << std::endl;
     }
     
     static void _shape(Context& ctx, const std::shared_ptr<Buffer>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
         Buffer tmp(ctx.shared_from_this(), src_loc);
-        tmp.setData<Context::IsGlThread::True>(data.size * sizeof(T), Value<const void>::Null(), GL_STATIC_COPY, src_loc);
+        tmp.setData<Context::IsGlThread::True>(data.size * sizeof(T), Value<const void>::Nullptr(), GL_STREAM_COPY, src_loc);
         tmp.copySubData<Context::IsGlThread::True>(*buffer, 0, 0, data.size * sizeof(T), src_loc);
 
-        buffer->setData<Context::IsGlThread::True>(data.size * sizeof(T), Value<const void>::Null(), data.usage, src_loc);
+        buffer->setData<Context::IsGlThread::True>(data.size * sizeof(T), Value<const void>::Nullptr(), data.usage, src_loc);
         buffer->copySubData<Context::IsGlThread::True>(tmp, 0, 0, data.size * sizeof(T), src_loc);
     }
 
@@ -122,7 +122,7 @@ private:
             return;
         }
         data.size -= 1;
-        buffer->setSubData<Context::IsGlThread::True>(data.size * sizeof(T), sizeof(T), Value<const void>::Null(), src_loc);
+        buffer->setSubData<Context::IsGlThread::True>(data.size * sizeof(T), sizeof(T), Value<const void>::Nullptr(), src_loc);
     }
 };
 

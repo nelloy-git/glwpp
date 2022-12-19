@@ -14,7 +14,7 @@ MeshAttribute::MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned
     stride(sizeof(float) * components),
     buffer(ctx){
     auto size = mNumVertices * 3 * sizeof(float);
-    Value<void> data_copy(size);
+    auto data_copy = Value<void>::Alloc(size);
     memcpy(data_copy.get(), ai_vector, size);
     buffer.setStorage(size, data_copy, 0);
 }
@@ -26,7 +26,7 @@ MeshAttribute::MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned
     stride(sizeof(float) * components),
     buffer(ctx){
     auto size = mNumVertices * 4 * sizeof(float);
-    Value<void> data_copy(size);
+    auto data_copy = Value<void>::Alloc(size);
     memcpy(data_copy.get(), ai_color, size);
     buffer.setStorage(size, data_copy, 0);
 }

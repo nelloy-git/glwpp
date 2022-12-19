@@ -12,7 +12,7 @@ public:
     EXPORT BufferStruct(const std::shared_ptr<Context>& ctx,
                         const Value<const T>& initial,
                         const SrcLoc& src_loc = SrcLoc{}) :
-        Object(ctx, nullptr, Object::DEFAULT_DELETER, src_loc),
+        Object(ctx, nullptr, &Object::DEFAULT_DELETER, src_loc),
         _buffer(ctx, src_loc){
         static const ConstBitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
         static const ConstEnum map_flag(GL_READ_WRITE);

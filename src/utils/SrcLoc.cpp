@@ -45,36 +45,15 @@ SrcLoc::SrcLoc(const SrcLoc& other,
 };
 
 SrcLoc::SrcLoc(SrcLoc&& other) :
-    _loc(other._loc){
+    _loc(std::move(other._loc)){
 };
 
-SrcLoc::SrcLoc(const SrcLoc&& other) :
-    _loc(other._loc){
-};
-
-
-SrcLoc& SrcLoc::add(const std::string& file, 
-                    std::uint_least32_t line,
-                    const std::string& function){
-    auto loc = std::make_shared<Loc>();
-    loc->prev = _loc;
-    _loc = loc;
-    _loc->file = file;
-    _loc->line = line;
-    _loc->function = function;
-    return *this;
-}
-
-const SrcLoc& SrcLoc::add(const std::string& file, 
-                          std::uint_least32_t line,
-                          const std::string& function) const {
-    auto prev = std::make_shared<Loc>();
-    *prev = *_loc;
-    _loc->file = file;
-    _loc->line = line;
-    _loc->function = function;
-    _loc->prev = prev;
-    return *this;
+SrcLoc SrcLoc::add(const std::string& file, 
+                   std::uint_least32_t line,
+                   const std::string& function) const {
+    SrcLoc src_loc(file, line, function);
+    src_loc._loc->prev = _loc;
+    return src_loc;
 }
 
 const std::string& SrcLoc::file_name() const {

@@ -78,7 +78,7 @@ using Sync = Value<__GLsync*>;
 template<typename T>
 class Object {
 public:
-    static constexpr auto DEFAULT_DELETER = [](std::weak_ptr<Context> wctx, T* data, const SrcLoc& src_loc){
+    static void DEFAULT_DELETER(std::weak_ptr<Context> wctx, T* data, const SrcLoc& src_loc){
         static constexpr auto F = [](Context& ctx, T* data, const SrcLoc& src_loc){
             delete data;
         };

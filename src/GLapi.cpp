@@ -11,6 +11,13 @@ auto GLapi::_call(const SrcLoc& src_loc, const std::string_view& name, auto&&...
     if (_metrics){
         (*_metrics)[name.data()]++;
     }
+
+    // if (name != "Viewport" && name != "Clear"){
+    //     std::cout << name.data();
+    //     ((std::cout << ',' << args), ...);
+    //     std::cout << std::endl;
+    // }
+
     return (_glad_context.get()->*M)(std::forward<decltype(args)>(args)...);
 }
 
