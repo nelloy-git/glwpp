@@ -11,13 +11,18 @@ namespace glwpp {
 
 class MeshAttribute {
 public:
-    enum class Type {
-        Float
+    enum class Type : GLenum {
+        Float = GL_FLOAT
     };
-    static GL::ConstEnum TypeToEnum(const Type& type);
 
-    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiVector3t<float>* ai_vectors);
-    MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiColor4t<float>* ai_colors);
+    MeshAttribute(Context& ctx,
+                  const unsigned int& mNumVertices,
+                  const aiVector3t<float>* ai_vectors,
+                  const SrcLoc& src_loc = SrcLoc{});
+    MeshAttribute(Context& ctx,
+                  const unsigned int& mNumVertices,
+                  const aiColor4t<float>* ai_colors,
+                  const SrcLoc& src_loc = SrcLoc{});
     virtual ~MeshAttribute();
 
     const Type type;

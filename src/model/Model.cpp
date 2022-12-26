@@ -6,7 +6,7 @@
 
 using namespace glwpp;
 
-Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path){
+Model::Model(Context& ctx, const std::string& model_path, const SrcLoc& src_loc){
     static auto ai_process_flags = aiProcess_CalcTangentSpace 
                                  | aiProcess_Triangulate
                                  | aiProcess_JoinIdenticalVertices
@@ -20,7 +20,7 @@ Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path)
         return;
     }
 
-    if (!_loadMeshes(ctx, *ai_scene)){
+    if (loading_error = _loadMeshes(ctx, *ai_scene, src_loc)){
         return;
     }
 }
@@ -28,21 +28,19 @@ Model::Model(const std::shared_ptr<Context>& ctx, const std::string& model_path)
 Model::~Model(){
 }
 
-bool Model::_loadMeshes(const std::shared_ptr<Context>& ctx, const aiScene& ai_scene){
+std::optional<std::string> Model::_loadMeshes(Context& ctx, const aiScene& ai_scene, const SrcLoc& src_loc){
     if (ai_scene.mNumMeshes == 0){
-        loading_error = "No meshes found";
-        return false;
+        return "No meshes found";
     }
 
     for (size_t i = 0; i < ai_scene.mNumMeshes; ++i){
         auto ai_mesh = ai_scene.mMeshes[i];
         if (!ai_mesh){
-            loading_error = "Empty mesh pointer i = " + std::to_string(i);
-            return false;
+            return "Empty pointer aiMesh[" + std::to_string(i) + "]";
         }
 
-        meshes.emplace_back(new Mesh(ctx, *ai_mesh));
+        meshes.emplace_back(new Mesh(ctx, *ai_mesh, src_loc));
     }
 
-    return true;
+    return std::nullopt;
 }

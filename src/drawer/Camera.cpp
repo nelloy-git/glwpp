@@ -5,8 +5,12 @@
 
 using namespace glwpp;
 
-Camera::Camera(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc) :
+Camera::Camera(Context& ctx, const SrcLoc& src_loc) :
     buffer(ctx, glm::mat4(1.f), src_loc){
+
+    constexpr bool b = std::is_convertible_v<Context&, Context&>;
+    constexpr bool v = IsValuable<decltype(ctx), Context>();
+
 }
 
 Camera::~Camera(){

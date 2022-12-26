@@ -12,7 +12,7 @@ namespace glwpp {
 
 class Model {
 public:
-    EXPORT Model(const std::shared_ptr<Context>& ctx, const std::string& model_path);
+    EXPORT Model(Context& ctx, const std::string& model_path, const SrcLoc& src_loc = SrcLoc{});
     EXPORT virtual ~Model();
 
     std::optional<std::string> loading_error;
@@ -20,7 +20,7 @@ public:
     std::vector<std::unique_ptr<Mesh>> meshes;
 
 private:
-    bool _loadMeshes(const std::shared_ptr<Context>& ctx, const aiScene& ai_scene);
+    std::optional<std::string> _loadMeshes(Context& ctx, const aiScene& ai_scene, const SrcLoc& src_loc);
 
 };
     

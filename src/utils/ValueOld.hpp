@@ -52,7 +52,8 @@ public:
         _ptr(other._ptr){
     }
 
-    Value<T>& operator=(const Value<T>& other){
+    template<typename V>
+    Value<T>& operator=(const Value<V>& other){
         _ptr = other._ptr;
         return *this;
     }

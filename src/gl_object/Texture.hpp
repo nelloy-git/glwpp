@@ -7,7 +7,7 @@ namespace glwpp {
 
 namespace GL {
 
-class TextureBase : public Object {
+class TextureBase : public ObjectRef {
 public:
     EXPORT ~TextureBase();
 
@@ -37,18 +37,18 @@ public:
     EXPORT void setMagFilter(const Enum& value, const SrcLoc& src_loc = SrcLoc{});
 
 protected:
-    TextureBase(const std::shared_ptr<Context>& ctx, const Enum& type, const SrcLoc& src_loc);
+    TextureBase(Context& ctx, const Enum& type, const SrcLoc& src_loc);
 
 };
 
 class Texture : public TextureBase, public SharedObject<Texture> {
 public:
-    EXPORT static std::shared_ptr<Texture> New(const std::shared_ptr<Context>& ctx, const Enum& type, const SrcLoc& src_loc = SrcLoc{}){
+    EXPORT static std::shared_ptr<Texture> New(Context& ctx, const Enum& type, const SrcLoc& src_loc = SrcLoc{}){
         return std::shared_ptr<Texture>(new Texture(ctx, type, src_loc));
     }
 
 protected:
-    Texture(const std::shared_ptr<Context>& ctx, const Enum& type, const SrcLoc& src_loc) : 
+    Texture(Context& ctx, const Enum& type, const SrcLoc& src_loc) : 
         TextureBase(ctx, type, src_loc){
     }
 };

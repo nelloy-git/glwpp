@@ -9,7 +9,7 @@ namespace glwpp {
 
 class Camera {
 public:
-    Camera(const std::shared_ptr<Context>& ctx, const SrcLoc& src_loc = SrcLoc{});
+    Camera(Context& ctx, const SrcLoc& src_loc = SrcLoc{});
     Camera(const Camera& other) = default;
     virtual ~Camera();
 

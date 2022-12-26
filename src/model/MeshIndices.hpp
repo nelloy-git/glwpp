@@ -12,7 +12,10 @@ public:
         UInt
     };
 
-    MeshIndices(const std::shared_ptr<Context>& ctx, const unsigned int& mNumFaces, const aiFace* ai_faces);
+    MeshIndices(Context& ctx,
+                const unsigned int& mNumFaces,
+                const aiFace* ai_faces,
+                const SrcLoc& src_loc = SrcLoc{});
     virtual ~MeshIndices();
     
     const Type type;

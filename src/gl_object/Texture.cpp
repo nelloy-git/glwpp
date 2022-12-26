@@ -5,8 +5,8 @@
 // using namespace glwpp;
 // using namespace GL;
 
-// TextureBase::TextureBase(const std::shared_ptr<Context>& ctx, const Enum& type, const SrcLoc& src_loc) :
-//     Object(ctx, ctx->gl().call([](Gl& gl, const Enum& type, const SrcLoc& src_loc){
+// TextureBase::TextureBase(Context& ctx, const Enum& type, const SrcLoc& src_loc) :
+//     ObjectRef(ctx, ctx->gl().call([](Gl& gl, const Enum& type, const SrcLoc& src_loc){
 //         unsigned int id;
 //         glCreateTextures(*type, 1, &id);
 //         gl.debug(src_loc);

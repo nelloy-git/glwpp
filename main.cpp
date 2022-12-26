@@ -15,7 +15,7 @@
 #include "model/Model.hpp"
 
 #include "gl_object/Buffer.hpp"
-#include "gl_object/BufferVector.hpp"
+// #include "gl_object/BufferVector.hpp"
 
 void add_imgui(const std::shared_ptr<glwpp::Context>& ctx){
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
@@ -107,23 +107,10 @@ int main(int argc, char **argv){
     auto ctx = std::make_shared<glwpp::Context>(ctx_params);
     add_imgui(ctx);
 
-    glwpp::GL::BufferVector<int> v(ctx);
-    // v.pop_back();
-    v.push_back(3);
-    // v.pop_back();
-    // auto a = ctx->addition(10, v.size());
-    v.reserve(ctx->multiplication(10, v.size()));
-    v.push_back(3);
-    v.reserve(ctx->multiplication(10, v.size()));
-    // v.shape();
-    auto cap = v.capacity();
-
-    auto d = v.get(0);
-
 #ifdef WIN32
-    glwpp::Model book_model(ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
+    glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
 #else
-    glwpp::Model book_model(ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
+    glwpp::Model book_model(*ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
 #endif
 
     if (book_model.loading_error.has_value()){
@@ -132,13 +119,9 @@ int main(int argc, char **argv){
 
     bool done = false;
     while(true){
-        auto cap = v.capacity();
-
         ctx->run().wait();
         if (!done){
             done = true;
-            std::cout << *cap << std::endl;
-            std::cout << *d << std::endl;
             // std::cout << *buf.id() << std::endl;
         }
 

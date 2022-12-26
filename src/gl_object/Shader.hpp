@@ -6,9 +6,9 @@ namespace glwpp::GL {
 
 namespace detail {
 
-class ShaderBase : public Object {
+class ShaderBase : public ObjectRef {
 public:
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT void source(const ConstString& code){
         return _addCallCustom<is_gl_thread>([](Context& ctx, const ConstUint& id, const ConstString& code){
             auto c_str = code->c_str();
@@ -18,32 +18,32 @@ public:
         }, id(), code);
     }
 
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT void compile(){
        return _callGL<&GLapi::CompileShader>(id());
     }
 
 
 
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Enum getType(){
         static const ConstEnum pname(GL_SHADER_TYPE);
         return _getParamiAs<Enum::type, is_gl_thread>(pname);
     }
 
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Boolean isCompiled(){
         static const ConstEnum pname(GL_COMPILE_STATUS);
         return _getParamiAs<Boolean::type, is_gl_thread>(pname);
     }
 
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Int getSourceLength(){
         static const ConstEnum pname(GL_SHADER_SOURCE_LENGTH);
         return _getParamiAs<Int::type, is_gl_thread>(pname);
     }
 
-    template<Context::IsGlThread is_gl_thread = Context::IsGlThread::Unknown>
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT String getInfoLog(){
         return _callGLCustom([](Context& ctx, const ConstUint& id){
             int len;
@@ -64,13 +64,13 @@ public:
     }
 
 protected:
-    ShaderBase(const std::shared_ptr<Context>& ctx, const ConstEnum& type) :
-        Object(ctx, ctx->addCallCustom([](Context& ctx, const ConstEnum& type){
+    ShaderBase(Context& ctx, const ConstEnum& type) :
+        ObjectRef(ctx, ctx->addCallCustom([](Context& ctx, const ConstEnum& type){
             return ctx.gl.CreateShader(type);
         }, type)){
     }
     
-    template<typename T, Context::IsGlThread is_gl_thread>
+    template<typename T, IsGlThread is_gl_thread>
     inline T _getParamiAs(const ConstEnum& pname){
         Int dst;
         _addCallGl<&GLapi::GetShaderiv, is_gl_thread>(id(), pname, dst);
@@ -83,12 +83,12 @@ protected:
 
 class Shader : public detail::ShaderBase, public SharedObject<Shader> {
 public:
-    EXPORT static std::shared_ptr<Shader> New(const std::shared_ptr<Context>& ctx, const ConstEnum& type){
+    EXPORT static std::shared_ptr<Shader> New(Context& ctx, const ConstEnum& type){
         return std::shared_ptr<Shader>(new Shader(ctx, type));
     }
 
 protected:
-    Shader(const std::shared_ptr<Context>& ctx, const ConstEnum& type) : 
+    Shader(Context& ctx, const ConstEnum& type) : 
         ShaderBase(ctx, type){
     }
 };

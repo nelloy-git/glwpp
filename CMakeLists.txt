@@ -23,7 +23,7 @@ add_compile_definitions(GLWPP_DEBUG)
 add_compile_definitions(IMGUI_IMPL_OPENGL_DEBUG)
 
 if (WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /Zi /W3 /D_DEBUG /bigobj")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /Zi /WX /D_DEBUG /bigobj")
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++23 -fconcepts -pthread")
 endif (WIN32)

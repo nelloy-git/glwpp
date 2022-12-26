@@ -4,9 +4,9 @@
 
 using namespace glwpp;
 
-MeshIndices::MeshIndices(const std::shared_ptr<Context>& ctx, const unsigned int& mNumFaces, const aiFace* ai_faces) :
+MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFace* ai_faces, const SrcLoc& src_loc) :
     type(Type::UInt),
-    buffer(ctx){
+    buffer(ctx, src_loc.add()){
 
     size_t buffer_size = mNumFaces * 3 * sizeof(*aiFace::mIndices);
     auto data_copy = Value<void>::Alloc(buffer_size);
@@ -23,7 +23,7 @@ MeshIndices::MeshIndices(const std::shared_ptr<Context>& ctx, const unsigned int
         memcpy(data_ptr, face.mIndices, face_size);
         data_ptr += face_size;
     }
-    buffer.setStorage(buffer_size, data_copy, 0);
+    buffer.setStorage(buffer_size, data_copy, 0, src_loc.add());
 }    
     
 MeshIndices::~MeshIndices(){

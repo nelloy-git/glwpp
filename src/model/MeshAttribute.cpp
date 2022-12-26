@@ -7,42 +7,35 @@
 
 using namespace glwpp;
 
-MeshAttribute::MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiVector3D* ai_vector) :
+MeshAttribute::MeshAttribute(Context& ctx,
+                             const unsigned int& mNumVertices,
+                             const aiVector3D* ai_vector,
+                             const SrcLoc& src_loc) :
     type(Type::Float),
     components(3),
     normalized(false),
     stride(sizeof(float) * components),
-    buffer(ctx){
+    buffer(ctx, src_loc){
     auto size = mNumVertices * 3 * sizeof(float);
     auto data_copy = Value<void>::Alloc(size);
     memcpy(data_copy.get(), ai_vector, size);
-    buffer.setStorage(size, data_copy, 0);
+    buffer.setStorage(size, data_copy, 0, src_loc);
 }
 
-MeshAttribute::MeshAttribute(const std::shared_ptr<Context>& ctx, const unsigned int& mNumVertices, const aiColor4D* ai_color) :
+MeshAttribute::MeshAttribute(Context& ctx,
+                             const unsigned int& mNumVertices,
+                             const aiColor4D* ai_color,
+                             const SrcLoc& src_loc) :
     type(Type::Float),
     components(4),
     normalized(false),
     stride(sizeof(float) * components),
-    buffer(ctx){
+    buffer(ctx, src_loc){
     auto size = mNumVertices * 4 * sizeof(float);
     auto data_copy = Value<void>::Alloc(size);
     memcpy(data_copy.get(), ai_color, size);
-    buffer.setStorage(size, data_copy, 0);
+    buffer.setStorage(size, data_copy, 0, src_loc);
 }
 
 MeshAttribute::~MeshAttribute(){
-}
-
-GL::ConstEnum MeshAttribute::TypeToEnum(const Type& type){
-    static const GL::ConstEnum GLfloatType(GL_FLOAT);
-
-    switch (type)
-    {
-    case Type::Float:
-        return GLfloatType;
-    
-    default:
-        throw std::logic_error("Unknown MeshAttribute::Tyoe");
-    }
 }
