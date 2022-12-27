@@ -1,5 +1,5 @@
 #ifdef WIN32
-// #include <vld.h>
+#include <vld.h>
 #endif
 
 // #include "glad/gl.h"
@@ -150,7 +150,7 @@ int main(int argc, char **argv){
     ctx_params.title = "Noname";
 
     auto ctx = std::make_shared<glwpp::Context>(ctx_params);
-    add_imgui(ctx);
+    // add_imgui(ctx);
 
     init_drawer(*ctx);
 
@@ -167,7 +167,9 @@ int main(int argc, char **argv){
     }
 
     bool done = false;
-    while(true){
+    size_t i = 0;
+    while(i < 1000){
+        ++i;
         ctx->run().wait();
         if (!done){
             done = true;

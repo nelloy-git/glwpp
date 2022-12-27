@@ -16,6 +16,10 @@ public:
         _id(id),
         _src_loc(src_loc){
     }
+    EventActionBase(const EventActionBase&) = delete;
+    EventActionBase(EventActionBase&&) = default;
+    virtual ~EventActionBase(){};
+
     virtual const Func& func() const = 0;
 
     const ID& id() const {

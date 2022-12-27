@@ -8,7 +8,7 @@
 #include "utils/FuncWrapper.hpp"
 #include "utils/SrcLoc.hpp"
 
-#include "utils/Event/ActionQueue.hpp"
+#include "utils/Event/ActionList.hpp"
 
 namespace glwpp {
 
