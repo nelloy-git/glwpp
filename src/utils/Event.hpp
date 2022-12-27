@@ -1,169 +1,39 @@
 #pragma once
 
 #include <atomic>
-#include <deque>
-#include <functional>
+#include <concepts>
 #include <memory>
-#include <mutex>
-#include <map>
-#include <optional>
 
 #include "utils/CmdQueue.hpp"
-#include "utils/Export.hpp"
 #include "utils/FuncWrapper.hpp"
-#include "utils/GlobalThreadPool.hpp"
 #include "utils/SrcLoc.hpp"
 
-#ifndef __GLWPP_FUNCTION_NAME__
-    #ifdef WIN32   //WINDOWS
-        #define __GLWPP_FUNCTION_NAME__ __FUNCTION__  
-    #else          //*NIX
-        #define __GLWPP_FUNCTION_NAME__ __func__ 
-    #endif
-#endif
+#include "utils/Event/ActionQueue.hpp"
 
 namespace glwpp {
 
-namespace detail {
-
-template<typename ... Args>
-class EventActionData {
-public:
-    EventActionData(const auto& action, const SrcLoc& src_loc) :
-        func(expand_func<Args...>(action)),
-        src_loc(src_loc){
-    }
-    const std::function<bool(Args...)> func;
-    SrcLoc src_loc;
-};
-
-template<typename ... Args>
-class EventInner {
-public:
-    using ID = uint64_t;
-    using IdMap = std::map<ID, std::shared_ptr<EventActionData<Args...>>>;
-    using BeforeActionCallback = std::function<void(const SrcLoc&, const std::function<bool(Args...)>&, const Args&... args)>;
-
-    void addQueued(const ID& id, const auto& action, const SrcLoc& src_loc){
-        auto data = std::make_shared<EventActionData<Args...>>(action, src_loc);
-        std::lock_guard lg(lock_queued);
-        queued.insert_or_assign(id, data);
-    }
-
-    bool moveToActive(const ID& id){
-        std::lock_guard lg_q(lock_queued);
-        auto iter = queued.find(id);
-        if (iter == queued.end()){
-            return false;
-        }
-        std::lock_guard lg_a(lock_active);
-        active.insert_or_assign(iter->first, iter->second);
-        queued.erase(iter);
-        return true;
-    }
-    
-    bool removeAction(const ID& id){
-        bool queued_found; 
-        {
-            std::lock_guard lg(lock_queued);
-            auto queued_iter = queued.find(id);
-            queued_found = (queued_iter != queued.end());
-            if (queued_found){
-                queued.erase(queued_iter);
-            }
-        }
-
-        bool active_found;
-        {
-            std::lock_guard lg(lock_active);
-            auto active_iter = active.find(id);
-            active_found = (active_iter != active.end());
-            if (active_found){
-                active.erase(active_iter);
-            }
-        }
-        return queued_found || active_found;
-    }
-
-    void emitActions(Args... args){
-        std::lock_guard lg(lock_active);
-        IdMap new_map;
-        for (auto& pair : active){
-            const ID& id = pair.first;
-            const std::function<bool(Args...)>& func = pair.second->func;
-            const SrcLoc& src_loc = pair.second->src_loc;
-
-            bool repeat = false;
-            {
-                std::lock_guard lg_cb(lock_callbacks);
-                if (before_action_callback){
-                    before_action_callback.value()(src_loc, func, args...);
-                }
-            }
-
-            try {
-                repeat = func(args...);
-            } catch (const std::exception& e) {
-                std::cout << "ERROR: " << e.what() << std::endl;
-                std::cout << src_loc.to_string_full().c_str() << std::endl;
-            }
-
-            if (repeat){
-                new_map[pair.first] = pair.second;
-            }
-        }
-        active = new_map;
-    }
-
-    void setBeforeActionCallback(const std::optional<BeforeActionCallback>& callback){
-        std::lock_guard lg(lock_queued);
-        before_action_callback = callback;
-    }
-
-private:
-    std::mutex lock_active;
-    IdMap active;
-
-    std::mutex lock_queued;
-    IdMap queued;
-    
-    std::mutex lock_callbacks;
-    std::optional<BeforeActionCallback> before_action_callback;
-
-};
-
-
-
-} // namespace detail
-
-template<typename ... Args>
+template<typename... Args>
 class Event {
 public:
-    using ID = detail::EventInner<Args...>::ID;
-    using IdMap = detail::EventInner<Args...>::IdMap;
-    using BeforeActionCallback = detail::EventInner<Args...>::BeforeActionCallback;
+    using ActionList = detail::EventActionList<Args...>;
+    using ID = ActionList::ID;
 
-    EXPORT Event(const std::shared_ptr<BS::thread_pool>& emitter_pool);
+    Event(const std::shared_ptr<BS::thread_pool>& emitter_pool);
     Event(const Event&) = delete;
     Event(const Event&&) = delete;
-    ~Event();
+    virtual ~Event();
 
-    EXPORT std::pair<ID, std::future<void>> addActionQueued(const auto& action, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT std::pair<ID, std::future<void>> addActionNow(const auto& action, const SrcLoc& src_loc = SrcLoc{});
+    template<auto F>
+    ID add(const SrcLoc& src_loc = SrcLoc{});
+    ID add(std::predicate<Args...> auto&& action, const SrcLoc& src_loc = SrcLoc{});
+    std::future<bool> remove(const ID& id);
+    std::future<void> emit(const Args&... args);
 
-    EXPORT std::future<bool> delActionQueued(const ID& id);
-    EXPORT std::future<bool> delActionNow(const ID& id);
-
-    EXPORT std::future<void> emitQueued(const Args&... args, const SrcLoc& src_loc = SrcLoc{});
-    EXPORT std::future<void> emitNow(const Args&... args, const SrcLoc& src_loc = SrcLoc{});
-
-    // EXPORT std::future<void> setBeforeEmitStartQueued(const auto& callback);
-    EXPORT void setBeforeActionCallback(const std::optional<BeforeActionCallback>& callback){
-        _inner->setBeforeActionCallback(callback);
-    }
+    template<auto F>
+    std::future<void> emit_convertable(const auto&... args);
 
 private:
-    std::shared_ptr<detail::EventInner<Args...>> _inner;
+    std::shared_ptr<ActionList> _list;
     std::shared_ptr<CmdQueue> _emitter;
     std::atomic<ID> _cur_id;
     ID _getUniqId();
@@ -173,103 +43,69 @@ private:
 
 
 
-template<typename ... Args>
+template<typename... Args>
 inline Event<Args...>::Event(const std::shared_ptr<BS::thread_pool>& emitter_pool) :
-    _inner(new detail::EventInner<Args...>),
+    _list(new ActionList()),
     _emitter(new CmdQueue(emitter_pool)),
     _cur_id(0){
 }
 
-template<typename ... Args>
+template<typename... Args>
 inline Event<Args...>::~Event(){
 }
 
-template<typename ... Args>
-inline std::pair<typename Event<Args...>::ID, std::future<void>>
-Event<Args...>::addActionQueued(const auto& action,
-                                const SrcLoc& src_loc){
-    using Expanded = decltype(expand_func<Args...>(action));
-    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>); //, __PRETTY_FUNCTION__": wrong function signature. Must return bool");
-
+template<typename... Args>
+template<auto F>
+Event<Args...>::ID Event<Args...>::add(const SrcLoc& src_loc){
     auto id = _getUniqId();
-    auto promise = std::make_shared<std::promise<void>>();
-
-    _inner->addQueued(id, action, src_loc);
-    _emitter->push_back([id, promise, inner = _inner](){
-        inner->moveToActive(id);
-        promise->set_value();
+    _emitter->push_back([id, src_loc, list = _list](){
+        list->add<F>(id, src_loc);
     });
-
-    return std::make_pair(id, promise->get_future());
+    return id;
 }
 
-template<typename ... Args>
-inline std::pair<typename Event<Args...>::ID, std::future<void>>
-Event<Args...>::addActionNow(const auto& action,
-                             const SrcLoc& src_loc){
-    using Expanded = decltype(expand_func<Args...>(action));
-    static_assert(std::is_same_v<std::invoke_result_t<Expanded, Args...>, bool>); //, __PRETTY_FUNCTION__ ": wrong function signature. Must return bool");
-
+template<typename... Args>
+Event<Args...>::ID Event<Args...>::add(std::predicate<Args...> auto&& action, const SrcLoc& src_loc){
     auto id = _getUniqId();
-    auto promise = std::make_shared<std::promise<void>>();
-
-    _inner->addQueued(id, action, src_loc);
-    _emitter->push_front([id, promise, inner = _inner](){
-        inner->moveToActive(id);
-        promise->set_value();
+    _emitter->push_back([id, action, src_loc, list = _list](){
+        list->add(id, action, src_loc);
     });
-
-    return std::make_pair(id, promise->get_future());
+    return id;
 }
 
-template<typename ... Args>
-inline std::future<bool>
-Event<Args...>::delActionQueued(const ID& id){
+template<typename... Args>
+std::future<bool> Event<Args...>::remove(const ID& id){
     auto promise = std::make_shared<std::promise<bool>>();
-    _emitter->push_back([id, promise, inner = _inner](){
-        bool found = inner->removeAction(id);
-        promise->set_value(found);
+    _emitter->push_back([id, promise, list = _list](){
+        promise->set_value(list->remove(id));
     });
     return promise->get_future();
 }
 
-template<typename ... Args>
-inline std::future<bool>
-Event<Args...>::delActionNow(const ID& id){
-    auto promise = std::make_shared<std::promise<bool>>();
-    _emitter->push_front([id, promise, inner = _inner](){
-        bool found = inner->removeAction(id);
-        promise->set_value(found);
-    });
-    return promise->get_future();
-}
-
-template<typename ... Args>
-inline std::future<void>
-Event<Args...>::emitQueued(const Args&... args,
-                           const SrcLoc& src_loc){
+template<typename... Args>
+std::future<void> Event<Args...>::emit(const Args&... args){
     auto promise = std::make_shared<std::promise<void>>();
-    _emitter->push_back([promise, inner = _inner, args...](){
-        inner->emitActions(args...);
+    _emitter->push_back([promise, list = _list, args...](){
+        list->emit(args...);
         promise->set_value();
     });
     return promise->get_future();
 }
 
-template<typename ... Args>
-inline std::future<void>
-Event<Args...>::emitNow(const Args&... args,
-                        const SrcLoc& src_loc){
+template<typename... Args>
+template<auto F>
+std::future<void> Event<Args...>::emit_convertable(const auto&... args){
+    static_assert(std::is_invocable_r_v<std::tuple<Args...>, decltype(F), decltype(std::make_tuple(args...))>, "F must be callable with const auto& args and return tuple<Args...>");
+
     auto promise = std::make_shared<std::promise<void>>();
-    _emitter->push_front([promise, inner = _inner, args...](){
-        inner->emitActions(args...);
+    _emitter->push_back([promise, list = _list, args = std::make_tuple(args...)](){
+        std::apply(&ActionList::emit, std::tuple_cat(std::forward_as_tuple(*list), F(args)));
         promise->set_value();
     });
-
     return promise->get_future();
 }
 
-template<typename ... Args>
+template<typename... Args>
 inline Event<Args...>::ID Event<Args...>::_getUniqId(){
     return _cur_id.fetch_add(1);
 }

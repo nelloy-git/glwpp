@@ -26,59 +26,59 @@ Mesh::Mesh(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc) :
 Mesh::~Mesh(){
 }
 
-bool Mesh::bindPosition(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    _bindAttribute(POSITION_INDEX, binding, src_loc);
-    return true;
-}
+// bool Mesh::bindPosition(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     _bindAttribute(POSITION_INDEX, binding, src_loc);
+//     return true;
+// }
 
-bool Mesh::bindNormal(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    if (!normal){return false;}
-    _bindAttribute(NORMAL_INDEX, binding, src_loc);
-    return true;
-}
+// bool Mesh::bindNormal(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     if (!normal){return false;}
+//     _bindAttribute(NORMAL_INDEX, binding, src_loc);
+//     return true;
+// }
 
-bool Mesh::bindTangent(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    if (!tangent){return false;}
-    _bindAttribute(TANGENT_INDEX, binding, src_loc);
-    return true;
-}
+// bool Mesh::bindTangent(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     if (!tangent){return false;}
+//     _bindAttribute(TANGENT_INDEX, binding, src_loc);
+//     return true;
+// }
 
-bool Mesh::bindBitangent(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    if (!bitangent){return false;}
-    _bindAttribute(BITANGENT_INDEX, binding, src_loc);
-    return true;
-}
+// bool Mesh::bindBitangent(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     if (!bitangent){return false;}
+//     _bindAttribute(BITANGENT_INDEX, binding, src_loc);
+//     return true;
+// }
 
-bool Mesh::bindTextureCoord(const size_t& i, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    if (!texture_coord[i]){return false;}
-    _bindAttribute(TEXTURE_INDEX[i], binding, src_loc);
-    return true;
-}
+// bool Mesh::bindTextureCoord(const size_t& i, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     if (!texture_coord[i]){return false;}
+//     _bindAttribute(TEXTURE_INDEX[i], binding, src_loc);
+//     return true;
+// }
 
-bool Mesh::bindColor(const size_t& i, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    if (!color[i]){return false;}
-    _bindAttribute(COLOR_INDEX[i], binding, src_loc);
-    return true;
-}
+// bool Mesh::bindColor(const size_t& i, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+//     if (!color[i]){return false;}
+//     _bindAttribute(COLOR_INDEX[i], binding, src_loc);
+//     return true;
+// }
 
-const Value<const Mesh::Bindings> Mesh::getBindings(){
+const Value<const Mesh::Bindings> Mesh::getBindings() const {
     return _bindings;
 }
 
-void Mesh::setBindings(const Value<const Bindings>& bindings, const SrcLoc& src_loc){
-    constexpr auto F = [](Context& ctx, GL::VertexArray& vao, Bindings& dst_bindings, const Bindings& bindings, const SrcLoc& src_loc){
-        for (unsigned int i = 0; i < bindings.size(); ++i){
-            dst_bindings[i] = bindings[i];
-            if (!bindings[i].has_value()){
-                vao.disableAttrib<IsGlThread::True>(i, src_loc);
-                return;
-            }
-            vao.enableAttrib<IsGlThread::True>(i, src_loc);
-            vao.setAttribBinding<IsGlThread::True>(i, bindings[i].value(), src_loc);
-        }
-    };
-    call<F, IsGlThread::Unknown>(vao, _bindings, bindings, src_loc);
-}
+// void Mesh::setBindings(const Value<const Bindings>& bindings, const SrcLoc& src_loc){
+//     constexpr auto F = [](Context& ctx, GL::VertexArray& vao, Bindings& dst_bindings, const Bindings& bindings, const SrcLoc& src_loc){
+//         for (unsigned int i = 0; i < bindings.size(); ++i){
+//             dst_bindings[i] = bindings[i];
+//             if (!bindings[i].has_value()){
+//                 vao.disableAttrib<IsGlThread::True>(i, src_loc);
+//                 return;
+//             }
+//             vao.enableAttrib<IsGlThread::True>(i, src_loc);
+//             vao.setAttribBinding<IsGlThread::True>(i, bindings[i].value(), src_loc);
+//         }
+//     };
+//     call<F, IsGlThread::Unknown>(vao, _bindings, bindings, src_loc);
+// }
 
 void Mesh::_initOptionalBuffers(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc){
     if (ai_mesh.HasNormals()){
@@ -114,6 +114,7 @@ void Mesh::_linkAllAttributes(const SrcLoc& src_loc){
     for (size_t i = 0; i < color.size(); ++i){
         if (color[i]){_linkAttribute(COLOR_INDEX[i], *color[i], src_loc);}
     }
+    
 }
 
 void Mesh::_linkAttribute(const GLuint& index, const MeshAttribute& attribute, const SrcLoc& src_loc){
@@ -122,14 +123,21 @@ void Mesh::_linkAttribute(const GLuint& index, const MeshAttribute& attribute, c
 }
 
 void Mesh::_bindAttribute(const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    constexpr auto F = [](Context& ctx, GL::VertexArray& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-        bindings[index] = binding;
-        if (!binding.has_value()){
-            vao.disableAttrib<IsGlThread::True>(index, src_loc);
-            return;
-        }
-        vao.enableAttrib<IsGlThread::True>(index, src_loc);
-        vao.setAttribBinding<IsGlThread::True>(index, binding.value(), src_loc);
-    };
-    call<F, IsGlThread::Unknown>(vao, _bindings, index, binding, src_loc);
+    call<&_bindAttributeGL, IsGlThread::Unknown>(vao, _bindings, index, binding, src_loc);
+}
+
+void Mesh::_setBindingsGL(Context& ctx, GL::VertexArray& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc){
+    for (unsigned int i = 0; i < trg_bindings.size(); ++i){
+        _bindAttributeGL(ctx, vao, cur_bindings, i, trg_bindings[i], src_loc);
+    }
+}
+
+void Mesh::_bindAttributeGL(Context& ctx, GL::VertexArray& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+    bindings[index] = binding;
+    if (!binding.has_value()){
+        vao.disableAttrib<IsGlThread::True>(index, src_loc);
+        return;
+    }
+    vao.enableAttrib<IsGlThread::True>(index, src_loc);
+    vao.setAttribBinding<IsGlThread::True>(index, binding.value(), src_loc);
 }

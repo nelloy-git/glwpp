@@ -17,7 +17,7 @@ public:
 
     std::optional<std::string> loading_error;
 
-    std::vector<std::unique_ptr<Mesh>> meshes;
+    std::vector<Mesh> meshes;
 
 private:
     std::optional<std::string> _loadMeshes(Context& ctx, const aiScene& ai_scene, const SrcLoc& src_loc);

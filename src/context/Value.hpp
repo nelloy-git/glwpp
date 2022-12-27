@@ -167,11 +167,17 @@ class Value<void> {
     template<typename U>
     friend class Value;
 
+    struct with_raw_ptr {};
+    Value(Context& ctx, const with_raw_ptr&, void* ptr) :
+        _wctx(ctx.weak_from_this()),
+        _ptr(ptr){
+    }
+
 public:
     using type = void;
 
-    static Value<void> Alloc(const size_t& bytes){
-        return Value<void>(malloc(bytes));
+    static Value<void> Alloc(Context& ctx, const size_t& bytes){
+        return Value<void>(ctx, with_raw_ptr{}, malloc(bytes));
     }
 
     template<typename V>
@@ -203,10 +209,6 @@ public:
 private:
     std::weak_ptr<Context> _wctx;
     std::shared_ptr<void> _ptr;
-
-    Value(void* ptr) :
-        _ptr(ptr){
-    }
 };
 
 } // namespace glwpp

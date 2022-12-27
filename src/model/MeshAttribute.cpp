@@ -17,7 +17,7 @@ MeshAttribute::MeshAttribute(Context& ctx,
     stride(sizeof(float) * components),
     buffer(ctx, src_loc){
     auto size = mNumVertices * 3 * sizeof(float);
-    auto data_copy = Value<void>::Alloc(size);
+    auto data_copy = Value<void>::Alloc(ctx, size);
     memcpy(data_copy.get(), ai_vector, size);
     buffer.setStorage(size, data_copy, 0, src_loc);
 }
@@ -32,7 +32,7 @@ MeshAttribute::MeshAttribute(Context& ctx,
     stride(sizeof(float) * components),
     buffer(ctx, src_loc){
     auto size = mNumVertices * 4 * sizeof(float);
-    auto data_copy = Value<void>::Alloc(size);
+    auto data_copy = Value<void>::Alloc(ctx, size);
     memcpy(data_copy.get(), ai_color, size);
     buffer.setStorage(size, data_copy, 0, src_loc);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <typeinfo>
 #include <type_traits>
@@ -26,6 +27,8 @@ class Context : public std::enable_shared_from_this<Context> {
     std::thread::id _gl_thread_id;
 
 public:
+    using ms = std::chrono::milliseconds;
+
     struct Parameters {
         std::string title;
         int width;
@@ -33,19 +36,16 @@ public:
         int fps;
     };
 
-    EXPORT Context(const Parameters& params);
+    EXPORT Context(const Parameters& params, const SrcLoc& src_loc = SrcLoc{});
     virtual ~Context();
 
     GLapi gl;
-
-    EXPORT const std::shared_ptr<GLFWwindow>& getGlfw();
+    Event<Context&, const ms&> on_run_gl;
+    Event<Context&, const ms&> after_run_any;
 
     EXPORT std::future<void> run();
+    EXPORT const std::shared_ptr<GLFWwindow>& getGlfw();
     EXPORT const std::thread::id& getGlThreadId() const;
-
-    using ms = std::chrono::milliseconds;
-    EXPORT Event<Context*, const ms&>& getOnStartEvent();
-    EXPORT Event<Context*, const ms&>& getOnRunEvent();
 
 protected:
     
@@ -59,10 +59,6 @@ private:
     std::chrono::steady_clock::time_point _init_time;
     std::chrono::steady_clock::time_point _last_start_time;
     std::chrono::steady_clock::time_point _last_finish_time;
-
-    Event<Context*, const ms&> _on_start_gl;
-    Event<Context*, const ms&> _on_run_gl;
-    Event<Context*, const ms&> _on_finish_gl;
 
     void _initGl(const Parameters& params);
 };

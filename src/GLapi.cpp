@@ -1828,6 +1828,10 @@ void GLapi::ScissorIndexedv(GLuint index, const GLint* v, const SrcLoc& src_loc)
     return _call<&GladGLContext::ScissorIndexedv>(src_loc, "ScissorIndexedv", index, v);
 }
 
+void GLapi::ShaderSource(GLuint shader, GLsizei count, const GLchar *const* string, const GLint * length, const SrcLoc& src_loc) const {
+    return _call<&GladGLContext::ShaderSource>(src_loc, "ShaderSource", shader, count, string, length);
+}
+
 void GLapi::ShaderBinary(GLsizei count, const GLuint* shaders, GLenum binaryFormat, const void* binary, GLsizei length, const SrcLoc& src_loc) const {
     return _call<&GladGLContext::ShaderBinary>(src_loc, "ShaderBinary", count, shaders, binaryFormat, binary, length);
 }

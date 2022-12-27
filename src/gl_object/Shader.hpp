@@ -1,96 +1,81 @@
 #pragma once
 
-#include "gl_object/Object.hpp"
+#include "gl_object/Handler.hpp"
 
 namespace glwpp::GL {
 
-namespace detail {
-
-class ShaderBase : public ObjectRef {
+class Shader : public Handler {
 public:
+    Shader(Valuable<Context&> auto&& ctx,
+           Valuable<const GLenum&> auto&& type,
+           Valuable<const SrcLoc&> auto&& src_loc) : 
+        Handler(GetValuable(ctx), new GLuint(0), &Handler::DELETER<_free>, GetValuable(src_loc).add()){
+        call<[](Context& ctx, const GLenum& type, GLuint& dst, const SrcLoc& src_loc){
+            dst = ctx.gl.CreateShader(type, src_loc);
+        }, IsGlThread::Unknown>(type, data, GetValuable(src_loc).add());
+    }
+    virtual ~Shader(){}
+
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT void source(const ConstString& code){
-        return _addCallCustom<is_gl_thread>([](Context& ctx, const ConstUint& id, const ConstString& code){
-            auto c_str = code->c_str();
-            int len = static_cast<int>(code->size());
-            cts.gl.ShaderSource(id, 1, &c_str, &len);
-            gl.debug(src_loc);
-        }, id(), code);
+    void source(Valuable<const std::string&> auto&& code,
+                Valuable<const SrcLoc&> auto&& src_loc){
+        return call<[](Context& ctx, const GLuint id, const std::string& code, const SrcLoc& src_loc){
+            auto c_str = code.c_str();
+            int len = static_cast<int>(code.size());
+            ctx.gl.ShaderSource(id, 1, &c_str, &len, src_loc);
+        }, is_gl_thread>(id(), code, GetValuable(src_loc).add());
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT void compile(){
-       return _callGL<&GLapi::CompileShader>(id());
+    void compile(Valuable<const SrcLoc&> auto&& src_loc){
+       return callGLapi<&GLapi::CompileShader, is_gl_thread>(id(), src_loc);
     }
 
 
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT Enum getType(){
-        static const ConstEnum pname(GL_SHADER_TYPE);
-        return _getParamiAs<Enum::type, is_gl_thread>(pname);
+    Value<std::optional<GLenum>> getType(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLenum, GL_SHADER_TYPE, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT Boolean isCompiled(){
-        static const ConstEnum pname(GL_COMPILE_STATUS);
-        return _getParamiAs<Boolean::type, is_gl_thread>(pname);
+    Value<std::optional<GLboolean>> isCompiled(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLboolean, GL_COMPILE_STATUS, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT Int getSourceLength(){
-        static const ConstEnum pname(GL_SHADER_SOURCE_LENGTH);
-        return _getParamiAs<Int::type, is_gl_thread>(pname);
+    Value<std::optional<GLint>> getSourceLength(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLint, GL_SHADER_SOURCE_LENGTH, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    EXPORT String getInfoLog(){
-        return _callGLCustom([](Context& ctx, const ConstUint& id){
+    Value<std::optional<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
+        return call<[](Context& ctx, const GLuint id){
             int len;
             std::string dst;
             ctx.gl.GetShaderiv(id, GL_INFO_LOG_LENGTH, &len);
             dst.resize(len);
-            ctx.gl.GetShaderInfoLog(*id, len, &len, dst.data());
+            ctx.gl.GetShaderInfoLog(id, len, &len, dst.data());
             return dst;
-        }, id());
+        }, is_gl_thread>(id());
     }
 
 
-
-    EXPORT virtual ~ShaderBase(){
-        if (auto ctx = lockCtx()){
-            _addCallGl<&GLapi::DeleteShader>(id());
-        }
-    }
 
 protected:
-    ShaderBase(Context& ctx, const ConstEnum& type) :
-        ObjectRef(ctx, ctx->addCallCustom([](Context& ctx, const ConstEnum& type){
-            return ctx.gl.CreateShader(type);
-        }, type)){
-    }
-    
-    template<typename T, IsGlThread is_gl_thread>
-    inline T _getParamiAs(const ConstEnum& pname){
-        Int dst;
-        _addCallGl<&GLapi::GetShaderiv, is_gl_thread>(id(), pname, dst);
-        return dst.reinterpret<T>();
+    static void _free(Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
+        ctx.gl.DeleteShader(*id_ptr, src_loc);
     }
 
-};
-
-} // namespace detail
-
-class Shader : public detail::ShaderBase, public SharedObject<Shader> {
-public:
-    EXPORT static std::shared_ptr<Shader> New(Context& ctx, const ConstEnum& type){
-        return std::shared_ptr<Shader>(new Shader(ctx, type));
+    template<typename T, GLenum Pname, IsGlThread is_gl_thread>
+    inline auto _getParamiAs(Valuable<const SrcLoc&> auto&& src_loc){
+        return call<[](Context& ctx, const GLuint& id, const SrcLoc& src_loc){
+            GLint dst;
+            ctx.gl.GetShaderiv(id, Pname, &dst, src_loc);
+            return static_cast<T>(dst);
+        }, is_gl_thread>(id(), src_loc);
     }
 
-protected:
-    Shader(Context& ctx, const ConstEnum& type) : 
-        ShaderBase(ctx, type){
-    }
 };
 
 } // namespace glwpp::GL

@@ -9,7 +9,7 @@ MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFa
     buffer(ctx, src_loc.add()){
 
     size_t buffer_size = mNumFaces * 3 * sizeof(*aiFace::mIndices);
-    auto data_copy = Value<void>::Alloc(buffer_size);
+    auto data_copy = Value<void>::Alloc(ctx, buffer_size);
 
     char* data_ptr = static_cast<char*>(data_copy.get());
     for (size_t i = 0; i < mNumFaces; ++i){

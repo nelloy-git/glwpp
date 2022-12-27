@@ -76,18 +76,15 @@ std::atomic<unsigned int>& Context::_glfwWindowsCounter(){
     return counter;
 }
 
-Context::Context(const Parameters& params) :
+Context::Context(const Parameters& params, const SrcLoc& src_loc) :
     _gl_thread(new BS::thread_pool(1)),
+
+    on_run_gl(_gl_thread),
+    after_run_any(GlobalThreadPool::get()),
 
     _init_time(std::chrono::steady_clock::now()),
     _last_start_time(std::chrono::steady_clock::now()),
-    _last_finish_time(std::chrono::steady_clock::now()),
-
-    _on_start_gl(_gl_thread),
-    _on_run_gl(_gl_thread),
-    _on_finish_gl(_gl_thread){
-        
-    std::cout << "Ctor thread: " << std::this_thread::get_id() << std::endl;
+    _last_finish_time(std::chrono::steady_clock::now()){
 
     _gl_thread->submit([this, &params](){
         try {
@@ -97,19 +94,15 @@ Context::Context(const Parameters& params) :
         }
     }).wait();
 
-    _on_start_gl.addActionQueued([window = _window](Context* ctx){
+    on_run_gl.add<[](Context& ctx, const ms&){
         glfwPollEvents();
-        glfwSwapBuffers(window.get());
-        ctx->gl.Clear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(ctx._window.get());
+        ctx.gl.Clear(GL_COLOR_BUFFER_BIT);
         return true;
-    });  
+    }>(src_loc);
 }
 
 Context::~Context(){
-}
-
-const std::shared_ptr<GLFWwindow>& Context::getGlfw(){
-    return _window;
 }
 
 std::future<void> Context::run(){
@@ -117,21 +110,24 @@ std::future<void> Context::run(){
     auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(now - _last_start_time);
     _last_start_time = now;
 
-    _on_start_gl.emitQueued(this, dt);
-    _on_run_gl.emitQueued(this, dt);
-    return _on_finish_gl.emitQueued(this, dt);
+    on_run_gl.add([](Context& ctx, const ms& dt){
+        ctx.after_run_any.emit_convertable<[](const std::tuple<Context*, const ms>& input){
+            return std::forward_as_tuple<Context&, const Context::ms&>(*std::get<0>(input), std::get<1>(input));
+        }>(&ctx, dt);
+        return false;
+    });
+
+    return on_run_gl.emit_convertable<[](const std::tuple<Context*, const ms>& input){
+        return std::forward_as_tuple<Context&, const Context::ms&>(*std::get<0>(input), std::get<1>(input));
+    }>(this, dt);
+}
+
+const std::shared_ptr<GLFWwindow>& Context::getGlfw(){
+    return _window;
 }
 
 const std::thread::id& Context::getGlThreadId() const {
     return _gl_thread_id;
-}
-
-Event<Context*, const Context::ms&>& Context::getOnStartEvent(){
-    return _on_start_gl;
-}
-
-Event<Context*, const Context::ms&>& Context::getOnRunEvent(){
-    return _on_run_gl;
 }
 
 void Context::_initGl(const Parameters& params){

@@ -20,6 +20,9 @@ constexpr bool IsValuable(){
     } else {
         if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<T>>, Value>::value){
             using R = decltype(std::declval<T>().value());
+            if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<R>>, std::optional>::value){
+                return std::is_convertible_v<R::value_type, Req>;
+            }
             return std::is_convertible_v<R, Req>;
         } else {
             return false;
@@ -34,7 +37,15 @@ static inline decltype(auto) GetValuable(auto&& val){
     using T = std::remove_const_t<std::remove_reference_t<decltype(val)>>;
 
     if constexpr (is_instance<T, Value>::value){
-        return val.value();
+        using R = std::remove_const_t<std::remove_reference_t<decltype(std::declval<T>().value())>>;
+        if constexpr (is_instance<R, std::optional>::value){
+            if (!val.value().has_value()){
+                throw std::runtime_error("empty optional");
+            }
+            return val.value().value();
+        } else {
+            return val.value();
+        }
     } else {
         return std::forward<decltype(val)>(val);
     }
@@ -122,7 +133,7 @@ auto CallOptimizer::_callDirect(auto&&... args) const {
     if constexpr (std::is_same_v<R, void>){
         F(*_p_ctx, GetValuable(std::forward<decltype(args)>(args))...);
     } else {
-        return Value(*_p_ctx, F(*_p_ctx, GetValuable(std::forward<decltype(args)>(args))...));
+        return Value<std::optional<R>>(*_p_ctx, F(*_p_ctx, GetValuable(std::forward<decltype(args)>(args))...));
     }
 }
 
@@ -141,17 +152,17 @@ auto CallOptimizer::_callWithRunEvent(Context& ctx, auto&&... args) const {
 
     using R = std::invoke_result_t<decltype(F), Context&, decltype(GetValuable(args))...>;
     if constexpr (std::is_same_v<R, void>){
-        ctx.getOnRunEvent().addActionQueued([args...](Context* ctx, const Context::ms&){
-            F(*ctx, args.value()...);
+        ctx.on_run_gl.add([args...](Context& ctx, const Context::ms&){
+            F(ctx, GetValuable(args)...);
             return false;
         });
     } else {
-        Value<std::remove_const_t<R>> result;
-        ctx.getOnRunEvent().addActionQueued([result, args...](Context* ctx, const Context::ms&){
-            *result = F(*ctx, args.value()...);
+        Value<std::optional<R>> result(ctx, std::nullopt);
+        ctx.on_run_gl.add([result, args...](Context& ctx, const Context::ms&){
+            *result = F(ctx, GetValuable(args)...);
             return false;
         });
-        return Value<R>(result);
+        return result;
     }
 }
 

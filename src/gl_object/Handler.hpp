@@ -13,8 +13,8 @@ public:
                 D(ctx, id_ptr, src_loc);
                 delete id_ptr;
             };
-            ctx->getOnRunEvent().addActionQueued([id_ptr, src_loc](Context *ctx, const Context::ms&){
-                F(*ctx, id_ptr, src_loc);
+            ctx->on_run_gl.add([id_ptr, src_loc](Context& ctx, const Context::ms&){
+                F(ctx, id_ptr, src_loc);
                 return false;
             });
         } else {
