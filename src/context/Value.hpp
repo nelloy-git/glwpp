@@ -57,15 +57,31 @@ public:
         _ptr(std::make_shared<T>(value)){
     }
 
+    Value(Context& ctx, T&& value) :
+        _wctx(ctx.weak_from_this()),
+        _ptr(std::make_shared<T>(std::move(value))){
+    }
+
     template<typename V>
     Value(const Value<V>& other) :
         _wctx(other._wctx),
         _ptr(other._ptr){
     }
 
+    template<typename V>
+    Value(Value<V>&& other) :
+        _wctx(std::move(other._wctx)),
+        _ptr(std::move(other._ptr)){
+    }
+
     Value(Context& ctx, const Value<T>& other) :
         _wctx(ctx.weak_from_this()),
         _ptr(other._ptr){
+    }
+
+    Value(Context& ctx, Value<T>&& other) :
+        _wctx(ctx.weak_from_this()),
+        _ptr(std::move(other._ptr)){
     }
 
     template<typename V>

@@ -12,7 +12,7 @@ namespace glwpp {
 class MeshAttribute {
 public:
     enum class Type : GLenum {
-        Float = GL_FLOAT
+        Float = GLapi::GL_FLOAT
     };
 
     MeshAttribute(Context& ctx,

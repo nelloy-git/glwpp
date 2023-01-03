@@ -15,8 +15,8 @@ public:
                  Valuable<const SrcLoc&> auto&& src_loc) :
         ObjectRef(ctx, nullptr, &ObjectRef::SIMPLE_DELETER, src_loc),
         _buffer(ctx, src_loc){
-        static const GLbitfield storage_flags(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
-        static const GLenum map_flag(GL_READ_WRITE);
+        static const GLbitfield storage_flags(GLapi::GL_MAP_READ_BIT | GLapi::GL_MAP_WRITE_BIT | GLapi::GL_MAP_PERSISTENT_BIT | GLapi::GL_MAP_COHERENT_BIT);
+        static const GLenum map_flag(GLapi::GL_READ_WRITE);
 
         // _buffer.setStorage(sizeof(T), initial, storage_flags, src_loc);
         // addCallGl<[](Context&, Buffer& buffer, void*& dst, const SrcLoc& src_loc){dst = *buffer.map<IsGlThread::True>(map_flag, src_loc);}>(_buffer, data, src_loc);

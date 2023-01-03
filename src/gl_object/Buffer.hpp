@@ -33,7 +33,7 @@ public:
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void setStorage(Valuable<const GLsizeiptr&> auto&& size,
+    Value<std::future<void>> setStorage(Valuable<const GLsizeiptr&> auto&& size,
                     Valuable<const void*> auto&& data,
                     Valuable<const GLbitfield&> auto&& flags,
                     Valuable<const SrcLoc&> auto&& src_loc){
@@ -135,62 +135,62 @@ public:
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLenum> getMapAccess(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_ACCESS);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_ACCESS);
         return _getParamiAs<GLenum, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLbitfield> getMapRangeAccess(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_ACCESS_FLAGS);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_ACCESS_FLAGS);
         return _getParamiAs<GLbitfield, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLboolean> isImmutableStorage(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_IMMUTABLE_STORAGE);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_IMMUTABLE_STORAGE);
         return _getParamiAs<GLboolean, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLboolean> isMapped(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_MAPPED);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_MAPPED);
         return _getParamiAs<GLboolean, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLint> getSize(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_SIZE);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_SIZE);
         return _getParamiAs<GLint, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLbitfield> getStorageFlags(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_STORAGE_FLAGS);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_STORAGE_FLAGS);
         return _getParamiAs<GLbitfield, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLenum> getUsage(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_USAGE);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_USAGE);
         return _getParamiAs<GLenum, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
 
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLint64> getMapLength(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_MAP_LENGTH); 
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_MAP_LENGTH); 
         return _getParami64As<GLint64, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<GLint64> getMapOffset(Valuable<const SrcLoc&> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_BUFFER_MAP_OFFSET);
+        static const Value<const GLenum> pname(GLapi::GL_BUFFER_MAP_OFFSET);
         return _getParami64As<GLint64, is_gl_thread>(pname, GetValuable(src_loc).add());
     }
 
 private:
-    static void _free(Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
-        ctx.gl.DeleteBuffers(1, id_ptr, src_loc);
+    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+        ctx.gl.DeleteBuffers(1, &id, src_loc);
     }
 
     template<typename T, IsGlThread is_gl_thread>

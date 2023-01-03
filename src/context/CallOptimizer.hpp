@@ -1,15 +1,9 @@
 #pragma once
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 #include "Context.hpp"
 #include "context/Value.hpp"
-
-#define WRAP_GL_TYPE(name, new_name) \
-typedef Value<name> ##new_name; \
-typedef Value<const name> Const##new_name; \
-typedef Value<name[]>  Arr##new_name; \
-typedef Value<const name[]> ConstArr##new_name
 
 namespace glwpp {
     
@@ -20,7 +14,7 @@ constexpr bool IsValuable(){
     } else {
         if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<T>>, Value>::value){
             using R = decltype(std::declval<T>().value());
-            if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<R>>, std::optional>::value){
+            if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<R>>, std::future>::value){
                 return std::is_convertible_v<R::value_type, Req>;
             }
             return std::is_convertible_v<R, Req>;
@@ -38,11 +32,11 @@ static inline decltype(auto) GetValuable(auto&& val){
 
     if constexpr (is_instance<T, Value>::value){
         using R = std::remove_const_t<std::remove_reference_t<decltype(std::declval<T>().value())>>;
-        if constexpr (is_instance<R, std::optional>::value){
-            if (!val.value().has_value()){
+        if constexpr (is_instance<R, std::future>::value){
+            if (!val.value().wait_for(std::chrono::seconds(0))){
                 throw std::runtime_error("empty optional");
             }
-            return val.value().value();
+            return val.value().get();
         } else {
             return val.value();
         }
@@ -60,6 +54,9 @@ public:
 
     template<auto F, IsGlThread is_gl_thread>
     auto call(auto&&... args) const;
+
+    template<auto F, IsGlThread is_gl_thread>
+    auto callWithoutCtx(auto&&... args) const;
     
     template<auto GLapi::*M, IsGlThread is_gl_thread>
     auto callGLapi(auto&&... args) const;
@@ -124,17 +121,30 @@ auto CallOptimizer::callGLapi(auto&&... args) const {
     static constexpr auto F = [](Context& ctx, auto&&... args){
         return (ctx.gl.*M)(GetValuable(std::forward<decltype(args)>(args))...);
     };
-    call<F, is_gl_thread>(std::forward<decltype(args)>(args)...);
+    return call<F, is_gl_thread>(std::forward<decltype(args)>(args)...);
+}
+
+template<auto F, IsGlThread is_gl_thread>
+auto CallOptimizer::callWithoutCtx(auto&&... args) const {
+    static constexpr auto Wrapped = [](Context& ctx, auto&&... args){
+        return F(GetValuable(std::forward<decltype(args)>(args))...);
+    };
+    return call<Wrapped, is_gl_thread>(std::forward<decltype(args)>(args)...);
 }
 
 template<auto F>
 auto CallOptimizer::_callDirect(auto&&... args) const {
     using R = std::invoke_result_t<decltype(F), Context&, decltype(GetValuable(args))...>;
+
+    std::promise<R> promise;
     if constexpr (std::is_same_v<R, void>){
-        F(*_p_ctx, GetValuable(std::forward<decltype(args)>(args))...);
+        F(*_p_ctx, GetValuable(args)...);
+        promise.set_value();
     } else {
-        return Value<std::optional<R>>(*_p_ctx, F(*_p_ctx, GetValuable(std::forward<decltype(args)>(args))...));
+        promise.set_value(F(*_p_ctx, GetValuable(args)...));
     }
+
+    return Value(*_p_ctx, std::move(promise.get_future()));
 }
 
 template<auto F>
@@ -151,19 +161,19 @@ auto CallOptimizer::_callWithRunEvent(Context& ctx, auto&&... args) const {
     static_assert(_IsValues<decltype(args)...>(), "all arguments must be glwpp::Value<T>");
 
     using R = std::invoke_result_t<decltype(F), Context&, decltype(GetValuable(args))...>;
-    if constexpr (std::is_same_v<R, void>){
-        ctx.on_run_gl.add([args...](Context& ctx, const Context::ms&){
-            F(ctx, GetValuable(args)...);
+    auto promise = std::make_shared<std::promise<R>>();
+    ctx.event_on_run_gl.add(Context::PRIORITY_DEFAULT,
+        [promise, args...](Context& ctx, const Context::ms&){
+            if constexpr (std::is_same_v<R, void>){
+                F(ctx, GetValuable(args)...);
+                promise->set_value();
+            } else {
+                promise->set_value(F(ctx, GetValuable(args)...));
+            }
             return false;
-        });
-    } else {
-        Value<std::optional<R>> result(ctx, std::nullopt);
-        ctx.on_run_gl.add([result, args...](Context& ctx, const Context::ms&){
-            *result = F(ctx, GetValuable(args)...);
-            return false;
-        });
-        return result;
-    }
+        }
+    );
+    return Value(ctx, std::move(promise->get_future()));
 }
 
 } // namespace glwpp

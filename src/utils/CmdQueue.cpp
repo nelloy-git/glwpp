@@ -13,19 +13,37 @@ CmdQueue::~CmdQueue(){
     _is_executing->wait(true);
 }
 
+void CmdQueue::lock(){
+    _lock->lock();
+}
+
+void CmdQueue::unlock(){
+    _lock->unlock();
+}
+
 size_t CmdQueue::size() const {
     std::lock_guard lg(*_lock);
     return _queue->size();
 }
 
-void CmdQueue::push_back(const std::function<void()>& cmd){
+void CmdQueue::_push_back_with_lock(const std::function<void()>& cmd){
     std::lock_guard lg(*_lock);
     _queue->push_back(cmd);
     _update();
 }
 
-void CmdQueue::push_front(const std::function<void()>& cmd){
+void CmdQueue::_push_back_no_lock(const std::function<void()>& cmd){
+    _queue->push_back(cmd);
+    _update();
+}
+
+void CmdQueue::_push_front_with_lock(const std::function<void()>& cmd){
     std::lock_guard lg(*_lock);
+    _queue->push_front(cmd);
+    _update();
+}
+
+void CmdQueue::_push_front_no_lock(const std::function<void()>& cmd){
     _queue->push_front(cmd);
     _update();
 }

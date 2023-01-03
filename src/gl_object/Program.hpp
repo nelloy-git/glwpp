@@ -16,7 +16,7 @@ public:
     virtual ~Program(){}
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void attach(Valuable<const Shader&> auto&& shader,
+    Value<std::future<void>> attach(Valuable<const Shader&> auto&& shader,
                 Valuable<const SrcLoc&> auto&& src_loc){
         return call<[](Context& ctx, const GLuint& id, const Shader& shader, const SrcLoc& src_loc){
             ctx.gl.AttachShader(id, shader.id().value(), src_loc);
@@ -24,17 +24,17 @@ public:
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void link(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<void>> link(Valuable<const SrcLoc&> auto&& src_loc){
         return callGLapi<&GLapi::LinkProgram, is_gl_thread>(id(), GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void validate(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<void>> validate(Valuable<const SrcLoc&> auto&& src_loc){
         return callGLapi<&GLapi::ValidateProgram, is_gl_thread>(id(), GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void use(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<void>> use(Valuable<const SrcLoc&> auto&& src_loc){
         return callGLapi<&GLapi::UseProgram, is_gl_thread>(id(), GetValuable(src_loc).add());
     }
 
@@ -61,62 +61,70 @@ public:
     //     }, id(), name);
     // }
     
-    // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    // Uint getUniformBlockIndex(const ConstString& name){
-    //     return _addCallCustom<is_gl_thread>([](Context& ctx, const ConstUint& id, const ConstString& name){
-    //         return ctx.gl.GetUniformBlockIndex(id, name->c_str());
-    //     }, id(), name);
-    // }
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
+    Value<std::future<GLuint>> getUniformBlockIndex(Valuable<const std::string&> auto&& name,
+                                                    Valuable<const SrcLoc&> auto&& src_loc){
+        return call<[](Context& ctx, const GLuint& program, const std::string& name){
+            return ctx.gl.GetUniformBlockIndex(program, name.c_str(), src_loc);
+        }, is_gl_thread>(id(), name, src_loc);
+    }
+    
+    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
+    Value<std::future<void>> setUniformBlockBinding(Valuable<const GLuint&> auto&& block_index,
+                                                    Valuable<const GLuint&> auto&& block_binding,
+                                                    Valuable<const SrcLoc&> auto&& src_loc){
+        return callGLapi<&GLapi::UniformBlockBinding, is_gl_thread>(id(), block_index, block_binding, GetValuable(src_loc).add());
+    }
 
 
 
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<GLboolean>> isLinked(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLboolean, GL_LINK_STATUS, is_gl_thread>(GetValuable(src_loc).add());
+    Value<std::future<GLboolean>> isLinked(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLboolean, GLapi::GL_LINK_STATUS, is_gl_thread>(GetValuable(src_loc).add());
     }
 
     // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     // Boolean isValidated(){
-    //     static const ConstEnum pname(GL_VALIDATE_STATUS);
+    //     static const ConstEnum pname(GLapi::GL_VALIDATE_STATUS);
     //     return _getParamiAs<Boolean::type, is_gl_thread>(pname);
     // }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<GLint>> getAttachedShadersCount(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLint, GL_ATTACHED_SHADERS, is_gl_thread>(GetValuable(src_loc).add());
+    Value<std::future<GLint>> getAttachedShadersCount(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLint, GLapi::GL_ATTACHED_SHADERS, is_gl_thread>(GetValuable(src_loc).add());
     }
 
     // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     // Int getActiveAttributesCount(){
-    //     static const ConstEnum pname(GL_ACTIVE_ATTRIBUTES);
+    //     static const ConstEnum pname(GLapi::GL_ACTIVE_ATTRIBUTES);
     //     return _getParamiAs<Int::type, is_gl_thread>(pname);
     // }
 
     // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     // Int getActiveAttributeMaxNameLength(){
-    //     static const ConstEnum pname(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
+    //     static const ConstEnum pname(GLapi::GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
     //     return _getParamiAs<Int::type, is_gl_thread>(pname);
     // }
 
     // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     // Int getActiveUniformsCount(){
-    //     static const ConstEnum pname(GL_ACTIVE_UNIFORMS);
+    //     static const ConstEnum pname(GLapi::GL_ACTIVE_UNIFORMS);
     //     return _getParamiAs<Int::type, is_gl_thread>(pname);
     // }
 
     // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     // Int getActiveUniformMaxNameLength(){
-    //     static const ConstEnum pname(GL_ACTIVE_UNIFORM_MAX_LENGTH);
+    //     static const ConstEnum pname(GLapi::GL_ACTIVE_UNIFORM_MAX_LENGTH);
     //     return _getParamiAs<Int::type, is_gl_thread>(pname);
     // }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
         return call<[](Context& ctx, const GLuint id){
             int len;
             std::string dst;
-            ctx.gl.GetProgramiv(id, GL_INFO_LOG_LENGTH, &len);
+            ctx.gl.GetProgramiv(id, GLapi::GL_INFO_LOG_LENGTH, &len);
             dst.resize(len);
             ctx.gl.GetProgramInfoLog(id, len, &len, dst.data());
             return dst;
@@ -124,8 +132,8 @@ public:
     }
 
 protected:
-    static void _free(Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
-        ctx.gl.DeleteProgram(*id_ptr, src_loc);
+    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+        ctx.gl.DeleteProgram(id, src_loc);
     }
     
     template<typename T, GLenum Pname, IsGlThread is_gl_thread>

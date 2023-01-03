@@ -1,17 +1,6 @@
 cmake_minimum_required(VERSION 3.1...3.17 FATAL_ERROR)
 
 project(glwpp VERSION 0.1 LANGUAGES C CXX)
-include_directories(${CMAKE_JS_INC})
-
-if (WIN32)
-    # set(CMAKE_CXX_COMPILER C:/MinGW/mingw64-g++-11.2/bin/g++.exe)
-    # set(CMAKE_C_COMPILER C:/MinGW/mingw64-g++-11.2/bin/gcc.exe)
-else ()
-    # set(/usr/bin/g++-11)
-    # set(/usr/bin/gcc-11)
-endif (WIN32)
-
-enable_testing()
 
 add_subdirectory(./3rdparty/assimp)
 add_subdirectory(./3rdparty/glfw)
@@ -21,9 +10,8 @@ add_subdirectory(./test)
 
 add_compile_definitions(GLWPP_DEBUG)
 add_compile_definitions(IMGUI_IMPL_OPENGL_DEBUG)
-
 if (WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /Zi /WX /D_DEBUG /bigobj")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /WX /D_DEBUG /DEBUG:FULL /std:c++latest")
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++23 -fconcepts -pthread")
 endif (WIN32)
@@ -42,6 +30,8 @@ include_directories(./3rdparty/freetype/include)
 include_directories(3rdparty/imgui)
 include_directories(3rdparty/imgui/backends)
 
+enable_testing()
+
 # add_library(imgui SHARED
 #     3rdparty/imgui/imgui_demo.cpp
 #     3rdparty/imgui/imgui_draw.cpp
@@ -56,6 +46,14 @@ include_directories(3rdparty/imgui/backends)
 file(GLOB_RECURSE SRC_FILES "src/**.cpp")
 add_library (${PROJECT_NAME} SHARED
     3rdparty/glad/src/gl.c
+    
+    3rdparty/imgui/imgui_demo.cpp
+    3rdparty/imgui/imgui_draw.cpp
+    3rdparty/imgui/imgui_tables.cpp
+    3rdparty/imgui/imgui_widgets.cpp
+    3rdparty/imgui/imgui.cpp
+    3rdparty/imgui/backends/imgui_impl_glfw.cpp
+    3rdparty/imgui/backends/imgui_impl_opengl3.cpp
 
     ${SRC_FILES}
     ${CMAKE_JS_SRC}
@@ -78,28 +76,28 @@ set_property (TARGET ${PROJECT_NAME}
 # Main test
 
 add_executable(${PROJECT_NAME}_test
-    3rdparty/imgui/imgui_demo.cpp
-    3rdparty/imgui/imgui_draw.cpp
-    3rdparty/imgui/imgui_tables.cpp
-    3rdparty/imgui/imgui_widgets.cpp
-    3rdparty/imgui/imgui.cpp
+    # 3rdparty/imgui/imgui_demo.cpp
+    # 3rdparty/imgui/imgui_draw.cpp
+    # 3rdparty/imgui/imgui_tables.cpp
+    # 3rdparty/imgui/imgui_widgets.cpp
+    # 3rdparty/imgui/imgui.cpp
 
-    3rdparty/imgui/backends/imgui_impl_glfw.cpp
-    3rdparty/imgui/backends/imgui_impl_opengl3.cpp
+    # 3rdparty/imgui/backends/imgui_impl_glfw.cpp
+    # 3rdparty/imgui/backends/imgui_impl_opengl3.cpp
 
     main.cpp
 )
-# target_compile_features(${PROJECT_NAME}_test PUBLIC cxx_std_20)
+target_compile_features(${PROJECT_NAME}_test PUBLIC cxx_std_20)
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME}_test
         ${PROJECT_NAME}
     )
 else()
-target_link_libraries(${PROJECT_NAME}_test
-    ${PROJECT_NAME}
-    dl
-)
+    target_link_libraries(${PROJECT_NAME}_test
+        ${PROJECT_NAME}
+        dl
+    )
 endif (WIN32)
 
 # if (WIN32)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glad/gl.h"
+// #include "glad/gl.h"
 
 #include "context/CallOptimizer.hpp"
 #include "gl_object/ObjectDeleter.hpp"

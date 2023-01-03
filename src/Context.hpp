@@ -29,6 +29,10 @@ class Context : public std::enable_shared_from_this<Context> {
 public:
     using ms = std::chrono::milliseconds;
 
+    static constexpr int PRIORITY_DEFAULT = 0;
+    static constexpr int PRIORITY_MIN = std::numeric_limits<int>::min();
+    static constexpr int PRIORITY_MAX = std::numeric_limits<int>::max();
+
     struct Parameters {
         std::string title;
         int width;
@@ -37,13 +41,15 @@ public:
     };
 
     EXPORT Context(const Parameters& params, const SrcLoc& src_loc = SrcLoc{});
-    virtual ~Context();
+    EXPORT virtual ~Context();
 
     GLapi gl;
-    Event<Context&, const ms&> on_run_gl;
-    Event<Context&, const ms&> after_run_any;
+    Event<Context&, const ms&> event_on_run_gl;
+    Event<Context&, const ms&> event_after_run_nongl;
+    Event<Context&, const ms&> event_on_destroy_gl;
+    Event<Context&, const ms&> event_on_destroy_nongl;
 
-    EXPORT std::future<void> run();
+    EXPORT std::shared_future<void> run();
     EXPORT const std::shared_ptr<GLFWwindow>& getGlfw();
     EXPORT const std::thread::id& getGlThreadId() const;
 

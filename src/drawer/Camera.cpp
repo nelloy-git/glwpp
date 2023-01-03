@@ -23,7 +23,6 @@ void Camera::apply(){
         auto proj_mat = glm::perspectiveFov(fov, static_cast<float>(width), static_cast<float>(height), near_z, far_z);
         mat = proj_mat * mat;
     }
-
     buffer.setValue(mat);
 }
 
@@ -34,6 +33,5 @@ void Camera::applyLookAt(const glm::vec3& dst){
         auto proj_mat = glm::perspectiveFov(fov, static_cast<float>(width), static_cast<float>(height), near_z, far_z);
         mat = proj_mat * mat;
     }
-    
     buffer.setValue(mat);
 }

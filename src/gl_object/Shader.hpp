@@ -17,8 +17,8 @@ public:
     virtual ~Shader(){}
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void source(Valuable<const std::string&> auto&& code,
-                Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<void>> source(Valuable<const std::string&> auto&& code,
+                                    Valuable<const SrcLoc&> auto&& src_loc){
         return call<[](Context& ctx, const GLuint id, const std::string& code, const SrcLoc& src_loc){
             auto c_str = code.c_str();
             int len = static_cast<int>(code.size());
@@ -27,33 +27,33 @@ public:
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    void compile(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<void>> compile(Valuable<const SrcLoc&> auto&& src_loc){
        return callGLapi<&GLapi::CompileShader, is_gl_thread>(id(), src_loc);
     }
 
 
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<GLenum>> getType(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLenum, GL_SHADER_TYPE, is_gl_thread>(src_loc);
+    Value<std::future<GLenum>> getType(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLenum, GLapi::GL_SHADER_TYPE, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<GLboolean>> isCompiled(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLboolean, GL_COMPILE_STATUS, is_gl_thread>(src_loc);
+    Value<std::future<GLboolean>> isCompiled(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLboolean, GLapi::GL_COMPILE_STATUS, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<GLint>> getSourceLength(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLint, GL_SHADER_SOURCE_LENGTH, is_gl_thread>(src_loc);
+    Value<std::future<GLint>> getSourceLength(Valuable<const SrcLoc&> auto&& src_loc){
+        return _getParamiAs<GLint, GLapi::GL_SHADER_SOURCE_LENGTH, is_gl_thread>(src_loc);
     }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::optional<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
+    Value<std::future<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
         return call<[](Context& ctx, const GLuint id){
             int len;
             std::string dst;
-            ctx.gl.GetShaderiv(id, GL_INFO_LOG_LENGTH, &len);
+            ctx.gl.GetShaderiv(id, GLapi::GL_INFO_LOG_LENGTH, &len);
             dst.resize(len);
             ctx.gl.GetShaderInfoLog(id, len, &len, dst.data());
             return dst;
@@ -63,8 +63,8 @@ public:
 
 
 protected:
-    static void _free(Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
-        ctx.gl.DeleteShader(*id_ptr, src_loc);
+    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+        ctx.gl.DeleteShader(id, src_loc);
     }
 
     template<typename T, GLenum Pname, IsGlThread is_gl_thread>

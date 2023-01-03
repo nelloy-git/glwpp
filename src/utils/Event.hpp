@@ -15,7 +15,7 @@ namespace glwpp {
 template<typename... Args>
 class Event {
 public:
-    using ActionList = detail::EventActionList<Args...>;
+    using ActionList = detail::EventActionQueue<Args...>;
     using ID = ActionList::ID;
 
     Event(const std::shared_ptr<BS::thread_pool>& emitter_pool);
@@ -23,13 +23,22 @@ public:
     Event(const Event&&) = delete;
     virtual ~Event();
 
-    template<auto F>
-    ID add(const SrcLoc& src_loc = SrcLoc{});
-    ID add(std::predicate<Args...> auto&& action, const SrcLoc& src_loc = SrcLoc{});
+    void lock(){_emitter->lock();}
+    void unlock(){_emitter->unlock();}
+
+    template<auto F, bool ignore_lock = false>
+    ID add(const int& priority, const SrcLoc& src_loc = SrcLoc{});
+
+    template<bool ignore_lock = false>
+    ID add(const int& priority, std::predicate<Args...> auto&& action, const SrcLoc& src_loc = SrcLoc{});
+
+    template<bool ignore_lock = false>
     std::future<bool> remove(const ID& id);
+
+    template<bool ignore_lock = false>
     std::future<void> emit(const Args&... args);
 
-    template<auto F>
+    template<auto F, bool ignore_lock = false>
     std::future<void> emit_convertable(const auto&... args);
 
 private:
@@ -55,37 +64,40 @@ inline Event<Args...>::~Event(){
 }
 
 template<typename... Args>
-template<auto F>
-Event<Args...>::ID Event<Args...>::add(const SrcLoc& src_loc){
+template<auto F, bool ignore_lock>
+Event<Args...>::ID Event<Args...>::add(const int& priority, const SrcLoc& src_loc){
     auto id = _getUniqId();
-    _emitter->push_back([id, src_loc, list = _list](){
-        list->add<F>(id, src_loc);
+    _emitter->push_back<ignore_lock>([priority, id, src_loc, list = _list](){
+        list->add<F>(priority, id, src_loc);
     });
     return id;
 }
 
 template<typename... Args>
-Event<Args...>::ID Event<Args...>::add(std::predicate<Args...> auto&& action, const SrcLoc& src_loc){
+template<bool ignore_lock>
+Event<Args...>::ID Event<Args...>::add(const int& priority, std::predicate<Args...> auto&& action, const SrcLoc& src_loc){
     auto id = _getUniqId();
-    _emitter->push_back([id, action, src_loc, list = _list](){
-        list->add(id, action, src_loc);
+    _emitter->push_back<ignore_lock>([priority, id, action, src_loc, list = _list](){
+        list->add(priority, id, action, src_loc);
     });
     return id;
 }
 
 template<typename... Args>
+template<bool ignore_lock>
 std::future<bool> Event<Args...>::remove(const ID& id){
     auto promise = std::make_shared<std::promise<bool>>();
-    _emitter->push_back([id, promise, list = _list](){
+    _emitter->push_back<ignore_lock>([id, promise, list = _list](){
         promise->set_value(list->remove(id));
     });
     return promise->get_future();
 }
 
 template<typename... Args>
+template<bool ignore_lock>
 std::future<void> Event<Args...>::emit(const Args&... args){
     auto promise = std::make_shared<std::promise<void>>();
-    _emitter->push_back([promise, list = _list, args...](){
+    _emitter->push_back<ignore_lock>([promise, list = _list, args...](){
         list->emit(args...);
         promise->set_value();
     });
@@ -93,12 +105,12 @@ std::future<void> Event<Args...>::emit(const Args&... args){
 }
 
 template<typename... Args>
-template<auto F>
+template<auto F, bool ignore_lock>
 std::future<void> Event<Args...>::emit_convertable(const auto&... args){
     static_assert(std::is_invocable_r_v<std::tuple<Args...>, decltype(F), decltype(std::make_tuple(args...))>, "F must be callable with const auto& args and return tuple<Args...>");
 
     auto promise = std::make_shared<std::promise<void>>();
-    _emitter->push_back([promise, list = _list, args = std::make_tuple(args...)](){
+    _emitter->push_back<ignore_lock>([promise, list = _list, args = std::make_tuple(args...)](){
         std::apply(&ActionList::emit, std::tuple_cat(std::forward_as_tuple(*list), F(args)));
         promise->set_value();
     });

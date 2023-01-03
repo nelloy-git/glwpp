@@ -76,61 +76,61 @@ public:
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLboolean> isAttribEnabled(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_ENABLED);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_ENABLED);
         return _getAttribParamiAs<GLboolean, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLint> getAttribSize(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_SIZE);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_SIZE);
         return _getAttribParamiAs<GLint, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLint> getAttribStride(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_STRIDE);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_STRIDE);
         return _getAttribParamiAs<GLint, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLenum> getAttribType(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_TYPE);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_TYPE);
         return _getAttribParamiAs<GLenum, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLboolean> isAttribNormalized(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_NORMALIZED);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_NORMALIZED);
         return _getAttribParamiAs<GLboolean, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLboolean> isAttribInteger(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_INTEGER);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_INTEGER);
         return _getAttribParamiAs<GLboolean, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLboolean> isAttribLong(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_LONG);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_LONG);
         return _getAttribParamiAs<GLboolean, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLint> getAttribDivisor(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_VERTEX_ATTRIB_ARRAY_DIVISOR);
+        static const Value<const GLenum> pname(GLapi::GL_VERTEX_ATTRIB_ARRAY_DIVISOR);
         return _getAttribParamiAs<GLint, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
     
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     EXPORT Value<GLint64> getAttribBindingOffset(Valuable<const GLuint> auto&& index, Valuable<const SrcLoc> auto&& src_loc){
-        static const Value<const GLenum> pname(GL_ACTIVE_UNIFORMS);
+        static const Value<const GLenum> pname(GLapi::GL_ACTIVE_UNIFORMS);
         return _getAttribParami64As<GLint64, is_gl_thread>(index, pname, GetValuable(src_loc).add());
     }
 
 protected:
-    static void _free(Context& ctx, const GLuint* id_ptr, const SrcLoc& src_loc){
-        ctx.gl.DeleteVertexArrays(1, id_ptr, src_loc);
+    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+        ctx.gl.DeleteVertexArrays(1, &id, src_loc);
     }
     
     template<typename T, IsGlThread is_gl_thread>
