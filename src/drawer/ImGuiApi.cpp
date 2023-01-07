@@ -15,8 +15,7 @@ thread_local ImGuiContext* MyImGuiTLS = nullptr;
 
 ImGuiApi::ImGuiApi(Context& ctx) :
     CallOptimizer(ctx),
-    _imgui_context(ctx, nullptr),
-    init_error(call<&_InitImguiBackendGL, IsGlThread::Unknown>(_imgui_context)){
+    init_error(call<&_InitImguiBackendGL, IsGlThread::Unknown>()){
 }
 
 ImGuiApi::~ImGuiApi(){
@@ -47,9 +46,8 @@ void ImGuiApi::_Text(const std::string& text){
     ImGui::Text(text.c_str());
 }
 
-ImGuiApi::Error ImGuiApi::_InitImguiBackendGL(Context& ctx, ImGuiContext*& imgui_context){
-    if (_GetInstancesInContext() > 1){
-        imgui_context = ImGui::GetCurrentContext();
+ImGuiApi::Error ImGuiApi::_InitImguiBackendGL(Context& ctx){
+    if (_GetInstancesInContext() > 1){  
         return {false, std::string{}};
     }
 
@@ -71,6 +69,7 @@ ImGuiApi::Error ImGuiApi::_InitImguiBackendGL(Context& ctx, ImGuiContext*& imgui
 }
 
 void ImGuiApi::_ShutdownImguiBackendGL(){
+    --_GetInstancesInContext();
     if (_GetInstancesInContext() != 0 || MyImGuiTLS == nullptr){
         return;
     }

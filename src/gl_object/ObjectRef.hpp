@@ -15,15 +15,9 @@ namespace glwpp {
 
 namespace GL {
 
-// template<typename Req, typename T>
-// constexpr bool IsValuable = std::is_convertible_v<T, Req>
-//                          || (is_instance<std::remove_const_t<std::remove_reference_t<T>>, Value>::value
-//                             && std::is_convertible_v<std::invoke_result_t<decltype(decltype(T)::value), decltype(T)>, Req>);
-
-
 template<typename T>
 class ObjectRef : public CallOptimizer {
-    static_assert(!is_instance<std::remove_const_t<std::remove_reference_t<T>>, Value>::value, "Value template can not be used for GL::ObjectRef");
+    static_assert(!detail::is_value_v<T>, "Value template can not be used for GL::ObjectRef");
 
 public:
     using DelFunc = typename ObjectDeleter<T>::DelFunc;
@@ -34,10 +28,10 @@ public:
 
     ObjectRef(Context& ctx,
               T* init_gl_data,
-              const DelFunc& deleter,
+              const DelFunc& deleter = &SIMPLE_DELETER,
               const SrcLoc& src_loc = SrcLoc{}) :
         CallOptimizer(ctx),
-        data(Value<T>::WithDeleter(ctx, init_gl_data, ObjectDeleter<T>(ctx, deleter, src_loc))){
+        data(Value<T>::Make(init_gl_data, ObjectDeleter<T>(ctx, deleter, src_loc))){
     };
     virtual ~ObjectRef() = 0;
 

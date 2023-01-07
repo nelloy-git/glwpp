@@ -9,7 +9,6 @@ struct ImGuiIO;
 namespace glwpp {
 
 class ImGuiApi : protected CallOptimizer {
-    Value<ImGuiContext*> _imgui_context;
 public:
     using Error = std::pair<bool, std::string>;
 
@@ -29,7 +28,9 @@ public:
     }
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
-    Value<std::future<bool>> Begin(const Value<std::string>& name, const Value<bool>& p_open, const Value<int> flags) const {
+    Value<std::future<bool>> Begin(Valuable<const std::string&> auto&& name,
+                                   Valuable<bool> auto&& p_open,
+                                   Valuable<int> auto&& flags) const {
         return callWithoutCtx<&_Begin, is_gl>(name, p_open, flags);
     }
 
@@ -51,7 +52,7 @@ private:
     EXPORT static void _End();
     EXPORT static void _Text(const std::string& text);
 
-    EXPORT static Error _InitImguiBackendGL(Context& ctx, ImGuiContext*& imgui_context);
+    EXPORT static Error _InitImguiBackendGL(Context& ctx);
     EXPORT static void _ShutdownImguiBackendGL();
 
     EXPORT static unsigned int& _GetInstancesInContext();

@@ -1,5 +1,5 @@
 #ifdef WIN32
-#include <vld.h>
+// #include <vld.h>
 #endif
 
 #include <string>
@@ -20,7 +20,6 @@
 
 #include "drawer/ImGuiApi.hpp"
 
-
 std::string read_file(const std::string& path){
     std::ifstream t(path);
     std::stringstream buffer;
@@ -29,18 +28,22 @@ std::string read_file(const std::string& path){
 }
 
 auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
+    auto f = __func__;
+
     glwpp::Drawer drawer(ctx, src_loc);
     auto vert_err = drawer.setVertexShader(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
     auto frag_err = drawer.setFragmentShader(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
 
+    drawer.setShaderTest(std::string(""), src_loc);
+
     ctx.event_after_run_nongl.add(glwpp::Context::PRIORITY_DEFAULT, [vert_err, frag_err](glwpp::Context& ctx, const glwpp::Context::ms&){
         std::cout << "Drawer debug" << std::endl;
-        auto v_err = vert_err->get();
+        auto& v_err = vert_err.value();
         if (v_err.first){
             std::cout << "Msg: " << v_err.second.c_str() << std::endl;
         }
 
-        auto f_err = frag_err->get();
+        auto& f_err = frag_err.value();
         if (f_err.first){
             std::cout << "Msg: " << f_err.second.c_str() << std::endl;
         }
@@ -73,69 +76,49 @@ int main(int argc, char **argv){
     ctx_params.fps = 60;
     ctx_params.title = "Noname";
 
-    auto ctx1 = std::make_shared<glwpp::Context>(ctx_params);
-    glwpp::ImGuiApi imgui1(*ctx1);
-    glwpp::Value<std::string> name1(*ctx1, "Metrics1");
-    glwpp::Value<bool> opened1(*ctx1, true);
-    glwpp::Value<int> flags1(*ctx1, 0);
-    
-
-    auto ctx2 = std::make_shared<glwpp::Context>(ctx_params);
-    glwpp::ImGuiApi imgui2(*ctx2);
-    glwpp::Value<std::string> name2(*ctx2, "Metrics2");
-    glwpp::Value<bool> opened2(*ctx2, true);
-    glwpp::Value<int> flags2(*ctx2, 0);
+    auto ctx = std::make_shared<glwpp::Context>(ctx_params);
+    glwpp::ImGuiApi imgui(*ctx);
+    glwpp::Value<std::string> name("Metrics");
+    glwpp::Value<bool> opened(true);
+    glwpp::Value<int> flags(0);
     
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
-    ctx1->gl.setMetricsCategory(gl_metrics);
+    ctx->gl.setMetricsCategory(gl_metrics);
 
     // init_drawer(*ctx);
 
     // glwpp
 
-// #ifdef WIN32
-//     glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
-// #else
-//     glwpp::Model book_model(*ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
-// #endif
+#ifdef WIN32
+    glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
+#else
+    glwpp::Model book_model(*ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
+#endif
 
-    // if (book_model.loading_error.has_value()){
-    //     std::cout << book_model.loading_error.value().c_str() << std::endl;
-    // }
+    if (book_model.loading_error.has_value()){
+        std::cout << book_model.loading_error.value().c_str() << std::endl;
+    }
 
     bool done = false;
     size_t i = 0;
-    while(i < 5000){
+    while(i < 10000){
         ++i;
-        auto run_future1 = ctx1->run();
-        auto run_future2 = ctx2->run();
+        auto run_future = ctx->run();
 
-        if (*opened1){
-            imgui1.NewFrame();
-            imgui1.Begin(name1, opened1, flags1);
+        if (*opened){
+            imgui.NewFrame();
+            imgui.Begin(name, opened, flags);
             auto all_names = gl_metrics->getAllNames();
             std::sort(all_names.begin(), all_names.end());
             for (auto& name : all_names){
-                imgui1.Text(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
+                imgui.Text(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
             }
-            imgui1.End();
-            imgui1.Render();
+            imgui.End();
+            imgui.Render();
         }
-
-        // if (*opened2){
-        //     imgui2.NewFrame();
-        //     imgui2.Begin(name2, opened2, flags2);
-        //     auto all_names = gl_metrics->getAllNames();
-        //     std::sort(all_names.begin(), all_names.end());
-        //     for (auto& name : all_names){
-        //         imgui2.Text(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
-        //     }
-        //     imgui2.End();
-        //     imgui2.Render();
-        // }
     
-        run_future1.wait();
-        run_future2.wait();
+
+        run_future.wait();
 
 
         if (!done){

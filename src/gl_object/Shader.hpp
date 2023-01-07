@@ -9,7 +9,7 @@ public:
     Shader(Valuable<Context&> auto&& ctx,
            Valuable<const GLenum&> auto&& type,
            Valuable<const SrcLoc&> auto&& src_loc) : 
-        Handler(GetValuable(ctx), new GLuint(0), &Handler::DELETER<_free>, GetValuable(src_loc).add()){
+        Handler(GetValuable(ctx), GetDeleter<&_free>(), GetValuable(src_loc).add()){
         call<[](Context& ctx, const GLenum& type, GLuint& dst, const SrcLoc& src_loc){
             dst = ctx.gl.CreateShader(type, src_loc);
         }, IsGlThread::Unknown>(type, data, GetValuable(src_loc).add());
@@ -63,7 +63,7 @@ public:
 
 
 protected:
-    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+    static void _free(Context& ctx, const GLuint& id, const SrcLoc& src_loc){
         ctx.gl.DeleteShader(id, src_loc);
     }
 

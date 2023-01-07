@@ -1,49 +1,19 @@
 #pragma once
 
-// #include "glad/gl.h"
+#include <memory>
 
 #include "Context.hpp"
 #include "context/Value.hpp"
 
 namespace glwpp {
-    
-template<typename T, typename Req>
-constexpr bool IsValuable(){
-    if constexpr (std::is_convertible_v<T, Req>){
-        return true;
-    } else {
-        if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<T>>, Value>::value){
-            using R = decltype(std::declval<T>().value());
-            if constexpr (is_instance<std::remove_const_t<std::remove_reference_t<R>>, std::future>::value){
-                return std::is_convertible_v<R::value_type, Req>;
-            }
-            return std::is_convertible_v<R, Req>;
-        } else {
-            return false;
-        }
-    }
-}
 
-template<typename T, typename Req>
-concept Valuable = IsValuable<T, Req>();
+namespace detail {
+template <typename T>
+concept CanMakeSharedFromThis = requires(std::remove_reference_t<T>* a){
+    { a->shared_from_this() } -> std::convertible_to<std::shared_ptr<std::remove_reference_t<T>>>;
+};
+} // namespace detail
 
-static inline decltype(auto) GetValuable(auto&& val){
-    using T = std::remove_const_t<std::remove_reference_t<decltype(val)>>;
-
-    if constexpr (is_instance<T, Value>::value){
-        using R = std::remove_const_t<std::remove_reference_t<decltype(std::declval<T>().value())>>;
-        if constexpr (is_instance<R, std::future>::value){
-            if (!val.value().wait_for(std::chrono::seconds(0))){
-                throw std::runtime_error("empty optional");
-            }
-            return val.value().get();
-        } else {
-            return val.value();
-        }
-    } else {
-        return std::forward<decltype(val)>(val);
-    }
-}
 
 class CallOptimizer {
 public:
@@ -61,6 +31,15 @@ public:
     template<auto GLapi::*M, IsGlThread is_gl_thread>
     auto callGLapi(auto&&... args) const;
 
+    template<auto M, IsGlThread is_gl_thread, detail::CanMakeSharedFromThis T>
+    auto callMember(T&& obj, auto&&... args) const {
+        using Unref_T = std::remove_reference_t<T>;
+        static constexpr auto F = [](Context& ctx, const std::shared_ptr<Unref_T>& obj, auto&&... args){
+            return (obj.get()->*M)(GetValuable(std::forward<decltype(args)>(args))...);
+        };
+        return call<F, is_gl_thread>(obj.shared_from_this(), std::forward<decltype(args)>(args)...);
+    }
+
 private:
     const std::thread::id _ctx_thread_id;
     const std::weak_ptr<Context> _wctx;
@@ -74,11 +53,6 @@ private:
 
     template<auto F>
     auto _callWithRunEvent(Context& ctx, auto&&... args) const;
-    
-    template<typename ... Ts>
-    static constexpr bool _IsValues(){
-        return std::conjunction_v<is_instance<std::remove_const_t<std::remove_reference_t<Ts>>, Value>...>;
-    }
 };
 
 
@@ -144,7 +118,7 @@ auto CallOptimizer::_callDirect(auto&&... args) const {
         promise.set_value(F(*_p_ctx, GetValuable(args)...));
     }
 
-    return Value(*_p_ctx, std::move(promise.get_future()));
+    return Value(std::move(promise.get_future()));
 }
 
 template<auto F>
@@ -153,12 +127,12 @@ auto CallOptimizer::_callIndirect(auto&&... args) const {
     if (!ctx){
         throw std::runtime_error("Conetext is destroyed");
     }
-    return _callWithRunEvent<F>(*ctx, Value(*ctx, std::forward<decltype(args)>(args))...);
+    return _callWithRunEvent<F>(*ctx, Value(std::forward<decltype(args)>(args))...);
 }
 
 template<auto F>
 auto CallOptimizer::_callWithRunEvent(Context& ctx, auto&&... args) const {
-    static_assert(_IsValues<decltype(args)...>(), "all arguments must be glwpp::Value<T>");
+    static_assert((detail::is_instance_v<decltype(args), Value> && ...), "all arguments must be glwpp::Value<T>");
 
     using R = std::invoke_result_t<decltype(F), Context&, decltype(GetValuable(args))...>;
     auto promise = std::make_shared<std::promise<R>>();
@@ -173,7 +147,7 @@ auto CallOptimizer::_callWithRunEvent(Context& ctx, auto&&... args) const {
             return false;
         }
     );
-    return Value(ctx, std::move(promise->get_future()));
+    return Value(promise->get_future());
 }
 
 } // namespace glwpp

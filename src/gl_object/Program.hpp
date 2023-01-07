@@ -8,7 +8,7 @@ class Program : public Handler {
 public:
     Program(Valuable<Context&> auto&& ctx,
             Valuable<const SrcLoc&> auto&& src_loc) : 
-        Handler(GetValuable(ctx), new GLuint(0), &Handler::DELETER<_free>, GetValuable(src_loc).add()){
+        Handler(GetValuable(ctx), GetDeleter<&_free>(), GetValuable(src_loc).add()){
         call<[](Context& ctx, GLuint& dst, const SrcLoc& src_loc){
             dst = ctx.gl.CreateProgram(src_loc);
         }, IsGlThread::Unknown>(data, GetValuable(src_loc).add());
@@ -64,7 +64,7 @@ public:
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<std::future<GLuint>> getUniformBlockIndex(Valuable<const std::string&> auto&& name,
                                                     Valuable<const SrcLoc&> auto&& src_loc){
-        return call<[](Context& ctx, const GLuint& program, const std::string& name){
+        return call<[](Context& ctx, const GLuint& program, const std::string& name, const SrcLoc& src_loc){
             return ctx.gl.GetUniformBlockIndex(program, name.c_str(), src_loc);
         }, is_gl_thread>(id(), name, src_loc);
     }
