@@ -36,7 +36,7 @@ public:
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<void>> bindUniformBlock(Valuable<const std::string&> auto&& block_name,
                                               Valuable<const GLuint&> auto&& block_binding,
-                                              Valuable<GL::Buffer&> auto&& buffer,
+                                              Valuable<GL::BufferRef&> auto&& buffer,
                                               Valuable<const SrcLoc&> auto&& src_loc = SrcLoc{}){
         return call<&_bindUniformBlock, is_gl>(_program, block_name, block_binding, buffer, src_loc);
     }
@@ -51,16 +51,16 @@ public:
 
 private:
     struct Inner {
-        GL::Program program;
+        GL::ProgramRef program;
         std::optional<std::function<void(const Error&)>> error_callback;
     };
-    GL::Program _program;
+    GL::ProgramRef _program;
 
     EXPORT void _setShaderTest(Context& ctx, const GLenum& type, const std::string& code, const SrcLoc& src_loc);
 
-    EXPORT static Error _setShader(Context& ctx, GL::Program& program, const GLenum& type, const std::string& code, const SrcLoc& src_loc);
-    EXPORT static void _bindUniformBlock(Context& ctx, GL::Program& program, const std::string& block_name, const GLuint& block_binding, GL::Buffer& buffer, const SrcLoc& src_loc);
-    EXPORT static void _bindUniformBlock(Context& ctx, GL::Program& program, const GLuint& block_index, const GLuint& block_binding, GL::Buffer& buffer, const SrcLoc& src_loc);
+    EXPORT static Error _setShader(Context& ctx, GL::ProgramRef& program, const GLenum& type, const std::string& code, const SrcLoc& src_loc);
+    EXPORT static void _bindUniformBlock(Context& ctx, GL::ProgramRef& program, const std::string& block_name, const GLuint& block_binding, GL::BufferRef& buffer, const SrcLoc& src_loc);
+    EXPORT static void _bindUniformBlock(Context& ctx, GL::ProgramRef& program, const GLuint& block_index, const GLuint& block_binding, GL::BufferRef& buffer, const SrcLoc& src_loc);
 
 };
 

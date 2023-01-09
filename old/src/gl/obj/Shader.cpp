@@ -6,12 +6,12 @@ using namespace glwpp;
 using namespace glwpp::gl;
 using namespace glwpp::utils;
 
-sptr<Shader> Shader::make(const sptr<Context>& ctx, const Val<const gl::ShaderType>& type,
+sptr<Shader> Shader::make(const sptr<Context>& ctx, const Val<const GL::ShaderRefType>& type,
                           const Val<const SrcLoc>& src_loc){
     return sptr<Shader>(new Shader(ctx, type, src_loc));
 }
 
-Shader::Shader(const sptr<Context>& ctx, const Val<const gl::ShaderType>& type,
+Shader::Shader(const sptr<Context>& ctx, const Val<const GL::ShaderRefType>& type,
                const Val<const SrcLoc>& src_loc) :
     Object(ctx, Shader::_initer, Shader::_deleter, type, src_loc){
 }
@@ -27,7 +27,7 @@ bool Shader::getParamInt(const Val<Int>& dst, const Val<const Enum>& param,
 }
 
 
-bool Shader::getType(const Val<gl::ShaderType>& dst,
+bool Shader::getType(const Val<GL::ShaderRefType>& dst,
                      const Val<const SrcLoc>& src_loc) const {
     return getParamInt(dst.cast_reinterpret<Int>(), GL_SHADER_TYPE, src_loc);
 }
@@ -78,7 +78,7 @@ bool Shader::compile(const Val<const SrcLoc>& src_loc){
     return true;
 }
 
-void Shader::_initer(const Val<UInt>& dst, const Val<const gl::ShaderType>& type,
+void Shader::_initer(const Val<UInt>& dst, const Val<const GL::ShaderRefType>& type,
                      const Val<const utils::SrcLoc>& src_loc){
     *dst = glCreateShader(type.cast_reinterpret<const Enum>());
     debug(src_loc);

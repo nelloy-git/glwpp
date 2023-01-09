@@ -4,22 +4,21 @@
 
 namespace glwpp::GL {
 
-class Program : public Handler {
+namespace detail {
+
+class ProgramImpl : public Handler<ProgramImpl> {
 public:
-    Program(Valuable<Context&> auto&& ctx,
-            Valuable<const SrcLoc&> auto&& src_loc) : 
-        Handler(GetValuable(ctx), GetDeleter<&_free>(), GetValuable(src_loc).add()){
-        call<[](Context& ctx, GLuint& dst, const SrcLoc& src_loc){
-            dst = ctx.gl.CreateProgram(src_loc);
-        }, IsGlThread::Unknown>(data, GetValuable(src_loc).add());
+    ProgramImpl(Valuable<Context&> auto&& ctx,
+                Valuable<const SrcLoc&> auto&& src_loc) : 
+        Handler<ProgramImpl>(ctx, &_Init, &_Free, src_loc){
     }
-    virtual ~Program(){}
+    virtual ~ProgramImpl(){}
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::future<void>> attach(Valuable<const Shader&> auto&& shader,
-                Valuable<const SrcLoc&> auto&& src_loc){
-        return call<[](Context& ctx, const GLuint& id, const Shader& shader, const SrcLoc& src_loc){
-            ctx.gl.AttachShader(id, shader.id().value(), src_loc);
+    Value<std::future<void>> attach(Valuable<const ShaderRef&> auto&& shader,
+                                    Valuable<const SrcLoc&> auto&& src_loc){
+        return call<[](Context& ctx, const GLuint& id, const ShaderRef& shader, const SrcLoc& src_loc){
+            ctx.gl.AttachShader(id, shader->id().value(), src_loc);
         }, is_gl_thread>(id(), shader, GetValuable(src_loc).add());
     }
     
@@ -132,7 +131,11 @@ public:
     }
 
 protected:
-    static void _free(Context& ctx, const GLuint id, const SrcLoc& src_loc){
+    static GLuint _Init(Context& ctx, const SrcLoc& src_loc){
+        return ctx.gl.CreateProgram(src_loc);
+    }
+
+    static void _Free(Context& ctx, const GLuint& id, const SrcLoc& src_loc){
         ctx.gl.DeleteProgram(id, src_loc);
     }
     
@@ -145,6 +148,16 @@ protected:
         }, is_gl_thread>(id(), src_loc);
     }
 
+};
+
+}; // namespace detail
+
+class ProgramRef : public CtxObjRef<detail::ProgramImpl> {
+public:
+    ProgramRef(Valuable<Context&> auto&& ctx,
+              Valuable<const SrcLoc&> auto&& src_loc) :
+        CtxObjRef(ctx, src_loc){
+    }
 };
 
 } // namespace glwpp::GL

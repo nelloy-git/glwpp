@@ -19,7 +19,7 @@ public:
     virtual ~MeshIndices();
     
     const Type type;
-    GL::Buffer buffer;
+    GL::BufferRef buffer;
 
 };
 

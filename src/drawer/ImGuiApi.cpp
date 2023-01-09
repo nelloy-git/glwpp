@@ -14,12 +14,12 @@ using namespace glwpp;
 thread_local ImGuiContext* MyImGuiTLS = nullptr;
 
 ImGuiApi::ImGuiApi(Context& ctx) :
-    CallOptimizer(ctx),
+    CtxObj(ctx),
     init_error(call<&_InitImguiBackendGL, IsGlThread::Unknown>()){
 }
 
 ImGuiApi::~ImGuiApi(){
-    callWithoutCtx<&_ShutdownImguiBackendGL, IsGlThread::Unknown>();
+    call<&_ShutdownImguiBackendGL, IsGlThread::Unknown>();
     // TODO
 }
 

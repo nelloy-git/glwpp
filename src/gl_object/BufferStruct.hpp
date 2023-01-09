@@ -24,7 +24,7 @@ public:
     }
     virtual ~BufferStruct(){};
 
-    const Buffer& buffer() const {
+    const BufferRef& buffer() const {
         return _buffer;
     }
 
@@ -48,7 +48,7 @@ public:
     }
 
 private:
-    Buffer _buffer;
+    BufferRef _buffer;
 
     static void _memcpy(GLapi& ctx, void* dst, void* src, const size_t& read_offset, const size_t& write_offset, size_t size){
         // memcpy( dst, src, size)

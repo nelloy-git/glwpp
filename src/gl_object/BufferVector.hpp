@@ -27,13 +27,13 @@ public:
                         const ConstEnum& usage = GL_DYNAMIC_READ,
                         const SrcLoc& src_loc = SrcLoc{}) :
         ObjectRef(ctx, detail::BufferVectorData{0, INIT_CAPACITY, 0}, &ObjectRef::SIMPLE_DELETER, src_loc),
-        _buffer(new Buffer(ctx, src_loc)){
+        _buffer(new BufferRef(ctx, src_loc)){
         _buffer->setData(INIT_CAPACITY * sizeof(T), Value<const void>::Nullptr(), usage, src_loc.add());
         addCallGl<[](Context&, detail::BufferVectorData& data, const GLenum& usage){data.usage = usage;}>(data, usage);
     }
     EXPORT virtual ~BufferVector(){};
 
-    const Buffer& buffer() const {
+    const BufferRef& buffer() const {
         return *_buffer;
     }
 
@@ -83,14 +83,14 @@ public:
 
 
 private:
-    std::shared_ptr<Buffer> _buffer;
+    std::shared_ptr<BufferRef> _buffer;
     
-    static void _reserve(Context& ctx, const size_t& capacity, const std::shared_ptr<Buffer>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
+    static void _reserve(Context& ctx, const size_t& capacity, const std::shared_ptr<BufferRef>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
         if (capacity <= data.capacity){
             return;
         }
 
-        Buffer tmp(ctx.shared_from_this(), src_loc);
+        BufferRef tmp(ctx.shared_from_this(), src_loc);
         tmp.setData<IsGlThread::True>(data.capacity * sizeof(T), Value<const void>::Nullptr(), GL_STREAM_COPY, src_loc);
         tmp.copySubData<IsGlThread::True>(*buffer, 0, 0, data.capacity * sizeof(T), src_loc);
 
@@ -99,8 +99,8 @@ private:
         data.capacity = capacity;
     }
     
-    static void _shape(Context& ctx, const std::shared_ptr<Buffer>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
-        Buffer tmp(ctx.shared_from_this(), src_loc);
+    static void _shape(Context& ctx, const std::shared_ptr<BufferRef>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
+        BufferRef tmp(ctx.shared_from_this(), src_loc);
         tmp.setData<IsGlThread::True>(data.size * sizeof(T), Value<const void>::Nullptr(), GL_STREAM_COPY, src_loc);
         tmp.copySubData<IsGlThread::True>(*buffer, 0, 0, data.size * sizeof(T), src_loc);
 
@@ -108,7 +108,7 @@ private:
         buffer->copySubData<IsGlThread::True>(tmp, 0, 0, data.size * sizeof(T), src_loc);
     }
 
-    static void _push_back(Context& ctx, const T& val, const std::shared_ptr<Buffer>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
+    static void _push_back(Context& ctx, const T& val, const std::shared_ptr<BufferRef>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
         if (data.size >= data.capacity){
             _reserve(ctx, MULT_CAPACITY * data.capacity, buffer, data, src_loc);
         }
@@ -117,7 +117,7 @@ private:
         data.size += 1;
     }
 
-    static void _pop_back(Context& ctx, const std::shared_ptr<Buffer>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
+    static void _pop_back(Context& ctx, const std::shared_ptr<BufferRef>& buffer, detail::BufferVectorData& data, const SrcLoc& src_loc){
         if (data.size == 0){
             return;
         }

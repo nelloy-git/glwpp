@@ -29,7 +29,7 @@ public:
     const unsigned int components;
     const bool normalized;
     const GLsizei stride;
-    GL::Buffer buffer;
+    GL::BufferRef buffer;
 };
 
 } // namespace glwpp

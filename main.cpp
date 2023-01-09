@@ -1,5 +1,5 @@
 #ifdef WIN32
-// #include <vld.h>
+#include <vld.h>
 #endif
 
 #include <string>
@@ -50,17 +50,17 @@ auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcL
         return false;
     });
 
-    // glwpp::GL::Shader vert(ctx, GL_VERTEX_SHADER, src_loc);
+    // glwpp::GL::ShaderRef vert(ctx, GL_VERTEX_SHADER, src_loc);
     // vert.source(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
     // vert.compile(src_loc);
     // auto vert_info = vert.getInfoLog(src_loc);
     
-    // glwpp::GL::Shader frag(ctx, GL_FRAGMENT_SHADER, src_loc);
+    // glwpp::GL::ShaderRef frag(ctx, GL_FRAGMENT_SHADER, src_loc);
     // frag.source(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
     // frag.compile(src_loc);
     // auto frag_info = frag.getInfoLog(src_loc);
 
-    // glwpp::GL::Program prog(ctx, src_loc);
+    // glwpp::GL::ProgramRef prog(ctx, src_loc);
     // prog.attach(vert, src_loc);
     // prog.attach(frag, src_loc);
     // prog.link(src_loc);
@@ -89,6 +89,8 @@ int main(int argc, char **argv){
 
     // glwpp
 
+    // glwpp::GL::Buffer buffer(*ctx, glwpp::SrcLoc{});
+
 #ifdef WIN32
     glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
 #else
@@ -101,7 +103,7 @@ int main(int argc, char **argv){
 
     bool done = false;
     size_t i = 0;
-    while(i < 10000){
+    while(i < 5000){
         ++i;
         auto run_future = ctx->run();
 

@@ -3,6 +3,7 @@
 using namespace glwpp;
 
 CmdQueue::CmdQueue(const std::shared_ptr<BS::thread_pool>& pool) :
+    _manual_lock(false),
     _lock(new std::mutex),
     _is_executing(new std::atomic<bool>(false)),
     _queue(new std::deque<std::function<void()>>),
@@ -15,10 +16,12 @@ CmdQueue::~CmdQueue(){
 
 void CmdQueue::lock(){
     _lock->lock();
+    _manual_lock = true;
 }
 
 void CmdQueue::unlock(){
     _lock->unlock();
+    _manual_lock = false;
 }
 
 size_t CmdQueue::size() const {
@@ -33,6 +36,9 @@ void CmdQueue::_push_back_with_lock(const std::function<void()>& cmd){
 }
 
 void CmdQueue::_push_back_no_lock(const std::function<void()>& cmd){
+    if (!_manual_lock){
+        throw std::logic_error("can not use \"ignore_lock\" if not manually locked");
+    }
     _queue->push_back(cmd);
     _update();
 }
@@ -44,6 +50,9 @@ void CmdQueue::_push_front_with_lock(const std::function<void()>& cmd){
 }
 
 void CmdQueue::_push_front_no_lock(const std::function<void()>& cmd){
+    if (!_manual_lock){
+        throw std::logic_error("can not use \"ignore_lock\" if not manually locked");
+    }
     _queue->push_front(cmd);
     _update();
 }

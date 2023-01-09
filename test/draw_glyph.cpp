@@ -53,7 +53,7 @@ static void pushTimePrinter(std::shared_ptr<glwpp::Context> win){
 }
 
 glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
-    auto v_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Vertex);
+    auto v_shader = glwpp::Shader(win, glwpp::GL::ShaderRefType::Vertex);
     v_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.vs"));
     win->onRun.push([v_shader](){
         bool compiled = false;
@@ -65,7 +65,7 @@ glwpp::Program loadProgram(std::shared_ptr<glwpp::Context> win){
         }
     });
     
-    auto f_shader = glwpp::Shader(win, glwpp::gl::ShaderType::Fragment);
+    auto f_shader = glwpp::Shader(win, glwpp::GL::ShaderRefType::Fragment);
     f_shader.compile(loadTextFile("D:\\projects\\glwpp\\shaders\\vertex_2d.fs"));
     win->onRun.push([f_shader](){
         bool compiled = false;

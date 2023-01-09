@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Context.hpp"
+#include "context/CtxObj.hpp"
 #include "context/CallOptimizer.hpp"
 
 struct ImGuiContext;
@@ -8,7 +9,7 @@ struct ImGuiIO;
 
 namespace glwpp {
 
-class ImGuiApi : protected CallOptimizer {
+class ImGuiApi : protected CtxObj<ImGuiApi> {
 public:
     using Error = std::pair<bool, std::string>;
 
@@ -19,29 +20,29 @@ public:
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<void>> NewFrame() const {
-        return callWithoutCtx<&_NewFrame, is_gl>();
+        return call<&_NewFrame, is_gl>();
     }
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<void>> Render() const {
-        return callWithoutCtx<&_Render, is_gl>();
+        return call<&_Render, is_gl>();
     }
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<bool>> Begin(Valuable<const std::string&> auto&& name,
                                    Valuable<bool> auto&& p_open,
                                    Valuable<int> auto&& flags) const {
-        return callWithoutCtx<&_Begin, is_gl>(name, p_open, flags);
+        return call<&_Begin, is_gl>(name, p_open, flags);
     }
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<void>> End() const {
-        return callWithoutCtx<&_End, is_gl>();
+        return call<&_End, is_gl>();
     }
 
     template<IsGlThread is_gl = IsGlThread::Unknown>
     Value<std::future<void>> Text(Valuable<const std::string&> auto&& text) const {
-        return callWithoutCtx<&_Text, is_gl>(std::forward<decltype(text)>(text));
+        return call<&_Text, is_gl>(std::forward<decltype(text)>(text));
     }
 
 private:

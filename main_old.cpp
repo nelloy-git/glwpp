@@ -80,7 +80,7 @@
 // }
 
 // sptr<Drawer> initDrawer(std::shared_ptr<Context> ctx){
-//     auto v_shader = gl::Shader::make(ctx, gl::ShaderType::Vertex);
+//     auto v_shader = GL::ShaderRef::make(ctx, GL::ShaderRefType::Vertex);
 //     v_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"));
 //     v_shader->compile();
 //     ctx->onRun.push([v_shader](){
@@ -93,7 +93,7 @@
 //         }
 //     });
     
-//     auto f_shader = gl::Shader::make(ctx, gl::ShaderType::Fragment);
+//     auto f_shader = GL::ShaderRef::make(ctx, GL::ShaderRefType::Fragment);
 //     f_shader->setSource(loadTextFile("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"));
 //     f_shader->compile();
 //     ctx->onRun.push([f_shader](){

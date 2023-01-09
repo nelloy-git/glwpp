@@ -23,7 +23,8 @@ MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFa
         memcpy(data_ptr, face.mIndices, face_size);
         data_ptr += face_size;
     }
-    buffer.setStorage(buffer_size, data_copy, 0, src_loc.add());
+    auto p = buffer->shared_from_this();
+    buffer->setStorage(buffer_size, data_copy, 0, src_loc.add());
 }    
     
 MeshIndices::~MeshIndices(){

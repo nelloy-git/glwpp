@@ -4,17 +4,16 @@
 
 namespace glwpp::GL {
 
-class Shader : public Handler {
+namespace detail {
+
+class ShaderImpl : public Handler<ShaderImpl> {
 public:
-    Shader(Valuable<Context&> auto&& ctx,
-           Valuable<const GLenum&> auto&& type,
-           Valuable<const SrcLoc&> auto&& src_loc) : 
-        Handler(GetValuable(ctx), GetDeleter<&_free>(), GetValuable(src_loc).add()){
-        call<[](Context& ctx, const GLenum& type, GLuint& dst, const SrcLoc& src_loc){
-            dst = ctx.gl.CreateShader(type, src_loc);
-        }, IsGlThread::Unknown>(type, data, GetValuable(src_loc).add());
+    ShaderImpl(Valuable<Context&> auto&& ctx,
+               Valuable<const GLenum&> auto&& type,
+               Valuable<const SrcLoc&> auto&& src_loc) : 
+        Handler(ctx, _GetInit(std::forward<decltype(type)>(type)), &_Free, src_loc){
     }
-    virtual ~Shader(){}
+    virtual ~ShaderImpl(){}
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<std::future<void>> source(Valuable<const std::string&> auto&& code,
@@ -33,20 +32,20 @@ public:
 
 
 
-    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::future<GLenum>> getType(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLenum, GLapi::GL_SHADER_TYPE, is_gl_thread>(src_loc);
-    }
+    // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
+    // Value<std::future<GLenum>> getType(Valuable<const SrcLoc&> auto&& src_loc){
+    //     return _getParamiAs<GLenum, GLapi::GL_SHADER_TYPE, is_gl_thread>(src_loc);
+    // }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<std::future<GLboolean>> isCompiled(Valuable<const SrcLoc&> auto&& src_loc){
         return _getParamiAs<GLboolean, GLapi::GL_COMPILE_STATUS, is_gl_thread>(src_loc);
     }
 
-    template<IsGlThread is_gl_thread = IsGlThread::Unknown>
-    Value<std::future<GLint>> getSourceLength(Valuable<const SrcLoc&> auto&& src_loc){
-        return _getParamiAs<GLint, GLapi::GL_SHADER_SOURCE_LENGTH, is_gl_thread>(src_loc);
-    }
+    // template<IsGlThread is_gl_thread = IsGlThread::Unknown>
+    // Value<std::future<GLint>> getSourceLength(Valuable<const SrcLoc&> auto&& src_loc){
+    //     return _getParamiAs<GLint, GLapi::GL_SHADER_SOURCE_LENGTH, is_gl_thread>(src_loc);
+    // }
 
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     Value<std::future<std::string>> getInfoLog(Valuable<const SrcLoc&> auto&& src_loc){
@@ -63,7 +62,13 @@ public:
 
 
 protected:
-    static void _free(Context& ctx, const GLuint& id, const SrcLoc& src_loc){
+    static Init _GetInit(Valuable<const GLenum&> auto&& type){
+        return [type](Context& ctx, const SrcLoc& src_loc){
+            return ctx.gl.CreateShader(GetValuable(type), src_loc);
+        };
+    }
+
+    static void _Free(Context& ctx, const GLuint& id, const SrcLoc& src_loc){
         ctx.gl.DeleteShader(id, src_loc);
     }
 
@@ -76,6 +81,17 @@ protected:
         }, is_gl_thread>(id(), src_loc);
     }
 
+};
+
+} // namespace detail
+
+class ShaderRef : public CtxObjRef<detail::ShaderImpl> {
+public:
+    ShaderRef(Valuable<Context&> auto&& ctx,
+              Valuable<const GLenum&> auto&& type,
+              Valuable<const SrcLoc&> auto&& src_loc) :
+        CtxObjRef(ctx, type, src_loc){
+    }
 };
 
 } // namespace glwpp::GL

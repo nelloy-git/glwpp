@@ -1,52 +1,48 @@
 #pragma once
 
-#include "gl_object/ObjectRef.hpp"
+#include "context/CtxObj.hpp"
 
 namespace glwpp::GL {
 
-class Handler : public ObjectRef<GLuint> {
+template<typename T>
+class Handler : public CtxObj<T> {
 public:
     static constexpr GLuint INVALID_ID = 0;
 
-    template<auto _Clean, int _Prio = Context::PRIORITY_MIN>
-    static constexpr auto GetDeleter(){
-        return [](std::weak_ptr<Context> wctx, GLuint* ptr, const SrcLoc& src_loc){
-            if (auto ctx = wctx.lock()){
-                ctx->event_on_run_gl.add(_Prio, [id = *ptr, src_loc](Context& ctx, const Context::ms&){
-                    _Clean(ctx, id, src_loc);
-                    return false;
-                });
-            }
-            delete ptr;
-        };
-    };
+    using Init = std::function<GLuint(Context&, const SrcLoc&)>;
+    using Free = std::function<void(Context&, const GLuint&, const SrcLoc&)>;
 
-    static auto GetDeleter(const std::function<void(Context&, const GLuint&, const SrcLoc&)>& clean){
-        return [clean](std::weak_ptr<Context> wctx, GLuint* ptr, const SrcLoc& src_loc){
-            if (auto ctx = wctx.lock()){
-                ctx->event_on_run_gl.add(Context::PRIORITY_DEFAULT, [clean, id = *ptr, src_loc](Context& ctx, const Context::ms&){
-                    clean(ctx, id, src_loc);
-                    return false;
-                });
-            }
-            delete ptr;
-        };
-    };
-
-    Handler(Context& ctx, const std::function<void(Context&, const GLuint&, const SrcLoc&)> clean, const SrcLoc& src_loc) :
-        ObjectRef(ctx, new GLuint(INVALID_ID), GetDeleter(clean), src_loc){
-    }
-
-    Handler(Context& ctx, const std::function<void(std::weak_ptr<Context> wctx, GLuint*, const SrcLoc&)> deleter, const SrcLoc& src_loc) :
-        ObjectRef(ctx, new GLuint(INVALID_ID), deleter, src_loc){
+    Handler(Context& ctx, const Init& init, const Free& free, const SrcLoc& src_loc) :
+        CtxObj<T>(ctx),
+        _id(Value<GLuint>::Make(new GLuint(INVALID_ID), _GetDeleter(ctx, free, src_loc))){
+        _init(init, src_loc);
     }
 
     inline Value<const GLuint> id() const {
-        return data;
+        return _id;
     }
 
-protected:
-    using ObjectRef<GLuint>::data;
+private:
+    Value<GLuint> _id;
+
+    void _init(const Init& init, const SrcLoc& src_loc){
+        static constexpr auto F = [](Context& ctx, GLuint& id, const Init& init, const SrcLoc& src_loc){
+            id = init(ctx, src_loc);
+        };
+        this->call<F, IsGlThread::Unknown>(_id, init, src_loc);
+    }
+
+    static constexpr auto _GetDeleter(Context& ctx, const Free& free, const SrcLoc& src_loc){
+        return [wctx = ctx.weak_from_this(), free, src_loc](GLuint* ptr){
+            if (auto ctx = wctx.lock()){
+                ctx->event_on_run_gl.add(Context::PRIORITY_MIN, [free, id = *ptr, src_loc](Context& ctx, const Context::ms&){
+                    free(ctx, id, src_loc);
+                    return false;
+                });
+            }
+            delete ptr;
+        };
+    };
 
 };
 

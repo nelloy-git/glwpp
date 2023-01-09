@@ -41,6 +41,7 @@ public:
     }
 
 private:
+    std::atomic<bool> _manual_lock;
     std::shared_ptr<std::mutex> _lock;
     std::shared_ptr<std::atomic<bool>> _is_executing;
     std::shared_ptr<std::deque<std::function<void()>>> _queue;

@@ -16,7 +16,7 @@ enum class DrawerUniformBlock {
     Mesh,
 };
 
-class Drawer : public gl::Program {
+class Drawer : public GL::ProgramRef {
 public:
     using MeshAttributeBindings = EnumContainer<model::MeshAttribute, std::string>;
     using UniformBlockBindings = EnumContainer<DrawerUniformBlock, std::string>;

@@ -12,7 +12,7 @@ struct aiMesh;
 
 namespace glwpp {
 
-class Mesh : protected CallOptimizer {
+class Mesh {
 public:
     static const GLuint POSITION_INDEX;
     static const GLuint NORMAL_INDEX;
@@ -29,7 +29,7 @@ public:
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     bool bindPosition(Valuable<const std::optional<unsigned int>&> auto&& binding,
                       Valuable<const SrcLoc&> auto&& src_loc){
-        call<&_bindAttributeGL, is_gl_thread>(vao, _bindings, POSITION_INDEX, binding, GetValuable(src_loc).add());
+        // call<&_bindAttributeGL, is_gl_thread>(vao, _bindings, POSITION_INDEX, binding, GetValuable(src_loc).add());
     }
 
     bool bindNormal(const std::optional<unsigned int>& binding, const SrcLoc& src_loc);
@@ -44,10 +44,10 @@ public:
     template<IsGlThread is_gl_thread = IsGlThread::Unknown>
     void setBindings(Valuable<const Bindings&> auto&& bindings,
                      Valuable<const SrcLoc&> auto&& src_loc){
-        call<&_setBindingsGL, is_gl_thread>(vao, _bindings, bindings, src_loc);
+        // call<&_setBindingsGL, is_gl_thread>(vao, _bindings, bindings, src_loc);
     }
 
-    GL::VertexArray vao;
+    GL::VertexArrayRef vao;
     MeshIndices indices;
     MeshAttribute position;
     std::unique_ptr<MeshAttribute> normal;
@@ -64,8 +64,8 @@ private:
     void _linkAttribute(const GLuint& index, const MeshAttribute& attribute, const SrcLoc& src_loc);
     void _bindAttribute(const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc);
 
-    static void _setBindingsGL(Context& ctx, GL::VertexArray& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc);
-    static void _bindAttributeGL(Context& ctx, GL::VertexArray& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc);
+    static void _setBindingsGL(Context& ctx, GL::VertexArrayRef& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc);
+    static void _bindAttributeGL(Context& ctx, GL::VertexArrayRef& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc);
 };
     
 } // namespace glwpp
