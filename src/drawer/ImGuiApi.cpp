@@ -14,13 +14,12 @@ using namespace glwpp;
 thread_local ImGuiContext* MyImGuiTLS = nullptr;
 
 ImGuiApi::ImGuiApi(Context& ctx) :
-    CtxObj(ctx),
-    init_error(call<&_InitImguiBackendGL, IsGlThread::Unknown>()){
+    CtxObj(ctx){
+    call<TState::Unknown>(&_InitImguiBackendGL);
 }
 
 ImGuiApi::~ImGuiApi(){
-    call<&_ShutdownImguiBackendGL, IsGlThread::Unknown>();
-    // TODO
+    // call<TState::Unknown>(&_ShutdownImguiBackendGL);
 }
 
 void ImGuiApi::_NewFrame(){
@@ -34,8 +33,8 @@ void ImGuiApi::_Render(){
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-bool ImGuiApi::_Begin(const std::string& name, bool& p_open, int& flags){
-    return ImGui::Begin(name.c_str(), &p_open, flags);
+bool ImGuiApi::_Begin(const std::string& name, bool* p_open, int& flags){
+    return ImGui::Begin(name.c_str(), p_open, flags);
 }
 
 void ImGuiApi::_End(){
@@ -46,9 +45,9 @@ void ImGuiApi::_Text(const std::string& text){
     ImGui::Text(text.c_str());
 }
 
-ImGuiApi::Error ImGuiApi::_InitImguiBackendGL(Context& ctx){
+void ImGuiApi::_InitImguiBackendGL(Context& ctx){
     if (_GetInstancesInContext() > 1){  
-        return {false, std::string{}};
+        return;
     }
 
     IMGUI_CHECKVERSION();
@@ -56,16 +55,16 @@ ImGuiApi::Error ImGuiApi::_InitImguiBackendGL(Context& ctx){
     ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer backends
-    if (!ImGui_ImplGlfw_InitForOpenGL(ctx.getGlfw().get(), true)){
-        return {true, "ImGui_ImplGlfw_InitForOpenGL failed"};
+    if (!ImGui_ImplGlfw_InitForOpenGL(&ctx.getGlfw(), true)){
+        throw std::runtime_error("ImGui_ImplGlfw_InitForOpenGL failed");
     }
 
     if (!ImGui_ImplOpenGL3_Init("#version 130")){
-        return {true, "ImGui_ImplOpenGL3_Init(\"#version 130\") failed"};
+        throw std::runtime_error("ImGui_ImplOpenGL3_Init(\"#version 130\") failed");
     }
 
     ++_GetInstancesInContext();
-    return {false, std::string{}};
+    return;
 }
 
 void ImGuiApi::_ShutdownImguiBackendGL(){

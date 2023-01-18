@@ -3,7 +3,7 @@
 const int vPosN = 0;
 const int vTexN = 1;
 
-// in vec3 vPos;
+in vec3 vPos;
 in vec2 vTex;
 
 layout (std140) uniform Camera {

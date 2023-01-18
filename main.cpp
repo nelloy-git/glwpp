@@ -20,6 +20,8 @@
 
 #include "drawer/ImGuiApi.hpp"
 
+#include "GLapi.hpp"
+
 std::string read_file(const std::string& path){
     std::ifstream t(path);
     std::stringstream buffer;
@@ -28,64 +30,35 @@ std::string read_file(const std::string& path){
 }
 
 auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
-    auto f = __func__;
-
-    glwpp::Drawer drawer(ctx, src_loc);
-    auto vert_err = drawer.setVertexShader(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
-    auto frag_err = drawer.setFragmentShader(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
-
-    drawer.setShaderTest(std::string(""), src_loc);
-
-    ctx.event_after_run_nongl.add(glwpp::Context::PRIORITY_DEFAULT, [vert_err, frag_err](glwpp::Context& ctx, const glwpp::Context::ms&){
-        std::cout << "Drawer debug" << std::endl;
-        auto& v_err = vert_err.value();
-        if (v_err.first){
-            std::cout << "Msg: " << v_err.second.c_str() << std::endl;
-        }
-
-        auto& f_err = frag_err.value();
-        if (f_err.first){
-            std::cout << "Msg: " << f_err.second.c_str() << std::endl;
-        }
-        return false;
-    });
-
-    // glwpp::GL::ShaderRef vert(ctx, GL_VERTEX_SHADER, src_loc);
-    // vert.source(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
-    // vert.compile(src_loc);
-    // auto vert_info = vert.getInfoLog(src_loc);
-    
-    // glwpp::GL::ShaderRef frag(ctx, GL_FRAGMENT_SHADER, src_loc);
-    // frag.source(read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
-    // frag.compile(src_loc);
-    // auto frag_info = frag.getInfoLog(src_loc);
-
-    // glwpp::GL::ProgramRef prog(ctx, src_loc);
-    // prog.attach(vert, src_loc);
-    // prog.attach(frag, src_loc);
-    // prog.link(src_loc);
-    // auto prog_info = prog.getInfoLog(src_loc);
-
-    // return std::make_tuple(vert_info, frag_info, prog_info);
+    // glwpp::DrawerRef drawer(ctx, src_loc);
+    // drawer->on_shader_error = [](auto& drawer, const auto& err){
+    //     std::cout << "Msg: " << err.second.c_str() << std::endl;
+    //     return true;
+    // };
+    // drawer->setShader(glwpp::GLapi::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
+    // drawer->setShader(glwpp::GLapi::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
 }
 
 int main(int argc, char **argv){
-    glwpp::Context::Parameters ctx_params;
+    glwpp::Context::Config ctx_params;
     ctx_params.width = 1280;
     ctx_params.height = 1024;
     ctx_params.fps = 60;
     ctx_params.title = "Noname";
 
-    auto ctx = std::make_shared<glwpp::Context>(ctx_params);
-    glwpp::ImGuiApi imgui(*ctx);
+    auto ctx = glwpp::Context::Make(ctx_params);
+    auto imgui = glwpp::ImGuiApi::Make(*ctx);
     glwpp::Value<std::string> name("Metrics");
     glwpp::Value<bool> opened(true);
     glwpp::Value<int> flags(0);
     
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
-    ctx->gl.setMetricsCategory(gl_metrics);
+    ctx->gl().setMetricsCategory(gl_metrics);
 
     // init_drawer(*ctx);
+
+    // unsigned int id;
+    // ctx->gl2().CreateBuffers<glwpp::TState::False>(1, &id, glwpp::SrcLoc{});
 
     // glwpp
 
@@ -103,20 +76,20 @@ int main(int argc, char **argv){
 
     bool done = false;
     size_t i = 0;
-    while(i < 5000){
+    while(i < 3000){
         ++i;
         auto run_future = ctx->run();
 
         if (*opened){
-            imgui.NewFrame();
-            imgui.Begin(name, opened, flags);
+            imgui->NewFrame<glwpp::TState::False>();
+            imgui->Begin<glwpp::TState::False>(name, opened.get(), flags);
             auto all_names = gl_metrics->getAllNames();
             std::sort(all_names.begin(), all_names.end());
             for (auto& name : all_names){
-                imgui.Text(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
+                imgui->Text<glwpp::TState::False>(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
             }
-            imgui.End();
-            imgui.Render();
+            imgui->End<glwpp::TState::False>();
+            imgui->Render<glwpp::TState::False>();
         }
     
 

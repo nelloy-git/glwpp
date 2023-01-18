@@ -39,7 +39,7 @@ std::optional<std::string> Model::_loadMeshes(Context& ctx, const aiScene& ai_sc
             return "Empty pointer aiMesh[" + std::to_string(i) + "]";
         }
 
-        meshes.emplace_back(ctx, *ai_mesh, src_loc);
+        meshes.emplace_back(Mesh::Make(ctx, *ai_mesh, src_loc));
     }
 
     return std::nullopt;

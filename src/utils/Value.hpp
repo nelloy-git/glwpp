@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "context/value/ConstVoidValue.hpp"
-#include "context/value/DelayedValue.hpp"
-#include "context/value/VoidValue.hpp"
+#include "utils/value/ConstVoidValue.hpp"
+#include "utils/value/DelayedValue.hpp"
+#include "utils/value/VoidValue.hpp"
 
 namespace glwpp {
 
@@ -62,6 +62,7 @@ class Value {
 public:
     using type = typename T;
 
+    static Value<T> Make(T* ptr);
     template<typename D>
     static Value<T> Make(T* ptr, D&& del);
     static Value<T> Make(auto&&... args);
@@ -98,6 +99,11 @@ protected:
 };
 
 // =============================================
+
+template<typename T>
+Value<T> Value<T>::Make(T* ptr){
+    return Value<T>(raw_ptr{}, ptr);
+}
 
 template<typename T>
 template<typename D>
@@ -166,12 +172,14 @@ Value<T>::Value(const emplace& empty, auto&&... args) :
 template<typename T>
 Value<T>::Value(const raw_ptr& empty, T* ptr) :
     _ptr(ptr){
+    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 template<typename T>
 template<typename D>
 Value<T>::Value(const raw_ptr_del& empty, T* ptr, D&& del) :
     _ptr(ptr, del){
+    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 } // namespace glwpp

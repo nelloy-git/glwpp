@@ -5,13 +5,14 @@
 using namespace glwpp;
 
 MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFace* ai_faces, const SrcLoc& src_loc) :
+    CtxObj(ctx),
     type(Type::UInt),
-    buffer(ctx, src_loc.add()){
+    buffer(GL::Buffer::Make(ctx, src_loc.add())){
 
     size_t buffer_size = mNumFaces * 3 * sizeof(*aiFace::mIndices);
     auto data_copy = Value<void>::Malloc(buffer_size);
 
-    char* data_ptr = static_cast<char*>(data_copy.get());
+    char* data_ptr = static_cast<char*>(data_copy.value());
     for (size_t i = 0; i < mNumFaces; ++i){
         auto& face = ai_faces[i];
         // Check is triangulated
@@ -24,7 +25,7 @@ MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFa
         data_ptr += face_size;
     }
     auto p = buffer->shared_from_this();
-    buffer->setStorage(buffer_size, data_copy, 0, src_loc.add());
+    buffer->setStorage<TState::Unknown>(buffer_size, data_copy, 0, src_loc.add());
 }    
     
 MeshIndices::~MeshIndices(){

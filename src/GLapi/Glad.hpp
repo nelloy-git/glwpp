@@ -2,6 +2,12 @@
 
 #include <KHR/khrplatform.h>
 
+#include "GLapi/Const.hpp"
+
+typedef struct __GLsync *GLsync;
+
+namespace glwpp {
+
 typedef void (*GLADapiproc)(void);
 typedef GLADapiproc (*GLADloadfunc)(const char *name);
 
@@ -57,7 +63,6 @@ typedef khronos_int64_t GLint64;
 typedef khronos_int64_t GLint64EXT;
 typedef khronos_uint64_t GLuint64;
 typedef khronos_uint64_t GLuint64EXT;
-typedef struct __GLsync *GLsync;
 struct _cl_context;
 struct _cl_event;
 
@@ -69,3 +74,5 @@ typedef void (*GLVULKANPROCNV)();
 
 typedef unsigned short GLhalfNV;
 typedef GLintptr GLvdpauSurfaceNV;
+
+} // namespace glwpp

@@ -6,23 +6,21 @@
 
 using namespace glwpp;
 
-const GLuint Mesh::POSITION_INDEX = 0;
-const GLuint Mesh::NORMAL_INDEX = 1;
-const GLuint Mesh::TANGENT_INDEX = 2;
-const GLuint Mesh::BITANGENT_INDEX = 3;
-const std::array<const GLuint, 8> Mesh::TEXTURE_INDEX = {4, 5, 6, 7, 8, 9, 10, 11};
-const std::array<const GLuint, 8> Mesh::COLOR_INDEX = {12, 13, 14, 15, 16, 17, 18, 19};
-
 Mesh::Mesh(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc) :
-    vao(ctx, src_loc),
-    indices(ctx, ai_mesh.mNumFaces, ai_mesh.mFaces, src_loc.add()),
-    position(ctx, ai_mesh.mNumVertices, ai_mesh.mVertices, src_loc.add()),
+    CtxObj(ctx),
+    vao(GL::VertexArray::Make(ctx, src_loc)),
+    indices(MeshIndices::Make(ctx, ai_mesh.mNumFaces, ai_mesh.mFaces, src_loc.add())),
     _bindings({}){
-    // _initOptionalBuffers(ctx, ai_mesh, src_loc);
-    // _linkAllAttributes(src_loc);
+    _initAttributes(ctx, ai_mesh, src_loc);
+    // _linkAttributes(src_loc);
 }
 
 Mesh::~Mesh(){
+}
+
+void Mesh::_init(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc){
+    // _initAttributes(src_loc);
+
 }
 
 // bool Mesh::bindPosition(const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
@@ -60,9 +58,9 @@ Mesh::~Mesh(){
 //     return true;
 // }
 
-const Value<const Mesh::Bindings> Mesh::getBindings() const {
-    return _bindings;
-}
+// const Value<const Mesh::Bindings> Mesh::getBindings() const {
+//     return _bindings;
+// }
 
 // void Mesh::setBindings(const Value<const Bindings>& bindings, const SrcLoc& src_loc){
 //     constexpr auto F = [](Context& ctx, GL::VertexArray& vao, Bindings& dst_bindings, const Bindings& bindings, const SrcLoc& src_loc){
@@ -79,59 +77,46 @@ const Value<const Mesh::Bindings> Mesh::getBindings() const {
 //     call<F, IsGlThread::Unknown>(vao, _bindings, bindings, src_loc);
 // }
 
-void Mesh::_initOptionalBuffers(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc){
-    // if (ai_mesh.HasNormals()){
-    //     normal = std::make_unique<MeshAttribute>(ctx, ai_mesh.mNumVertices, ai_mesh.mNormals, src_loc);
-    // }
-    // if (ai_mesh.HasTangentsAndBitangents()){
-    //     tangent = std::make_unique<MeshAttribute>(ctx, ai_mesh.mNumVertices, ai_mesh.mTangents, src_loc);
-    //     bitangent = std::make_unique<MeshAttribute>(ctx, ai_mesh.mNumVertices, ai_mesh.mBitangents, src_loc);
-    // }
+void Mesh::_initAttributes(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& src_loc){
+    using Type = MeshAttributeType;
 
-    // for (int i = 0; i < 8; ++i){
-    //     if (ai_mesh.HasTextureCoords(i)){
-    //         texture_coord[i] = std::make_unique<MeshAttribute>(ctx, ai_mesh.mNumVertices, ai_mesh.mTextureCoords[i], src_loc);
-    //     }
-    // }
+    if (ai_mesh.HasPositions()){
+        _initAttribute(ctx, Type::Position, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mVertices, src_loc), src_loc);
+    }
+    if (ai_mesh.HasNormals()){
+        attributes[Type::Normal] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mNormals, src_loc);
+    }
+    if (ai_mesh.HasTangentsAndBitangents()){
+        attributes[Type::Tangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTangents, src_loc);
+        attributes[Type::Bitangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mBitangents, src_loc);
+    }
 
-    // for (int i = 0; i < 8; ++i){
-    //     if (ai_mesh.HasVertexColors(i)){
-    //         color[i] = std::make_unique<MeshAttribute>(ctx, ai_mesh.mNumVertices, ai_mesh.mColors[i], src_loc);
-    //     }
-    // }
+    for (unsigned int i = 0; i < attributes.textures(); ++i){
+        if (ai_mesh.HasTextureCoords(i)){
+            attributes.setTexture(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTextureCoords[i], src_loc));
+        }
+    }
+
+    for (unsigned int i = 0; i < attributes.textures(); ++i){
+        if (ai_mesh.HasVertexColors(i)){
+            attributes.setColor(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mColors[i], src_loc));
+        }
+    }
 }
 
-void Mesh::_linkAllAttributes(const SrcLoc& src_loc){
-    // vao->setElementBuffer(indices.buffer, src_loc);
-    // _linkAttribute(POSITION_INDEX, position, src_loc);
-    // if (normal){_linkAttribute(NORMAL_INDEX, *normal, src_loc);}
-    // if (tangent){_linkAttribute(TANGENT_INDEX, *tangent, src_loc);}
-    // if (bitangent){_linkAttribute(BITANGENT_INDEX, *bitangent, src_loc);}
-    // for (size_t i = 0; i < texture_coord.size(); ++i){
-    //     if (texture_coord[i]){_linkAttribute(TEXTURE_INDEX[i], *texture_coord[i], src_loc);}
-    // }
-    // for (size_t i = 0; i < color.size(); ++i){
-    //     if (color[i]){_linkAttribute(COLOR_INDEX[i], *color[i], src_loc);}
-    // }
-    
+void Mesh::_initAttribute(Context& ctx, const MeshAttributeType& type, const Value<MeshAttribute>& attrib, const SrcLoc& src_loc){
+    attributes[type] = attrib;
+    vao->setVertexBuffer<TState::Unknown>(INDEX[type], attrib->buffer, 0, attrib->stride, src_loc);
+    vao->setAttribFormat<TState::Unknown>(INDEX[type], attrib->components, static_cast<GLenum>(attrib->type), attrib->normalized, 0, src_loc);
 }
 
-void Mesh::_linkAttribute(const GLuint& index, const MeshAttribute& attribute, const SrcLoc& src_loc){
-    // vao->setVertexBuffer(index, attribute.buffer, 0, attribute.stride, src_loc);
-    // vao->setAttribFormat(index, attribute.components, static_cast<GLenum>(attribute.type), attribute.normalized, 0, src_loc);
-}
-
-void Mesh::_bindAttribute(const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
-    // call<&_bindAttributeGL, IsGlThread::Unknown>(vao, _bindings, index, binding, src_loc);
-}
-
-void Mesh::_setBindingsGL(Context& ctx, GL::VertexArrayRef& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc){
+void Mesh::_setBindingsGL(Context& ctx, GL::VertexArray& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc){
     // for (unsigned int i = 0; i < trg_bindings.size(); ++i){
     //     _bindAttributeGL(ctx, vao, cur_bindings, i, trg_bindings[i], src_loc);
     // }
 }
 
-void Mesh::_bindAttributeGL(Context& ctx, GL::VertexArrayRef& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
+void Mesh::_bindAttributeGL(Context& ctx, GL::VertexArray& vao, Bindings& bindings, const GLuint& index, const std::optional<unsigned int>& binding, const SrcLoc& src_loc){
     // bindings[index] = binding;
     // if (!binding.has_value()){
     //     vao->disableAttrib<IsGlThread::True>(index, src_loc);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "context/CtxObj.hpp"
+#include "GLapi.hpp"
 
 namespace glwpp::GL {
 
@@ -29,13 +29,13 @@ private:
         static constexpr auto F = [](Context& ctx, GLuint& id, const Init& init, const SrcLoc& src_loc){
             id = init(ctx, src_loc);
         };
-        this->call<F, IsGlThread::Unknown>(_id, init, src_loc);
+        this->call<TState::Unknown>(F, _id, init, src_loc);
     }
 
     static constexpr auto _GetDeleter(Context& ctx, const Free& free, const SrcLoc& src_loc){
         return [wctx = ctx.weak_from_this(), free, src_loc](GLuint* ptr){
             if (auto ctx = wctx.lock()){
-                ctx->event_on_run_gl.add(Context::PRIORITY_MIN, [free, id = *ptr, src_loc](Context& ctx, const Context::ms&){
+                ctx->event_on_run_gl.add(Context::PRIORITY_MIN, [free, id = *ptr, src_loc](Context& ctx, const Context::time&){
                     free(ctx, id, src_loc);
                     return false;
                 });

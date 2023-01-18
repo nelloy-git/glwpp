@@ -1,2891 +1,2146 @@
 #pragma once
 
-#include <functional>
-
 #include <GLapi/Glad.hpp>
 
+#include "context/CtxObj.hpp"
 #include "metric/Category.hpp"
 #include "utils/Export.hpp"
 #include "utils/SrcLoc.hpp"
+#include "utils/TState.hpp"
+#include "utils/Value.hpp"
 
 namespace glwpp {
 
-class GLapi {
+class GLapi;
+
+class GLapiRef : public CtxObjRef<GLapi> {
+    GLapiRef(Valuable<Context&> auto&& ctx,
+              Valuable<const SrcLoc&> auto&& src_loc) :
+        CtxObjRef(ctx, src_loc){
+    }
+};
+
+class GLapi : public CtxObj<GLapi> {
 private:
-    struct GLapiInner;
-    std::unique_ptr<GLapiInner> _glad_context;
+    struct GLapiImpl;
+    std::unique_ptr<GLapiImpl> _impl;
     std::shared_ptr<Metrics::Category> _metrics;
     std::unique_ptr<SrcLoc> _last_src_loc;
 
     template<auto M>
-    auto _call(const SrcLoc& src_loc, const std::string_view& name, auto&&... args) const;
+    auto _implCall(const SrcLoc& src_loc, const std::string_view& name, auto&&... args) const;
 
 public:
-    GLapi();
+    GLapi(Context& ctx);
     virtual ~GLapi();
 
-    int loadGladGLContext(GLADloadfunc load);
+    template<TState IsCtx> inline auto loadGladGLContext(GLADloadfunc load){return callMember<IsCtx, &GLapi::_loadGladGLContext>(load);}
 
     EXPORT const SrcLoc& getLastSrcLoc() const;
     EXPORT void setMetricsCategory(const std::shared_ptr<Metrics::Category>& category);
+    
+    template<TState IsCtx> inline auto Accum(auto&&... args) const {return callMember<IsCtx, &GLapi::_Accum>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ActiveShaderProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_ActiveShaderProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ActiveTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_ActiveTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto AlphaFunc(auto&&... args) const {return callMember<IsCtx, &GLapi::_AlphaFunc>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto AreTexturesResident(auto&&... args) const {return callMember<IsCtx, &GLapi::_AreTexturesResident>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ArrayElement(auto&&... args) const {return callMember<IsCtx, &GLapi::_ArrayElement>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto AttachShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_AttachShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Begin(auto&&... args) const {return callMember<IsCtx, &GLapi::_Begin>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BeginConditionalRender(auto&&... args) const {return callMember<IsCtx, &GLapi::_BeginConditionalRender>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BeginQuery(auto&&... args) const {return callMember<IsCtx, &GLapi::_BeginQuery>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BeginQueryIndexed(auto&&... args) const {return callMember<IsCtx, &GLapi::_BeginQueryIndexed>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BeginTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_BeginTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindAttribLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindAttribLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindBufferBase(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindBufferBase>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindBuffersBase(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindBuffersBase>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindBuffersRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindBuffersRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindFragDataLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindFragDataLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindFragDataLocationIndexed(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindFragDataLocationIndexed>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindImageTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindImageTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindImageTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindImageTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindProgramPipeline(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindProgramPipeline>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindRenderbuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindRenderbuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindSampler(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindSampler>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindSamplers(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindSamplers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindTextureUnit(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindTextureUnit>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindVertexArray(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindVertexArray>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindVertexBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindVertexBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BindVertexBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_BindVertexBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Bitmap(auto&&... args) const {return callMember<IsCtx, &GLapi::_Bitmap>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendColor(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendColor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendEquation(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendEquation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendEquationSeparate(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendEquationSeparate>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendEquationSeparatei(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendEquationSeparatei>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendEquationi(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendEquationi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendFunc(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendFunc>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendFuncSeparate(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendFuncSeparate>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendFuncSeparatei(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendFuncSeparatei>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlendFunci(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlendFunci>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlitFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlitFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BlitNamedFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_BlitNamedFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_BufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BufferStorage(auto&&... args) const {return callMember<IsCtx, &GLapi::_BufferStorage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto BufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_BufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CallList(auto&&... args) const {return callMember<IsCtx, &GLapi::_CallList>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CallLists(auto&&... args) const {return callMember<IsCtx, &GLapi::_CallLists>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CheckFramebufferStatus(auto&&... args) const {return callMember<IsCtx, &GLapi::_CheckFramebufferStatus>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CheckNamedFramebufferStatus(auto&&... args) const {return callMember<IsCtx, &GLapi::_CheckNamedFramebufferStatus>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClampColor(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClampColor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Clear(auto&&... args) const {return callMember<IsCtx, &GLapi::_Clear>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearAccum(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearAccum>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferfi(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferfi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearBufferuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearBufferuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearColor(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearColor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearDepth(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearDepth>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearDepthf(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearDepthf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedBufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedBufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedFramebufferfi(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedFramebufferfi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedFramebufferfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedFramebufferfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedFramebufferiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedFramebufferiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearNamedFramebufferuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearNamedFramebufferuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearStencil(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearStencil>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClearTexSubImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClearTexSubImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClientActiveTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClientActiveTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClientWaitSync(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClientWaitSync>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClipControl(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClipControl>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ClipPlane(auto&&... args) const {return callMember<IsCtx, &GLapi::_ClipPlane>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3b(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3b>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3bv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3ub(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3ub>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3ubv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3ubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3uiv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3us(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3us>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color3usv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color3usv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4b(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4b>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4bv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4ub(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4ub>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4ubv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4ubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4uiv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4us(auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4us>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Color4usv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Color4usv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorMask(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorMask>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorMaski(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorMaski>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorMaterial(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorMaterial>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorP4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorP4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorP4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorP4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ColorPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_ColorPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompileShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompileShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTexSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTexSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTextureSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTextureSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTextureSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTextureSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CompressedTextureSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CompressedTextureSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyImageSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyImageSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyNamedBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyNamedBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyPixels(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyPixels>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTexImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTexImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTexImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTexImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTexSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTexSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTexSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTexSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTexSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTexSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTextureSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTextureSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTextureSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTextureSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CopyTextureSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_CopyTextureSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateFramebuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateFramebuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateProgramPipelines(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateProgramPipelines>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateQueries(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateQueries>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateRenderbuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateRenderbuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateSamplers(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateSamplers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateShaderProgramv(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateShaderProgramv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateTransformFeedbacks(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateTransformFeedbacks>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CreateVertexArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_CreateVertexArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto CullFace(auto&&... args) const {return callMember<IsCtx, &GLapi::_CullFace>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DebugMessageCallback(auto&&... args) const {return callMember<IsCtx, &GLapi::_DebugMessageCallback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DebugMessageControl(auto&&... args) const {return callMember<IsCtx, &GLapi::_DebugMessageControl>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DebugMessageInsert(auto&&... args) const {return callMember<IsCtx, &GLapi::_DebugMessageInsert>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteFramebuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteFramebuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteLists(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteLists>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteProgramPipelines(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteProgramPipelines>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteQueries(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteQueries>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteRenderbuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteRenderbuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteSamplers(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteSamplers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteSync(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteSync>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteTransformFeedbacks(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteTransformFeedbacks>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DeleteVertexArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_DeleteVertexArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthFunc(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthFunc>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthMask(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthMask>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthRangeArrayv(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthRangeArrayv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthRangeIndexed(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthRangeIndexed>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DepthRangef(auto&&... args) const {return callMember<IsCtx, &GLapi::_DepthRangef>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DetachShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_DetachShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Disable(auto&&... args) const {return callMember<IsCtx, &GLapi::_Disable>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DisableClientState(auto&&... args) const {return callMember<IsCtx, &GLapi::_DisableClientState>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DisableVertexArrayAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_DisableVertexArrayAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DisableVertexAttribArray(auto&&... args) const {return callMember<IsCtx, &GLapi::_DisableVertexAttribArray>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Disablei(auto&&... args) const {return callMember<IsCtx, &GLapi::_Disablei>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DispatchCompute(auto&&... args) const {return callMember<IsCtx, &GLapi::_DispatchCompute>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DispatchComputeIndirect(auto&&... args) const {return callMember<IsCtx, &GLapi::_DispatchComputeIndirect>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawArraysIndirect(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawArraysIndirect>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawArraysInstanced(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawArraysInstanced>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawArraysInstancedBaseInstance(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawArraysInstancedBaseInstance>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElements(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElements>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsBaseVertex(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsBaseVertex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsIndirect(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsIndirect>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsInstanced(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsInstanced>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsInstancedBaseInstance(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsInstancedBaseInstance>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsInstancedBaseVertex(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsInstancedBaseVertex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawElementsInstancedBaseVertexBaseInstance(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawElementsInstancedBaseVertexBaseInstance>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawPixels(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawPixels>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawRangeElements(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawRangeElements>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawRangeElementsBaseVertex(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawRangeElementsBaseVertex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawTransformFeedbackInstanced(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawTransformFeedbackInstanced>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawTransformFeedbackStream(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawTransformFeedbackStream>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto DrawTransformFeedbackStreamInstanced(auto&&... args) const {return callMember<IsCtx, &GLapi::_DrawTransformFeedbackStreamInstanced>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EdgeFlag(auto&&... args) const {return callMember<IsCtx, &GLapi::_EdgeFlag>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EdgeFlagPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_EdgeFlagPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EdgeFlagv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_EdgeFlagv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Enable(auto&&... args) const {return callMember<IsCtx, &GLapi::_Enable>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EnableClientState(auto&&... args) const {return callMember<IsCtx, &GLapi::_EnableClientState>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EnableVertexArrayAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_EnableVertexArrayAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EnableVertexAttribArray(auto&&... args) const {return callMember<IsCtx, &GLapi::_EnableVertexAttribArray>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Enablei(auto&&... args) const {return callMember<IsCtx, &GLapi::_Enablei>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto End(auto&&... args) const {return callMember<IsCtx, &GLapi::_End>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EndConditionalRender(auto&&... args) const {return callMember<IsCtx, &GLapi::_EndConditionalRender>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EndList(auto&&... args) const {return callMember<IsCtx, &GLapi::_EndList>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EndQuery(auto&&... args) const {return callMember<IsCtx, &GLapi::_EndQuery>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EndQueryIndexed(auto&&... args) const {return callMember<IsCtx, &GLapi::_EndQueryIndexed>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EndTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_EndTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord1dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord1fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord2dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalCoord2fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalCoord2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalMesh1(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalMesh1>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalMesh2(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalMesh2>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalPoint1(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalPoint1>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto EvalPoint2(auto&&... args) const {return callMember<IsCtx, &GLapi::_EvalPoint2>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FeedbackBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_FeedbackBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FenceSync(auto&&... args) const {return callMember<IsCtx, &GLapi::_FenceSync>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Finish(auto&&... args) const {return callMember<IsCtx, &GLapi::_Finish>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Flush(auto&&... args) const {return callMember<IsCtx, &GLapi::_Flush>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FlushMappedBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_FlushMappedBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FlushMappedNamedBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_FlushMappedNamedBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FogCoordPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_FogCoordPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FogCoordd(auto&&... args) const {return callMember<IsCtx, &GLapi::_FogCoordd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FogCoorddv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_FogCoorddv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FogCoordf(auto&&... args) const {return callMember<IsCtx, &GLapi::_FogCoordf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FogCoordfv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_FogCoordfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Fogf(auto&&... args) const {return callMember<IsCtx, &GLapi::_Fogf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Fogfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Fogfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Fogi(auto&&... args) const {return callMember<IsCtx, &GLapi::_Fogi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Fogiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Fogiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferRenderbuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferRenderbuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferTexture1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferTexture1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferTexture2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferTexture2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferTexture3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferTexture3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FramebufferTextureLayer(auto&&... args) const {return callMember<IsCtx, &GLapi::_FramebufferTextureLayer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto FrontFace(auto&&... args) const {return callMember<IsCtx, &GLapi::_FrontFace>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Frustum(auto&&... args) const {return callMember<IsCtx, &GLapi::_Frustum>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenFramebuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenFramebuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenLists(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenLists>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenProgramPipelines(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenProgramPipelines>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenQueries(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenQueries>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenRenderbuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenRenderbuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenSamplers(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenSamplers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenTransformFeedbacks(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenTransformFeedbacks>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenVertexArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenVertexArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenerateMipmap(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenerateMipmap>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GenerateTextureMipmap(auto&&... args) const {return callMember<IsCtx, &GLapi::_GenerateTextureMipmap>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveAtomicCounterBufferiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveAtomicCounterBufferiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveSubroutineName(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveSubroutineName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveSubroutineUniformName(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveSubroutineUniformName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveSubroutineUniformiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveSubroutineUniformiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveUniform(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveUniform>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveUniformBlockName(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveUniformBlockName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveUniformBlockiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveUniformBlockiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveUniformName(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveUniformName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetActiveUniformsiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetActiveUniformsiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetAttachedShaders(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetAttachedShaders>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetAttribLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetAttribLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBooleani_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBooleani_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBooleanv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBooleanv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBufferParameteri64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBufferParameteri64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBufferPointerv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBufferPointerv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetClipPlane(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetClipPlane>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetCompressedTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetCompressedTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetCompressedTextureImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetCompressedTextureImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetCompressedTextureSubImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetCompressedTextureSubImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetDebugMessageLog(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetDebugMessageLog>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetDoublei_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetDoublei_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetDoublev(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetDoublev>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetError(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetError>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFloati_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFloati_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFloatv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFloatv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFragDataIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFragDataIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFragDataLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFragDataLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFramebufferAttachmentParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFramebufferAttachmentParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetFramebufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetFramebufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetGraphicsResetStatus(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetGraphicsResetStatus>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetInteger64i_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetInteger64i_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetInteger64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetInteger64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetIntegeri_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetIntegeri_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetIntegerv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetIntegerv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetInternalformati64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetInternalformati64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetInternalformativ(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetInternalformativ>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetLightfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetLightfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetLightiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetLightiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMapdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMapdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMapfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMapfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMapiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMapiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMaterialfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMaterialfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMaterialiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMaterialiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetMultisamplefv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetMultisamplefv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedBufferParameteri64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedBufferParameteri64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedBufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedBufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedBufferPointerv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedBufferPointerv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedFramebufferAttachmentParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedFramebufferAttachmentParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedFramebufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedFramebufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetNamedRenderbufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetNamedRenderbufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetObjectLabel(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetObjectLabel>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetObjectPtrLabel(const auto&&... args) const {return callMember<IsCtx, &GLapi::_GetObjectPtrLabel>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetPixelMapfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetPixelMapfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetPixelMapuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetPixelMapuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetPixelMapusv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetPixelMapusv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetPointerv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetPointerv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetPolygonStipple(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetPolygonStipple>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramBinary(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramBinary>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramInfoLog(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramInfoLog>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramInterfaceiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramInterfaceiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramPipelineInfoLog(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramPipelineInfoLog>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramPipelineiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramPipelineiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramResourceIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramResourceIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramResourceLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramResourceLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramResourceLocationIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramResourceLocationIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramResourceName(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramResourceName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramResourceiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramResourceiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramStageiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramStageiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetProgramiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetProgramiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryBufferObjecti64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryBufferObjecti64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryBufferObjectiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryBufferObjectiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryBufferObjectui64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryBufferObjectui64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryBufferObjectuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryBufferObjectuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryIndexediv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryIndexediv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryObjecti64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryObjecti64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryObjectiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryObjectiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryObjectui64v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryObjectui64v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryObjectuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryObjectuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetQueryiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetQueryiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetRenderbufferParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetRenderbufferParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSamplerParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSamplerParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSamplerParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSamplerParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSamplerParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSamplerParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSamplerParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSamplerParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetShaderInfoLog(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetShaderInfoLog>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetShaderPrecisionFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetShaderPrecisionFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetShaderSource(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetShaderSource>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetShaderiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetShaderiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetString(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetString>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetStringi(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetStringi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSubroutineIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSubroutineIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSubroutineUniformLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSubroutineUniformLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetSynciv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetSynciv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexEnvfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexEnvfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexEnviv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexEnviv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexGendv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexGendv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexGenfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexGenfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexGeniv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexGeniv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexLevelParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexLevelParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexLevelParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexLevelParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTexParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTexParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureLevelParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureLevelParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureLevelParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureLevelParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTextureSubImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTextureSubImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTransformFeedbackVarying(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTransformFeedbackVarying>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTransformFeedbacki64_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTransformFeedbacki64_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTransformFeedbacki_v(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTransformFeedbacki_v>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetTransformFeedbackiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetTransformFeedbackiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformBlockIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformBlockIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformIndices(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformIndices>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformLocation(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformLocation>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformSubroutineuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformSubroutineuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetUniformuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetUniformuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexArrayIndexed64iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexArrayIndexed64iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexArrayIndexediv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexArrayIndexediv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexArrayiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexArrayiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribLdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribLdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribPointerv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribPointerv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetVertexAttribiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetVertexAttribiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnColorTable(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnColorTable>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnCompressedTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnCompressedTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnConvolutionFilter(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnConvolutionFilter>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnHistogram(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnHistogram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnMapdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnMapdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnMapfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnMapfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnMapiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnMapiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnMinmax(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnMinmax>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnPixelMapfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnPixelMapfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnPixelMapuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnPixelMapuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnPixelMapusv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnPixelMapusv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnPolygonStipple(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnPolygonStipple>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnSeparableFilter(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnSeparableFilter>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnUniformdv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnUniformdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnUniformfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnUniformfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnUniformiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnUniformiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto GetnUniformuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_GetnUniformuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Hint(auto&&... args) const {return callMember<IsCtx, &GLapi::_Hint>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IndexMask(auto&&... args) const {return callMember<IsCtx, &GLapi::_IndexMask>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IndexPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_IndexPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexd(auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexdv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexf(auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexfv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexi(auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexiv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexs(auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexs>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexsv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexsv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexub(auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexub>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Indexubv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Indexubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InitNames(auto&&... args) const {return callMember<IsCtx, &GLapi::_InitNames>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InterleavedArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_InterleavedArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateBufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateBufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateNamedFramebufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateNamedFramebufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateNamedFramebufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateNamedFramebufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateSubFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateSubFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateTexImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateTexImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto InvalidateTexSubImage(auto&&... args) const {return callMember<IsCtx, &GLapi::_InvalidateTexSubImage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsEnabled(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsEnabled>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsEnabledi(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsEnabledi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsFramebuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsFramebuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsList(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsList>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsProgramPipeline(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsProgramPipeline>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsQuery(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsQuery>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsRenderbuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsRenderbuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsSampler(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsSampler>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsSync(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsSync>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto IsVertexArray(auto&&... args) const {return callMember<IsCtx, &GLapi::_IsVertexArray>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LightModelf(auto&&... args) const {return callMember<IsCtx, &GLapi::_LightModelf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LightModelfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_LightModelfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LightModeli(auto&&... args) const {return callMember<IsCtx, &GLapi::_LightModeli>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LightModeliv(auto&&... args) const {return callMember<IsCtx, &GLapi::_LightModeliv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Lightf(auto&&... args) const {return callMember<IsCtx, &GLapi::_Lightf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Lightfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Lightfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Lighti(auto&&... args) const {return callMember<IsCtx, &GLapi::_Lighti>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Lightiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Lightiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LineStipple(auto&&... args) const {return callMember<IsCtx, &GLapi::_LineStipple>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LineWidth(auto&&... args) const {return callMember<IsCtx, &GLapi::_LineWidth>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LinkProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_LinkProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ListBase(auto&&... args) const {return callMember<IsCtx, &GLapi::_ListBase>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadIdentity(auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadIdentity>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadMatrixd(const auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadMatrixd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadMatrixf(const auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadMatrixf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadName(auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadTransposeMatrixd(const auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadTransposeMatrixd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LoadTransposeMatrixf(const auto&&... args) const {return callMember<IsCtx, &GLapi::_LoadTransposeMatrixf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto LogicOp(auto&&... args) const {return callMember<IsCtx, &GLapi::_LogicOp>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Map1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Map1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Map1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Map1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Map2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Map2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Map2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Map2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapBuffer (auto&&... args) const {return callMember<IsCtx, &GLapi::_MapBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapBufferRange (auto&&... args) const {return callMember<IsCtx, &GLapi::_MapBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapGrid1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MapGrid1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapGrid1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MapGrid1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapGrid2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MapGrid2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapGrid2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MapGrid2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapNamedBuffer (auto&&... args) const {return callMember<IsCtx, &GLapi::_MapNamedBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MapNamedBufferRange (auto&&... args) const {return callMember<IsCtx, &GLapi::_MapNamedBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Materialf(auto&&... args) const {return callMember<IsCtx, &GLapi::_Materialf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Materialfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Materialfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Materiali(auto&&... args) const {return callMember<IsCtx, &GLapi::_Materiali>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Materialiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Materialiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MatrixMode(auto&&... args) const {return callMember<IsCtx, &GLapi::_MatrixMode>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MemoryBarrier(auto&&... args) const {return callMember<IsCtx, &GLapi::_MemoryBarrier>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MemoryBarrierByRegion(auto&&... args) const {return callMember<IsCtx, &GLapi::_MemoryBarrierByRegion>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MinSampleShading(auto&&... args) const {return callMember<IsCtx, &GLapi::_MinSampleShading>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultMatrixd(const auto&&... args) const {return callMember<IsCtx, &GLapi::_MultMatrixd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultMatrixf(const auto&&... args) const {return callMember<IsCtx, &GLapi::_MultMatrixf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultTransposeMatrixd(const auto&&... args) const {return callMember<IsCtx, &GLapi::_MultTransposeMatrixd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultTransposeMatrixf(const auto&&... args) const {return callMember<IsCtx, &GLapi::_MultTransposeMatrixf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawArrays(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawArrays>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawArraysIndirect(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawArraysIndirect>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawArraysIndirectCount(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawArraysIndirectCount>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawElements(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawElements>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawElementsBaseVertex(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawElementsBaseVertex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawElementsIndirect(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawElementsIndirect>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiDrawElementsIndirectCount(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiDrawElementsIndirectCount>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1i(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1s(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord1sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord1sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord2sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord3sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoord4sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoord4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto MultiTexCoordP4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_MultiTexCoordP4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedBufferData(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedBufferData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedBufferStorage(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedBufferStorage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedBufferSubData(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedBufferSubData>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferDrawBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferDrawBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferDrawBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferDrawBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferReadBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferReadBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferRenderbuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferRenderbuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferTexture(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferTexture>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedFramebufferTextureLayer(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedFramebufferTextureLayer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedRenderbufferStorage(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedRenderbufferStorage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NamedRenderbufferStorageMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_NamedRenderbufferStorageMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NewList(auto&&... args) const {return callMember<IsCtx, &GLapi::_NewList>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3b(auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3b>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3bv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Normal3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Normal3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NormalP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_NormalP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NormalP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_NormalP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto NormalPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_NormalPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ObjectLabel(auto&&... args) const {return callMember<IsCtx, &GLapi::_ObjectLabel>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ObjectPtrLabel(const auto&&... args) const {return callMember<IsCtx, &GLapi::_ObjectPtrLabel>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Ortho(auto&&... args) const {return callMember<IsCtx, &GLapi::_Ortho>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PassThrough(auto&&... args) const {return callMember<IsCtx, &GLapi::_PassThrough>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PatchParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PatchParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PatchParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_PatchParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PauseTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_PauseTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelMapfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelMapfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelMapuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelMapuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelMapusv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelMapusv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelStoref(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelStoref>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelStorei(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelStorei>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelTransferf(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelTransferf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelTransferi(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelTransferi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PixelZoom(auto&&... args) const {return callMember<IsCtx, &GLapi::_PixelZoom>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PointParameterf(auto&&... args) const {return callMember<IsCtx, &GLapi::_PointParameterf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PointParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PointParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PointParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_PointParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PointParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_PointParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PointSize(auto&&... args) const {return callMember<IsCtx, &GLapi::_PointSize>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PolygonMode(auto&&... args) const {return callMember<IsCtx, &GLapi::_PolygonMode>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PolygonOffset(auto&&... args) const {return callMember<IsCtx, &GLapi::_PolygonOffset>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PolygonOffsetClamp(auto&&... args) const {return callMember<IsCtx, &GLapi::_PolygonOffsetClamp>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PolygonStipple(const auto&&... args) const {return callMember<IsCtx, &GLapi::_PolygonStipple>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PopAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_PopAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PopClientAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_PopClientAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PopDebugGroup(auto&&... args) const {return callMember<IsCtx, &GLapi::_PopDebugGroup>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PopMatrix(auto&&... args) const {return callMember<IsCtx, &GLapi::_PopMatrix>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PopName(auto&&... args) const {return callMember<IsCtx, &GLapi::_PopName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PrimitiveRestartIndex(auto&&... args) const {return callMember<IsCtx, &GLapi::_PrimitiveRestartIndex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PrioritizeTextures(auto&&... args) const {return callMember<IsCtx, &GLapi::_PrioritizeTextures>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramBinary(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramBinary>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1i(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniform4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniform4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2x3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2x3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2x3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2x3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2x4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2x4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix2x4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix2x4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3x2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3x2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3x2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3x2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3x4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3x4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix3x4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix3x4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4x2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4x2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4x2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4x2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4x3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4x3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProgramUniformMatrix4x3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProgramUniformMatrix4x3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ProvokingVertex(auto&&... args) const {return callMember<IsCtx, &GLapi::_ProvokingVertex>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PushAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_PushAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PushClientAttrib(auto&&... args) const {return callMember<IsCtx, &GLapi::_PushClientAttrib>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PushDebugGroup(auto&&... args) const {return callMember<IsCtx, &GLapi::_PushDebugGroup>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PushMatrix(auto&&... args) const {return callMember<IsCtx, &GLapi::_PushMatrix>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto PushName(auto&&... args) const {return callMember<IsCtx, &GLapi::_PushName>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto QueryCounter(auto&&... args) const {return callMember<IsCtx, &GLapi::_QueryCounter>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos2sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RasterPos4sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_RasterPos4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ReadBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_ReadBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ReadPixels(auto&&... args) const {return callMember<IsCtx, &GLapi::_ReadPixels>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ReadnPixels(auto&&... args) const {return callMember<IsCtx, &GLapi::_ReadnPixels>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectd(auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectd>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectdv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectdv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectf(auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectfv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Recti(auto&&... args) const {return callMember<IsCtx, &GLapi::_Recti>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectiv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rects(auto&&... args) const {return callMember<IsCtx, &GLapi::_Rects>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rectsv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Rectsv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ReleaseShaderCompiler(auto&&... args) const {return callMember<IsCtx, &GLapi::_ReleaseShaderCompiler>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RenderMode(auto&&... args) const {return callMember<IsCtx, &GLapi::_RenderMode>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RenderbufferStorage(auto&&... args) const {return callMember<IsCtx, &GLapi::_RenderbufferStorage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto RenderbufferStorageMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_RenderbufferStorageMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ResumeTransformFeedback(auto&&... args) const {return callMember<IsCtx, &GLapi::_ResumeTransformFeedback>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rotated(auto&&... args) const {return callMember<IsCtx, &GLapi::_Rotated>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Rotatef(auto&&... args) const {return callMember<IsCtx, &GLapi::_Rotatef>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SampleCoverage(auto&&... args) const {return callMember<IsCtx, &GLapi::_SampleCoverage>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SampleMaski(auto&&... args) const {return callMember<IsCtx, &GLapi::_SampleMaski>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameterf(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameterf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SamplerParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_SamplerParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Scaled(auto&&... args) const {return callMember<IsCtx, &GLapi::_Scaled>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Scalef(auto&&... args) const {return callMember<IsCtx, &GLapi::_Scalef>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Scissor(auto&&... args) const {return callMember<IsCtx, &GLapi::_Scissor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ScissorArrayv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ScissorArrayv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ScissorIndexed(auto&&... args) const {return callMember<IsCtx, &GLapi::_ScissorIndexed>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ScissorIndexedv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ScissorIndexedv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3b(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3b>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3bv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3ub(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3ub>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3ubv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3ubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3uiv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3us(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3us>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColor3usv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColor3usv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColorP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColorP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColorP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColorP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SecondaryColorPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_SecondaryColorPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SelectBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_SelectBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ShadeModel(auto&&... args) const {return callMember<IsCtx, &GLapi::_ShadeModel>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ShaderBinary(auto&&... args) const {return callMember<IsCtx, &GLapi::_ShaderBinary>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ShaderSource(auto&&... args) const {return callMember<IsCtx, &GLapi::_ShaderSource>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ShaderStorageBlockBinding(auto&&... args) const {return callMember<IsCtx, &GLapi::_ShaderStorageBlockBinding>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto SpecializeShader(auto&&... args) const {return callMember<IsCtx, &GLapi::_SpecializeShader>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilFunc(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilFunc>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilFuncSeparate(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilFuncSeparate>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilMask(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilMask>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilMaskSeparate(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilMaskSeparate>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilOp(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilOp>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto StencilOpSeparate(auto&&... args) const {return callMember<IsCtx, &GLapi::_StencilOpSeparate>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1i(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1s(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord1sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord1sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord2sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoord4sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoord4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordP4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordP4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexCoordPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexCoordPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexEnvf(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexEnvf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexEnvfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexEnvfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexEnvi(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexEnvi>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexEnviv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexEnviv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGend(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGend>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGendv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGendv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGenf(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGenf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGenfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGenfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGeni(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGeni>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexGeniv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexGeniv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexImage2DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexImage2DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexImage3DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexImage3DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameterf(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameterf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexStorage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexStorage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexStorage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexStorage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexStorage2DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexStorage2DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexStorage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexStorage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexStorage3DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexStorage3DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TexSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TexSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureBarrier(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureBarrier>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameterIiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameterIiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameterIuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameterIuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameterf(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameterf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameterfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameterfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameteri(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameteri>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureParameteriv(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureParameteriv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureStorage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureStorage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureStorage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureStorage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureStorage2DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureStorage2DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureStorage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureStorage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureStorage3DMultisample(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureStorage3DMultisample>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureSubImage1D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureSubImage1D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureSubImage2D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureSubImage2D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureSubImage3D(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureSubImage3D>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TextureView(auto&&... args) const {return callMember<IsCtx, &GLapi::_TextureView>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TransformFeedbackBufferBase(auto&&... args) const {return callMember<IsCtx, &GLapi::_TransformFeedbackBufferBase>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TransformFeedbackBufferRange(auto&&... args) const {return callMember<IsCtx, &GLapi::_TransformFeedbackBufferRange>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto TransformFeedbackVaryings(auto&&... args) const {return callMember<IsCtx, &GLapi::_TransformFeedbackVaryings>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Translated(auto&&... args) const {return callMember<IsCtx, &GLapi::_Translated>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Translatef(auto&&... args) const {return callMember<IsCtx, &GLapi::_Translatef>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Uniform4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_Uniform4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformBlockBinding(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformBlockBinding>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2x3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2x3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2x3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2x3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2x4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2x4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix2x4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix2x4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3x2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3x2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3x2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3x2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3x4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3x4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix3x4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix3x4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4x2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4x2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4x2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4x2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4x3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4x3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformMatrix4x3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformMatrix4x3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UniformSubroutinesuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_UniformSubroutinesuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UnmapBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_UnmapBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UnmapNamedBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_UnmapNamedBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UseProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_UseProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto UseProgramStages(auto&&... args) const {return callMember<IsCtx, &GLapi::_UseProgramStages>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ValidateProgram(auto&&... args) const {return callMember<IsCtx, &GLapi::_ValidateProgram>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ValidateProgramPipeline(auto&&... args) const {return callMember<IsCtx, &GLapi::_ValidateProgramPipeline>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex2sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Vertex4sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_Vertex4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayAttribBinding(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayAttribBinding>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayAttribFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayAttribFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayAttribIFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayAttribIFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayAttribLFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayAttribLFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayBindingDivisor(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayBindingDivisor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayElementBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayElementBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayVertexBuffer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayVertexBuffer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexArrayVertexBuffers(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexArrayVertexBuffers>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1f(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1s(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib1sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib1sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib2sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib3sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib3sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nbv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nbv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Niv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Niv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nsv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nsv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nub(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nub>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nubv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nuiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nuiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4Nusv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4Nusv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4bv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4f(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4fv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4s(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4ubv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4ubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttrib4usv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttrib4usv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribBinding(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribBinding>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribDivisor(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribDivisor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI1i(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI1i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI1iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI1iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI2iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI3iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4bv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4bv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4i(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4iv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4sv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4ubv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4ubv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribI4usv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribI4usv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribIFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribIFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribIPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribIPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL1d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL1d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL1dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL1dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL2dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL3dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL4d(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL4d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribL4dv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribL4dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribLFormat(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribLFormat>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribLPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribLPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP1ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP1ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP1uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP1uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribP4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribP4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexAttribPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexAttribPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexBindingDivisor(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexBindingDivisor>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP2ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP2ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP2uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP2uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP3ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP3ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP3uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP3uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP4ui(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP4ui>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexP4uiv(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexP4uiv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto VertexPointer(auto&&... args) const {return callMember<IsCtx, &GLapi::_VertexPointer>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto Viewport(auto&&... args) const {return callMember<IsCtx, &GLapi::_Viewport>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ViewportArrayv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ViewportArrayv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ViewportIndexedf(auto&&... args) const {return callMember<IsCtx, &GLapi::_ViewportIndexedf>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto ViewportIndexedfv(auto&&... args) const {return callMember<IsCtx, &GLapi::_ViewportIndexedfv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WaitSync(auto&&... args) const {return callMember<IsCtx, &GLapi::_WaitSync>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2d(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2f(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2i(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2s(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos2sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos2sv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3d(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3d>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3dv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3dv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3f(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3f>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3fv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3fv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3i(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3i>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3iv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3iv>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3s(auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3s>(std::forward<decltype(args)>(args)...);}
+    template<TState IsCtx> inline auto WindowPos3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3sv>(std::forward<decltype(args)>(args)...);}
 
-    EXPORT void Accum(GLenum op, GLfloat value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ActiveShaderProgram(GLuint pipeline, GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ActiveTexture(GLenum texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void AlphaFunc(GLenum func, GLfloat ref, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean AreTexturesResident(GLsizei n, const GLuint * textures, GLboolean * residences, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ArrayElement(GLint i, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void AttachShader(GLuint program, GLuint shader, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Begin(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BeginConditionalRender(GLuint id, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BeginQuery(GLenum target, GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BeginQueryIndexed(GLenum target, GLuint index, GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BeginTransformFeedback(GLenum primitiveMode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindAttribLocation(GLuint program, GLuint index, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindBuffer(GLenum target, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindBufferBase(GLenum target, GLuint index, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint * buffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindBuffersRange(GLenum target, GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizeiptr * sizes, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindFragDataLocation(GLuint program, GLuint color, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindFragDataLocationIndexed(GLuint program, GLuint colorNumber, GLuint index, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindFramebuffer(GLenum target, GLuint framebuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindImageTextures(GLuint first, GLsizei count, const GLuint * textures, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindProgramPipeline(GLuint pipeline, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindRenderbuffer(GLenum target, GLuint renderbuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindSampler(GLuint unit, GLuint sampler, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindSamplers(GLuint first, GLsizei count, const GLuint * samplers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindTexture(GLenum target, GLuint texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindTextureUnit(GLuint unit, GLuint texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindTextures(GLuint first, GLsizei count, const GLuint * textures, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindTransformFeedback(GLenum target, GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindVertexArray(GLuint array, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindVertexBuffer(GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BindVertexBuffers(GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizei * strides, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Bitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendEquation(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendEquationi(GLuint buf, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendFunc(GLenum sfactor, GLenum dfactor, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendFuncSeparate(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlendFunci(GLuint buf, GLenum src, GLenum dst, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BlitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BufferData(GLenum target, GLsizeiptr size, const void * data, GLenum usage, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BufferStorage(GLenum target, GLsizeiptr size, const void * data, GLbitfield flags, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CallList(GLuint list, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CallLists(GLsizei n, GLenum type, const void * lists, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLenum CheckFramebufferStatus(GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLenum CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClampColor(GLenum target, GLenum clamp, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Clear(GLbitfield mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferData(GLenum target, GLenum internalformat, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferSubData(GLenum target, GLenum internalformat, GLintptr offset, GLsizeiptr size, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearDepth(GLdouble depth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearDepthf(GLfloat d, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearIndex(GLfloat c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedBufferData(GLuint buffer, GLenum internalformat, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedBufferSubData(GLuint buffer, GLenum internalformat, GLintptr offset, GLsizeiptr size, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedFramebufferfi(GLuint framebuffer, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedFramebufferfv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedFramebufferiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearStencil(GLint s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClearTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClientActiveTexture(GLenum texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLenum ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClipControl(GLenum origin, GLenum depth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ClipPlane(GLenum plane, const GLdouble * equation, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3b(GLbyte red, GLbyte green, GLbyte blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3bv(const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3d(GLdouble red, GLdouble green, GLdouble blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3f(GLfloat red, GLfloat green, GLfloat blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3i(GLint red, GLint green, GLint blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3s(GLshort red, GLshort green, GLshort blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3ub(GLubyte red, GLubyte green, GLubyte blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3ubv(const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3ui(GLuint red, GLuint green, GLuint blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3uiv(const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3us(GLushort red, GLushort green, GLushort blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color3usv(const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4bv(const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4i(GLint red, GLint green, GLint blue, GLint alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4s(GLshort red, GLshort green, GLshort blue, GLshort alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4ubv(const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4uiv(const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4us(GLushort red, GLushort green, GLushort blue, GLushort alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Color4usv(const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorMaterial(GLenum face, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorP3ui(GLenum type, GLuint color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorP3uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorP4ui(GLenum type, GLuint color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorP4uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompileShader(GLuint shader, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexImage1D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CompressedTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX, GLint srcY, GLint srcZ, GLuint dstName, GLenum dstTarget, GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei srcWidth, GLsizei srcHeight, GLsizei srcDepth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyNamedBufferSubData(GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CopyTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateBuffers(GLsizei n, GLuint * buffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateFramebuffers(GLsizei n, GLuint * framebuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint CreateProgram(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateProgramPipelines(GLsizei n, GLuint * pipelines, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateQueries(GLenum target, GLsizei n, GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateRenderbuffers(GLsizei n, GLuint * renderbuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateSamplers(GLsizei n, GLuint * samplers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint CreateShader(GLenum type, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint CreateShaderProgramv(GLenum type, GLsizei count, const GLchar *const* strings, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateTextures(GLenum target, GLsizei n, GLuint * textures, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateTransformFeedbacks(GLsizei n, GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CreateVertexArrays(GLsizei n, GLuint * arrays, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void CullFace(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DebugMessageCallback(GLDEBUGPROC callback, const void * userParam, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DebugMessageControl(GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint * ids, GLboolean enabled, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DebugMessageInsert(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * buf, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteBuffers(GLsizei n, const GLuint * buffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteFramebuffers(GLsizei n, const GLuint * framebuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteLists(GLuint list, GLsizei range, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteProgram(GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteProgramPipelines(GLsizei n, const GLuint * pipelines, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteQueries(GLsizei n, const GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteRenderbuffers(GLsizei n, const GLuint * renderbuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteSamplers(GLsizei count, const GLuint * samplers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteShader(GLuint shader, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteSync(GLsync sync, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteTextures(GLsizei n, const GLuint * textures, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteTransformFeedbacks(GLsizei n, const GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DeleteVertexArrays(GLsizei n, const GLuint * arrays, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthFunc(GLenum func, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthMask(GLboolean flag, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthRange(GLdouble n, GLdouble f, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthRangeArrayv(GLuint first, GLsizei count, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthRangeIndexed(GLuint index, GLdouble n, GLdouble f, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DepthRangef(GLfloat n, GLfloat f, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DetachShader(GLuint program, GLuint shader, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Disable(GLenum cap, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DisableClientState(GLenum array, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DisableVertexArrayAttrib(GLuint vaobj, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DisableVertexAttribArray(GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Disablei(GLenum target, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DispatchComputeIndirect(GLintptr indirect, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawArrays(GLenum mode, GLint first, GLsizei count, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawArraysIndirect(GLenum mode, const void * indirect, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawBuffer(GLenum buf, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawBuffers(GLsizei n, const GLenum * bufs, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElements(GLenum mode, GLsizei count, GLenum type, const void * indices, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLint basevertex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsIndirect(GLenum mode, GLenum type, const void * indirect, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLuint baseinstance, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsInstancedBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawElementsInstancedBaseVertexBaseInstance(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawRangeElementsBaseVertex(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, GLint basevertex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawTransformFeedback(GLenum mode, GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void DrawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint stream, GLsizei instancecount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EdgeFlag(GLboolean flag, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EdgeFlagPointer(GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EdgeFlagv(const GLboolean * flag, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Enable(GLenum cap, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EnableClientState(GLenum array, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EnableVertexArrayAttrib(GLuint vaobj, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EnableVertexAttribArray(GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Enablei(GLenum target, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void End(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EndConditionalRender(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EndList(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EndQuery(GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EndQueryIndexed(GLenum target, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EndTransformFeedback(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord1d(GLdouble u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord1dv(const GLdouble * u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord1f(GLfloat u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord1fv(const GLfloat * u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord2d(GLdouble u, GLdouble v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord2dv(const GLdouble * u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord2f(GLfloat u, GLfloat v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalCoord2fv(const GLfloat * u, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalMesh1(GLenum mode, GLint i1, GLint i2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalPoint1(GLint i, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void EvalPoint2(GLint i, GLint j, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FeedbackBuffer(GLsizei size, GLenum type, GLfloat * buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLsync FenceSync(GLenum condition, GLbitfield flags, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Finish(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Flush(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FlushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FogCoordPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FogCoordd(GLdouble coord, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FogCoorddv(const GLdouble * coord, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FogCoordf(GLfloat coord, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FogCoordfv(const GLfloat * coord, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Fogf(GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Fogfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Fogi(GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Fogiv(GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferParameteri(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferTexture1D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void FrontFace(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenBuffers(GLsizei n, GLuint * buffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenFramebuffers(GLsizei n, GLuint * framebuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint GenLists(GLsizei range, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenProgramPipelines(GLsizei n, GLuint * pipelines, const SrcLoc& GetProgram) const;
-    EXPORT void GenQueries(GLsizei n, GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenRenderbuffers(GLsizei n, GLuint * renderbuffers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenSamplers(GLsizei count, GLuint * samplers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenTextures(GLsizei n, GLuint * textures, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenTransformFeedbacks(GLsizei n, GLuint * ids, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenVertexArrays(GLsizei n, GLuint * arrays, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenerateMipmap(GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GenerateTextureMipmap(GLuint texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveAtomicCounterBufferiv(GLuint program, GLuint bufferIndex, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveAttrib(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveSubroutineName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveSubroutineUniformName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveSubroutineUniformiv(GLuint program, GLenum shadertype, GLuint index, GLenum pname, GLint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformBlockName, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveUniformName(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformName, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint * uniformIndices, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetAttachedShaders(GLuint program, GLsizei maxCount, GLsizei * count, GLuint * shaders, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetAttribLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBooleani_v(GLenum target, GLuint index, GLboolean * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBooleanv(GLenum pname, GLboolean * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBufferPointerv(GLenum target, GLenum pname, void ** params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetClipPlane(GLenum plane, GLdouble * equation, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetCompressedTexImage(GLenum target, GLint level, void * img, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetCompressedTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint GetDebugMessageLog(GLuint count, GLsizei bufSize, GLenum * sources, GLenum * types, GLuint * ids, GLenum * severities, GLsizei * lengths, GLchar * messageLog, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetDoublei_v(GLenum target, GLuint index, GLdouble * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetDoublev(GLenum pname, GLdouble * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLenum GetError(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetFloati_v(GLenum target, GLuint index, GLfloat * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetFloatv(GLenum pname, GLfloat * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetFragDataIndex(GLuint program, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetFragDataLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetFramebufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLenum GetGraphicsResetStatus(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetInteger64i_v(GLenum target, GLuint index, GLint64 * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetInteger64v(GLenum pname, GLint64 * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetIntegeri_v(GLenum target, GLuint index, GLint * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetIntegerv(GLenum pname, GLint * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetInternalformati64v(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint64 * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetLightfv(GLenum light, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetLightiv(GLenum light, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMapdv(GLenum target, GLenum query, GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMapfv(GLenum target, GLenum query, GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMapiv(GLenum target, GLenum query, GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMaterialfv(GLenum face, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMaterialiv(GLenum face, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetMultisamplefv(GLenum pname, GLuint index, GLfloat * val, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedBufferPointerv(GLuint buffer, GLenum pname, void ** params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer, GLenum attachment, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei * length, GLchar * label, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetObjectPtrLabel(const void * ptr, GLsizei bufSize, GLsizei * length, GLchar * label, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetPixelMapfv(GLenum map, GLfloat * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetPixelMapuiv(GLenum map, GLuint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetPixelMapusv(GLenum map, GLushort * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetPointerv(GLenum pname, void ** params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetPolygonStipple(GLubyte * mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei * length, GLenum * binaryFormat, void * binary, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramInterfaceiv(GLuint program, GLenum programInterface, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramPipelineInfoLog(GLuint pipeline, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint GetProgramResourceIndex(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetProgramResourceLocation(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetProgramResourceLocationIndex(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramResourceName(GLuint program, GLenum programInterface, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramResourceiv(GLuint program, GLenum programInterface, GLuint index, GLsizei propCount, const GLenum * props, GLsizei count, GLsizei * length, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetProgramiv(GLuint program, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryObjecti64v(GLuint id, GLenum pname, GLint64 * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryObjectiv(GLuint id, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryObjectui64v(GLuint id, GLenum pname, GLuint64 * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryObjectuiv(GLuint id, GLenum pname, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetQueryiv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint * range, GLint * precision, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * source, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetShaderiv(GLuint shader, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT const GLubyte* GetString(GLenum name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT const GLubyte* GetStringi(GLenum name, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint GetSubroutineIndex(GLuint program, GLenum shadertype, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetSubroutineUniformLocation(GLuint program, GLenum shadertype, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetSynciv(GLsync sync, GLenum pname, GLsizei count, GLsizei * length, GLint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexEnvfv(GLenum target, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexEnviv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexGendv(GLenum coord, GLenum pname, GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexGenfv(GLenum coord, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexGeniv(GLenum coord, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexParameterIiv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexParameterIuiv(GLenum target, GLenum pname, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexParameterfv(GLenum target, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTexParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureImage(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureParameterIiv(GLuint texture, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureParameterIuiv(GLuint texture, GLenum pname, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureParameterfv(GLuint texture, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureParameteriv(GLuint texture, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLsizei * size, GLenum * type, GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetTransformFeedbackiv(GLuint xfb, GLenum pname, GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLuint GetUniformBlockIndex(GLuint program, const GLchar * uniformBlockName, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar *const* uniformNames, GLuint * uniformIndices, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint GetUniformLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformdv(GLuint program, GLint location, GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformfv(GLuint program, GLint location, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformiv(GLuint program, GLint location, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetUniformuiv(GLuint program, GLint location, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexArrayiv(GLuint vaobj, GLenum pname, GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribIiv(GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribLdv(GLuint index, GLenum pname, GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribPointerv(GLuint index, GLenum pname, void ** pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribdv(GLuint index, GLenum pname, GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribfv(GLuint index, GLenum pname, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetVertexAttribiv(GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void * table, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnConvolutionFilter(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void * image, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnHistogram(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnMapiv(GLenum target, GLenum query, GLsizei bufSize, GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnMinmax(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnPolygonStipple(GLsizei bufSize, GLubyte * pattern, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnSeparableFilter(GLenum target, GLenum format, GLenum type, GLsizei rowBufSize, void * row, GLsizei columnBufSize, void * column, void * span, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void GetnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Hint(GLenum target, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void IndexMask(GLuint mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void IndexPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexd(GLdouble c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexdv(const GLdouble * c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexf(GLfloat c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexfv(const GLfloat * c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexi(GLint c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexiv(const GLint * c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexs(GLshort c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexsv(const GLshort * c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexub(GLubyte c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Indexubv(const GLubyte * c, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InitNames(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InterleavedArrays(GLenum format, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateBufferData(GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum * attachments, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateNamedFramebufferData(GLuint framebuffer, GLsizei numAttachments, const GLenum * attachments, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachments, const GLenum * attachments, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum * attachments, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateTexImage(GLuint texture, GLint level, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void InvalidateTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsBuffer(GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsEnabled(GLenum cap, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsEnabledi(GLenum target, GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsFramebuffer(GLuint framebuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsList(GLuint list, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsProgram(GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsProgramPipeline(GLuint pipeline, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsQuery(GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsRenderbuffer(GLuint renderbuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsSampler(GLuint sampler, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsShader(GLuint shader, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsSync(GLsync sync, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsTexture(GLuint texture, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsTransformFeedback(GLuint id, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean IsVertexArray(GLuint array, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LightModelf(GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LightModelfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LightModeli(GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LightModeliv(GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Lightf(GLenum light, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Lightfv(GLenum light, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Lighti(GLenum light, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Lightiv(GLenum light, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LineStipple(GLint factor, GLushort pattern, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LineWidth(GLfloat width, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LinkProgram(GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ListBase(GLuint base, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadIdentity(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadMatrixd(const GLdouble * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadMatrixf(const GLfloat * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadName(GLuint name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadTransposeMatrixd(const GLdouble * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LoadTransposeMatrixf(const GLfloat * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void LogicOp(GLenum opcode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Map1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble * points, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat * points, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Map2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble * points, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Map2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat * points, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void* MapBuffer (GLenum target, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void* MapBufferRange (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapGrid1d(GLint un, GLdouble u1, GLdouble u2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapGrid1f(GLint un, GLfloat u1, GLfloat u2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void* MapNamedBuffer (GLuint buffer, GLenum access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void* MapNamedBufferRange (GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Materialf(GLenum face, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Materialfv(GLenum face, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Materiali(GLenum face, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Materialiv(GLenum face, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MatrixMode(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MemoryBarrier(GLbitfield barriers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MemoryBarrierByRegion(GLbitfield barriers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MinSampleShading(GLfloat value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultMatrixd(const GLdouble * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultMatrixf(const GLfloat * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultTransposeMatrixd(const GLdouble * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultTransposeMatrixf(const GLfloat * m, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawArrays(GLenum mode, const GLint * first, const GLsizei * count, GLsizei drawcount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawArraysIndirect(GLenum mode, const void * indirect, GLsizei drawcount, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawArraysIndirectCount(GLenum mode, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawElements(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawElementsBaseVertex(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const GLint * basevertex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawElementsIndirect(GLenum mode, GLenum type, const void * indirect, GLsizei drawcount, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiDrawElementsIndirectCount(GLenum mode, GLenum type, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1d(GLenum target, GLdouble s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1f(GLenum target, GLfloat s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1i(GLenum target, GLint s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1iv(GLenum target, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1s(GLenum target, GLshort s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord1sv(GLenum target, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2i(GLenum target, GLint s, GLint t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2iv(GLenum target, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2s(GLenum target, GLshort s, GLshort t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord2sv(GLenum target, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3iv(GLenum target, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord3sv(GLenum target, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4iv(GLenum target, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoord4sv(GLenum target, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void MultiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedBufferData(GLuint buffer, GLsizeiptr size, const void * data, GLenum usage, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedBufferStorage(GLuint buffer, GLsizeiptr size, const void * data, GLbitfield flags, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum * bufs, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferReadBuffer(GLuint framebuffer, GLenum src, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferTexture(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level, GLint layer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedRenderbufferStorage(GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NamedRenderbufferStorageMultisample(GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NewList(GLuint list, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3b(GLbyte nx, GLbyte ny, GLbyte nz, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3bv(const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3d(GLdouble nx, GLdouble ny, GLdouble nz, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3f(GLfloat nx, GLfloat ny, GLfloat nz, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3i(GLint nx, GLint ny, GLint nz, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3s(GLshort nx, GLshort ny, GLshort nz, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Normal3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NormalP3ui(GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NormalP3uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void NormalPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ObjectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar * label, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ObjectPtrLabel(const void * ptr, GLsizei length, const GLchar * label, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Ortho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PassThrough(GLfloat token, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PatchParameterfv(GLenum pname, const GLfloat * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PatchParameteri(GLenum pname, GLint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PauseTransformFeedback(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelMapfv(GLenum map, GLsizei mapsize, const GLfloat * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelMapuiv(GLenum map, GLsizei mapsize, const GLuint * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelMapusv(GLenum map, GLsizei mapsize, const GLushort * values, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelStoref(GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelStorei(GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelTransferf(GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelTransferi(GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PixelZoom(GLfloat xfactor, GLfloat yfactor, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PointParameterf(GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PointParameterfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PointParameteri(GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PointParameteriv(GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PointSize(GLfloat size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PolygonMode(GLenum face, GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PolygonOffset(GLfloat factor, GLfloat units, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PolygonStipple(const GLubyte * mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PopAttrib(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PopClientAttrib(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PopDebugGroup(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PopMatrix(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PopName(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PrimitiveRestartIndex(GLuint index, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PrioritizeTextures(GLsizei n, const GLuint * textures, const GLfloat * priorities, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramBinary(GLuint program, GLenum binaryFormat, const void * binary, GLsizei length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramParameteri(GLuint program, GLenum pname, GLint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1d(GLuint program, GLint location, GLdouble v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1f(GLuint program, GLint location, GLfloat v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1i(GLuint program, GLint location, GLint v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1ui(GLuint program, GLint location, GLuint v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform1uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2d(GLuint program, GLint location, GLdouble v0, GLdouble v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2i(GLuint program, GLint location, GLint v0, GLint v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform2uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform3uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniform4uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2x3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2x3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2x4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix2x4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3x2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3x2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3x4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix3x4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4x2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4x2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4x3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProgramUniformMatrix4x3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ProvokingVertex(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PushAttrib(GLbitfield mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PushClientAttrib(GLbitfield mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar * message, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PushMatrix(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void PushName(GLuint name, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void QueryCounter(GLuint id, GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2d(GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2f(GLfloat x, GLfloat y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2i(GLint x, GLint y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2s(GLshort x, GLshort y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos2sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4i(GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RasterPos4sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ReadBuffer(GLenum src, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, void * data, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectdv(const GLdouble * v1, const GLdouble * v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectfv(const GLfloat * v1, const GLfloat * v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Recti(GLint x1, GLint y1, GLint x2, GLint y2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectiv(const GLint * v1, const GLint * v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rects(GLshort x1, GLshort y1, GLshort x2, GLshort y2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rectsv(const GLshort * v1, const GLshort * v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ReleaseShaderCompiler(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLint RenderMode(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ResumeTransformFeedback(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SampleCoverage(GLfloat value, GLboolean invert, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SampleMaski(GLuint maskNumber, GLbitfield mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameteri(GLuint sampler, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SamplerParameteriv(GLuint sampler, GLenum pname, const GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Scaled(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Scalef(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Scissor(GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ScissorArrayv(GLuint first, GLsizei count, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ScissorIndexedv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3bv(const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3i(GLint red, GLint green, GLint blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3s(GLshort red, GLshort green, GLshort blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3ubv(const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3ui(GLuint red, GLuint green, GLuint blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3uiv(const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3us(GLushort red, GLushort green, GLushort blue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColor3usv(const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColorP3ui(GLenum type, GLuint color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColorP3uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SelectBuffer(GLsizei size, GLuint * buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ShadeModel(GLenum mode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ShaderBinary(GLsizei count, const GLuint * shaders, GLenum binaryFormat, const void * binary, GLsizei length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ShaderSource(GLuint shader, GLsizei count, const GLchar *const* string, const GLint * length, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ShaderStorageBlockBinding(GLuint program, GLuint storageBlockIndex, GLuint storageBlockBinding, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void SpecializeShader(GLuint shader, const GLchar * pEntryPoint, GLuint numSpecializationConstants, const GLuint * pConstantIndex, const GLuint * pConstantValue, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilFunc(GLenum func, GLint ref, GLuint mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilMask(GLuint mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilMaskSeparate(GLenum face, GLuint mask, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilOp(GLenum fail, GLenum zfail, GLenum zpass, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexBuffer(GLenum target, GLenum internalformat, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexBufferRange(GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1d(GLdouble s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1f(GLfloat s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1i(GLint s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1s(GLshort s, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord1sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2d(GLdouble s, GLdouble t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2f(GLfloat s, GLfloat t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2i(GLint s, GLint t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2s(GLshort s, GLshort t, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord2sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3d(GLdouble s, GLdouble t, GLdouble r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3f(GLfloat s, GLfloat t, GLfloat r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3i(GLint s, GLint t, GLint r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3s(GLshort s, GLshort t, GLshort r, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4i(GLint s, GLint t, GLint r, GLint q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoord4sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP1ui(GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP1uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP2ui(GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP2uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP3ui(GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP3uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP4ui(GLenum type, GLuint coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordP4uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexCoordPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexEnvf(GLenum target, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexEnvfv(GLenum target, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexEnvi(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexEnviv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGend(GLenum coord, GLenum pname, GLdouble param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGendv(GLenum coord, GLenum pname, const GLdouble * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGenf(GLenum coord, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGenfv(GLenum coord, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGeni(GLenum coord, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexGeniv(GLenum coord, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameterIiv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameterIuiv(GLenum target, GLenum pname, const GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameterf(GLenum target, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameterfv(GLenum target, GLenum pname, const GLfloat * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameteri(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexParameteriv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexStorage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexStorage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureBarrier(const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureBuffer(GLuint texture, GLenum internalformat, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureBufferRange(GLuint texture, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameterIiv(GLuint texture, GLenum pname, const GLint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameterIuiv(GLuint texture, GLenum pname, const GLuint * params, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameterf(GLuint texture, GLenum pname, GLfloat param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameterfv(GLuint texture, GLenum pname, const GLfloat * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameteri(GLuint texture, GLenum pname, GLint param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureParameteriv(GLuint texture, GLenum pname, const GLint * param, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureStorage1D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureStorage2DMultisample(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureStorage3D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureStorage3DMultisample(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TextureView(GLuint texture, GLenum target, GLuint origtexture, GLenum internalformat, GLuint minlevel, GLuint numlevels, GLuint minlayer, GLuint numlayers, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TransformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TransformFeedbackBufferRange(GLuint xfb, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar *const* varyings, GLenum bufferMode, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Translated(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Translatef(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1d(GLint location, GLdouble x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1f(GLint location, GLfloat v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1i(GLint location, GLint v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1ui(GLint location, GLuint v0, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform1uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2d(GLint location, GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2f(GLint location, GLfloat v0, GLfloat v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2i(GLint location, GLint v0, GLint v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2ui(GLint location, GLuint v0, GLuint v1, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform2uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3i(GLint location, GLint v0, GLint v1, GLint v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform3uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4i(GLint location, GLint v0, GLint v1, GLint v2, GLint v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Uniform4uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint * indices, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean UnmapBuffer(GLenum target, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT GLboolean UnmapNamedBuffer(GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UseProgram(GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ValidateProgram(GLuint program, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ValidateProgramPipeline(GLuint pipeline, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2d(GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2f(GLfloat x, GLfloat y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2i(GLint x, GLint y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2s(GLshort x, GLshort y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex2sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4i(GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4s(GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Vertex4sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayAttribIFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayAttribLFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayElementBuffer(GLuint vaobj, GLuint buffer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexArrayVertexBuffers(GLuint vaobj, GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizei * strides, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1d(GLuint index, GLdouble x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1f(GLuint index, GLfloat x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1s(GLuint index, GLshort x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib1sv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2d(GLuint index, GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2f(GLuint index, GLfloat x, GLfloat y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2s(GLuint index, GLshort x, GLshort y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib2sv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3d(GLuint index, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3s(GLuint index, GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib3sv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nbv(GLuint index, const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Niv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nsv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nub(GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nuiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4Nusv(GLuint index, const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4bv(GLuint index, const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4iv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4s(GLuint index, GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4sv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4ubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttrib4usv(GLuint index, const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribBinding(GLuint attribindex, GLuint bindingindex, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribDivisor(GLuint index, GLuint divisor, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribFormat(GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI1i(GLuint index, GLint x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI1iv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI1ui(GLuint index, GLuint x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI1uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI2i(GLuint index, GLint x, GLint y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI2iv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI2ui(GLuint index, GLuint x, GLuint y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI2uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI3i(GLuint index, GLint x, GLint y, GLint z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI3iv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI3uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4bv(GLuint index, const GLbyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4iv(GLuint index, const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4sv(GLuint index, const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4ubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribI4usv(GLuint index, const GLushort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribIFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL1d(GLuint index, GLdouble x, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL1dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL2d(GLuint index, GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL2dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL3dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribL4dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribLFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP1ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP1uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP2ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP2uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP3ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP3uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP4ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribP4uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexBindingDivisor(GLuint bindingindex, GLuint divisor, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP2ui(GLenum type, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP2uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP3ui(GLenum type, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP3uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP4ui(GLenum type, GLuint value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexP4uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void VertexPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void Viewport(GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ViewportArrayv(GLuint first, GLsizei count, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void ViewportIndexedfv(GLuint index, const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2d(GLdouble x, GLdouble y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2f(GLfloat x, GLfloat y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2i(GLint x, GLint y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2s(GLshort x, GLshort y, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos2sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3dv(const GLdouble * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3fv(const GLfloat * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3iv(const GLint * v, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc = SrcLoc{}) const;
-    EXPORT void WindowPos3sv(const GLshort * v, const SrcLoc& src_loc = SrcLoc{}) const;
+private:
+    EXPORT int _loadGladGLContext(GLADloadfunc load);
 
-    static constexpr GLenum GL_2D = 0x0600;
-    static constexpr GLenum GL_2_BYTES = 0x1407;
-    static constexpr GLenum GL_3D = 0x0601;
-    static constexpr GLenum GL_3D_COLOR = 0x0602;
-    static constexpr GLenum GL_3D_COLOR_TEXTURE = 0x0603;
-    static constexpr GLenum GL_3_BYTES = 0x1408;
-    static constexpr GLenum GL_4D_COLOR_TEXTURE = 0x0604;
-    static constexpr GLenum GL_4_BYTES = 0x1409;
-    static constexpr GLenum GL_ACCUM = 0x0100;
-    static constexpr GLenum GL_ACCUM_ALPHA_BITS = 0x0D5B;
-    static constexpr GLenum GL_ACCUM_BLUE_BITS = 0x0D5A;
-    static constexpr GLenum GL_ACCUM_BUFFER_BIT = 0x00000200;
-    static constexpr GLenum GL_ACCUM_CLEAR_VALUE = 0x0B80;
-    static constexpr GLenum GL_ACCUM_GREEN_BITS = 0x0D59;
-    static constexpr GLenum GL_ACCUM_RED_BITS = 0x0D58;
-    static constexpr GLenum GL_ACTIVE_ATOMIC_COUNTER_BUFFERS = 0x92D9;
-    static constexpr GLenum GL_ACTIVE_ATTRIBUTES = 0x8B89;
-    static constexpr GLenum GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8B8A;
-    static constexpr GLenum GL_ACTIVE_PROGRAM = 0x8259;
-    static constexpr GLenum GL_ACTIVE_RESOURCES = 0x92F5;
-    static constexpr GLenum GL_ACTIVE_SUBROUTINES = 0x8DE5;
-    static constexpr GLenum GL_ACTIVE_SUBROUTINE_MAX_LENGTH = 0x8E48;
-    static constexpr GLenum GL_ACTIVE_SUBROUTINE_UNIFORMS = 0x8DE6;
-    static constexpr GLenum GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS = 0x8E47;
-    static constexpr GLenum GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH = 0x8E49;
-    static constexpr GLenum GL_ACTIVE_TEXTURE = 0x84E0;
-    static constexpr GLenum GL_ACTIVE_UNIFORMS = 0x8B86;
-    static constexpr GLenum GL_ACTIVE_UNIFORM_BLOCKS = 0x8A36;
-    static constexpr GLenum GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH = 0x8A35;
-    static constexpr GLenum GL_ACTIVE_UNIFORM_MAX_LENGTH = 0x8B87;
-    static constexpr GLenum GL_ACTIVE_VARIABLES = 0x9305;
-    static constexpr GLenum GL_ADD = 0x0104;
-    static constexpr GLenum GL_ADD_SIGNED = 0x8574;
-    static constexpr GLenum GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
-    static constexpr GLenum GL_ALIASED_POINT_SIZE_RANGE = 0x846D;
-    static constexpr GLenum GL_ALL_ATTRIB_BITS = 0xFFFFFFFF;
-    static constexpr GLenum GL_ALL_BARRIER_BITS = 0xFFFFFFFF;
-    static constexpr GLenum GL_ALL_SHADER_BITS = 0xFFFFFFFF;
-    static constexpr GLenum GL_ALPHA = 0x1906;
-    static constexpr GLenum GL_ALPHA12 = 0x803D;
-    static constexpr GLenum GL_ALPHA16 = 0x803E;
-    static constexpr GLenum GL_ALPHA4 = 0x803B;
-    static constexpr GLenum GL_ALPHA8 = 0x803C;
-    static constexpr GLenum GL_ALPHA_BIAS = 0x0D1D;
-    static constexpr GLenum GL_ALPHA_BITS = 0x0D55;
-    static constexpr GLenum GL_ALPHA_INTEGER = 0x8D97;
-    static constexpr GLenum GL_ALPHA_SCALE = 0x0D1C;
-    static constexpr GLenum GL_ALPHA_TEST = 0x0BC0;
-    static constexpr GLenum GL_ALPHA_TEST_FUNC = 0x0BC1;
-    static constexpr GLenum GL_ALPHA_TEST_REF = 0x0BC2;
-    static constexpr GLenum GL_ALREADY_SIGNALED = 0x911A;
-    static constexpr GLenum GL_ALWAYS = 0x0207;
-    static constexpr GLenum GL_AMBIENT = 0x1200;
-    static constexpr GLenum GL_AMBIENT_AND_DIFFUSE = 0x1602;
-    static constexpr GLenum GL_AND = 0x1501;
-    static constexpr GLenum GL_AND_INVERTED = 0x1504;
-    static constexpr GLenum GL_AND_REVERSE = 0x1502;
-    static constexpr GLenum GL_ANY_SAMPLES_PASSED = 0x8C2F;
-    static constexpr GLenum GL_ANY_SAMPLES_PASSED_CONSERVATIVE = 0x8D6A;
-    static constexpr GLenum GL_ARRAY_BUFFER = 0x8892;
-    static constexpr GLenum GL_ARRAY_BUFFER_BINDING = 0x8894;
-    static constexpr GLenum GL_ARRAY_SIZE = 0x92FB;
-    static constexpr GLenum GL_ARRAY_STRIDE = 0x92FE;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BARRIER_BIT = 0x00001000;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER = 0x92C0;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS = 0x92C5;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES = 0x92C6;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_BINDING = 0x92C1;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE = 0x92C4;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_INDEX = 0x9301;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_COMPUTE_SHADER = 0x90ED;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER = 0x92CB;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER = 0x92CA;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER = 0x92C8;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER = 0x92C9;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER = 0x92C7;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_SIZE = 0x92C3;
-    static constexpr GLenum GL_ATOMIC_COUNTER_BUFFER_START = 0x92C2;
-    static constexpr GLenum GL_ATTACHED_SHADERS = 0x8B85;
-    static constexpr GLenum GL_ATTRIB_STACK_DEPTH = 0x0BB0;
-    static constexpr GLenum GL_AUTO_GENERATE_MIPMAP = 0x8295;
-    static constexpr GLenum GL_AUTO_NORMAL = 0x0D80;
-    static constexpr GLenum GL_AUX0 = 0x0409;
-    static constexpr GLenum GL_AUX1 = 0x040A;
-    static constexpr GLenum GL_AUX2 = 0x040B;
-    static constexpr GLenum GL_AUX3 = 0x040C;
-    static constexpr GLenum GL_AUX_BUFFERS = 0x0C00;
-    static constexpr GLenum GL_BACK = 0x0405;
-    static constexpr GLenum GL_BACK_LEFT = 0x0402;
-    static constexpr GLenum GL_BACK_RIGHT = 0x0403;
-    static constexpr GLenum GL_BGR = 0x80E0;
-    static constexpr GLenum GL_BGRA = 0x80E1;
-    static constexpr GLenum GL_BGRA_INTEGER = 0x8D9B;
-    static constexpr GLenum GL_BGR_INTEGER = 0x8D9A;
-    static constexpr GLenum GL_BITMAP = 0x1A00;
-    static constexpr GLenum GL_BITMAP_TOKEN = 0x0704;
-    static constexpr GLenum GL_BLEND = 0x0BE2;
-    static constexpr GLenum GL_BLEND_COLOR = 0x8005;
-    static constexpr GLenum GL_BLEND_DST = 0x0BE0;
-    static constexpr GLenum GL_BLEND_DST_ALPHA = 0x80CA;
-    static constexpr GLenum GL_BLEND_DST_RGB = 0x80C8;
-    static constexpr GLenum GL_BLEND_EQUATION = 0x8009;
-    static constexpr GLenum GL_BLEND_EQUATION_ALPHA = 0x883D;
-    static constexpr GLenum GL_BLEND_EQUATION_RGB = 0x8009;
-    static constexpr GLenum GL_BLEND_SRC = 0x0BE1;
-    static constexpr GLenum GL_BLEND_SRC_ALPHA = 0x80CB;
-    static constexpr GLenum GL_BLEND_SRC_RGB = 0x80C9;
-    static constexpr GLenum GL_BLOCK_INDEX = 0x92FD;
-    static constexpr GLenum GL_BLUE = 0x1905;
-    static constexpr GLenum GL_BLUE_BIAS = 0x0D1B;
-    static constexpr GLenum GL_BLUE_BITS = 0x0D54;
-    static constexpr GLenum GL_BLUE_INTEGER = 0x8D96;
-    static constexpr GLenum GL_BLUE_SCALE = 0x0D1A;
-    static constexpr GLenum GL_BOOL = 0x8B56;
-    static constexpr GLenum GL_BOOL_VEC2 = 0x8B57;
-    static constexpr GLenum GL_BOOL_VEC3 = 0x8B58;
-    static constexpr GLenum GL_BOOL_VEC4 = 0x8B59;
-    static constexpr GLenum GL_BUFFER = 0x82E0;
-    static constexpr GLenum GL_BUFFER_ACCESS = 0x88BB;
-    static constexpr GLenum GL_BUFFER_ACCESS_FLAGS = 0x911F;
-    static constexpr GLenum GL_BUFFER_BINDING = 0x9302;
-    static constexpr GLenum GL_BUFFER_DATA_SIZE = 0x9303;
-    static constexpr GLenum GL_BUFFER_IMMUTABLE_STORAGE = 0x821F;
-    static constexpr GLenum GL_BUFFER_MAPPED = 0x88BC;
-    static constexpr GLenum GL_BUFFER_MAP_LENGTH = 0x9120;
-    static constexpr GLenum GL_BUFFER_MAP_OFFSET = 0x9121;
-    static constexpr GLenum GL_BUFFER_MAP_POINTER = 0x88BD;
-    static constexpr GLenum GL_BUFFER_SIZE = 0x8764;
-    static constexpr GLenum GL_BUFFER_STORAGE_FLAGS = 0x8220;
-    static constexpr GLenum GL_BUFFER_UPDATE_BARRIER_BIT = 0x00000200;
-    static constexpr GLenum GL_BUFFER_USAGE = 0x8765;
-    static constexpr GLenum GL_BUFFER_VARIABLE = 0x92E5;
-    static constexpr GLenum GL_BYTE = 0x1400;
-    static constexpr GLenum GL_C3F_V3F = 0x2A24;
-    static constexpr GLenum GL_C4F_N3F_V3F = 0x2A26;
-    static constexpr GLenum GL_C4UB_V2F = 0x2A22;
-    static constexpr GLenum GL_C4UB_V3F = 0x2A23;
-    static constexpr GLenum GL_CAVEAT_SUPPORT = 0x82B8;
-    static constexpr GLenum GL_CCW = 0x0901;
-    static constexpr GLenum GL_CLAMP = 0x2900;
-    static constexpr GLenum GL_CLAMP_FRAGMENT_COLOR = 0x891B;
-    static constexpr GLenum GL_CLAMP_READ_COLOR = 0x891C;
-    static constexpr GLenum GL_CLAMP_TO_BORDER = 0x812D;
-    static constexpr GLenum GL_CLAMP_TO_EDGE = 0x812F;
-    static constexpr GLenum GL_CLAMP_VERTEX_COLOR = 0x891A;
-    static constexpr GLenum GL_CLEAR = 0x1500;
-    static constexpr GLenum GL_CLEAR_BUFFER = 0x82B4;
-    static constexpr GLenum GL_CLEAR_TEXTURE = 0x9365;
-    static constexpr GLenum GL_CLIENT_ACTIVE_TEXTURE = 0x84E1;
-    static constexpr GLenum GL_CLIENT_ALL_ATTRIB_BITS = 0xFFFFFFFF;
-    static constexpr GLenum GL_CLIENT_ATTRIB_STACK_DEPTH = 0x0BB1;
-    static constexpr GLenum GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT = 0x00004000;
-    static constexpr GLenum GL_CLIENT_PIXEL_STORE_BIT = 0x00000001;
-    static constexpr GLenum GL_CLIENT_STORAGE_BIT = 0x0200;
-    static constexpr GLenum GL_CLIENT_VERTEX_ARRAY_BIT = 0x00000002;
-    static constexpr GLenum GL_CLIPPING_INPUT_PRIMITIVES = 0x82F6;
-    static constexpr GLenum GL_CLIPPING_OUTPUT_PRIMITIVES = 0x82F7;
-    static constexpr GLenum GL_CLIP_DEPTH_MODE = 0x935D;
-    static constexpr GLenum GL_CLIP_DISTANCE0 = 0x3000;
-    static constexpr GLenum GL_CLIP_DISTANCE1 = 0x3001;
-    static constexpr GLenum GL_CLIP_DISTANCE2 = 0x3002;
-    static constexpr GLenum GL_CLIP_DISTANCE3 = 0x3003;
-    static constexpr GLenum GL_CLIP_DISTANCE4 = 0x3004;
-    static constexpr GLenum GL_CLIP_DISTANCE5 = 0x3005;
-    static constexpr GLenum GL_CLIP_DISTANCE6 = 0x3006;
-    static constexpr GLenum GL_CLIP_DISTANCE7 = 0x3007;
-    static constexpr GLenum GL_CLIP_ORIGIN = 0x935C;
-    static constexpr GLenum GL_CLIP_PLANE0 = 0x3000;
-    static constexpr GLenum GL_CLIP_PLANE1 = 0x3001;
-    static constexpr GLenum GL_CLIP_PLANE2 = 0x3002;
-    static constexpr GLenum GL_CLIP_PLANE3 = 0x3003;
-    static constexpr GLenum GL_CLIP_PLANE4 = 0x3004;
-    static constexpr GLenum GL_CLIP_PLANE5 = 0x3005;
-    static constexpr GLenum GL_COEFF = 0x0A00;
-    static constexpr GLenum GL_COLOR = 0x1800;
-    static constexpr GLenum GL_COLOR_ARRAY = 0x8076;
-    static constexpr GLenum GL_COLOR_ARRAY_BUFFER_BINDING = 0x8898;
-    static constexpr GLenum GL_COLOR_ARRAY_POINTER = 0x8090;
-    static constexpr GLenum GL_COLOR_ARRAY_SIZE = 0x8081;
-    static constexpr GLenum GL_COLOR_ARRAY_STRIDE = 0x8083;
-    static constexpr GLenum GL_COLOR_ARRAY_TYPE = 0x8082;
-    static constexpr GLenum GL_COLOR_ATTACHMENT0 = 0x8CE0;
-    static constexpr GLenum GL_COLOR_ATTACHMENT1 = 0x8CE1;
-    static constexpr GLenum GL_COLOR_ATTACHMENT10 = 0x8CEA;
-    static constexpr GLenum GL_COLOR_ATTACHMENT11 = 0x8CEB;
-    static constexpr GLenum GL_COLOR_ATTACHMENT12 = 0x8CEC;
-    static constexpr GLenum GL_COLOR_ATTACHMENT13 = 0x8CED;
-    static constexpr GLenum GL_COLOR_ATTACHMENT14 = 0x8CEE;
-    static constexpr GLenum GL_COLOR_ATTACHMENT15 = 0x8CEF;
-    static constexpr GLenum GL_COLOR_ATTACHMENT16 = 0x8CF0;
-    static constexpr GLenum GL_COLOR_ATTACHMENT17 = 0x8CF1;
-    static constexpr GLenum GL_COLOR_ATTACHMENT18 = 0x8CF2;
-    static constexpr GLenum GL_COLOR_ATTACHMENT19 = 0x8CF3;
-    static constexpr GLenum GL_COLOR_ATTACHMENT2 = 0x8CE2;
-    static constexpr GLenum GL_COLOR_ATTACHMENT20 = 0x8CF4;
-    static constexpr GLenum GL_COLOR_ATTACHMENT21 = 0x8CF5;
-    static constexpr GLenum GL_COLOR_ATTACHMENT22 = 0x8CF6;
-    static constexpr GLenum GL_COLOR_ATTACHMENT23 = 0x8CF7;
-    static constexpr GLenum GL_COLOR_ATTACHMENT24 = 0x8CF8;
-    static constexpr GLenum GL_COLOR_ATTACHMENT25 = 0x8CF9;
-    static constexpr GLenum GL_COLOR_ATTACHMENT26 = 0x8CFA;
-    static constexpr GLenum GL_COLOR_ATTACHMENT27 = 0x8CFB;
-    static constexpr GLenum GL_COLOR_ATTACHMENT28 = 0x8CFC;
-    static constexpr GLenum GL_COLOR_ATTACHMENT29 = 0x8CFD;
-    static constexpr GLenum GL_COLOR_ATTACHMENT3 = 0x8CE3;
-    static constexpr GLenum GL_COLOR_ATTACHMENT30 = 0x8CFE;
-    static constexpr GLenum GL_COLOR_ATTACHMENT31 = 0x8CFF;
-    static constexpr GLenum GL_COLOR_ATTACHMENT4 = 0x8CE4;
-    static constexpr GLenum GL_COLOR_ATTACHMENT5 = 0x8CE5;
-    static constexpr GLenum GL_COLOR_ATTACHMENT6 = 0x8CE6;
-    static constexpr GLenum GL_COLOR_ATTACHMENT7 = 0x8CE7;
-    static constexpr GLenum GL_COLOR_ATTACHMENT8 = 0x8CE8;
-    static constexpr GLenum GL_COLOR_ATTACHMENT9 = 0x8CE9;
-    static constexpr GLenum GL_COLOR_BUFFER_BIT = 0x00004000;
-    static constexpr GLenum GL_COLOR_CLEAR_VALUE = 0x0C22;
-    static constexpr GLenum GL_COLOR_COMPONENTS = 0x8283;
-    static constexpr GLenum GL_COLOR_ENCODING = 0x8296;
-    static constexpr GLenum GL_COLOR_INDEX = 0x1900;
-    static constexpr GLenum GL_COLOR_INDEXES = 0x1603;
-    static constexpr GLenum GL_COLOR_LOGIC_OP = 0x0BF2;
-    static constexpr GLenum GL_COLOR_MATERIAL = 0x0B57;
-    static constexpr GLenum GL_COLOR_MATERIAL_FACE = 0x0B55;
-    static constexpr GLenum GL_COLOR_MATERIAL_PARAMETER = 0x0B56;
-    static constexpr GLenum GL_COLOR_RENDERABLE = 0x8286;
-    static constexpr GLenum GL_COLOR_SUM = 0x8458;
-    static constexpr GLenum GL_COLOR_TABLE = 0x80D0;
-    static constexpr GLenum GL_COLOR_WRITEMASK = 0x0C23;
-    static constexpr GLenum GL_COMBINE = 0x8570;
-    static constexpr GLenum GL_COMBINE_ALPHA = 0x8572;
-    static constexpr GLenum GL_COMBINE_RGB = 0x8571;
-    static constexpr GLenum GL_COMMAND_BARRIER_BIT = 0x00000040;
-    static constexpr GLenum GL_COMPARE_REF_TO_TEXTURE = 0x884E;
-    static constexpr GLenum GL_COMPARE_R_TO_TEXTURE = 0x884E;
-    static constexpr GLenum GL_COMPATIBLE_SUBROUTINES = 0x8E4B;
-    static constexpr GLenum GL_COMPILE = 0x1300;
-    static constexpr GLenum GL_COMPILE_AND_EXECUTE = 0x1301;
-    static constexpr GLenum GL_COMPILE_STATUS = 0x8B81;
-    static constexpr GLenum GL_COMPRESSED_ALPHA = 0x84E9;
-    static constexpr GLenum GL_COMPRESSED_INTENSITY = 0x84EC;
-    static constexpr GLenum GL_COMPRESSED_LUMINANCE = 0x84EA;
-    static constexpr GLenum GL_COMPRESSED_LUMINANCE_ALPHA = 0x84EB;
-    static constexpr GLenum GL_COMPRESSED_R11_EAC = 0x9270;
-    static constexpr GLenum GL_COMPRESSED_RED = 0x8225;
-    static constexpr GLenum GL_COMPRESSED_RED_RGTC1 = 0x8DBB;
-    static constexpr GLenum GL_COMPRESSED_RG = 0x8226;
-    static constexpr GLenum GL_COMPRESSED_RG11_EAC = 0x9272;
-    static constexpr GLenum GL_COMPRESSED_RGB = 0x84ED;
-    static constexpr GLenum GL_COMPRESSED_RGB8_ETC2 = 0x9274;
-    static constexpr GLenum GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9276;
-    static constexpr GLenum GL_COMPRESSED_RGBA = 0x84EE;
-    static constexpr GLenum GL_COMPRESSED_RGBA8_ETC2_EAC = 0x9278;
-    static constexpr GLenum GL_COMPRESSED_RGBA_BPTC_UNORM = 0x8E8C;
-    static constexpr GLenum GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT = 0x8E8E;
-    static constexpr GLenum GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = 0x8E8F;
-    static constexpr GLenum GL_COMPRESSED_RG_RGTC2 = 0x8DBD;
-    static constexpr GLenum GL_COMPRESSED_SIGNED_R11_EAC = 0x9271;
-    static constexpr GLenum GL_COMPRESSED_SIGNED_RED_RGTC1 = 0x8DBC;
-    static constexpr GLenum GL_COMPRESSED_SIGNED_RG11_EAC = 0x9273;
-    static constexpr GLenum GL_COMPRESSED_SIGNED_RG_RGTC2 = 0x8DBE;
-    static constexpr GLenum GL_COMPRESSED_SLUMINANCE = 0x8C4A;
-    static constexpr GLenum GL_COMPRESSED_SLUMINANCE_ALPHA = 0x8C4B;
-    static constexpr GLenum GL_COMPRESSED_SRGB = 0x8C48;
-    static constexpr GLenum GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = 0x9279;
-    static constexpr GLenum GL_COMPRESSED_SRGB8_ETC2 = 0x9275;
-    static constexpr GLenum GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9277;
-    static constexpr GLenum GL_COMPRESSED_SRGB_ALPHA = 0x8C49;
-    static constexpr GLenum GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM = 0x8E8D;
-    static constexpr GLenum GL_COMPRESSED_TEXTURE_FORMATS = 0x86A3;
-    static constexpr GLenum GL_COMPUTE_SHADER = 0x91B9;
-    static constexpr GLenum GL_COMPUTE_SHADER_BIT = 0x00000020;
-    static constexpr GLenum GL_COMPUTE_SHADER_INVOCATIONS = 0x82F5;
-    static constexpr GLenum GL_COMPUTE_SUBROUTINE = 0x92ED;
-    static constexpr GLenum GL_COMPUTE_SUBROUTINE_UNIFORM = 0x92F3;
-    static constexpr GLenum GL_COMPUTE_TEXTURE = 0x82A0;
-    static constexpr GLenum GL_COMPUTE_WORK_GROUP_SIZE = 0x8267;
-    static constexpr GLenum GL_CONDITION_SATISFIED = 0x911C;
-    static constexpr GLenum GL_CONSTANT = 0x8576;
-    static constexpr GLenum GL_CONSTANT_ALPHA = 0x8003;
-    static constexpr GLenum GL_CONSTANT_ATTENUATION = 0x1207;
-    static constexpr GLenum GL_CONSTANT_COLOR = 0x8001;
-    static constexpr GLenum GL_CONTEXT_COMPATIBILITY_PROFILE_BIT = 0x00000002;
-    static constexpr GLenum GL_CONTEXT_CORE_PROFILE_BIT = 0x00000001;
-    static constexpr GLenum GL_CONTEXT_FLAGS = 0x821E;
-    static constexpr GLenum GL_CONTEXT_FLAG_DEBUG_BIT = 0x00000002;
-    static constexpr GLenum GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT = 0x00000001;
-    static constexpr GLenum GL_CONTEXT_FLAG_NO_ERROR_BIT = 0x00000008;
-    static constexpr GLenum GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT = 0x00000004;
-    static constexpr GLenum GL_CONTEXT_LOST = 0x0507;
-    static constexpr GLenum GL_CONTEXT_PROFILE_MASK = 0x9126;
-    static constexpr GLenum GL_CONTEXT_RELEASE_BEHAVIOR = 0x82FB;
-    static constexpr GLenum GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH = 0x82FC;
-    static constexpr GLenum GL_CONVOLUTION_1D = 0x8010;
-    static constexpr GLenum GL_CONVOLUTION_2D = 0x8011;
-    static constexpr GLenum GL_COORD_REPLACE = 0x8862;
-    static constexpr GLenum GL_COPY = 0x1503;
-    static constexpr GLenum GL_COPY_INVERTED = 0x150C;
-    static constexpr GLenum GL_COPY_PIXEL_TOKEN = 0x0706;
-    static constexpr GLenum GL_COPY_READ_BUFFER = 0x8F36;
-    static constexpr GLenum GL_COPY_READ_BUFFER_BINDING = 0x8F36;
-    static constexpr GLenum GL_COPY_WRITE_BUFFER = 0x8F37;
-    static constexpr GLenum GL_COPY_WRITE_BUFFER_BINDING = 0x8F37;
-    static constexpr GLenum GL_CULL_FACE = 0x0B44;
-    static constexpr GLenum GL_CULL_FACE_MODE = 0x0B45;
-    static constexpr GLenum GL_CURRENT_BIT = 0x00000001;
-    static constexpr GLenum GL_CURRENT_COLOR = 0x0B00;
-    static constexpr GLenum GL_CURRENT_FOG_COORD = 0x8453;
-    static constexpr GLenum GL_CURRENT_FOG_COORDINATE = 0x8453;
-    static constexpr GLenum GL_CURRENT_INDEX = 0x0B01;
-    static constexpr GLenum GL_CURRENT_NORMAL = 0x0B02;
-    static constexpr GLenum GL_CURRENT_PROGRAM = 0x8B8D;
-    static constexpr GLenum GL_CURRENT_QUERY = 0x8865;
-    static constexpr GLenum GL_CURRENT_RASTER_COLOR = 0x0B04;
-    static constexpr GLenum GL_CURRENT_RASTER_DISTANCE = 0x0B09;
-    static constexpr GLenum GL_CURRENT_RASTER_INDEX = 0x0B05;
-    static constexpr GLenum GL_CURRENT_RASTER_POSITION = 0x0B07;
-    static constexpr GLenum GL_CURRENT_RASTER_POSITION_VALID = 0x0B08;
-    static constexpr GLenum GL_CURRENT_RASTER_SECONDARY_COLOR = 0x845F;
-    static constexpr GLenum GL_CURRENT_RASTER_TEXTURE_COORDS = 0x0B06;
-    static constexpr GLenum GL_CURRENT_SECONDARY_COLOR = 0x8459;
-    static constexpr GLenum GL_CURRENT_TEXTURE_COORDS = 0x0B03;
-    static constexpr GLenum GL_CURRENT_VERTEX_ATTRIB = 0x8626;
-    static constexpr GLenum GL_CW = 0x0900;
-    static constexpr GLenum GL_DEBUG_CALLBACK_FUNCTION = 0x8244;
-    static constexpr GLenum GL_DEBUG_CALLBACK_USER_PARAM = 0x8245;
-    static constexpr GLenum GL_DEBUG_GROUP_STACK_DEPTH = 0x826D;
-    static constexpr GLenum GL_DEBUG_LOGGED_MESSAGES = 0x9145;
-    static constexpr GLenum GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH = 0x8243;
-    static constexpr GLenum GL_DEBUG_OUTPUT = 0x92E0;
-    static constexpr GLenum GL_DEBUG_OUTPUT_SYNCHRONOUS = 0x8242;
-    static constexpr GLenum GL_DEBUG_SEVERITY_HIGH = 0x9146;
-    static constexpr GLenum GL_DEBUG_SEVERITY_LOW = 0x9148;
-    static constexpr GLenum GL_DEBUG_SEVERITY_MEDIUM = 0x9147;
-    static constexpr GLenum GL_DEBUG_SEVERITY_NOTIFICATION = 0x826B;
-    static constexpr GLenum GL_DEBUG_SOURCE_API = 0x8246;
-    static constexpr GLenum GL_DEBUG_SOURCE_APPLICATION = 0x824A;
-    static constexpr GLenum GL_DEBUG_SOURCE_OTHER = 0x824B;
-    static constexpr GLenum GL_DEBUG_SOURCE_SHADER_COMPILER = 0x8248;
-    static constexpr GLenum GL_DEBUG_SOURCE_THIRD_PARTY = 0x8249;
-    static constexpr GLenum GL_DEBUG_SOURCE_WINDOW_SYSTEM = 0x8247;
-    static constexpr GLenum GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR = 0x824D;
-    static constexpr GLenum GL_DEBUG_TYPE_ERROR = 0x824C;
-    static constexpr GLenum GL_DEBUG_TYPE_MARKER = 0x8268;
-    static constexpr GLenum GL_DEBUG_TYPE_OTHER = 0x8251;
-    static constexpr GLenum GL_DEBUG_TYPE_PERFORMANCE = 0x8250;
-    static constexpr GLenum GL_DEBUG_TYPE_POP_GROUP = 0x826A;
-    static constexpr GLenum GL_DEBUG_TYPE_PORTABILITY = 0x824F;
-    static constexpr GLenum GL_DEBUG_TYPE_PUSH_GROUP = 0x8269;
-    static constexpr GLenum GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR = 0x824E;
-    static constexpr GLenum GL_DECAL = 0x2101;
-    static constexpr GLenum GL_DECR = 0x1E03;
-    static constexpr GLenum GL_DECR_WRAP = 0x8508;
-    static constexpr GLenum GL_DELETE_STATUS = 0x8B80;
-    static constexpr GLenum GL_DEPTH = 0x1801;
-    static constexpr GLenum GL_DEPTH24_STENCIL8 = 0x88F0;
-    static constexpr GLenum GL_DEPTH32F_STENCIL8 = 0x8CAD;
-    static constexpr GLenum GL_DEPTH_ATTACHMENT = 0x8D00;
-    static constexpr GLenum GL_DEPTH_BIAS = 0x0D1F;
-    static constexpr GLenum GL_DEPTH_BITS = 0x0D56;
-    static constexpr GLenum GL_DEPTH_BUFFER_BIT = 0x00000100;
-    static constexpr GLenum GL_DEPTH_CLAMP = 0x864F;
-    static constexpr GLenum GL_DEPTH_CLEAR_VALUE = 0x0B73;
-    static constexpr GLenum GL_DEPTH_COMPONENT = 0x1902;
-    static constexpr GLenum GL_DEPTH_COMPONENT16 = 0x81A5;
-    static constexpr GLenum GL_DEPTH_COMPONENT24 = 0x81A6;
-    static constexpr GLenum GL_DEPTH_COMPONENT32 = 0x81A7;
-    static constexpr GLenum GL_DEPTH_COMPONENT32F = 0x8CAC;
-    static constexpr GLenum GL_DEPTH_COMPONENTS = 0x8284;
-    static constexpr GLenum GL_DEPTH_FUNC = 0x0B74;
-    static constexpr GLenum GL_DEPTH_RANGE = 0x0B70;
-    static constexpr GLenum GL_DEPTH_RENDERABLE = 0x8287;
-    static constexpr GLenum GL_DEPTH_SCALE = 0x0D1E;
-    static constexpr GLenum GL_DEPTH_STENCIL = 0x84F9;
-    static constexpr GLenum GL_DEPTH_STENCIL_ATTACHMENT = 0x821A;
-    static constexpr GLenum GL_DEPTH_STENCIL_TEXTURE_MODE = 0x90EA;
-    static constexpr GLenum GL_DEPTH_TEST = 0x0B71;
-    static constexpr GLenum GL_DEPTH_TEXTURE_MODE = 0x884B;
-    static constexpr GLenum GL_DEPTH_WRITEMASK = 0x0B72;
-    static constexpr GLenum GL_DIFFUSE = 0x1201;
-    static constexpr GLenum GL_DISPATCH_INDIRECT_BUFFER = 0x90EE;
-    static constexpr GLenum GL_DISPATCH_INDIRECT_BUFFER_BINDING = 0x90EF;
-    static constexpr GLenum GL_DISPLAY_LIST = 0x82E7;
-    static constexpr GLenum GL_DITHER = 0x0BD0;
-    static constexpr GLenum GL_DOMAIN = 0x0A02;
-    static constexpr GLenum GL_DONT_CARE = 0x1100;
-    static constexpr GLenum GL_DOT3_RGB = 0x86AE;
-    static constexpr GLenum GL_DOT3_RGBA = 0x86AF;
-    static constexpr GLenum GL_DOUBLE = 0x140A;
-    static constexpr GLenum GL_DOUBLEBUFFER = 0x0C32;
-    static constexpr GLenum GL_DOUBLE_MAT2 = 0x8F46;
-    static constexpr GLenum GL_DOUBLE_MAT2x3 = 0x8F49;
-    static constexpr GLenum GL_DOUBLE_MAT2x4 = 0x8F4A;
-    static constexpr GLenum GL_DOUBLE_MAT3 = 0x8F47;
-    static constexpr GLenum GL_DOUBLE_MAT3x2 = 0x8F4B;
-    static constexpr GLenum GL_DOUBLE_MAT3x4 = 0x8F4C;
-    static constexpr GLenum GL_DOUBLE_MAT4 = 0x8F48;
-    static constexpr GLenum GL_DOUBLE_MAT4x2 = 0x8F4D;
-    static constexpr GLenum GL_DOUBLE_MAT4x3 = 0x8F4E;
-    static constexpr GLenum GL_DOUBLE_VEC2 = 0x8FFC;
-    static constexpr GLenum GL_DOUBLE_VEC3 = 0x8FFD;
-    static constexpr GLenum GL_DOUBLE_VEC4 = 0x8FFE;
-    static constexpr GLenum GL_DRAW_BUFFER = 0x0C01;
-    static constexpr GLenum GL_DRAW_BUFFER0 = 0x8825;
-    static constexpr GLenum GL_DRAW_BUFFER1 = 0x8826;
-    static constexpr GLenum GL_DRAW_BUFFER10 = 0x882F;
-    static constexpr GLenum GL_DRAW_BUFFER11 = 0x8830;
-    static constexpr GLenum GL_DRAW_BUFFER12 = 0x8831;
-    static constexpr GLenum GL_DRAW_BUFFER13 = 0x8832;
-    static constexpr GLenum GL_DRAW_BUFFER14 = 0x8833;
-    static constexpr GLenum GL_DRAW_BUFFER15 = 0x8834;
-    static constexpr GLenum GL_DRAW_BUFFER2 = 0x8827;
-    static constexpr GLenum GL_DRAW_BUFFER3 = 0x8828;
-    static constexpr GLenum GL_DRAW_BUFFER4 = 0x8829;
-    static constexpr GLenum GL_DRAW_BUFFER5 = 0x882A;
-    static constexpr GLenum GL_DRAW_BUFFER6 = 0x882B;
-    static constexpr GLenum GL_DRAW_BUFFER7 = 0x882C;
-    static constexpr GLenum GL_DRAW_BUFFER8 = 0x882D;
-    static constexpr GLenum GL_DRAW_BUFFER9 = 0x882E;
-    static constexpr GLenum GL_DRAW_FRAMEBUFFER = 0x8CA9;
-    static constexpr GLenum GL_DRAW_FRAMEBUFFER_BINDING = 0x8CA6;
-    static constexpr GLenum GL_DRAW_INDIRECT_BUFFER = 0x8F3F;
-    static constexpr GLenum GL_DRAW_INDIRECT_BUFFER_BINDING = 0x8F43;
-    static constexpr GLenum GL_DRAW_PIXEL_TOKEN = 0x0705;
-    static constexpr GLenum GL_DST_ALPHA = 0x0304;
-    static constexpr GLenum GL_DST_COLOR = 0x0306;
-    static constexpr GLenum GL_DYNAMIC_COPY = 0x88EA;
-    static constexpr GLenum GL_DYNAMIC_DRAW = 0x88E8;
-    static constexpr GLenum GL_DYNAMIC_READ = 0x88E9;
-    static constexpr GLenum GL_DYNAMIC_STORAGE_BIT = 0x0100;
-    static constexpr GLenum GL_EDGE_FLAG = 0x0B43;
-    static constexpr GLenum GL_EDGE_FLAG_ARRAY = 0x8079;
-    static constexpr GLenum GL_EDGE_FLAG_ARRAY_BUFFER_BINDING = 0x889B;
-    static constexpr GLenum GL_EDGE_FLAG_ARRAY_POINTER = 0x8093;
-    static constexpr GLenum GL_EDGE_FLAG_ARRAY_STRIDE = 0x808C;
-    static constexpr GLenum GL_ELEMENT_ARRAY_BARRIER_BIT = 0x00000002;
-    static constexpr GLenum GL_ELEMENT_ARRAY_BUFFER = 0x8893;
-    static constexpr GLenum GL_ELEMENT_ARRAY_BUFFER_BINDING = 0x8895;
-    static constexpr GLenum GL_EMISSION = 0x1600;
-    static constexpr GLenum GL_ENABLE_BIT = 0x00002000;
-    static constexpr GLenum GL_EQUAL = 0x0202;
-    static constexpr GLenum GL_EQUIV = 0x1509;
-    static constexpr GLenum GL_EVAL_BIT = 0x00010000;
-    static constexpr GLenum GL_EXP = 0x0800;
-    static constexpr GLenum GL_EXP2 = 0x0801;
-    static constexpr GLenum GL_EXTENSIONS = 0x1F03;
-    static constexpr GLenum GL_EYE_LINEAR = 0x2400;
-    static constexpr GLenum GL_EYE_PLANE = 0x2502;
-    static constexpr GLenum GL_FALSE = 0;
-    static constexpr GLenum GL_FASTEST = 0x1101;
-    static constexpr GLenum GL_FEEDBACK = 0x1C01;
-    static constexpr GLenum GL_FEEDBACK_BUFFER_POINTER = 0x0DF0;
-    static constexpr GLenum GL_FEEDBACK_BUFFER_SIZE = 0x0DF1;
-    static constexpr GLenum GL_FEEDBACK_BUFFER_TYPE = 0x0DF2;
-    static constexpr GLenum GL_FILL = 0x1B02;
-    static constexpr GLenum GL_FILTER = 0x829A;
-    static constexpr GLenum GL_FIRST_VERTEX_CONVENTION = 0x8E4D;
-    static constexpr GLenum GL_FIXED = 0x140C;
-    static constexpr GLenum GL_FIXED_ONLY = 0x891D;
-    static constexpr GLenum GL_FLAT = 0x1D00;
-    static constexpr GLenum GL_FLOAT = 0x1406;
-    static constexpr GLenum GL_FLOAT_32_UNSIGNED_INT_24_8_REV = 0x8DAD;
-    static constexpr GLenum GL_FLOAT_MAT2 = 0x8B5A;
-    static constexpr GLenum GL_FLOAT_MAT2x3 = 0x8B65;
-    static constexpr GLenum GL_FLOAT_MAT2x4 = 0x8B66;
-    static constexpr GLenum GL_FLOAT_MAT3 = 0x8B5B;
-    static constexpr GLenum GL_FLOAT_MAT3x2 = 0x8B67;
-    static constexpr GLenum GL_FLOAT_MAT3x4 = 0x8B68;
-    static constexpr GLenum GL_FLOAT_MAT4 = 0x8B5C;
-    static constexpr GLenum GL_FLOAT_MAT4x2 = 0x8B69;
-    static constexpr GLenum GL_FLOAT_MAT4x3 = 0x8B6A;
-    static constexpr GLenum GL_FLOAT_VEC2 = 0x8B50;
-    static constexpr GLenum GL_FLOAT_VEC3 = 0x8B51;
-    static constexpr GLenum GL_FLOAT_VEC4 = 0x8B52;
-    static constexpr GLenum GL_FOG = 0x0B60;
-    static constexpr GLenum GL_FOG_BIT = 0x00000080;
-    static constexpr GLenum GL_FOG_COLOR = 0x0B66;
-    static constexpr GLenum GL_FOG_COORD = 0x8451;
-    static constexpr GLenum GL_FOG_COORDINATE = 0x8451;
-    static constexpr GLenum GL_FOG_COORDINATE_ARRAY = 0x8457;
-    static constexpr GLenum GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = 0x889D;
-    static constexpr GLenum GL_FOG_COORDINATE_ARRAY_POINTER = 0x8456;
-    static constexpr GLenum GL_FOG_COORDINATE_ARRAY_STRIDE = 0x8455;
-    static constexpr GLenum GL_FOG_COORDINATE_ARRAY_TYPE = 0x8454;
-    static constexpr GLenum GL_FOG_COORDINATE_SOURCE = 0x8450;
-    static constexpr GLenum GL_FOG_COORD_ARRAY = 0x8457;
-    static constexpr GLenum GL_FOG_COORD_ARRAY_BUFFER_BINDING = 0x889D;
-    static constexpr GLenum GL_FOG_COORD_ARRAY_POINTER = 0x8456;
-    static constexpr GLenum GL_FOG_COORD_ARRAY_STRIDE = 0x8455;
-    static constexpr GLenum GL_FOG_COORD_ARRAY_TYPE = 0x8454;
-    static constexpr GLenum GL_FOG_COORD_SRC = 0x8450;
-    static constexpr GLenum GL_FOG_DENSITY = 0x0B62;
-    static constexpr GLenum GL_FOG_END = 0x0B64;
-    static constexpr GLenum GL_FOG_HINT = 0x0C54;
-    static constexpr GLenum GL_FOG_INDEX = 0x0B61;
-    static constexpr GLenum GL_FOG_MODE = 0x0B65;
-    static constexpr GLenum GL_FOG_START = 0x0B63;
-    static constexpr GLenum GL_FRACTIONAL_EVEN = 0x8E7C;
-    static constexpr GLenum GL_FRACTIONAL_ODD = 0x8E7B;
-    static constexpr GLenum GL_FRAGMENT_DEPTH = 0x8452;
-    static constexpr GLenum GL_FRAGMENT_INTERPOLATION_OFFSET_BITS = 0x8E5D;
-    static constexpr GLenum GL_FRAGMENT_SHADER = 0x8B30;
-    static constexpr GLenum GL_FRAGMENT_SHADER_BIT = 0x00000002;
-    static constexpr GLenum GL_FRAGMENT_SHADER_DERIVATIVE_HINT = 0x8B8B;
-    static constexpr GLenum GL_FRAGMENT_SHADER_INVOCATIONS = 0x82F4;
-    static constexpr GLenum GL_FRAGMENT_SUBROUTINE = 0x92EC;
-    static constexpr GLenum GL_FRAGMENT_SUBROUTINE_UNIFORM = 0x92F2;
-    static constexpr GLenum GL_FRAGMENT_TEXTURE = 0x829F;
-    static constexpr GLenum GL_FRAMEBUFFER = 0x8D40;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE = 0x8215;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE = 0x8214;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING = 0x8210;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE = 0x8211;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE = 0x8216;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE = 0x8213;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_LAYERED = 0x8DA7;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 0x8CD1;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE = 0x8CD0;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE = 0x8212;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE = 0x8217;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 0x8CD3;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER = 0x8CD4;
-    static constexpr GLenum GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 0x8CD2;
-    static constexpr GLenum GL_FRAMEBUFFER_BARRIER_BIT = 0x00000400;
-    static constexpr GLenum GL_FRAMEBUFFER_BINDING = 0x8CA6;
-    static constexpr GLenum GL_FRAMEBUFFER_BLEND = 0x828B;
-    static constexpr GLenum GL_FRAMEBUFFER_COMPLETE = 0x8CD5;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT = 0x8218;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS = 0x9314;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT_HEIGHT = 0x9311;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT_LAYERS = 0x9312;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT_SAMPLES = 0x9313;
-    static constexpr GLenum GL_FRAMEBUFFER_DEFAULT_WIDTH = 0x9310;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER = 0x8CDB;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS = 0x8DA8;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 0x8CD7;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE = 0x8D56;
-    static constexpr GLenum GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER = 0x8CDC;
-    static constexpr GLenum GL_FRAMEBUFFER_RENDERABLE = 0x8289;
-    static constexpr GLenum GL_FRAMEBUFFER_RENDERABLE_LAYERED = 0x828A;
-    static constexpr GLenum GL_FRAMEBUFFER_SRGB = 0x8DB9;
-    static constexpr GLenum GL_FRAMEBUFFER_UNDEFINED = 0x8219;
-    static constexpr GLenum GL_FRAMEBUFFER_UNSUPPORTED = 0x8CDD;
-    static constexpr GLenum GL_FRONT = 0x0404;
-    static constexpr GLenum GL_FRONT_AND_BACK = 0x0408;
-    static constexpr GLenum GL_FRONT_FACE = 0x0B46;
-    static constexpr GLenum GL_FRONT_LEFT = 0x0400;
-    static constexpr GLenum GL_FRONT_RIGHT = 0x0401;
-    static constexpr GLenum GL_FULL_SUPPORT = 0x82B7;
-    static constexpr GLenum GL_FUNC_ADD = 0x8006;
-    static constexpr GLenum GL_FUNC_REVERSE_SUBTRACT = 0x800B;
-    static constexpr GLenum GL_FUNC_SUBTRACT = 0x800A;
-    static constexpr GLenum GL_GENERATE_MIPMAP = 0x8191;
-    static constexpr GLenum GL_GENERATE_MIPMAP_HINT = 0x8192;
-    static constexpr GLenum GL_GEOMETRY_INPUT_TYPE = 0x8917;
-    static constexpr GLenum GL_GEOMETRY_OUTPUT_TYPE = 0x8918;
-    static constexpr GLenum GL_GEOMETRY_SHADER = 0x8DD9;
-    static constexpr GLenum GL_GEOMETRY_SHADER_BIT = 0x00000004;
-    static constexpr GLenum GL_GEOMETRY_SHADER_INVOCATIONS = 0x887F;
-    static constexpr GLenum GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED = 0x82F3;
-    static constexpr GLenum GL_GEOMETRY_SUBROUTINE = 0x92EB;
-    static constexpr GLenum GL_GEOMETRY_SUBROUTINE_UNIFORM = 0x92F1;
-    static constexpr GLenum GL_GEOMETRY_TEXTURE = 0x829E;
-    static constexpr GLenum GL_GEOMETRY_VERTICES_OUT = 0x8916;
-    static constexpr GLenum GL_GEQUAL = 0x0206;
-    static constexpr GLenum GL_GET_TEXTURE_IMAGE_FORMAT = 0x8291;
-    static constexpr GLenum GL_GET_TEXTURE_IMAGE_TYPE = 0x8292;
-    static constexpr GLenum GL_GREATER = 0x0204;
-    static constexpr GLenum GL_GREEN = 0x1904;
-    static constexpr GLenum GL_GREEN_BIAS = 0x0D19;
-    static constexpr GLenum GL_GREEN_BITS = 0x0D53;
-    static constexpr GLenum GL_GREEN_INTEGER = 0x8D95;
-    static constexpr GLenum GL_GREEN_SCALE = 0x0D18;
-    static constexpr GLenum GL_GUILTY_CONTEXT_RESET = 0x8253;
-    static constexpr GLenum GL_HALF_FLOAT = 0x140B;
-    static constexpr GLenum GL_HIGH_FLOAT = 0x8DF2;
-    static constexpr GLenum GL_HIGH_INT = 0x8DF5;
-    static constexpr GLenum GL_HINT_BIT = 0x00008000;
-    static constexpr GLenum GL_HISTOGRAM = 0x8024;
-    static constexpr GLenum GL_IMAGE_1D = 0x904C;
-    static constexpr GLenum GL_IMAGE_1D_ARRAY = 0x9052;
-    static constexpr GLenum GL_IMAGE_2D = 0x904D;
-    static constexpr GLenum GL_IMAGE_2D_ARRAY = 0x9053;
-    static constexpr GLenum GL_IMAGE_2D_MULTISAMPLE = 0x9055;
-    static constexpr GLenum GL_IMAGE_2D_MULTISAMPLE_ARRAY = 0x9056;
-    static constexpr GLenum GL_IMAGE_2D_RECT = 0x904F;
-    static constexpr GLenum GL_IMAGE_3D = 0x904E;
-    static constexpr GLenum GL_IMAGE_BINDING_ACCESS = 0x8F3E;
-    static constexpr GLenum GL_IMAGE_BINDING_FORMAT = 0x906E;
-    static constexpr GLenum GL_IMAGE_BINDING_LAYER = 0x8F3D;
-    static constexpr GLenum GL_IMAGE_BINDING_LAYERED = 0x8F3C;
-    static constexpr GLenum GL_IMAGE_BINDING_LEVEL = 0x8F3B;
-    static constexpr GLenum GL_IMAGE_BINDING_NAME = 0x8F3A;
-    static constexpr GLenum GL_IMAGE_BUFFER = 0x9051;
-    static constexpr GLenum GL_IMAGE_CLASS_10_10_10_2 = 0x82C3;
-    static constexpr GLenum GL_IMAGE_CLASS_11_11_10 = 0x82C2;
-    static constexpr GLenum GL_IMAGE_CLASS_1_X_16 = 0x82BE;
-    static constexpr GLenum GL_IMAGE_CLASS_1_X_32 = 0x82BB;
-    static constexpr GLenum GL_IMAGE_CLASS_1_X_8 = 0x82C1;
-    static constexpr GLenum GL_IMAGE_CLASS_2_X_16 = 0x82BD;
-    static constexpr GLenum GL_IMAGE_CLASS_2_X_32 = 0x82BA;
-    static constexpr GLenum GL_IMAGE_CLASS_2_X_8 = 0x82C0;
-    static constexpr GLenum GL_IMAGE_CLASS_4_X_16 = 0x82BC;
-    static constexpr GLenum GL_IMAGE_CLASS_4_X_32 = 0x82B9;
-    static constexpr GLenum GL_IMAGE_CLASS_4_X_8 = 0x82BF;
-    static constexpr GLenum GL_IMAGE_COMPATIBILITY_CLASS = 0x82A8;
-    static constexpr GLenum GL_IMAGE_CUBE = 0x9050;
-    static constexpr GLenum GL_IMAGE_CUBE_MAP_ARRAY = 0x9054;
-    static constexpr GLenum GL_IMAGE_FORMAT_COMPATIBILITY_BY_CLASS = 0x90C9;
-    static constexpr GLenum GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE = 0x90C8;
-    static constexpr GLenum GL_IMAGE_FORMAT_COMPATIBILITY_TYPE = 0x90C7;
-    static constexpr GLenum GL_IMAGE_PIXEL_FORMAT = 0x82A9;
-    static constexpr GLenum GL_IMAGE_PIXEL_TYPE = 0x82AA;
-    static constexpr GLenum GL_IMAGE_TEXEL_SIZE = 0x82A7;
-    static constexpr GLenum GL_IMPLEMENTATION_COLOR_READ_FORMAT = 0x8B9B;
-    static constexpr GLenum GL_IMPLEMENTATION_COLOR_READ_TYPE = 0x8B9A;
-    static constexpr GLenum GL_INCR = 0x1E02;
-    static constexpr GLenum GL_INCR_WRAP = 0x8507;
-    static constexpr GLenum GL_INDEX = 0x8222;
-    static constexpr GLenum GL_INDEX_ARRAY = 0x8077;
-    static constexpr GLenum GL_INDEX_ARRAY_BUFFER_BINDING = 0x8899;
-    static constexpr GLenum GL_INDEX_ARRAY_POINTER = 0x8091;
-    static constexpr GLenum GL_INDEX_ARRAY_STRIDE = 0x8086;
-    static constexpr GLenum GL_INDEX_ARRAY_TYPE = 0x8085;
-    static constexpr GLenum GL_INDEX_BITS = 0x0D51;
-    static constexpr GLenum GL_INDEX_CLEAR_VALUE = 0x0C20;
-    static constexpr GLenum GL_INDEX_LOGIC_OP = 0x0BF1;
-    static constexpr GLenum GL_INDEX_MODE = 0x0C30;
-    static constexpr GLenum GL_INDEX_OFFSET = 0x0D13;
-    static constexpr GLenum GL_INDEX_SHIFT = 0x0D12;
-    static constexpr GLenum GL_INDEX_WRITEMASK = 0x0C21;
-    static constexpr GLenum GL_INFO_LOG_LENGTH = 0x8B84;
-    static constexpr GLenum GL_INNOCENT_CONTEXT_RESET = 0x8254;
-    static constexpr GLenum GL_INT = 0x1404;
-    static constexpr GLenum GL_INTENSITY = 0x8049;
-    static constexpr GLenum GL_INTENSITY12 = 0x804C;
-    static constexpr GLenum GL_INTENSITY16 = 0x804D;
-    static constexpr GLenum GL_INTENSITY4 = 0x804A;
-    static constexpr GLenum GL_INTENSITY8 = 0x804B;
-    static constexpr GLenum GL_INTERLEAVED_ATTRIBS = 0x8C8C;
-    static constexpr GLenum GL_INTERNALFORMAT_ALPHA_SIZE = 0x8274;
-    static constexpr GLenum GL_INTERNALFORMAT_ALPHA_TYPE = 0x827B;
-    static constexpr GLenum GL_INTERNALFORMAT_BLUE_SIZE = 0x8273;
-    static constexpr GLenum GL_INTERNALFORMAT_BLUE_TYPE = 0x827A;
-    static constexpr GLenum GL_INTERNALFORMAT_DEPTH_SIZE = 0x8275;
-    static constexpr GLenum GL_INTERNALFORMAT_DEPTH_TYPE = 0x827C;
-    static constexpr GLenum GL_INTERNALFORMAT_GREEN_SIZE = 0x8272;
-    static constexpr GLenum GL_INTERNALFORMAT_GREEN_TYPE = 0x8279;
-    static constexpr GLenum GL_INTERNALFORMAT_PREFERRED = 0x8270;
-    static constexpr GLenum GL_INTERNALFORMAT_RED_SIZE = 0x8271;
-    static constexpr GLenum GL_INTERNALFORMAT_RED_TYPE = 0x8278;
-    static constexpr GLenum GL_INTERNALFORMAT_SHARED_SIZE = 0x8277;
-    static constexpr GLenum GL_INTERNALFORMAT_STENCIL_SIZE = 0x8276;
-    static constexpr GLenum GL_INTERNALFORMAT_STENCIL_TYPE = 0x827D;
-    static constexpr GLenum GL_INTERNALFORMAT_SUPPORTED = 0x826F;
-    static constexpr GLenum GL_INTERPOLATE = 0x8575;
-    static constexpr GLenum GL_INT_2_10_10_10_REV = 0x8D9F;
-    static constexpr GLenum GL_INT_IMAGE_1D = 0x9057;
-    static constexpr GLenum GL_INT_IMAGE_1D_ARRAY = 0x905D;
-    static constexpr GLenum GL_INT_IMAGE_2D = 0x9058;
-    static constexpr GLenum GL_INT_IMAGE_2D_ARRAY = 0x905E;
-    static constexpr GLenum GL_INT_IMAGE_2D_MULTISAMPLE = 0x9060;
-    static constexpr GLenum GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY = 0x9061;
-    static constexpr GLenum GL_INT_IMAGE_2D_RECT = 0x905A;
-    static constexpr GLenum GL_INT_IMAGE_3D = 0x9059;
-    static constexpr GLenum GL_INT_IMAGE_BUFFER = 0x905C;
-    static constexpr GLenum GL_INT_IMAGE_CUBE = 0x905B;
-    static constexpr GLenum GL_INT_IMAGE_CUBE_MAP_ARRAY = 0x905F;
-    static constexpr GLenum GL_INT_SAMPLER_1D = 0x8DC9;
-    static constexpr GLenum GL_INT_SAMPLER_1D_ARRAY = 0x8DCE;
-    static constexpr GLenum GL_INT_SAMPLER_2D = 0x8DCA;
-    static constexpr GLenum GL_INT_SAMPLER_2D_ARRAY = 0x8DCF;
-    static constexpr GLenum GL_INT_SAMPLER_2D_MULTISAMPLE = 0x9109;
-    static constexpr GLenum GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910C;
-    static constexpr GLenum GL_INT_SAMPLER_2D_RECT = 0x8DCD;
-    static constexpr GLenum GL_INT_SAMPLER_3D = 0x8DCB;
-    static constexpr GLenum GL_INT_SAMPLER_BUFFER = 0x8DD0;
-    static constexpr GLenum GL_INT_SAMPLER_CUBE = 0x8DCC;
-    static constexpr GLenum GL_INT_SAMPLER_CUBE_MAP_ARRAY = 0x900E;
-    static constexpr GLenum GL_INT_VEC2 = 0x8B53;
-    static constexpr GLenum GL_INT_VEC3 = 0x8B54;
-    static constexpr GLenum GL_INT_VEC4 = 0x8B55;
-    static constexpr GLenum GL_INVALID_ENUM = 0x0500;
-    static constexpr GLenum GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506;
-    static constexpr GLenum GL_INVALID_INDEX = 0xFFFFFFFF;
-    static constexpr GLenum GL_INVALID_OPERATION = 0x0502;
-    static constexpr GLenum GL_INVALID_VALUE = 0x0501;
-    static constexpr GLenum GL_INVERT = 0x150A;
-    static constexpr GLenum GL_ISOLINES = 0x8E7A;
-    static constexpr GLenum GL_IS_PER_PATCH = 0x92E7;
-    static constexpr GLenum GL_IS_ROW_MAJOR = 0x9300;
-    static constexpr GLenum GL_KEEP = 0x1E00;
-    static constexpr GLenum GL_LAST_VERTEX_CONVENTION = 0x8E4E;
-    static constexpr GLenum GL_LAYER_PROVOKING_VERTEX = 0x825E;
-    static constexpr GLenum GL_LEFT = 0x0406;
-    static constexpr GLenum GL_LEQUAL = 0x0203;
-    static constexpr GLenum GL_LESS = 0x0201;
-    static constexpr GLenum GL_LIGHT0 = 0x4000;
-    static constexpr GLenum GL_LIGHT1 = 0x4001;
-    static constexpr GLenum GL_LIGHT2 = 0x4002;
-    static constexpr GLenum GL_LIGHT3 = 0x4003;
-    static constexpr GLenum GL_LIGHT4 = 0x4004;
-    static constexpr GLenum GL_LIGHT5 = 0x4005;
-    static constexpr GLenum GL_LIGHT6 = 0x4006;
-    static constexpr GLenum GL_LIGHT7 = 0x4007;
-    static constexpr GLenum GL_LIGHTING = 0x0B50;
-    static constexpr GLenum GL_LIGHTING_BIT = 0x00000040;
-    static constexpr GLenum GL_LIGHT_MODEL_AMBIENT = 0x0B53;
-    static constexpr GLenum GL_LIGHT_MODEL_COLOR_CONTROL = 0x81F8;
-    static constexpr GLenum GL_LIGHT_MODEL_LOCAL_VIEWER = 0x0B51;
-    static constexpr GLenum GL_LIGHT_MODEL_TWO_SIDE = 0x0B52;
-    static constexpr GLenum GL_LINE = 0x1B01;
-    static constexpr GLenum GL_LINEAR = 0x2601;
-    static constexpr GLenum GL_LINEAR_ATTENUATION = 0x1208;
-    static constexpr GLenum GL_LINEAR_MIPMAP_LINEAR = 0x2703;
-    static constexpr GLenum GL_LINEAR_MIPMAP_NEAREST = 0x2701;
-    static constexpr GLenum GL_LINES = 0x0001;
-    static constexpr GLenum GL_LINES_ADJACENCY = 0x000A;
-    static constexpr GLenum GL_LINE_BIT = 0x00000004;
-    static constexpr GLenum GL_LINE_LOOP = 0x0002;
-    static constexpr GLenum GL_LINE_RESET_TOKEN = 0x0707;
-    static constexpr GLenum GL_LINE_SMOOTH = 0x0B20;
-    static constexpr GLenum GL_LINE_SMOOTH_HINT = 0x0C52;
-    static constexpr GLenum GL_LINE_STIPPLE = 0x0B24;
-    static constexpr GLenum GL_LINE_STIPPLE_PATTERN = 0x0B25;
-    static constexpr GLenum GL_LINE_STIPPLE_REPEAT = 0x0B26;
-    static constexpr GLenum GL_LINE_STRIP = 0x0003;
-    static constexpr GLenum GL_LINE_STRIP_ADJACENCY = 0x000B;
-    static constexpr GLenum GL_LINE_TOKEN = 0x0702;
-    static constexpr GLenum GL_LINE_WIDTH = 0x0B21;
-    static constexpr GLenum GL_LINE_WIDTH_GRANULARITY = 0x0B23;
-    static constexpr GLenum GL_LINE_WIDTH_RANGE = 0x0B22;
-    static constexpr GLenum GL_LINK_STATUS = 0x8B82;
-    static constexpr GLenum GL_LIST_BASE = 0x0B32;
-    static constexpr GLenum GL_LIST_BIT = 0x00020000;
-    static constexpr GLenum GL_LIST_INDEX = 0x0B33;
-    static constexpr GLenum GL_LIST_MODE = 0x0B30;
-    static constexpr GLenum GL_LOAD = 0x0101;
-    static constexpr GLenum GL_LOCATION = 0x930E;
-    static constexpr GLenum GL_LOCATION_COMPONENT = 0x934A;
-    static constexpr GLenum GL_LOCATION_INDEX = 0x930F;
-    static constexpr GLenum GL_LOGIC_OP = 0x0BF1;
-    static constexpr GLenum GL_LOGIC_OP_MODE = 0x0BF0;
-    static constexpr GLenum GL_LOSE_CONTEXT_ON_RESET = 0x8252;
-    static constexpr GLenum GL_LOWER_LEFT = 0x8CA1;
-    static constexpr GLenum GL_LOW_FLOAT = 0x8DF0;
-    static constexpr GLenum GL_LOW_INT = 0x8DF3;
-    static constexpr GLenum GL_LUMINANCE = 0x1909;
-    static constexpr GLenum GL_LUMINANCE12 = 0x8041;
-    static constexpr GLenum GL_LUMINANCE12_ALPHA12 = 0x8047;
-    static constexpr GLenum GL_LUMINANCE12_ALPHA4 = 0x8046;
-    static constexpr GLenum GL_LUMINANCE16 = 0x8042;
-    static constexpr GLenum GL_LUMINANCE16_ALPHA16 = 0x8048;
-    static constexpr GLenum GL_LUMINANCE4 = 0x803F;
-    static constexpr GLenum GL_LUMINANCE4_ALPHA4 = 0x8043;
-    static constexpr GLenum GL_LUMINANCE6_ALPHA2 = 0x8044;
-    static constexpr GLenum GL_LUMINANCE8 = 0x8040;
-    static constexpr GLenum GL_LUMINANCE8_ALPHA8 = 0x8045;
-    static constexpr GLenum GL_LUMINANCE_ALPHA = 0x190A;
-    static constexpr GLenum GL_MAJOR_VERSION = 0x821B;
-    static constexpr GLenum GL_MANUAL_GENERATE_MIPMAP = 0x8294;
-    static constexpr GLenum GL_MAP1_COLOR_4 = 0x0D90;
-    static constexpr GLenum GL_MAP1_GRID_DOMAIN = 0x0DD0;
-    static constexpr GLenum GL_MAP1_GRID_SEGMENTS = 0x0DD1;
-    static constexpr GLenum GL_MAP1_INDEX = 0x0D91;
-    static constexpr GLenum GL_MAP1_NORMAL = 0x0D92;
-    static constexpr GLenum GL_MAP1_TEXTURE_COORD_1 = 0x0D93;
-    static constexpr GLenum GL_MAP1_TEXTURE_COORD_2 = 0x0D94;
-    static constexpr GLenum GL_MAP1_TEXTURE_COORD_3 = 0x0D95;
-    static constexpr GLenum GL_MAP1_TEXTURE_COORD_4 = 0x0D96;
-    static constexpr GLenum GL_MAP1_VERTEX_3 = 0x0D97;
-    static constexpr GLenum GL_MAP1_VERTEX_4 = 0x0D98;
-    static constexpr GLenum GL_MAP2_COLOR_4 = 0x0DB0;
-    static constexpr GLenum GL_MAP2_GRID_DOMAIN = 0x0DD2;
-    static constexpr GLenum GL_MAP2_GRID_SEGMENTS = 0x0DD3;
-    static constexpr GLenum GL_MAP2_INDEX = 0x0DB1;
-    static constexpr GLenum GL_MAP2_NORMAL = 0x0DB2;
-    static constexpr GLenum GL_MAP2_TEXTURE_COORD_1 = 0x0DB3;
-    static constexpr GLenum GL_MAP2_TEXTURE_COORD_2 = 0x0DB4;
-    static constexpr GLenum GL_MAP2_TEXTURE_COORD_3 = 0x0DB5;
-    static constexpr GLenum GL_MAP2_TEXTURE_COORD_4 = 0x0DB6;
-    static constexpr GLenum GL_MAP2_VERTEX_3 = 0x0DB7;
-    static constexpr GLenum GL_MAP2_VERTEX_4 = 0x0DB8;
-    static constexpr GLenum GL_MAP_COHERENT_BIT = 0x0080;
-    static constexpr GLenum GL_MAP_COLOR = 0x0D10;
-    static constexpr GLenum GL_MAP_FLUSH_EXPLICIT_BIT = 0x0010;
-    static constexpr GLenum GL_MAP_INVALIDATE_BUFFER_BIT = 0x0008;
-    static constexpr GLenum GL_MAP_INVALIDATE_RANGE_BIT = 0x0004;
-    static constexpr GLenum GL_MAP_PERSISTENT_BIT = 0x0040;
-    static constexpr GLenum GL_MAP_READ_BIT = 0x0001;
-    static constexpr GLenum GL_MAP_STENCIL = 0x0D11;
-    static constexpr GLenum GL_MAP_UNSYNCHRONIZED_BIT = 0x0020;
-    static constexpr GLenum GL_MAP_WRITE_BIT = 0x0002;
-    static constexpr GLenum GL_MATRIX_MODE = 0x0BA0;
-    static constexpr GLenum GL_MATRIX_STRIDE = 0x92FF;
-    static constexpr GLenum GL_MAX = 0x8008;
-    static constexpr GLenum GL_MAX_3D_TEXTURE_SIZE = 0x8073;
-    static constexpr GLenum GL_MAX_ARRAY_TEXTURE_LAYERS = 0x88FF;
-    static constexpr GLenum GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS = 0x92DC;
-    static constexpr GLenum GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE = 0x92D8;
-    static constexpr GLenum GL_MAX_ATTRIB_STACK_DEPTH = 0x0D35;
-    static constexpr GLenum GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 0x0D3B;
-    static constexpr GLenum GL_MAX_CLIP_DISTANCES = 0x0D32;
-    static constexpr GLenum GL_MAX_CLIP_PLANES = 0x0D32;
-    static constexpr GLenum GL_MAX_COLOR_ATTACHMENTS = 0x8CDF;
-    static constexpr GLenum GL_MAX_COLOR_TEXTURE_SAMPLES = 0x910E;
-    static constexpr GLenum GL_MAX_COMBINED_ATOMIC_COUNTERS = 0x92D7;
-    static constexpr GLenum GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS = 0x92D1;
-    static constexpr GLenum GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES = 0x82FA;
-    static constexpr GLenum GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS = 0x8266;
-    static constexpr GLenum GL_MAX_COMBINED_DIMENSIONS = 0x8282;
-    static constexpr GLenum GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS = 0x8A33;
-    static constexpr GLenum GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS = 0x8A32;
-    static constexpr GLenum GL_MAX_COMBINED_IMAGE_UNIFORMS = 0x90CF;
-    static constexpr GLenum GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS = 0x8F39;
-    static constexpr GLenum GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES = 0x8F39;
-    static constexpr GLenum GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS = 0x90DC;
-    static constexpr GLenum GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 0x8E1E;
-    static constexpr GLenum GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 0x8E1F;
-    static constexpr GLenum GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8B4D;
-    static constexpr GLenum GL_MAX_COMBINED_UNIFORM_BLOCKS = 0x8A2E;
-    static constexpr GLenum GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS = 0x8A31;
-    static constexpr GLenum GL_MAX_COMPUTE_ATOMIC_COUNTERS = 0x8265;
-    static constexpr GLenum GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS = 0x8264;
-    static constexpr GLenum GL_MAX_COMPUTE_IMAGE_UNIFORMS = 0x91BD;
-    static constexpr GLenum GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS = 0x90DB;
-    static constexpr GLenum GL_MAX_COMPUTE_SHARED_MEMORY_SIZE = 0x8262;
-    static constexpr GLenum GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS = 0x91BC;
-    static constexpr GLenum GL_MAX_COMPUTE_UNIFORM_BLOCKS = 0x91BB;
-    static constexpr GLenum GL_MAX_COMPUTE_UNIFORM_COMPONENTS = 0x8263;
-    static constexpr GLenum GL_MAX_COMPUTE_WORK_GROUP_COUNT = 0x91BE;
-    static constexpr GLenum GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS = 0x90EB;
-    static constexpr GLenum GL_MAX_COMPUTE_WORK_GROUP_SIZE = 0x91BF;
-    static constexpr GLenum GL_MAX_CUBE_MAP_TEXTURE_SIZE = 0x851C;
-    static constexpr GLenum GL_MAX_CULL_DISTANCES = 0x82F9;
-    static constexpr GLenum GL_MAX_DEBUG_GROUP_STACK_DEPTH = 0x826C;
-    static constexpr GLenum GL_MAX_DEBUG_LOGGED_MESSAGES = 0x9144;
-    static constexpr GLenum GL_MAX_DEBUG_MESSAGE_LENGTH = 0x9143;
-    static constexpr GLenum GL_MAX_DEPTH = 0x8280;
-    static constexpr GLenum GL_MAX_DEPTH_TEXTURE_SAMPLES = 0x910F;
-    static constexpr GLenum GL_MAX_DRAW_BUFFERS = 0x8824;
-    static constexpr GLenum GL_MAX_DUAL_SOURCE_DRAW_BUFFERS = 0x88FC;
-    static constexpr GLenum GL_MAX_ELEMENTS_INDICES = 0x80E9;
-    static constexpr GLenum GL_MAX_ELEMENTS_VERTICES = 0x80E8;
-    static constexpr GLenum GL_MAX_ELEMENT_INDEX = 0x8D6B;
-    static constexpr GLenum GL_MAX_EVAL_ORDER = 0x0D30;
-    static constexpr GLenum GL_MAX_FRAGMENT_ATOMIC_COUNTERS = 0x92D6;
-    static constexpr GLenum GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS = 0x92D0;
-    static constexpr GLenum GL_MAX_FRAGMENT_IMAGE_UNIFORMS = 0x90CE;
-    static constexpr GLenum GL_MAX_FRAGMENT_INPUT_COMPONENTS = 0x9125;
-    static constexpr GLenum GL_MAX_FRAGMENT_INTERPOLATION_OFFSET = 0x8E5C;
-    static constexpr GLenum GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS = 0x90DA;
-    static constexpr GLenum GL_MAX_FRAGMENT_UNIFORM_BLOCKS = 0x8A2D;
-    static constexpr GLenum GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = 0x8B49;
-    static constexpr GLenum GL_MAX_FRAGMENT_UNIFORM_VECTORS = 0x8DFD;
-    static constexpr GLenum GL_MAX_FRAMEBUFFER_HEIGHT = 0x9316;
-    static constexpr GLenum GL_MAX_FRAMEBUFFER_LAYERS = 0x9317;
-    static constexpr GLenum GL_MAX_FRAMEBUFFER_SAMPLES = 0x9318;
-    static constexpr GLenum GL_MAX_FRAMEBUFFER_WIDTH = 0x9315;
-    static constexpr GLenum GL_MAX_GEOMETRY_ATOMIC_COUNTERS = 0x92D5;
-    static constexpr GLenum GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS = 0x92CF;
-    static constexpr GLenum GL_MAX_GEOMETRY_IMAGE_UNIFORMS = 0x90CD;
-    static constexpr GLenum GL_MAX_GEOMETRY_INPUT_COMPONENTS = 0x9123;
-    static constexpr GLenum GL_MAX_GEOMETRY_OUTPUT_COMPONENTS = 0x9124;
-    static constexpr GLenum GL_MAX_GEOMETRY_OUTPUT_VERTICES = 0x8DE0;
-    static constexpr GLenum GL_MAX_GEOMETRY_SHADER_INVOCATIONS = 0x8E5A;
-    static constexpr GLenum GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS = 0x90D7;
-    static constexpr GLenum GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS = 0x8C29;
-    static constexpr GLenum GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS = 0x8DE1;
-    static constexpr GLenum GL_MAX_GEOMETRY_UNIFORM_BLOCKS = 0x8A2C;
-    static constexpr GLenum GL_MAX_GEOMETRY_UNIFORM_COMPONENTS = 0x8DDF;
-    static constexpr GLenum GL_MAX_HEIGHT = 0x827F;
-    static constexpr GLenum GL_MAX_IMAGE_SAMPLES = 0x906D;
-    static constexpr GLenum GL_MAX_IMAGE_UNITS = 0x8F38;
-    static constexpr GLenum GL_MAX_INTEGER_SAMPLES = 0x9110;
-    static constexpr GLenum GL_MAX_LABEL_LENGTH = 0x82E8;
-    static constexpr GLenum GL_MAX_LAYERS = 0x8281;
-    static constexpr GLenum GL_MAX_LIGHTS = 0x0D31;
-    static constexpr GLenum GL_MAX_LIST_NESTING = 0x0B31;
-    static constexpr GLenum GL_MAX_MODELVIEW_STACK_DEPTH = 0x0D36;
-    static constexpr GLenum GL_MAX_NAME_LENGTH = 0x92F6;
-    static constexpr GLenum GL_MAX_NAME_STACK_DEPTH = 0x0D37;
-    static constexpr GLenum GL_MAX_NUM_ACTIVE_VARIABLES = 0x92F7;
-    static constexpr GLenum GL_MAX_NUM_COMPATIBLE_SUBROUTINES = 0x92F8;
-    static constexpr GLenum GL_MAX_PATCH_VERTICES = 0x8E7D;
-    static constexpr GLenum GL_MAX_PIXEL_MAP_TABLE = 0x0D34;
-    static constexpr GLenum GL_MAX_PROGRAM_TEXEL_OFFSET = 0x8905;
-    static constexpr GLenum GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET = 0x8E5F;
-    static constexpr GLenum GL_MAX_PROJECTION_STACK_DEPTH = 0x0D38;
-    static constexpr GLenum GL_MAX_RECTANGLE_TEXTURE_SIZE = 0x84F8;
-    static constexpr GLenum GL_MAX_RENDERBUFFER_SIZE = 0x84E8;
-    static constexpr GLenum GL_MAX_SAMPLES = 0x8D57;
-    static constexpr GLenum GL_MAX_SAMPLE_MASK_WORDS = 0x8E59;
-    static constexpr GLenum GL_MAX_SERVER_WAIT_TIMEOUT = 0x9111;
-    static constexpr GLenum GL_MAX_SHADER_STORAGE_BLOCK_SIZE = 0x90DE;
-    static constexpr GLenum GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 0x90DD;
-    static constexpr GLenum GL_MAX_SUBROUTINES = 0x8DE7;
-    static constexpr GLenum GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS = 0x8DE8;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS = 0x92D3;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS = 0x92CD;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS = 0x90CB;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_INPUT_COMPONENTS = 0x886C;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS = 0x8E83;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS = 0x90D8;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS = 0x8E81;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS = 0x8E85;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS = 0x8E89;
-    static constexpr GLenum GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS = 0x8E7F;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS = 0x92D4;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS = 0x92CE;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS = 0x90CC;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS = 0x886D;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS = 0x8E86;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS = 0x90D9;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS = 0x8E82;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS = 0x8E8A;
-    static constexpr GLenum GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS = 0x8E80;
-    static constexpr GLenum GL_MAX_TESS_GEN_LEVEL = 0x8E7E;
-    static constexpr GLenum GL_MAX_TESS_PATCH_COMPONENTS = 0x8E84;
-    static constexpr GLenum GL_MAX_TEXTURE_BUFFER_SIZE = 0x8C2B;
-    static constexpr GLenum GL_MAX_TEXTURE_COORDS = 0x8871;
-    static constexpr GLenum GL_MAX_TEXTURE_IMAGE_UNITS = 0x8872;
-    static constexpr GLenum GL_MAX_TEXTURE_LOD_BIAS = 0x84FD;
-    static constexpr GLenum GL_MAX_TEXTURE_MAX_ANISOTROPY = 0x84FF;
-    static constexpr GLenum GL_MAX_TEXTURE_SIZE = 0x0D33;
-    static constexpr GLenum GL_MAX_TEXTURE_STACK_DEPTH = 0x0D39;
-    static constexpr GLenum GL_MAX_TEXTURE_UNITS = 0x84E2;
-    static constexpr GLenum GL_MAX_TRANSFORM_FEEDBACK_BUFFERS = 0x8E70;
-    static constexpr GLenum GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS = 0x8C8A;
-    static constexpr GLenum GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS = 0x8C8B;
-    static constexpr GLenum GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS = 0x8C80;
-    static constexpr GLenum GL_MAX_UNIFORM_BLOCK_SIZE = 0x8A30;
-    static constexpr GLenum GL_MAX_UNIFORM_BUFFER_BINDINGS = 0x8A2F;
-    static constexpr GLenum GL_MAX_UNIFORM_LOCATIONS = 0x826E;
-    static constexpr GLenum GL_MAX_VARYING_COMPONENTS = 0x8B4B;
-    static constexpr GLenum GL_MAX_VARYING_FLOATS = 0x8B4B;
-    static constexpr GLenum GL_MAX_VARYING_VECTORS = 0x8DFC;
-    static constexpr GLenum GL_MAX_VERTEX_ATOMIC_COUNTERS = 0x92D2;
-    static constexpr GLenum GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS = 0x92CC;
-    static constexpr GLenum GL_MAX_VERTEX_ATTRIBS = 0x8869;
-    static constexpr GLenum GL_MAX_VERTEX_ATTRIB_BINDINGS = 0x82DA;
-    static constexpr GLenum GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET = 0x82D9;
-    static constexpr GLenum GL_MAX_VERTEX_ATTRIB_STRIDE = 0x82E5;
-    static constexpr GLenum GL_MAX_VERTEX_IMAGE_UNIFORMS = 0x90CA;
-    static constexpr GLenum GL_MAX_VERTEX_OUTPUT_COMPONENTS = 0x9122;
-    static constexpr GLenum GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS = 0x90D6;
-    static constexpr GLenum GL_MAX_VERTEX_STREAMS = 0x8E71;
-    static constexpr GLenum GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0x8B4C;
-    static constexpr GLenum GL_MAX_VERTEX_UNIFORM_BLOCKS = 0x8A2B;
-    static constexpr GLenum GL_MAX_VERTEX_UNIFORM_COMPONENTS = 0x8B4A;
-    static constexpr GLenum GL_MAX_VERTEX_UNIFORM_VECTORS = 0x8DFB;
-    static constexpr GLenum GL_MAX_VIEWPORTS = 0x825B;
-    static constexpr GLenum GL_MAX_VIEWPORT_DIMS = 0x0D3A;
-    static constexpr GLenum GL_MAX_WIDTH = 0x827E;
-    static constexpr GLenum GL_MEDIUM_FLOAT = 0x8DF1;
-    static constexpr GLenum GL_MEDIUM_INT = 0x8DF4;
-    static constexpr GLenum GL_MIN = 0x8007;
-    static constexpr GLenum GL_MINMAX = 0x802E;
-    static constexpr GLenum GL_MINOR_VERSION = 0x821C;
-    static constexpr GLenum GL_MIN_FRAGMENT_INTERPOLATION_OFFSET = 0x8E5B;
-    static constexpr GLenum GL_MIN_MAP_BUFFER_ALIGNMENT = 0x90BC;
-    static constexpr GLenum GL_MIN_PROGRAM_TEXEL_OFFSET = 0x8904;
-    static constexpr GLenum GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET = 0x8E5E;
-    static constexpr GLenum GL_MIN_SAMPLE_SHADING_VALUE = 0x8C37;
-    static constexpr GLenum GL_MIPMAP = 0x8293;
-    static constexpr GLenum GL_MIRRORED_REPEAT = 0x8370;
-    static constexpr GLenum GL_MIRROR_CLAMP_TO_EDGE = 0x8743;
-    static constexpr GLenum GL_MODELVIEW = 0x1700;
-    static constexpr GLenum GL_MODELVIEW_MATRIX = 0x0BA6;
-    static constexpr GLenum GL_MODELVIEW_STACK_DEPTH = 0x0BA3;
-    static constexpr GLenum GL_MODULATE = 0x2100;
-    static constexpr GLenum GL_MULT = 0x0103;
-    static constexpr GLenum GL_MULTISAMPLE = 0x809D;
-    static constexpr GLenum GL_MULTISAMPLE_BIT = 0x20000000;
-    static constexpr GLenum GL_N3F_V3F = 0x2A25;
-    static constexpr GLenum GL_NAME_LENGTH = 0x92F9;
-    static constexpr GLenum GL_NAME_STACK_DEPTH = 0x0D70;
-    static constexpr GLenum GL_NAND = 0x150E;
-    static constexpr GLenum GL_NEAREST = 0x2600;
-    static constexpr GLenum GL_NEAREST_MIPMAP_LINEAR = 0x2702;
-    static constexpr GLenum GL_NEAREST_MIPMAP_NEAREST = 0x2700;
-    static constexpr GLenum GL_NEGATIVE_ONE_TO_ONE = 0x935E;
-    static constexpr GLenum GL_NEVER = 0x0200;
-    static constexpr GLenum GL_NICEST = 0x1102;
-    static constexpr GLenum GL_NONE = 0;
-    static constexpr GLenum GL_NOOP = 0x1505;
-    static constexpr GLenum GL_NOR = 0x1508;
-    static constexpr GLenum GL_NORMALIZE = 0x0BA1;
-    static constexpr GLenum GL_NORMAL_ARRAY = 0x8075;
-    static constexpr GLenum GL_NORMAL_ARRAY_BUFFER_BINDING = 0x8897;
-    static constexpr GLenum GL_NORMAL_ARRAY_POINTER = 0x808F;
-    static constexpr GLenum GL_NORMAL_ARRAY_STRIDE = 0x807F;
-    static constexpr GLenum GL_NORMAL_ARRAY_TYPE = 0x807E;
-    static constexpr GLenum GL_NORMAL_MAP = 0x8511;
-    static constexpr GLenum GL_NOTEQUAL = 0x0205;
-    static constexpr GLenum GL_NO_ERROR = 0;
-    static constexpr GLenum GL_NO_RESET_NOTIFICATION = 0x8261;
-    static constexpr GLenum GL_NUM_ACTIVE_VARIABLES = 0x9304;
-    static constexpr GLenum GL_NUM_COMPATIBLE_SUBROUTINES = 0x8E4A;
-    static constexpr GLenum GL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
-    static constexpr GLenum GL_NUM_EXTENSIONS = 0x821D;
-    static constexpr GLenum GL_NUM_PROGRAM_BINARY_FORMATS = 0x87FE;
-    static constexpr GLenum GL_NUM_SAMPLE_COUNTS = 0x9380;
-    static constexpr GLenum GL_NUM_SHADER_BINARY_FORMATS = 0x8DF9;
-    static constexpr GLenum GL_NUM_SHADING_LANGUAGE_VERSIONS = 0x82E9;
-    static constexpr GLenum GL_NUM_SPIR_V_EXTENSIONS = 0x9554;
-    static constexpr GLenum GL_OBJECT_LINEAR = 0x2401;
-    static constexpr GLenum GL_OBJECT_PLANE = 0x2501;
-    static constexpr GLenum GL_OBJECT_TYPE = 0x9112;
-    static constexpr GLenum GL_OFFSET = 0x92FC;
-    static constexpr GLenum GL_ONE = 1;
-    static constexpr GLenum GL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
-    static constexpr GLenum GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
-    static constexpr GLenum GL_ONE_MINUS_DST_ALPHA = 0x0305;
-    static constexpr GLenum GL_ONE_MINUS_DST_COLOR = 0x0307;
-    static constexpr GLenum GL_ONE_MINUS_SRC1_ALPHA = 0x88FB;
-    static constexpr GLenum GL_ONE_MINUS_SRC1_COLOR = 0x88FA;
-    static constexpr GLenum GL_ONE_MINUS_SRC_ALPHA = 0x0303;
-    static constexpr GLenum GL_ONE_MINUS_SRC_COLOR = 0x0301;
-    static constexpr GLenum GL_OPERAND0_ALPHA = 0x8598;
-    static constexpr GLenum GL_OPERAND0_RGB = 0x8590;
-    static constexpr GLenum GL_OPERAND1_ALPHA = 0x8599;
-    static constexpr GLenum GL_OPERAND1_RGB = 0x8591;
-    static constexpr GLenum GL_OPERAND2_ALPHA = 0x859A;
-    static constexpr GLenum GL_OPERAND2_RGB = 0x8592;
-    static constexpr GLenum GL_OR = 0x1507;
-    static constexpr GLenum GL_ORDER = 0x0A01;
-    static constexpr GLenum GL_OR_INVERTED = 0x150D;
-    static constexpr GLenum GL_OR_REVERSE = 0x150B;
-    static constexpr GLenum GL_OUT_OF_MEMORY = 0x0505;
-    static constexpr GLenum GL_PACK_ALIGNMENT = 0x0D05;
-    static constexpr GLenum GL_PACK_COMPRESSED_BLOCK_DEPTH = 0x912D;
-    static constexpr GLenum GL_PACK_COMPRESSED_BLOCK_HEIGHT = 0x912C;
-    static constexpr GLenum GL_PACK_COMPRESSED_BLOCK_SIZE = 0x912E;
-    static constexpr GLenum GL_PACK_COMPRESSED_BLOCK_WIDTH = 0x912B;
-    static constexpr GLenum GL_PACK_IMAGE_HEIGHT = 0x806C;
-    static constexpr GLenum GL_PACK_LSB_FIRST = 0x0D01;
-    static constexpr GLenum GL_PACK_ROW_LENGTH = 0x0D02;
-    static constexpr GLenum GL_PACK_SKIP_IMAGES = 0x806B;
-    static constexpr GLenum GL_PACK_SKIP_PIXELS = 0x0D04;
-    static constexpr GLenum GL_PACK_SKIP_ROWS = 0x0D03;
-    static constexpr GLenum GL_PACK_SWAP_BYTES = 0x0D00;
-    static constexpr GLenum GL_PARAMETER_BUFFER = 0x80EE;
-    static constexpr GLenum GL_PARAMETER_BUFFER_BINDING = 0x80EF;
-    static constexpr GLenum GL_PASS_THROUGH_TOKEN = 0x0700;
-    static constexpr GLenum GL_PATCHES = 0x000E;
-    static constexpr GLenum GL_PATCH_DEFAULT_INNER_LEVEL = 0x8E73;
-    static constexpr GLenum GL_PATCH_DEFAULT_OUTER_LEVEL = 0x8E74;
-    static constexpr GLenum GL_PATCH_VERTICES = 0x8E72;
-    static constexpr GLenum GL_PERSPECTIVE_CORRECTION_HINT = 0x0C50;
-    static constexpr GLenum GL_PIXEL_BUFFER_BARRIER_BIT = 0x00000080;
-    static constexpr GLenum GL_PIXEL_MAP_A_TO_A = 0x0C79;
-    static constexpr GLenum GL_PIXEL_MAP_A_TO_A_SIZE = 0x0CB9;
-    static constexpr GLenum GL_PIXEL_MAP_B_TO_B = 0x0C78;
-    static constexpr GLenum GL_PIXEL_MAP_B_TO_B_SIZE = 0x0CB8;
-    static constexpr GLenum GL_PIXEL_MAP_G_TO_G = 0x0C77;
-    static constexpr GLenum GL_PIXEL_MAP_G_TO_G_SIZE = 0x0CB7;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_A = 0x0C75;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_A_SIZE = 0x0CB5;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_B = 0x0C74;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_B_SIZE = 0x0CB4;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_G = 0x0C73;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_G_SIZE = 0x0CB3;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_I = 0x0C70;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_I_SIZE = 0x0CB0;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_R = 0x0C72;
-    static constexpr GLenum GL_PIXEL_MAP_I_TO_R_SIZE = 0x0CB2;
-    static constexpr GLenum GL_PIXEL_MAP_R_TO_R = 0x0C76;
-    static constexpr GLenum GL_PIXEL_MAP_R_TO_R_SIZE = 0x0CB6;
-    static constexpr GLenum GL_PIXEL_MAP_S_TO_S = 0x0C71;
-    static constexpr GLenum GL_PIXEL_MAP_S_TO_S_SIZE = 0x0CB1;
-    static constexpr GLenum GL_PIXEL_MODE_BIT = 0x00000020;
-    static constexpr GLenum GL_PIXEL_PACK_BUFFER = 0x88EB;
-    static constexpr GLenum GL_PIXEL_PACK_BUFFER_BINDING = 0x88ED;
-    static constexpr GLenum GL_PIXEL_UNPACK_BUFFER = 0x88EC;
-    static constexpr GLenum GL_PIXEL_UNPACK_BUFFER_BINDING = 0x88EF;
-    static constexpr GLenum GL_POINT = 0x1B00;
-    static constexpr GLenum GL_POINTS = 0x0000;
-    static constexpr GLenum GL_POINT_BIT = 0x00000002;
-    static constexpr GLenum GL_POINT_DISTANCE_ATTENUATION = 0x8129;
-    static constexpr GLenum GL_POINT_FADE_THRESHOLD_SIZE = 0x8128;
-    static constexpr GLenum GL_POINT_SIZE = 0x0B11;
-    static constexpr GLenum GL_POINT_SIZE_GRANULARITY = 0x0B13;
-    static constexpr GLenum GL_POINT_SIZE_MAX = 0x8127;
-    static constexpr GLenum GL_POINT_SIZE_MIN = 0x8126;
-    static constexpr GLenum GL_POINT_SIZE_RANGE = 0x0B12;
-    static constexpr GLenum GL_POINT_SMOOTH = 0x0B10;
-    static constexpr GLenum GL_POINT_SMOOTH_HINT = 0x0C51;
-    static constexpr GLenum GL_POINT_SPRITE = 0x8861;
-    static constexpr GLenum GL_POINT_SPRITE_COORD_ORIGIN = 0x8CA0;
-    static constexpr GLenum GL_POINT_TOKEN = 0x0701;
-    static constexpr GLenum GL_POLYGON = 0x0009;
-    static constexpr GLenum GL_POLYGON_BIT = 0x00000008;
-    static constexpr GLenum GL_POLYGON_MODE = 0x0B40;
-    static constexpr GLenum GL_POLYGON_OFFSET_CLAMP = 0x8E1B;
-    static constexpr GLenum GL_POLYGON_OFFSET_FACTOR = 0x8038;
-    static constexpr GLenum GL_POLYGON_OFFSET_FILL = 0x8037;
-    static constexpr GLenum GL_POLYGON_OFFSET_LINE = 0x2A02;
-    static constexpr GLenum GL_POLYGON_OFFSET_POINT = 0x2A01;
-    static constexpr GLenum GL_POLYGON_OFFSET_UNITS = 0x2A00;
-    static constexpr GLenum GL_POLYGON_SMOOTH = 0x0B41;
-    static constexpr GLenum GL_POLYGON_SMOOTH_HINT = 0x0C53;
-    static constexpr GLenum GL_POLYGON_STIPPLE = 0x0B42;
-    static constexpr GLenum GL_POLYGON_STIPPLE_BIT = 0x00000010;
-    static constexpr GLenum GL_POLYGON_TOKEN = 0x0703;
-    static constexpr GLenum GL_POSITION = 0x1203;
-    static constexpr GLenum GL_POST_COLOR_MATRIX_COLOR_TABLE = 0x80D2;
-    static constexpr GLenum GL_POST_CONVOLUTION_COLOR_TABLE = 0x80D1;
-    static constexpr GLenum GL_PREVIOUS = 0x8578;
-    static constexpr GLenum GL_PRIMARY_COLOR = 0x8577;
-    static constexpr GLenum GL_PRIMITIVES_GENERATED = 0x8C87;
-    static constexpr GLenum GL_PRIMITIVES_SUBMITTED = 0x82EF;
-    static constexpr GLenum GL_PRIMITIVE_RESTART = 0x8F9D;
-    static constexpr GLenum GL_PRIMITIVE_RESTART_FIXED_INDEX = 0x8D69;
-    static constexpr GLenum GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED = 0x8221;
-    static constexpr GLenum GL_PRIMITIVE_RESTART_INDEX = 0x8F9E;
-    static constexpr GLenum GL_PROGRAM = 0x82E2;
-    static constexpr GLenum GL_PROGRAM_BINARY_FORMATS = 0x87FF;
-    static constexpr GLenum GL_PROGRAM_BINARY_LENGTH = 0x8741;
-    static constexpr GLenum GL_PROGRAM_BINARY_RETRIEVABLE_HINT = 0x8257;
-    static constexpr GLenum GL_PROGRAM_INPUT = 0x92E3;
-    static constexpr GLenum GL_PROGRAM_OUTPUT = 0x92E4;
-    static constexpr GLenum GL_PROGRAM_PIPELINE = 0x82E4;
-    static constexpr GLenum GL_PROGRAM_PIPELINE_BINDING = 0x825A;
-    static constexpr GLenum GL_PROGRAM_POINT_SIZE = 0x8642;
-    static constexpr GLenum GL_PROGRAM_SEPARABLE = 0x8258;
-    static constexpr GLenum GL_PROJECTION = 0x1701;
-    static constexpr GLenum GL_PROJECTION_MATRIX = 0x0BA7;
-    static constexpr GLenum GL_PROJECTION_STACK_DEPTH = 0x0BA4;
-    static constexpr GLenum GL_PROVOKING_VERTEX = 0x8E4F;
-    static constexpr GLenum GL_PROXY_COLOR_TABLE = 0x80D3;
-    static constexpr GLenum GL_PROXY_HISTOGRAM = 0x8025;
-    static constexpr GLenum GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE = 0x80D5;
-    static constexpr GLenum GL_PROXY_POST_CONVOLUTION_COLOR_TABLE = 0x80D4;
-    static constexpr GLenum GL_PROXY_TEXTURE_1D = 0x8063;
-    static constexpr GLenum GL_PROXY_TEXTURE_1D_ARRAY = 0x8C19;
-    static constexpr GLenum GL_PROXY_TEXTURE_2D = 0x8064;
-    static constexpr GLenum GL_PROXY_TEXTURE_2D_ARRAY = 0x8C1B;
-    static constexpr GLenum GL_PROXY_TEXTURE_2D_MULTISAMPLE = 0x9101;
-    static constexpr GLenum GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9103;
-    static constexpr GLenum GL_PROXY_TEXTURE_3D = 0x8070;
-    static constexpr GLenum GL_PROXY_TEXTURE_CUBE_MAP = 0x851B;
-    static constexpr GLenum GL_PROXY_TEXTURE_CUBE_MAP_ARRAY = 0x900B;
-    static constexpr GLenum GL_PROXY_TEXTURE_RECTANGLE = 0x84F7;
-    static constexpr GLenum GL_Q = 0x2003;
-    static constexpr GLenum GL_QUADRATIC_ATTENUATION = 0x1209;
-    static constexpr GLenum GL_QUADS = 0x0007;
-    static constexpr GLenum GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION = 0x8E4C;
-    static constexpr GLenum GL_QUAD_STRIP = 0x0008;
-    static constexpr GLenum GL_QUERY = 0x82E3;
-    static constexpr GLenum GL_QUERY_BUFFER = 0x9192;
-    static constexpr GLenum GL_QUERY_BUFFER_BARRIER_BIT = 0x00008000;
-    static constexpr GLenum GL_QUERY_BUFFER_BINDING = 0x9193;
-    static constexpr GLenum GL_QUERY_BY_REGION_NO_WAIT = 0x8E16;
-    static constexpr GLenum GL_QUERY_BY_REGION_NO_WAIT_INVERTED = 0x8E1A;
-    static constexpr GLenum GL_QUERY_BY_REGION_WAIT = 0x8E15;
-    static constexpr GLenum GL_QUERY_BY_REGION_WAIT_INVERTED = 0x8E19;
-    static constexpr GLenum GL_QUERY_COUNTER_BITS = 0x8864;
-    static constexpr GLenum GL_QUERY_NO_WAIT = 0x8E14;
-    static constexpr GLenum GL_QUERY_NO_WAIT_INVERTED = 0x8E18;
-    static constexpr GLenum GL_QUERY_RESULT = 0x8866;
-    static constexpr GLenum GL_QUERY_RESULT_AVAILABLE = 0x8867;
-    static constexpr GLenum GL_QUERY_RESULT_NO_WAIT = 0x9194;
-    static constexpr GLenum GL_QUERY_TARGET = 0x82EA;
-    static constexpr GLenum GL_QUERY_WAIT = 0x8E13;
-    static constexpr GLenum GL_QUERY_WAIT_INVERTED = 0x8E17;
-    static constexpr GLenum GL_R = 0x2002;
-    static constexpr GLenum GL_R11F_G11F_B10F = 0x8C3A;
-    static constexpr GLenum GL_R16 = 0x822A;
-    static constexpr GLenum GL_R16F = 0x822D;
-    static constexpr GLenum GL_R16I = 0x8233;
-    static constexpr GLenum GL_R16UI = 0x8234;
-    static constexpr GLenum GL_R16_SNORM = 0x8F98;
-    static constexpr GLenum GL_R32F = 0x822E;
-    static constexpr GLenum GL_R32I = 0x8235;
-    static constexpr GLenum GL_R32UI = 0x8236;
-    static constexpr GLenum GL_R3_G3_B2 = 0x2A10;
-    static constexpr GLenum GL_R8 = 0x8229;
-    static constexpr GLenum GL_R8I = 0x8231;
-    static constexpr GLenum GL_R8UI = 0x8232;
-    static constexpr GLenum GL_R8_SNORM = 0x8F94;
-    static constexpr GLenum GL_RASTERIZER_DISCARD = 0x8C89;
-    static constexpr GLenum GL_READ_BUFFER = 0x0C02;
-    static constexpr GLenum GL_READ_FRAMEBUFFER = 0x8CA8;
-    static constexpr GLenum GL_READ_FRAMEBUFFER_BINDING = 0x8CAA;
-    static constexpr GLenum GL_READ_ONLY = 0x88B8;
-    static constexpr GLenum GL_READ_PIXELS = 0x828C;
-    static constexpr GLenum GL_READ_PIXELS_FORMAT = 0x828D;
-    static constexpr GLenum GL_READ_PIXELS_TYPE = 0x828E;
-    static constexpr GLenum GL_READ_WRITE = 0x88BA;
-    static constexpr GLenum GL_RED = 0x1903;
-    static constexpr GLenum GL_RED_BIAS = 0x0D15;
-    static constexpr GLenum GL_RED_BITS = 0x0D52;
-    static constexpr GLenum GL_RED_INTEGER = 0x8D94;
-    static constexpr GLenum GL_RED_SCALE = 0x0D14;
-    static constexpr GLenum GL_REFERENCED_BY_COMPUTE_SHADER = 0x930B;
-    static constexpr GLenum GL_REFERENCED_BY_FRAGMENT_SHADER = 0x930A;
-    static constexpr GLenum GL_REFERENCED_BY_GEOMETRY_SHADER = 0x9309;
-    static constexpr GLenum GL_REFERENCED_BY_TESS_CONTROL_SHADER = 0x9307;
-    static constexpr GLenum GL_REFERENCED_BY_TESS_EVALUATION_SHADER = 0x9308;
-    static constexpr GLenum GL_REFERENCED_BY_VERTEX_SHADER = 0x9306;
-    static constexpr GLenum GL_REFLECTION_MAP = 0x8512;
-    static constexpr GLenum GL_RENDER = 0x1C00;
-    static constexpr GLenum GL_RENDERBUFFER = 0x8D41;
-    static constexpr GLenum GL_RENDERBUFFER_ALPHA_SIZE = 0x8D53;
-    static constexpr GLenum GL_RENDERBUFFER_BINDING = 0x8CA7;
-    static constexpr GLenum GL_RENDERBUFFER_BLUE_SIZE = 0x8D52;
-    static constexpr GLenum GL_RENDERBUFFER_DEPTH_SIZE = 0x8D54;
-    static constexpr GLenum GL_RENDERBUFFER_GREEN_SIZE = 0x8D51;
-    static constexpr GLenum GL_RENDERBUFFER_HEIGHT = 0x8D43;
-    static constexpr GLenum GL_RENDERBUFFER_INTERNAL_FORMAT = 0x8D44;
-    static constexpr GLenum GL_RENDERBUFFER_RED_SIZE = 0x8D50;
-    static constexpr GLenum GL_RENDERBUFFER_SAMPLES = 0x8CAB;
-    static constexpr GLenum GL_RENDERBUFFER_STENCIL_SIZE = 0x8D55;
-    static constexpr GLenum GL_RENDERBUFFER_WIDTH = 0x8D42;
-    static constexpr GLenum GL_RENDERER = 0x1F01;
-    static constexpr GLenum GL_RENDER_MODE = 0x0C40;
-    static constexpr GLenum GL_REPEAT = 0x2901;
-    static constexpr GLenum GL_REPLACE = 0x1E01;
-    static constexpr GLenum GL_RESCALE_NORMAL = 0x803A;
-    static constexpr GLenum GL_RESET_NOTIFICATION_STRATEGY = 0x8256;
-    static constexpr GLenum GL_RETURN = 0x0102;
-    static constexpr GLenum GL_RG = 0x8227;
-    static constexpr GLenum GL_RG16 = 0x822C;
-    static constexpr GLenum GL_RG16F = 0x822F;
-    static constexpr GLenum GL_RG16I = 0x8239;
-    static constexpr GLenum GL_RG16UI = 0x823A;
-    static constexpr GLenum GL_RG16_SNORM = 0x8F99;
-    static constexpr GLenum GL_RG32F = 0x8230;
-    static constexpr GLenum GL_RG32I = 0x823B;
-    static constexpr GLenum GL_RG32UI = 0x823C;
-    static constexpr GLenum GL_RG8 = 0x822B;
-    static constexpr GLenum GL_RG8I = 0x8237;
-    static constexpr GLenum GL_RG8UI = 0x8238;
-    static constexpr GLenum GL_RG8_SNORM = 0x8F95;
-    static constexpr GLenum GL_RGB = 0x1907;
-    static constexpr GLenum GL_RGB10 = 0x8052;
-    static constexpr GLenum GL_RGB10_A2 = 0x8059;
-    static constexpr GLenum GL_RGB10_A2UI = 0x906F;
-    static constexpr GLenum GL_RGB12 = 0x8053;
-    static constexpr GLenum GL_RGB16 = 0x8054;
-    static constexpr GLenum GL_RGB16F = 0x881B;
-    static constexpr GLenum GL_RGB16I = 0x8D89;
-    static constexpr GLenum GL_RGB16UI = 0x8D77;
-    static constexpr GLenum GL_RGB16_SNORM = 0x8F9A;
-    static constexpr GLenum GL_RGB32F = 0x8815;
-    static constexpr GLenum GL_RGB32I = 0x8D83;
-    static constexpr GLenum GL_RGB32UI = 0x8D71;
-    static constexpr GLenum GL_RGB4 = 0x804F;
-    static constexpr GLenum GL_RGB5 = 0x8050;
-    static constexpr GLenum GL_RGB565 = 0x8D62;
-    static constexpr GLenum GL_RGB5_A1 = 0x8057;
-    static constexpr GLenum GL_RGB8 = 0x8051;
-    static constexpr GLenum GL_RGB8I = 0x8D8F;
-    static constexpr GLenum GL_RGB8UI = 0x8D7D;
-    static constexpr GLenum GL_RGB8_SNORM = 0x8F96;
-    static constexpr GLenum GL_RGB9_E5 = 0x8C3D;
-    static constexpr GLenum GL_RGBA = 0x1908;
-    static constexpr GLenum GL_RGBA12 = 0x805A;
-    static constexpr GLenum GL_RGBA16 = 0x805B;
-    static constexpr GLenum GL_RGBA16F = 0x881A;
-    static constexpr GLenum GL_RGBA16I = 0x8D88;
-    static constexpr GLenum GL_RGBA16UI = 0x8D76;
-    static constexpr GLenum GL_RGBA16_SNORM = 0x8F9B;
-    static constexpr GLenum GL_RGBA2 = 0x8055;
-    static constexpr GLenum GL_RGBA32F = 0x8814;
-    static constexpr GLenum GL_RGBA32I = 0x8D82;
-    static constexpr GLenum GL_RGBA32UI = 0x8D70;
-    static constexpr GLenum GL_RGBA4 = 0x8056;
-    static constexpr GLenum GL_RGBA8 = 0x8058;
-    static constexpr GLenum GL_RGBA8I = 0x8D8E;
-    static constexpr GLenum GL_RGBA8UI = 0x8D7C;
-    static constexpr GLenum GL_RGBA8_SNORM = 0x8F97;
-    static constexpr GLenum GL_RGBA_INTEGER = 0x8D99;
-    static constexpr GLenum GL_RGBA_MODE = 0x0C31;
-    static constexpr GLenum GL_RGB_INTEGER = 0x8D98;
-    static constexpr GLenum GL_RGB_SCALE = 0x8573;
-    static constexpr GLenum GL_RG_INTEGER = 0x8228;
-    static constexpr GLenum GL_RIGHT = 0x0407;
-    static constexpr GLenum GL_S = 0x2000;
-    static constexpr GLenum GL_SAMPLER = 0x82E6;
-    static constexpr GLenum GL_SAMPLER_1D = 0x8B5D;
-    static constexpr GLenum GL_SAMPLER_1D_ARRAY = 0x8DC0;
-    static constexpr GLenum GL_SAMPLER_1D_ARRAY_SHADOW = 0x8DC3;
-    static constexpr GLenum GL_SAMPLER_1D_SHADOW = 0x8B61;
-    static constexpr GLenum GL_SAMPLER_2D = 0x8B5E;
-    static constexpr GLenum GL_SAMPLER_2D_ARRAY = 0x8DC1;
-    static constexpr GLenum GL_SAMPLER_2D_ARRAY_SHADOW = 0x8DC4;
-    static constexpr GLenum GL_SAMPLER_2D_MULTISAMPLE = 0x9108;
-    static constexpr GLenum GL_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910B;
-    static constexpr GLenum GL_SAMPLER_2D_RECT = 0x8B63;
-    static constexpr GLenum GL_SAMPLER_2D_RECT_SHADOW = 0x8B64;
-    static constexpr GLenum GL_SAMPLER_2D_SHADOW = 0x8B62;
-    static constexpr GLenum GL_SAMPLER_3D = 0x8B5F;
-    static constexpr GLenum GL_SAMPLER_BINDING = 0x8919;
-    static constexpr GLenum GL_SAMPLER_BUFFER = 0x8DC2;
-    static constexpr GLenum GL_SAMPLER_CUBE = 0x8B60;
-    static constexpr GLenum GL_SAMPLER_CUBE_MAP_ARRAY = 0x900C;
-    static constexpr GLenum GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW = 0x900D;
-    static constexpr GLenum GL_SAMPLER_CUBE_SHADOW = 0x8DC5;
-    static constexpr GLenum GL_SAMPLES = 0x80A9;
-    static constexpr GLenum GL_SAMPLES_PASSED = 0x8914;
-    static constexpr GLenum GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
-    static constexpr GLenum GL_SAMPLE_ALPHA_TO_ONE = 0x809F;
-    static constexpr GLenum GL_SAMPLE_BUFFERS = 0x80A8;
-    static constexpr GLenum GL_SAMPLE_COVERAGE = 0x80A0;
-    static constexpr GLenum GL_SAMPLE_COVERAGE_INVERT = 0x80AB;
-    static constexpr GLenum GL_SAMPLE_COVERAGE_VALUE = 0x80AA;
-    static constexpr GLenum GL_SAMPLE_MASK = 0x8E51;
-    static constexpr GLenum GL_SAMPLE_MASK_VALUE = 0x8E52;
-    static constexpr GLenum GL_SAMPLE_POSITION = 0x8E50;
-    static constexpr GLenum GL_SAMPLE_SHADING = 0x8C36;
-    static constexpr GLenum GL_SCISSOR_BIT = 0x00080000;
-    static constexpr GLenum GL_SCISSOR_BOX = 0x0C10;
-    static constexpr GLenum GL_SCISSOR_TEST = 0x0C11;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY = 0x845E;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = 0x889C;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY_POINTER = 0x845D;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY_SIZE = 0x845A;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY_STRIDE = 0x845C;
-    static constexpr GLenum GL_SECONDARY_COLOR_ARRAY_TYPE = 0x845B;
-    static constexpr GLenum GL_SELECT = 0x1C02;
-    static constexpr GLenum GL_SELECTION_BUFFER_POINTER = 0x0DF3;
-    static constexpr GLenum GL_SELECTION_BUFFER_SIZE = 0x0DF4;
-    static constexpr GLenum GL_SEPARABLE_2D = 0x8012;
-    static constexpr GLenum GL_SEPARATE_ATTRIBS = 0x8C8D;
-    static constexpr GLenum GL_SEPARATE_SPECULAR_COLOR = 0x81FA;
-    static constexpr GLenum GL_SET = 0x150F;
-    static constexpr GLenum GL_SHADER = 0x82E1;
-    static constexpr GLenum GL_SHADER_BINARY_FORMATS = 0x8DF8;
-    static constexpr GLenum GL_SHADER_BINARY_FORMAT_SPIR_V = 0x9551;
-    static constexpr GLenum GL_SHADER_COMPILER = 0x8DFA;
-    static constexpr GLenum GL_SHADER_IMAGE_ACCESS_BARRIER_BIT = 0x00000020;
-    static constexpr GLenum GL_SHADER_IMAGE_ATOMIC = 0x82A6;
-    static constexpr GLenum GL_SHADER_IMAGE_LOAD = 0x82A4;
-    static constexpr GLenum GL_SHADER_IMAGE_STORE = 0x82A5;
-    static constexpr GLenum GL_SHADER_SOURCE_LENGTH = 0x8B88;
-    static constexpr GLenum GL_SHADER_STORAGE_BARRIER_BIT = 0x00002000;
-    static constexpr GLenum GL_SHADER_STORAGE_BLOCK = 0x92E6;
-    static constexpr GLenum GL_SHADER_STORAGE_BUFFER = 0x90D2;
-    static constexpr GLenum GL_SHADER_STORAGE_BUFFER_BINDING = 0x90D3;
-    static constexpr GLenum GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = 0x90DF;
-    static constexpr GLenum GL_SHADER_STORAGE_BUFFER_SIZE = 0x90D5;
-    static constexpr GLenum GL_SHADER_STORAGE_BUFFER_START = 0x90D4;
-    static constexpr GLenum GL_SHADER_TYPE = 0x8B4F;
-    static constexpr GLenum GL_SHADE_MODEL = 0x0B54;
-    static constexpr GLenum GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
-    static constexpr GLenum GL_SHININESS = 0x1601;
-    static constexpr GLenum GL_SHORT = 0x1402;
-    static constexpr GLenum GL_SIGNALED = 0x9119;
-    static constexpr GLenum GL_SIGNED_NORMALIZED = 0x8F9C;
-    static constexpr GLenum GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST = 0x82AC;
-    static constexpr GLenum GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE = 0x82AE;
-    static constexpr GLenum GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST = 0x82AD;
-    static constexpr GLenum GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE = 0x82AF;
-    static constexpr GLenum GL_SINGLE_COLOR = 0x81F9;
-    static constexpr GLenum GL_SLUMINANCE = 0x8C46;
-    static constexpr GLenum GL_SLUMINANCE8 = 0x8C47;
-    static constexpr GLenum GL_SLUMINANCE8_ALPHA8 = 0x8C45;
-    static constexpr GLenum GL_SLUMINANCE_ALPHA = 0x8C44;
-    static constexpr GLenum GL_SMOOTH = 0x1D01;
-    static constexpr GLenum GL_SMOOTH_LINE_WIDTH_GRANULARITY = 0x0B23;
-    static constexpr GLenum GL_SMOOTH_LINE_WIDTH_RANGE = 0x0B22;
-    static constexpr GLenum GL_SMOOTH_POINT_SIZE_GRANULARITY = 0x0B13;
-    static constexpr GLenum GL_SMOOTH_POINT_SIZE_RANGE = 0x0B12;
-    static constexpr GLenum GL_SOURCE0_ALPHA = 0x8588;
-    static constexpr GLenum GL_SOURCE0_RGB = 0x8580;
-    static constexpr GLenum GL_SOURCE1_ALPHA = 0x8589;
-    static constexpr GLenum GL_SOURCE1_RGB = 0x8581;
-    static constexpr GLenum GL_SOURCE2_ALPHA = 0x858A;
-    static constexpr GLenum GL_SOURCE2_RGB = 0x8582;
-    static constexpr GLenum GL_SPECULAR = 0x1202;
-    static constexpr GLenum GL_SPHERE_MAP = 0x2402;
-    static constexpr GLenum GL_SPIR_V_BINARY = 0x9552;
-    static constexpr GLenum GL_SPIR_V_EXTENSIONS = 0x9553;
-    static constexpr GLenum GL_SPOT_CUTOFF = 0x1206;
-    static constexpr GLenum GL_SPOT_DIRECTION = 0x1204;
-    static constexpr GLenum GL_SPOT_EXPONENT = 0x1205;
-    static constexpr GLenum GL_SRC0_ALPHA = 0x8588;
-    static constexpr GLenum GL_SRC0_RGB = 0x8580;
-    static constexpr GLenum GL_SRC1_ALPHA = 0x8589;
-    static constexpr GLenum GL_SRC1_COLOR = 0x88F9;
-    static constexpr GLenum GL_SRC1_RGB = 0x8581;
-    static constexpr GLenum GL_SRC2_ALPHA = 0x858A;
-    static constexpr GLenum GL_SRC2_RGB = 0x8582;
-    static constexpr GLenum GL_SRC_ALPHA = 0x0302;
-    static constexpr GLenum GL_SRC_ALPHA_SATURATE = 0x0308;
-    static constexpr GLenum GL_SRC_COLOR = 0x0300;
-    static constexpr GLenum GL_SRGB = 0x8C40;
-    static constexpr GLenum GL_SRGB8 = 0x8C41;
-    static constexpr GLenum GL_SRGB8_ALPHA8 = 0x8C43;
-    static constexpr GLenum GL_SRGB_ALPHA = 0x8C42;
-    static constexpr GLenum GL_SRGB_READ = 0x8297;
-    static constexpr GLenum GL_SRGB_WRITE = 0x8298;
-    static constexpr GLenum GL_STACK_OVERFLOW = 0x0503;
-    static constexpr GLenum GL_STACK_UNDERFLOW = 0x0504;
-    static constexpr GLenum GL_STATIC_COPY = 0x88E6;
-    static constexpr GLenum GL_STATIC_DRAW = 0x88E4;
-    static constexpr GLenum GL_STATIC_READ = 0x88E5;
-    static constexpr GLenum GL_STENCIL = 0x1802;
-    static constexpr GLenum GL_STENCIL_ATTACHMENT = 0x8D20;
-    static constexpr GLenum GL_STENCIL_BACK_FAIL = 0x8801;
-    static constexpr GLenum GL_STENCIL_BACK_FUNC = 0x8800;
-    static constexpr GLenum GL_STENCIL_BACK_PASS_DEPTH_FAIL = 0x8802;
-    static constexpr GLenum GL_STENCIL_BACK_PASS_DEPTH_PASS = 0x8803;
-    static constexpr GLenum GL_STENCIL_BACK_REF = 0x8CA3;
-    static constexpr GLenum GL_STENCIL_BACK_VALUE_MASK = 0x8CA4;
-    static constexpr GLenum GL_STENCIL_BACK_WRITEMASK = 0x8CA5;
-    static constexpr GLenum GL_STENCIL_BITS = 0x0D57;
-    static constexpr GLenum GL_STENCIL_BUFFER_BIT = 0x00000400;
-    static constexpr GLenum GL_STENCIL_CLEAR_VALUE = 0x0B91;
-    static constexpr GLenum GL_STENCIL_COMPONENTS = 0x8285;
-    static constexpr GLenum GL_STENCIL_FAIL = 0x0B94;
-    static constexpr GLenum GL_STENCIL_FUNC = 0x0B92;
-    static constexpr GLenum GL_STENCIL_INDEX = 0x1901;
-    static constexpr GLenum GL_STENCIL_INDEX1 = 0x8D46;
-    static constexpr GLenum GL_STENCIL_INDEX16 = 0x8D49;
-    static constexpr GLenum GL_STENCIL_INDEX4 = 0x8D47;
-    static constexpr GLenum GL_STENCIL_INDEX8 = 0x8D48;
-    static constexpr GLenum GL_STENCIL_PASS_DEPTH_FAIL = 0x0B95;
-    static constexpr GLenum GL_STENCIL_PASS_DEPTH_PASS = 0x0B96;
-    static constexpr GLenum GL_STENCIL_REF = 0x0B97;
-    static constexpr GLenum GL_STENCIL_RENDERABLE = 0x8288;
-    static constexpr GLenum GL_STENCIL_TEST = 0x0B90;
-    static constexpr GLenum GL_STENCIL_VALUE_MASK = 0x0B93;
-    static constexpr GLenum GL_STENCIL_WRITEMASK = 0x0B98;
-    static constexpr GLenum GL_STEREO = 0x0C33;
-    static constexpr GLenum GL_STREAM_COPY = 0x88E2;
-    static constexpr GLenum GL_STREAM_DRAW = 0x88E0;
-    static constexpr GLenum GL_STREAM_READ = 0x88E1;
-    static constexpr GLenum GL_SUBPIXEL_BITS = 0x0D50;
-    static constexpr GLenum GL_SUBTRACT = 0x84E7;
-    static constexpr GLenum GL_SYNC_CONDITION = 0x9113;
-    static constexpr GLenum GL_SYNC_FENCE = 0x9116;
-    static constexpr GLenum GL_SYNC_FLAGS = 0x9115;
-    static constexpr GLenum GL_SYNC_FLUSH_COMMANDS_BIT = 0x00000001;
-    static constexpr GLenum GL_SYNC_GPU_COMMANDS_COMPLETE = 0x9117;
-    static constexpr GLenum GL_SYNC_STATUS = 0x9114;
-    static constexpr GLenum GL_T = 0x2001;
-    static constexpr GLenum GL_T2F_C3F_V3F = 0x2A2A;
-    static constexpr GLenum GL_T2F_C4F_N3F_V3F = 0x2A2C;
-    static constexpr GLenum GL_T2F_C4UB_V3F = 0x2A29;
-    static constexpr GLenum GL_T2F_N3F_V3F = 0x2A2B;
-    static constexpr GLenum GL_T2F_V3F = 0x2A27;
-    static constexpr GLenum GL_T4F_C4F_N3F_V4F = 0x2A2D;
-    static constexpr GLenum GL_T4F_V4F = 0x2A28;
-    static constexpr GLenum GL_TESS_CONTROL_OUTPUT_VERTICES = 0x8E75;
-    static constexpr GLenum GL_TESS_CONTROL_SHADER = 0x8E88;
-    static constexpr GLenum GL_TESS_CONTROL_SHADER_BIT = 0x00000008;
-    static constexpr GLenum GL_TESS_CONTROL_SHADER_PATCHES = 0x82F1;
-    static constexpr GLenum GL_TESS_CONTROL_SUBROUTINE = 0x92E9;
-    static constexpr GLenum GL_TESS_CONTROL_SUBROUTINE_UNIFORM = 0x92EF;
-    static constexpr GLenum GL_TESS_CONTROL_TEXTURE = 0x829C;
-    static constexpr GLenum GL_TESS_EVALUATION_SHADER = 0x8E87;
-    static constexpr GLenum GL_TESS_EVALUATION_SHADER_BIT = 0x00000010;
-    static constexpr GLenum GL_TESS_EVALUATION_SHADER_INVOCATIONS = 0x82F2;
-    static constexpr GLenum GL_TESS_EVALUATION_SUBROUTINE = 0x92EA;
-    static constexpr GLenum GL_TESS_EVALUATION_SUBROUTINE_UNIFORM = 0x92F0;
-    static constexpr GLenum GL_TESS_EVALUATION_TEXTURE = 0x829D;
-    static constexpr GLenum GL_TESS_GEN_MODE = 0x8E76;
-    static constexpr GLenum GL_TESS_GEN_POINT_MODE = 0x8E79;
-    static constexpr GLenum GL_TESS_GEN_SPACING = 0x8E77;
-    static constexpr GLenum GL_TESS_GEN_VERTEX_ORDER = 0x8E78;
-    static constexpr GLenum GL_TEXTURE = 0x1702;
-    static constexpr GLenum GL_TEXTURE0 = 0x84C0;
-    static constexpr GLenum GL_TEXTURE1 = 0x84C1;
-    static constexpr GLenum GL_TEXTURE10 = 0x84CA;
-    static constexpr GLenum GL_TEXTURE11 = 0x84CB;
-    static constexpr GLenum GL_TEXTURE12 = 0x84CC;
-    static constexpr GLenum GL_TEXTURE13 = 0x84CD;
-    static constexpr GLenum GL_TEXTURE14 = 0x84CE;
-    static constexpr GLenum GL_TEXTURE15 = 0x84CF;
-    static constexpr GLenum GL_TEXTURE16 = 0x84D0;
-    static constexpr GLenum GL_TEXTURE17 = 0x84D1;
-    static constexpr GLenum GL_TEXTURE18 = 0x84D2;
-    static constexpr GLenum GL_TEXTURE19 = 0x84D3;
-    static constexpr GLenum GL_TEXTURE2 = 0x84C2;
-    static constexpr GLenum GL_TEXTURE20 = 0x84D4;
-    static constexpr GLenum GL_TEXTURE21 = 0x84D5;
-    static constexpr GLenum GL_TEXTURE22 = 0x84D6;
-    static constexpr GLenum GL_TEXTURE23 = 0x84D7;
-    static constexpr GLenum GL_TEXTURE24 = 0x84D8;
-    static constexpr GLenum GL_TEXTURE25 = 0x84D9;
-    static constexpr GLenum GL_TEXTURE26 = 0x84DA;
-    static constexpr GLenum GL_TEXTURE27 = 0x84DB;
-    static constexpr GLenum GL_TEXTURE28 = 0x84DC;
-    static constexpr GLenum GL_TEXTURE29 = 0x84DD;
-    static constexpr GLenum GL_TEXTURE3 = 0x84C3;
-    static constexpr GLenum GL_TEXTURE30 = 0x84DE;
-    static constexpr GLenum GL_TEXTURE31 = 0x84DF;
-    static constexpr GLenum GL_TEXTURE4 = 0x84C4;
-    static constexpr GLenum GL_TEXTURE5 = 0x84C5;
-    static constexpr GLenum GL_TEXTURE6 = 0x84C6;
-    static constexpr GLenum GL_TEXTURE7 = 0x84C7;
-    static constexpr GLenum GL_TEXTURE8 = 0x84C8;
-    static constexpr GLenum GL_TEXTURE9 = 0x84C9;
-    static constexpr GLenum GL_TEXTURE_1D = 0x0DE0;
-    static constexpr GLenum GL_TEXTURE_1D_ARRAY = 0x8C18;
-    static constexpr GLenum GL_TEXTURE_2D = 0x0DE1;
-    static constexpr GLenum GL_TEXTURE_2D_ARRAY = 0x8C1A;
-    static constexpr GLenum GL_TEXTURE_2D_MULTISAMPLE = 0x9100;
-    static constexpr GLenum GL_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9102;
-    static constexpr GLenum GL_TEXTURE_3D = 0x806F;
-    static constexpr GLenum GL_TEXTURE_ALPHA_SIZE = 0x805F;
-    static constexpr GLenum GL_TEXTURE_ALPHA_TYPE = 0x8C13;
-    static constexpr GLenum GL_TEXTURE_BASE_LEVEL = 0x813C;
-    static constexpr GLenum GL_TEXTURE_BINDING_1D = 0x8068;
-    static constexpr GLenum GL_TEXTURE_BINDING_1D_ARRAY = 0x8C1C;
-    static constexpr GLenum GL_TEXTURE_BINDING_2D = 0x8069;
-    static constexpr GLenum GL_TEXTURE_BINDING_2D_ARRAY = 0x8C1D;
-    static constexpr GLenum GL_TEXTURE_BINDING_2D_MULTISAMPLE = 0x9104;
-    static constexpr GLenum GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY = 0x9105;
-    static constexpr GLenum GL_TEXTURE_BINDING_3D = 0x806A;
-    static constexpr GLenum GL_TEXTURE_BINDING_BUFFER = 0x8C2C;
-    static constexpr GLenum GL_TEXTURE_BINDING_CUBE_MAP = 0x8514;
-    static constexpr GLenum GL_TEXTURE_BINDING_CUBE_MAP_ARRAY = 0x900A;
-    static constexpr GLenum GL_TEXTURE_BINDING_RECTANGLE = 0x84F6;
-    static constexpr GLenum GL_TEXTURE_BIT = 0x00040000;
-    static constexpr GLenum GL_TEXTURE_BLUE_SIZE = 0x805E;
-    static constexpr GLenum GL_TEXTURE_BLUE_TYPE = 0x8C12;
-    static constexpr GLenum GL_TEXTURE_BORDER = 0x1005;
-    static constexpr GLenum GL_TEXTURE_BORDER_COLOR = 0x1004;
-    static constexpr GLenum GL_TEXTURE_BUFFER = 0x8C2A;
-    static constexpr GLenum GL_TEXTURE_BUFFER_BINDING = 0x8C2A;
-    static constexpr GLenum GL_TEXTURE_BUFFER_DATA_STORE_BINDING = 0x8C2D;
-    static constexpr GLenum GL_TEXTURE_BUFFER_OFFSET = 0x919D;
-    static constexpr GLenum GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT = 0x919F;
-    static constexpr GLenum GL_TEXTURE_BUFFER_SIZE = 0x919E;
-    static constexpr GLenum GL_TEXTURE_COMPARE_FUNC = 0x884D;
-    static constexpr GLenum GL_TEXTURE_COMPARE_MODE = 0x884C;
-    static constexpr GLenum GL_TEXTURE_COMPONENTS = 0x1003;
-    static constexpr GLenum GL_TEXTURE_COMPRESSED = 0x86A1;
-    static constexpr GLenum GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT = 0x82B2;
-    static constexpr GLenum GL_TEXTURE_COMPRESSED_BLOCK_SIZE = 0x82B3;
-    static constexpr GLenum GL_TEXTURE_COMPRESSED_BLOCK_WIDTH = 0x82B1;
-    static constexpr GLenum GL_TEXTURE_COMPRESSED_IMAGE_SIZE = 0x86A0;
-    static constexpr GLenum GL_TEXTURE_COMPRESSION_HINT = 0x84EF;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY = 0x8078;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING = 0x889A;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY_POINTER = 0x8092;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY_SIZE = 0x8088;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY_STRIDE = 0x808A;
-    static constexpr GLenum GL_TEXTURE_COORD_ARRAY_TYPE = 0x8089;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP = 0x8513;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_ARRAY = 0x9009;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
-    static constexpr GLenum GL_TEXTURE_CUBE_MAP_SEAMLESS = 0x884F;
-    static constexpr GLenum GL_TEXTURE_DEPTH = 0x8071;
-    static constexpr GLenum GL_TEXTURE_DEPTH_SIZE = 0x884A;
-    static constexpr GLenum GL_TEXTURE_DEPTH_TYPE = 0x8C16;
-    static constexpr GLenum GL_TEXTURE_ENV = 0x2300;
-    static constexpr GLenum GL_TEXTURE_ENV_COLOR = 0x2201;
-    static constexpr GLenum GL_TEXTURE_ENV_MODE = 0x2200;
-    static constexpr GLenum GL_TEXTURE_FETCH_BARRIER_BIT = 0x00000008;
-    static constexpr GLenum GL_TEXTURE_FILTER_CONTROL = 0x8500;
-    static constexpr GLenum GL_TEXTURE_FIXED_SAMPLE_LOCATIONS = 0x9107;
-    static constexpr GLenum GL_TEXTURE_GATHER = 0x82A2;
-    static constexpr GLenum GL_TEXTURE_GATHER_SHADOW = 0x82A3;
-    static constexpr GLenum GL_TEXTURE_GEN_MODE = 0x2500;
-    static constexpr GLenum GL_TEXTURE_GEN_Q = 0x0C63;
-    static constexpr GLenum GL_TEXTURE_GEN_R = 0x0C62;
-    static constexpr GLenum GL_TEXTURE_GEN_S = 0x0C60;
-    static constexpr GLenum GL_TEXTURE_GEN_T = 0x0C61;
-    static constexpr GLenum GL_TEXTURE_GREEN_SIZE = 0x805D;
-    static constexpr GLenum GL_TEXTURE_GREEN_TYPE = 0x8C11;
-    static constexpr GLenum GL_TEXTURE_HEIGHT = 0x1001;
-    static constexpr GLenum GL_TEXTURE_IMAGE_FORMAT = 0x828F;
-    static constexpr GLenum GL_TEXTURE_IMAGE_TYPE = 0x8290;
-    static constexpr GLenum GL_TEXTURE_IMMUTABLE_FORMAT = 0x912F;
-    static constexpr GLenum GL_TEXTURE_IMMUTABLE_LEVELS = 0x82DF;
-    static constexpr GLenum GL_TEXTURE_INTENSITY_SIZE = 0x8061;
-    static constexpr GLenum GL_TEXTURE_INTENSITY_TYPE = 0x8C15;
-    static constexpr GLenum GL_TEXTURE_INTERNAL_FORMAT = 0x1003;
-    static constexpr GLenum GL_TEXTURE_LOD_BIAS = 0x8501;
-    static constexpr GLenum GL_TEXTURE_LUMINANCE_SIZE = 0x8060;
-    static constexpr GLenum GL_TEXTURE_LUMINANCE_TYPE = 0x8C14;
-    static constexpr GLenum GL_TEXTURE_MAG_FILTER = 0x2800;
-    static constexpr GLenum GL_TEXTURE_MATRIX = 0x0BA8;
-    static constexpr GLenum GL_TEXTURE_MAX_ANISOTROPY = 0x84FE;
-    static constexpr GLenum GL_TEXTURE_MAX_LEVEL = 0x813D;
-    static constexpr GLenum GL_TEXTURE_MAX_LOD = 0x813B;
-    static constexpr GLenum GL_TEXTURE_MIN_FILTER = 0x2801;
-    static constexpr GLenum GL_TEXTURE_MIN_LOD = 0x813A;
-    static constexpr GLenum GL_TEXTURE_PRIORITY = 0x8066;
-    static constexpr GLenum GL_TEXTURE_RECTANGLE = 0x84F5;
-    static constexpr GLenum GL_TEXTURE_RED_SIZE = 0x805C;
-    static constexpr GLenum GL_TEXTURE_RED_TYPE = 0x8C10;
-    static constexpr GLenum GL_TEXTURE_RESIDENT = 0x8067;
-    static constexpr GLenum GL_TEXTURE_SAMPLES = 0x9106;
-    static constexpr GLenum GL_TEXTURE_SHADOW = 0x82A1;
-    static constexpr GLenum GL_TEXTURE_SHARED_SIZE = 0x8C3F;
-    static constexpr GLenum GL_TEXTURE_STACK_DEPTH = 0x0BA5;
-    static constexpr GLenum GL_TEXTURE_STENCIL_SIZE = 0x88F1;
-    static constexpr GLenum GL_TEXTURE_SWIZZLE_A = 0x8E45;
-    static constexpr GLenum GL_TEXTURE_SWIZZLE_B = 0x8E44;
-    static constexpr GLenum GL_TEXTURE_SWIZZLE_G = 0x8E43;
-    static constexpr GLenum GL_TEXTURE_SWIZZLE_R = 0x8E42;
-    static constexpr GLenum GL_TEXTURE_SWIZZLE_RGBA = 0x8E46;
-    static constexpr GLenum GL_TEXTURE_TARGET = 0x1006;
-    static constexpr GLenum GL_TEXTURE_UPDATE_BARRIER_BIT = 0x00000100;
-    static constexpr GLenum GL_TEXTURE_VIEW = 0x82B5;
-    static constexpr GLenum GL_TEXTURE_VIEW_MIN_LAYER = 0x82DD;
-    static constexpr GLenum GL_TEXTURE_VIEW_MIN_LEVEL = 0x82DB;
-    static constexpr GLenum GL_TEXTURE_VIEW_NUM_LAYERS = 0x82DE;
-    static constexpr GLenum GL_TEXTURE_VIEW_NUM_LEVELS = 0x82DC;
-    static constexpr GLenum GL_TEXTURE_WIDTH = 0x1000;
-    static constexpr GLenum GL_TEXTURE_WRAP_R = 0x8072;
-    static constexpr GLenum GL_TEXTURE_WRAP_S = 0x2802;
-    static constexpr GLenum GL_TEXTURE_WRAP_T = 0x2803;
-    static constexpr GLenum GL_TIMEOUT_EXPIRED = 0x911B;
-    static constexpr GLenum GL_TIMEOUT_IGNORED = 0xFFFFFFFFFFFFFFFF;
-    static constexpr GLenum GL_TIMESTAMP = 0x8E28;
-    static constexpr GLenum GL_TIME_ELAPSED = 0x88BF;
-    static constexpr GLenum GL_TOP_LEVEL_ARRAY_SIZE = 0x930C;
-    static constexpr GLenum GL_TOP_LEVEL_ARRAY_STRIDE = 0x930D;
-    static constexpr GLenum GL_TRANSFORM_BIT = 0x00001000;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK = 0x8E22;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_ACTIVE = 0x8E24;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BARRIER_BIT = 0x00000800;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BINDING = 0x8E25;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER = 0x8C8E;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = 0x8E24;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_BINDING = 0x8C8F;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_INDEX = 0x934B;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_MODE = 0x8C7F;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED = 0x8E23;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_SIZE = 0x8C85;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_START = 0x8C84;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE = 0x934C;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_OVERFLOW = 0x82EC;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_PAUSED = 0x8E23;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN = 0x8C88;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW = 0x82ED;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_VARYING = 0x92F4;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_VARYINGS = 0x8C83;
-    static constexpr GLenum GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH = 0x8C76;
-    static constexpr GLenum GL_TRANSPOSE_COLOR_MATRIX = 0x84E6;
-    static constexpr GLenum GL_TRANSPOSE_MODELVIEW_MATRIX = 0x84E3;
-    static constexpr GLenum GL_TRANSPOSE_PROJECTION_MATRIX = 0x84E4;
-    static constexpr GLenum GL_TRANSPOSE_TEXTURE_MATRIX = 0x84E5;
-    static constexpr GLenum GL_TRIANGLES = 0x0004;
-    static constexpr GLenum GL_TRIANGLES_ADJACENCY = 0x000C;
-    static constexpr GLenum GL_TRIANGLE_FAN = 0x0006;
-    static constexpr GLenum GL_TRIANGLE_STRIP = 0x0005;
-    static constexpr GLenum GL_TRIANGLE_STRIP_ADJACENCY = 0x000D;
-    static constexpr GLenum GL_TRUE = 1;
-    static constexpr GLenum GL_TYPE = 0x92FA;
-    static constexpr GLenum GL_UNDEFINED_VERTEX = 0x8260;
-    static constexpr GLenum GL_UNIFORM = 0x92E1;
-    static constexpr GLenum GL_UNIFORM_ARRAY_STRIDE = 0x8A3C;
-    static constexpr GLenum GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX = 0x92DA;
-    static constexpr GLenum GL_UNIFORM_BARRIER_BIT = 0x00000004;
-    static constexpr GLenum GL_UNIFORM_BLOCK = 0x92E2;
-    static constexpr GLenum GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS = 0x8A42;
-    static constexpr GLenum GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES = 0x8A43;
-    static constexpr GLenum GL_UNIFORM_BLOCK_BINDING = 0x8A3F;
-    static constexpr GLenum GL_UNIFORM_BLOCK_DATA_SIZE = 0x8A40;
-    static constexpr GLenum GL_UNIFORM_BLOCK_INDEX = 0x8A3A;
-    static constexpr GLenum GL_UNIFORM_BLOCK_NAME_LENGTH = 0x8A41;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER = 0x90EC;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER = 0x8A46;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER = 0x8A45;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER = 0x84F0;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER = 0x84F1;
-    static constexpr GLenum GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER = 0x8A44;
-    static constexpr GLenum GL_UNIFORM_BUFFER = 0x8A11;
-    static constexpr GLenum GL_UNIFORM_BUFFER_BINDING = 0x8A28;
-    static constexpr GLenum GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT = 0x8A34;
-    static constexpr GLenum GL_UNIFORM_BUFFER_SIZE = 0x8A2A;
-    static constexpr GLenum GL_UNIFORM_BUFFER_START = 0x8A29;
-    static constexpr GLenum GL_UNIFORM_IS_ROW_MAJOR = 0x8A3E;
-    static constexpr GLenum GL_UNIFORM_MATRIX_STRIDE = 0x8A3D;
-    static constexpr GLenum GL_UNIFORM_NAME_LENGTH = 0x8A39;
-    static constexpr GLenum GL_UNIFORM_OFFSET = 0x8A3B;
-    static constexpr GLenum GL_UNIFORM_SIZE = 0x8A38;
-    static constexpr GLenum GL_UNIFORM_TYPE = 0x8A37;
-    static constexpr GLenum GL_UNKNOWN_CONTEXT_RESET = 0x8255;
-    static constexpr GLenum GL_UNPACK_ALIGNMENT = 0x0CF5;
-    static constexpr GLenum GL_UNPACK_COMPRESSED_BLOCK_DEPTH = 0x9129;
-    static constexpr GLenum GL_UNPACK_COMPRESSED_BLOCK_HEIGHT = 0x9128;
-    static constexpr GLenum GL_UNPACK_COMPRESSED_BLOCK_SIZE = 0x912A;
-    static constexpr GLenum GL_UNPACK_COMPRESSED_BLOCK_WIDTH = 0x9127;
-    static constexpr GLenum GL_UNPACK_IMAGE_HEIGHT = 0x806E;
-    static constexpr GLenum GL_UNPACK_LSB_FIRST = 0x0CF1;
-    static constexpr GLenum GL_UNPACK_ROW_LENGTH = 0x0CF2;
-    static constexpr GLenum GL_UNPACK_SKIP_IMAGES = 0x806D;
-    static constexpr GLenum GL_UNPACK_SKIP_PIXELS = 0x0CF4;
-    static constexpr GLenum GL_UNPACK_SKIP_ROWS = 0x0CF3;
-    static constexpr GLenum GL_UNPACK_SWAP_BYTES = 0x0CF0;
-    static constexpr GLenum GL_UNSIGNALED = 0x9118;
-    static constexpr GLenum GL_UNSIGNED_BYTE = 0x1401;
-    static constexpr GLenum GL_UNSIGNED_BYTE_2_3_3_REV = 0x8362;
-    static constexpr GLenum GL_UNSIGNED_BYTE_3_3_2 = 0x8032;
-    static constexpr GLenum GL_UNSIGNED_INT = 0x1405;
-    static constexpr GLenum GL_UNSIGNED_INT_10F_11F_11F_REV = 0x8C3B;
-    static constexpr GLenum GL_UNSIGNED_INT_10_10_10_2 = 0x8036;
-    static constexpr GLenum GL_UNSIGNED_INT_24_8 = 0x84FA;
-    static constexpr GLenum GL_UNSIGNED_INT_2_10_10_10_REV = 0x8368;
-    static constexpr GLenum GL_UNSIGNED_INT_5_9_9_9_REV = 0x8C3E;
-    static constexpr GLenum GL_UNSIGNED_INT_8_8_8_8 = 0x8035;
-    static constexpr GLenum GL_UNSIGNED_INT_8_8_8_8_REV = 0x8367;
-    static constexpr GLenum GL_UNSIGNED_INT_ATOMIC_COUNTER = 0x92DB;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_1D = 0x9062;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_1D_ARRAY = 0x9068;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_2D = 0x9063;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_2D_ARRAY = 0x9069;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE = 0x906B;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY = 0x906C;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_2D_RECT = 0x9065;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_3D = 0x9064;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_BUFFER = 0x9067;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_CUBE = 0x9066;
-    static constexpr GLenum GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY = 0x906A;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_1D = 0x8DD1;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_1D_ARRAY = 0x8DD6;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_2D = 0x8DD2;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_2D_ARRAY = 0x8DD7;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE = 0x910A;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910D;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_2D_RECT = 0x8DD5;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_3D = 0x8DD3;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_BUFFER = 0x8DD8;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_CUBE = 0x8DD4;
-    static constexpr GLenum GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY = 0x900F;
-    static constexpr GLenum GL_UNSIGNED_INT_VEC2 = 0x8DC6;
-    static constexpr GLenum GL_UNSIGNED_INT_VEC3 = 0x8DC7;
-    static constexpr GLenum GL_UNSIGNED_INT_VEC4 = 0x8DC8;
-    static constexpr GLenum GL_UNSIGNED_NORMALIZED = 0x8C17;
-    static constexpr GLenum GL_UNSIGNED_SHORT = 0x1403;
-    static constexpr GLenum GL_UNSIGNED_SHORT_1_5_5_5_REV = 0x8366;
-    static constexpr GLenum GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
-    static constexpr GLenum GL_UNSIGNED_SHORT_4_4_4_4_REV = 0x8365;
-    static constexpr GLenum GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
-    static constexpr GLenum GL_UNSIGNED_SHORT_5_6_5 = 0x8363;
-    static constexpr GLenum GL_UNSIGNED_SHORT_5_6_5_REV = 0x8364;
-    static constexpr GLenum GL_UPPER_LEFT = 0x8CA2;
-    static constexpr GLenum GL_V2F = 0x2A20;
-    static constexpr GLenum GL_V3F = 0x2A21;
-    static constexpr GLenum GL_VALIDATE_STATUS = 0x8B83;
-    static constexpr GLenum GL_VENDOR = 0x1F00;
-    static constexpr GLenum GL_VERSION = 0x1F02;
-    static constexpr GLenum GL_VERTEX_ARRAY = 0x8074;
-    static constexpr GLenum GL_VERTEX_ARRAY_BINDING = 0x85B5;
-    static constexpr GLenum GL_VERTEX_ARRAY_BUFFER_BINDING = 0x8896;
-    static constexpr GLenum GL_VERTEX_ARRAY_POINTER = 0x808E;
-    static constexpr GLenum GL_VERTEX_ARRAY_SIZE = 0x807A;
-    static constexpr GLenum GL_VERTEX_ARRAY_STRIDE = 0x807C;
-    static constexpr GLenum GL_VERTEX_ARRAY_TYPE = 0x807B;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT = 0x00000001;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_DIVISOR = 0x88FE;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_INTEGER = 0x88FD;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_LONG = 0x874E;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886A;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
-    static constexpr GLenum GL_VERTEX_ATTRIB_ARRAY_TYPE = 0x8625;
-    static constexpr GLenum GL_VERTEX_ATTRIB_BINDING = 0x82D4;
-    static constexpr GLenum GL_VERTEX_ATTRIB_RELATIVE_OFFSET = 0x82D5;
-    static constexpr GLenum GL_VERTEX_BINDING_BUFFER = 0x8F4F;
-    static constexpr GLenum GL_VERTEX_BINDING_DIVISOR = 0x82D6;
-    static constexpr GLenum GL_VERTEX_BINDING_OFFSET = 0x82D7;
-    static constexpr GLenum GL_VERTEX_BINDING_STRIDE = 0x82D8;
-    static constexpr GLenum GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642;
-    static constexpr GLenum GL_VERTEX_PROGRAM_TWO_SIDE = 0x8643;
-    static constexpr GLenum GL_VERTEX_SHADER = 0x8B31;
-    static constexpr GLenum GL_VERTEX_SHADER_BIT = 0x00000001;
-    static constexpr GLenum GL_VERTEX_SHADER_INVOCATIONS = 0x82F0;
-    static constexpr GLenum GL_VERTEX_SUBROUTINE = 0x92E8;
-    static constexpr GLenum GL_VERTEX_SUBROUTINE_UNIFORM = 0x92EE;
-    static constexpr GLenum GL_VERTEX_TEXTURE = 0x829B;
-    static constexpr GLenum GL_VERTICES_SUBMITTED = 0x82EE;
-    static constexpr GLenum GL_VIEWPORT = 0x0BA2;
-    static constexpr GLenum GL_VIEWPORT_BIT = 0x00000800;
-    static constexpr GLenum GL_VIEWPORT_BOUNDS_RANGE = 0x825D;
-    static constexpr GLenum GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 0x825F;
-    static constexpr GLenum GL_VIEWPORT_SUBPIXEL_BITS = 0x825C;
-    static constexpr GLenum GL_VIEW_CLASS_128_BITS = 0x82C4;
-    static constexpr GLenum GL_VIEW_CLASS_16_BITS = 0x82CA;
-    static constexpr GLenum GL_VIEW_CLASS_24_BITS = 0x82C9;
-    static constexpr GLenum GL_VIEW_CLASS_32_BITS = 0x82C8;
-    static constexpr GLenum GL_VIEW_CLASS_48_BITS = 0x82C7;
-    static constexpr GLenum GL_VIEW_CLASS_64_BITS = 0x82C6;
-    static constexpr GLenum GL_VIEW_CLASS_8_BITS = 0x82CB;
-    static constexpr GLenum GL_VIEW_CLASS_96_BITS = 0x82C5;
-    static constexpr GLenum GL_VIEW_CLASS_BPTC_FLOAT = 0x82D3;
-    static constexpr GLenum GL_VIEW_CLASS_BPTC_UNORM = 0x82D2;
-    static constexpr GLenum GL_VIEW_CLASS_RGTC1_RED = 0x82D0;
-    static constexpr GLenum GL_VIEW_CLASS_RGTC2_RG = 0x82D1;
-    static constexpr GLenum GL_VIEW_CLASS_S3TC_DXT1_RGB = 0x82CC;
-    static constexpr GLenum GL_VIEW_CLASS_S3TC_DXT1_RGBA = 0x82CD;
-    static constexpr GLenum GL_VIEW_CLASS_S3TC_DXT3_RGBA = 0x82CE;
-    static constexpr GLenum GL_VIEW_CLASS_S3TC_DXT5_RGBA = 0x82CF;
-    static constexpr GLenum GL_VIEW_COMPATIBILITY_CLASS = 0x82B6;
-    static constexpr GLenum GL_WAIT_FAILED = 0x911D;
-    static constexpr GLenum GL_WEIGHT_ARRAY_BUFFER_BINDING = 0x889E;
-    static constexpr GLenum GL_WRITE_ONLY = 0x88B9;
-    static constexpr GLenum GL_XOR = 0x1506;
-    static constexpr GLenum GL_ZERO = 0;
-    static constexpr GLenum GL_ZERO_TO_ONE = 0x935F;
-    static constexpr GLenum GL_ZOOM_X = 0x0D16;
-    static constexpr GLenum GL_ZOOM_Y = 0x0D17;
+    EXPORT void _Accum(GLenum op, GLfloat value, const SrcLoc& src_loc) const;
+    EXPORT void _ActiveShaderProgram(GLuint pipeline, GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _ActiveTexture(GLenum texture, const SrcLoc& src_loc) const;
+    EXPORT void _AlphaFunc(GLenum func, GLfloat ref, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _AreTexturesResident(GLsizei n, const GLuint * textures, GLboolean * residences, const SrcLoc& src_loc) const;
+    EXPORT void _ArrayElement(GLint i, const SrcLoc& src_loc) const;
+    EXPORT void _AttachShader(GLuint program, GLuint shader, const SrcLoc& src_loc) const;
+    EXPORT void _Begin(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _BeginConditionalRender(GLuint id, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _BeginQuery(GLenum target, GLuint id, const SrcLoc& src_loc) const;
+    EXPORT void _BeginQueryIndexed(GLenum target, GLuint index, GLuint id, const SrcLoc& src_loc) const;
+    EXPORT void _BeginTransformFeedback(GLenum primitiveMode, const SrcLoc& src_loc) const;
+    EXPORT void _BindAttribLocation(GLuint program, GLuint index, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _BindBuffer(GLenum target, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _BindBufferBase(GLenum target, GLuint index, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _BindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint * buffers, const SrcLoc& src_loc) const;
+    EXPORT void _BindBuffersRange(GLenum target, GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizeiptr * sizes, const SrcLoc& src_loc) const;
+    EXPORT void _BindFragDataLocation(GLuint program, GLuint color, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _BindFragDataLocationIndexed(GLuint program, GLuint colorNumber, GLuint index, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _BindFramebuffer(GLenum target, GLuint framebuffer, const SrcLoc& src_loc) const;
+    EXPORT void _BindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format, const SrcLoc& src_loc) const;
+    EXPORT void _BindImageTextures(GLuint first, GLsizei count, const GLuint * textures, const SrcLoc& src_loc) const;
+    EXPORT void _BindProgramPipeline(GLuint pipeline, const SrcLoc& src_loc) const;
+    EXPORT void _BindRenderbuffer(GLenum target, GLuint renderbuffer, const SrcLoc& src_loc) const;
+    EXPORT void _BindSampler(GLuint unit, GLuint sampler, const SrcLoc& src_loc) const;
+    EXPORT void _BindSamplers(GLuint first, GLsizei count, const GLuint * samplers, const SrcLoc& src_loc) const;
+    EXPORT void _BindTexture(GLenum target, GLuint texture, const SrcLoc& src_loc) const;
+    EXPORT void _BindTextureUnit(GLuint unit, GLuint texture, const SrcLoc& src_loc) const;
+    EXPORT void _BindTextures(GLuint first, GLsizei count, const GLuint * textures, const SrcLoc& src_loc) const;
+    EXPORT void _BindTransformFeedback(GLenum target, GLuint id, const SrcLoc& src_loc) const;
+    EXPORT void _BindVertexArray(GLuint array, const SrcLoc& src_loc) const;
+    EXPORT void _BindVertexBuffer(GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _BindVertexBuffers(GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizei * strides, const SrcLoc& src_loc) const;
+    EXPORT void _Bitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap, const SrcLoc& src_loc) const;
+    EXPORT void _BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc) const;
+    EXPORT void _BlendEquation(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha, const SrcLoc& src_loc) const;
+    EXPORT void _BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha, const SrcLoc& src_loc) const;
+    EXPORT void _BlendEquationi(GLuint buf, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _BlendFunc(GLenum sfactor, GLenum dfactor, const SrcLoc& src_loc) const;
+    EXPORT void _BlendFuncSeparate(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha, const SrcLoc& src_loc) const;
+    EXPORT void _BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha, const SrcLoc& src_loc) const;
+    EXPORT void _BlendFunci(GLuint buf, GLenum src, GLenum dst, const SrcLoc& src_loc) const;
+    EXPORT void _BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter, const SrcLoc& src_loc) const;
+    EXPORT void _BlitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter, const SrcLoc& src_loc) const;
+    EXPORT void _BufferData(GLenum target, GLsizeiptr size, const void * data, GLenum usage, const SrcLoc& src_loc) const;
+    EXPORT void _BufferStorage(GLenum target, GLsizeiptr size, const void * data, GLbitfield flags, const SrcLoc& src_loc) const;
+    EXPORT void _BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CallList(GLuint list, const SrcLoc& src_loc) const;
+    EXPORT void _CallLists(GLsizei n, GLenum type, const void * lists, const SrcLoc& src_loc) const;
+    EXPORT GLenum _CheckFramebufferStatus(GLenum target, const SrcLoc& src_loc) const;
+    EXPORT GLenum _CheckNamedFramebufferStatus(GLuint framebuffer, GLenum target, const SrcLoc& src_loc) const;
+    EXPORT void _ClampColor(GLenum target, GLenum clamp, const SrcLoc& src_loc) const;
+    EXPORT void _Clear(GLbitfield mask, const SrcLoc& src_loc) const;
+    EXPORT void _ClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferData(GLenum target, GLenum internalformat, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferSubData(GLenum target, GLenum internalformat, GLintptr offset, GLsizeiptr size, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc) const;
+    EXPORT void _ClearDepth(GLdouble depth, const SrcLoc& src_loc) const;
+    EXPORT void _ClearDepthf(GLfloat d, const SrcLoc& src_loc) const;
+    EXPORT void _ClearIndex(GLfloat c, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedBufferData(GLuint buffer, GLenum internalformat, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedBufferSubData(GLuint buffer, GLenum internalformat, GLintptr offset, GLsizeiptr size, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedFramebufferfi(GLuint framebuffer, GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedFramebufferfv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedFramebufferiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearNamedFramebufferuiv(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ClearStencil(GLint s, const SrcLoc& src_loc) const;
+    EXPORT void _ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClearTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _ClientActiveTexture(GLenum texture, const SrcLoc& src_loc) const;
+    EXPORT GLenum _ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout, const SrcLoc& src_loc) const;
+    EXPORT void _ClipControl(GLenum origin, GLenum depth, const SrcLoc& src_loc) const;
+    EXPORT void _ClipPlane(GLenum plane, const GLdouble * equation, const SrcLoc& src_loc) const;
+    EXPORT void _Color3b(GLbyte red, GLbyte green, GLbyte blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3bv(const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3d(GLdouble red, GLdouble green, GLdouble blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3f(GLfloat red, GLfloat green, GLfloat blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3i(GLint red, GLint green, GLint blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3s(GLshort red, GLshort green, GLshort blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3ub(GLubyte red, GLubyte green, GLubyte blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3ubv(const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3ui(GLuint red, GLuint green, GLuint blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3uiv(const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color3us(GLushort red, GLushort green, GLushort blue, const SrcLoc& src_loc) const;
+    EXPORT void _Color3usv(const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4bv(const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4i(GLint red, GLint green, GLint blue, GLint alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4s(GLshort red, GLshort green, GLshort blue, GLshort alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4ubv(const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4uiv(const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Color4us(GLushort red, GLushort green, GLushort blue, GLushort alpha, const SrcLoc& src_loc) const;
+    EXPORT void _Color4usv(const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha, const SrcLoc& src_loc) const;
+    EXPORT void _ColorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a, const SrcLoc& src_loc) const;
+    EXPORT void _ColorMaterial(GLenum face, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _ColorP3ui(GLenum type, GLuint color, const SrcLoc& src_loc) const;
+    EXPORT void _ColorP3uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc) const;
+    EXPORT void _ColorP4ui(GLenum type, GLuint color, const SrcLoc& src_loc) const;
+    EXPORT void _ColorP4uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc) const;
+    EXPORT void _ColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _CompileShader(GLuint shader, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexImage1D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CompressedTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _CopyImageSubData(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX, GLint srcY, GLint srcZ, GLuint dstName, GLenum dstTarget, GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei srcWidth, GLsizei srcHeight, GLsizei srcDepth, const SrcLoc& src_loc) const;
+    EXPORT void _CopyNamedBufferSubData(GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _CopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _CopyTextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _CreateBuffers(GLsizei n, GLuint * buffers, const SrcLoc& src_loc) const;
+    EXPORT void _CreateFramebuffers(GLsizei n, GLuint * framebuffers, const SrcLoc& src_loc) const;
+    EXPORT GLuint _CreateProgram(const SrcLoc& src_loc) const;
+    EXPORT void _CreateProgramPipelines(GLsizei n, GLuint * pipelines, const SrcLoc& src_loc) const;
+    EXPORT void _CreateQueries(GLenum target, GLsizei n, GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _CreateRenderbuffers(GLsizei n, GLuint * renderbuffers, const SrcLoc& src_loc) const;
+    EXPORT void _CreateSamplers(GLsizei n, GLuint * samplers, const SrcLoc& src_loc) const;
+    EXPORT GLuint _CreateShader(GLenum type, const SrcLoc& src_loc) const;
+    EXPORT GLuint _CreateShaderProgramv(GLenum type, GLsizei count, const GLchar *const* strings, const SrcLoc& src_loc) const;
+    EXPORT void _CreateTextures(GLenum target, GLsizei n, GLuint * textures, const SrcLoc& src_loc) const;
+    EXPORT void _CreateTransformFeedbacks(GLsizei n, GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _CreateVertexArrays(GLsizei n, GLuint * arrays, const SrcLoc& src_loc) const;
+    EXPORT void _CullFace(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _DebugMessageCallback(GLDEBUGPROC callback, const void * userParam, const SrcLoc& src_loc) const;
+    EXPORT void _DebugMessageControl(GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint * ids, GLboolean enabled, const SrcLoc& src_loc) const;
+    EXPORT void _DebugMessageInsert(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * buf, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteBuffers(GLsizei n, const GLuint * buffers, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteFramebuffers(GLsizei n, const GLuint * framebuffers, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteLists(GLuint list, GLsizei range, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteProgram(GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteProgramPipelines(GLsizei n, const GLuint * pipelines, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteQueries(GLsizei n, const GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteRenderbuffers(GLsizei n, const GLuint * renderbuffers, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteSamplers(GLsizei count, const GLuint * samplers, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteShader(GLuint shader, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteSync(GLsync sync, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteTextures(GLsizei n, const GLuint * textures, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteTransformFeedbacks(GLsizei n, const GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _DeleteVertexArrays(GLsizei n, const GLuint * arrays, const SrcLoc& src_loc) const;
+    EXPORT void _DepthFunc(GLenum func, const SrcLoc& src_loc) const;
+    EXPORT void _DepthMask(GLboolean flag, const SrcLoc& src_loc) const;
+    EXPORT void _DepthRange(GLdouble n, GLdouble f, const SrcLoc& src_loc) const;
+    EXPORT void _DepthRangeArrayv(GLuint first, GLsizei count, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _DepthRangeIndexed(GLuint index, GLdouble n, GLdouble f, const SrcLoc& src_loc) const;
+    EXPORT void _DepthRangef(GLfloat n, GLfloat f, const SrcLoc& src_loc) const;
+    EXPORT void _DetachShader(GLuint program, GLuint shader, const SrcLoc& src_loc) const;
+    EXPORT void _Disable(GLenum cap, const SrcLoc& src_loc) const;
+    EXPORT void _DisableClientState(GLenum array, const SrcLoc& src_loc) const;
+    EXPORT void _DisableVertexArrayAttrib(GLuint vaobj, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _DisableVertexAttribArray(GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _Disablei(GLenum target, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z, const SrcLoc& src_loc) const;
+    EXPORT void _DispatchComputeIndirect(GLintptr indirect, const SrcLoc& src_loc) const;
+    EXPORT void _DrawArrays(GLenum mode, GLint first, GLsizei count, const SrcLoc& src_loc) const;
+    EXPORT void _DrawArraysIndirect(GLenum mode, const void * indirect, const SrcLoc& src_loc) const;
+    EXPORT void _DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, const SrcLoc& src_loc) const;
+    EXPORT void _DrawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance, const SrcLoc& src_loc) const;
+    EXPORT void _DrawBuffer(GLenum buf, const SrcLoc& src_loc) const;
+    EXPORT void _DrawBuffers(GLsizei n, const GLenum * bufs, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElements(GLenum mode, GLsizei count, GLenum type, const void * indices, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLint basevertex, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsIndirect(GLenum mode, GLenum type, const void * indirect, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLuint baseinstance, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsInstancedBaseVertex(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, const SrcLoc& src_loc) const;
+    EXPORT void _DrawElementsInstancedBaseVertexBaseInstance(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance, const SrcLoc& src_loc) const;
+    EXPORT void _DrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, const SrcLoc& src_loc) const;
+    EXPORT void _DrawRangeElementsBaseVertex(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices, GLint basevertex, const SrcLoc& src_loc) const;
+    EXPORT void _DrawTransformFeedback(GLenum mode, GLuint id, const SrcLoc& src_loc) const;
+    EXPORT void _DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount, const SrcLoc& src_loc) const;
+    EXPORT void _DrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stream, const SrcLoc& src_loc) const;
+    EXPORT void _DrawTransformFeedbackStreamInstanced(GLenum mode, GLuint id, GLuint stream, GLsizei instancecount, const SrcLoc& src_loc) const;
+    EXPORT void _EdgeFlag(GLboolean flag, const SrcLoc& src_loc) const;
+    EXPORT void _EdgeFlagPointer(GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _EdgeFlagv(const GLboolean * flag, const SrcLoc& src_loc) const;
+    EXPORT void _Enable(GLenum cap, const SrcLoc& src_loc) const;
+    EXPORT void _EnableClientState(GLenum array, const SrcLoc& src_loc) const;
+    EXPORT void _EnableVertexArrayAttrib(GLuint vaobj, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _EnableVertexAttribArray(GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _Enablei(GLenum target, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _End(const SrcLoc& src_loc) const;
+    EXPORT void _EndConditionalRender(const SrcLoc& src_loc) const;
+    EXPORT void _EndList(const SrcLoc& src_loc) const;
+    EXPORT void _EndQuery(GLenum target, const SrcLoc& src_loc) const;
+    EXPORT void _EndQueryIndexed(GLenum target, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _EndTransformFeedback(const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord1d(GLdouble u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord1dv(const GLdouble * u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord1f(GLfloat u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord1fv(const GLfloat * u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord2d(GLdouble u, GLdouble v, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord2dv(const GLdouble * u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord2f(GLfloat u, GLfloat v, const SrcLoc& src_loc) const;
+    EXPORT void _EvalCoord2fv(const GLfloat * u, const SrcLoc& src_loc) const;
+    EXPORT void _EvalMesh1(GLenum mode, GLint i1, GLint i2, const SrcLoc& src_loc) const;
+    EXPORT void _EvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2, const SrcLoc& src_loc) const;
+    EXPORT void _EvalPoint1(GLint i, const SrcLoc& src_loc) const;
+    EXPORT void _EvalPoint2(GLint i, GLint j, const SrcLoc& src_loc) const;
+    EXPORT void _FeedbackBuffer(GLsizei size, GLenum type, GLfloat * buffer, const SrcLoc& src_loc) const;
+    EXPORT GLsync _FenceSync(GLenum condition, GLbitfield flags, const SrcLoc& src_loc) const;
+    EXPORT void _Finish(const SrcLoc& src_loc) const;
+    EXPORT void _Flush(const SrcLoc& src_loc) const;
+    EXPORT void _FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc) const;
+    EXPORT void _FlushMappedNamedBufferRange(GLuint buffer, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc) const;
+    EXPORT void _FogCoordPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _FogCoordd(GLdouble coord, const SrcLoc& src_loc) const;
+    EXPORT void _FogCoorddv(const GLdouble * coord, const SrcLoc& src_loc) const;
+    EXPORT void _FogCoordf(GLfloat coord, const SrcLoc& src_loc) const;
+    EXPORT void _FogCoordfv(const GLfloat * coord, const SrcLoc& src_loc) const;
+    EXPORT void _Fogf(GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _Fogfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _Fogi(GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _Fogiv(GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferParameteri(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferTexture1D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset, const SrcLoc& src_loc) const;
+    EXPORT void _FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer, const SrcLoc& src_loc) const;
+    EXPORT void _FrontFace(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _Frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar, const SrcLoc& src_loc) const;
+    EXPORT void _GenBuffers(GLsizei n, GLuint * buffers, const SrcLoc& src_loc) const;
+    EXPORT void _GenFramebuffers(GLsizei n, GLuint * framebuffers, const SrcLoc& src_loc) const;
+    EXPORT GLuint _GenLists(GLsizei range, const SrcLoc& src_loc) const;
+    EXPORT void _GenProgramPipelines(GLsizei n, GLuint * pipelines, const SrcLoc& GetProgram) const;
+    EXPORT void _GenQueries(GLsizei n, GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _GenRenderbuffers(GLsizei n, GLuint * renderbuffers, const SrcLoc& src_loc) const;
+    EXPORT void _GenSamplers(GLsizei count, GLuint * samplers, const SrcLoc& src_loc) const;
+    EXPORT void _GenTextures(GLsizei n, GLuint * textures, const SrcLoc& src_loc) const;
+    EXPORT void _GenTransformFeedbacks(GLsizei n, GLuint * ids, const SrcLoc& src_loc) const;
+    EXPORT void _GenVertexArrays(GLsizei n, GLuint * arrays, const SrcLoc& src_loc) const;
+    EXPORT void _GenerateMipmap(GLenum target, const SrcLoc& src_loc) const;
+    EXPORT void _GenerateTextureMipmap(GLuint texture, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveAtomicCounterBufferiv(GLuint program, GLuint bufferIndex, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveAttrib(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveSubroutineName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveSubroutineUniformName(GLuint program, GLenum shadertype, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveSubroutineUniformiv(GLuint program, GLenum shadertype, GLuint index, GLenum pname, GLint * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformBlockName, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveUniformName(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei * length, GLchar * uniformName, const SrcLoc& src_loc) const;
+    EXPORT void _GetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint * uniformIndices, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetAttachedShaders(GLuint program, GLsizei maxCount, GLsizei * count, GLuint * shaders, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetAttribLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetBooleani_v(GLenum target, GLuint index, GLboolean * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetBooleanv(GLenum pname, GLboolean * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetBufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetBufferPointerv(GLenum target, GLenum pname, void ** params, const SrcLoc& src_loc) const;
+    EXPORT void _GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetClipPlane(GLenum plane, GLdouble * equation, const SrcLoc& src_loc) const;
+    EXPORT void _GetCompressedTexImage(GLenum target, GLint level, void * img, const SrcLoc& src_loc) const;
+    EXPORT void _GetCompressedTextureImage(GLuint texture, GLint level, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetCompressedTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT GLuint _GetDebugMessageLog(GLuint count, GLsizei bufSize, GLenum * sources, GLenum * types, GLuint * ids, GLenum * severities, GLsizei * lengths, GLchar * messageLog, const SrcLoc& src_loc) const;
+    EXPORT void _GetDoublei_v(GLenum target, GLuint index, GLdouble * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetDoublev(GLenum pname, GLdouble * data, const SrcLoc& src_loc) const;
+    EXPORT GLenum _GetError(const SrcLoc& src_loc) const;
+    EXPORT void _GetFloati_v(GLenum target, GLuint index, GLfloat * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetFloatv(GLenum pname, GLfloat * data, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetFragDataIndex(GLuint program, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetFragDataLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetFramebufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT GLenum _GetGraphicsResetStatus(const SrcLoc& src_loc) const;
+    EXPORT void _GetInteger64i_v(GLenum target, GLuint index, GLint64 * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetInteger64v(GLenum pname, GLint64 * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetIntegeri_v(GLenum target, GLuint index, GLint * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetIntegerv(GLenum pname, GLint * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetInternalformati64v(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint64 * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, GLsizei count, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetLightfv(GLenum light, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetLightiv(GLenum light, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetMapdv(GLenum target, GLenum query, GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetMapfv(GLenum target, GLenum query, GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetMapiv(GLenum target, GLenum query, GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetMaterialfv(GLenum face, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetMaterialiv(GLenum face, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetMultisamplefv(GLenum pname, GLuint index, GLfloat * val, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedBufferParameteri64v(GLuint buffer, GLenum pname, GLint64 * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedBufferParameteriv(GLuint buffer, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedBufferPointerv(GLuint buffer, GLenum pname, void ** params, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, void * data, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedFramebufferAttachmentParameteriv(GLuint framebuffer, GLenum attachment, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedFramebufferParameteriv(GLuint framebuffer, GLenum pname, GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetNamedRenderbufferParameteriv(GLuint renderbuffer, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei * length, GLchar * label, const SrcLoc& src_loc) const;
+    EXPORT void _GetObjectPtrLabel(const void * ptr, GLsizei bufSize, GLsizei * length, GLchar * label, const SrcLoc& src_loc) const;
+    EXPORT void _GetPixelMapfv(GLenum map, GLfloat * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetPixelMapuiv(GLenum map, GLuint * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetPixelMapusv(GLenum map, GLushort * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetPointerv(GLenum pname, void ** params, const SrcLoc& src_loc) const;
+    EXPORT void _GetPolygonStipple(GLubyte * mask, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei * length, GLenum * binaryFormat, void * binary, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramInterfaceiv(GLuint program, GLenum programInterface, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramPipelineInfoLog(GLuint pipeline, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT GLuint _GetProgramResourceIndex(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetProgramResourceLocation(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetProgramResourceLocationIndex(GLuint program, GLenum programInterface, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramResourceName(GLuint program, GLenum programInterface, GLuint index, GLsizei bufSize, GLsizei * length, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramResourceiv(GLuint program, GLenum programInterface, GLuint index, GLsizei propCount, const GLenum * props, GLsizei count, GLsizei * length, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetProgramiv(GLuint program, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryBufferObjecti64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryBufferObjectiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryBufferObjectui64v(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryBufferObjectuiv(GLuint id, GLuint buffer, GLenum pname, GLintptr offset, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryObjecti64v(GLuint id, GLenum pname, GLint64 * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryObjectiv(GLuint id, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryObjectui64v(GLuint id, GLenum pname, GLuint64 * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryObjectuiv(GLuint id, GLenum pname, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetQueryiv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * infoLog, const SrcLoc& src_loc) const;
+    EXPORT void _GetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint * range, GLint * precision, const SrcLoc& src_loc) const;
+    EXPORT void _GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei * length, GLchar * source, const SrcLoc& src_loc) const;
+    EXPORT void _GetShaderiv(GLuint shader, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT const GLubyte* _GetString(GLenum name, const SrcLoc& src_loc) const;
+    EXPORT const GLubyte* _GetStringi(GLenum name, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT GLuint _GetSubroutineIndex(GLuint program, GLenum shadertype, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetSubroutineUniformLocation(GLuint program, GLenum shadertype, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetSynciv(GLsync sync, GLenum pname, GLsizei count, GLsizei * length, GLint * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexEnvfv(GLenum target, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexEnviv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexGendv(GLenum coord, GLenum pname, GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexGenfv(GLenum coord, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexGeniv(GLenum coord, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexParameterIiv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexParameterIuiv(GLenum target, GLenum pname, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexParameterfv(GLenum target, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTexParameteriv(GLenum target, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureImage(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureLevelParameterfv(GLuint texture, GLint level, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureLevelParameteriv(GLuint texture, GLint level, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureParameterIiv(GLuint texture, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureParameterIuiv(GLuint texture, GLenum pname, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureParameterfv(GLuint texture, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureParameteriv(GLuint texture, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetTextureSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLsizei * size, GLenum * type, GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetTransformFeedbacki64_v(GLuint xfb, GLenum pname, GLuint index, GLint64 * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetTransformFeedbacki_v(GLuint xfb, GLenum pname, GLuint index, GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetTransformFeedbackiv(GLuint xfb, GLenum pname, GLint * param, const SrcLoc& src_loc) const;
+    EXPORT GLuint _GetUniformBlockIndex(GLuint program, const GLchar * uniformBlockName, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar *const* uniformNames, GLuint * uniformIndices, const SrcLoc& src_loc) const;
+    EXPORT GLint _GetUniformLocation(GLuint program, const GLchar * name, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformdv(GLuint program, GLint location, GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformfv(GLuint program, GLint location, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformiv(GLuint program, GLint location, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetUniformuiv(GLuint program, GLint location, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexArrayIndexed64iv(GLuint vaobj, GLuint index, GLenum pname, GLint64 * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexArrayIndexediv(GLuint vaobj, GLuint index, GLenum pname, GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexArrayiv(GLuint vaobj, GLenum pname, GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribIiv(GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribLdv(GLuint index, GLenum pname, GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribPointerv(GLuint index, GLenum pname, void ** pointer, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribdv(GLuint index, GLenum pname, GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribfv(GLuint index, GLenum pname, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetVertexAttribiv(GLuint index, GLenum pname, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetnColorTable(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void * table, const SrcLoc& src_loc) const;
+    EXPORT void _GetnCompressedTexImage(GLenum target, GLint lod, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetnConvolutionFilter(GLenum target, GLenum format, GLenum type, GLsizei bufSize, void * image, const SrcLoc& src_loc) const;
+    EXPORT void _GetnHistogram(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetnMapdv(GLenum target, GLenum query, GLsizei bufSize, GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetnMapfv(GLenum target, GLenum query, GLsizei bufSize, GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetnMapiv(GLenum target, GLenum query, GLsizei bufSize, GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _GetnMinmax(GLenum target, GLboolean reset, GLenum format, GLenum type, GLsizei bufSize, void * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetnPixelMapfv(GLenum map, GLsizei bufSize, GLfloat * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetnPixelMapuiv(GLenum map, GLsizei bufSize, GLuint * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetnPixelMapusv(GLenum map, GLsizei bufSize, GLushort * values, const SrcLoc& src_loc) const;
+    EXPORT void _GetnPolygonStipple(GLsizei bufSize, GLubyte * pattern, const SrcLoc& src_loc) const;
+    EXPORT void _GetnSeparableFilter(GLenum target, GLenum format, GLenum type, GLsizei rowBufSize, void * row, GLsizei columnBufSize, void * column, void * span, const SrcLoc& src_loc) const;
+    EXPORT void _GetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _GetnUniformdv(GLuint program, GLint location, GLsizei bufSize, GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _GetnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _Hint(GLenum target, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _IndexMask(GLuint mask, const SrcLoc& src_loc) const;
+    EXPORT void _IndexPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _Indexd(GLdouble c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexdv(const GLdouble * c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexf(GLfloat c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexfv(const GLfloat * c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexi(GLint c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexiv(const GLint * c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexs(GLshort c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexsv(const GLshort * c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexub(GLubyte c, const SrcLoc& src_loc) const;
+    EXPORT void _Indexubv(const GLubyte * c, const SrcLoc& src_loc) const;
+    EXPORT void _InitNames(const SrcLoc& src_loc) const;
+    EXPORT void _InterleavedArrays(GLenum format, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateBufferData(GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr length, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum * attachments, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateNamedFramebufferData(GLuint framebuffer, GLsizei numAttachments, const GLenum * attachments, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateNamedFramebufferSubData(GLuint framebuffer, GLsizei numAttachments, const GLenum * attachments, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum * attachments, GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateTexImage(GLuint texture, GLint level, const SrcLoc& src_loc) const;
+    EXPORT void _InvalidateTexSubImage(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsBuffer(GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsEnabled(GLenum cap, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsEnabledi(GLenum target, GLuint index, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsFramebuffer(GLuint framebuffer, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsList(GLuint list, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsProgram(GLuint program, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsProgramPipeline(GLuint pipeline, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsQuery(GLuint id, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsRenderbuffer(GLuint renderbuffer, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsSampler(GLuint sampler, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsShader(GLuint shader, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsSync(GLsync sync, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsTexture(GLuint texture, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsTransformFeedback(GLuint id, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _IsVertexArray(GLuint array, const SrcLoc& src_loc) const;
+    EXPORT void _LightModelf(GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _LightModelfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _LightModeli(GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _LightModeliv(GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _Lightf(GLenum light, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _Lightfv(GLenum light, GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _Lighti(GLenum light, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _Lightiv(GLenum light, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _LineStipple(GLint factor, GLushort pattern, const SrcLoc& src_loc) const;
+    EXPORT void _LineWidth(GLfloat width, const SrcLoc& src_loc) const;
+    EXPORT void _LinkProgram(GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _ListBase(GLuint base, const SrcLoc& src_loc) const;
+    EXPORT void _LoadIdentity(const SrcLoc& src_loc) const;
+    EXPORT void _LoadMatrixd(const GLdouble * m, const SrcLoc& src_loc) const;
+    EXPORT void _LoadMatrixf(const GLfloat * m, const SrcLoc& src_loc) const;
+    EXPORT void _LoadName(GLuint name, const SrcLoc& src_loc) const;
+    EXPORT void _LoadTransposeMatrixd(const GLdouble * m, const SrcLoc& src_loc) const;
+    EXPORT void _LoadTransposeMatrixf(const GLfloat * m, const SrcLoc& src_loc) const;
+    EXPORT void _LogicOp(GLenum opcode, const SrcLoc& src_loc) const;
+    EXPORT void _Map1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble * points, const SrcLoc& src_loc) const;
+    EXPORT void _Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat * points, const SrcLoc& src_loc) const;
+    EXPORT void _Map2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble * points, const SrcLoc& src_loc) const;
+    EXPORT void _Map2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat * points, const SrcLoc& src_loc) const;
+    EXPORT void* _MapBuffer (GLenum target, GLenum access, const SrcLoc& src_loc) const;
+    EXPORT void* _MapBufferRange (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc) const;
+    EXPORT void _MapGrid1d(GLint un, GLdouble u1, GLdouble u2, const SrcLoc& src_loc) const;
+    EXPORT void _MapGrid1f(GLint un, GLfloat u1, GLfloat u2, const SrcLoc& src_loc) const;
+    EXPORT void _MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2, const SrcLoc& src_loc) const;
+    EXPORT void _MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2, const SrcLoc& src_loc) const;
+    EXPORT void* _MapNamedBuffer (GLuint buffer, GLenum access, const SrcLoc& src_loc) const;
+    EXPORT void* _MapNamedBufferRange (GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access, const SrcLoc& src_loc) const;
+    EXPORT void _Materialf(GLenum face, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _Materialfv(GLenum face, GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _Materiali(GLenum face, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _Materialiv(GLenum face, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _MatrixMode(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _MemoryBarrier(GLbitfield barriers, const SrcLoc& src_loc) const;
+    EXPORT void _MemoryBarrierByRegion(GLbitfield barriers, const SrcLoc& src_loc) const;
+    EXPORT void _MinSampleShading(GLfloat value, const SrcLoc& src_loc) const;
+    EXPORT void _MultMatrixd(const GLdouble * m, const SrcLoc& src_loc) const;
+    EXPORT void _MultMatrixf(const GLfloat * m, const SrcLoc& src_loc) const;
+    EXPORT void _MultTransposeMatrixd(const GLdouble * m, const SrcLoc& src_loc) const;
+    EXPORT void _MultTransposeMatrixf(const GLfloat * m, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawArrays(GLenum mode, const GLint * first, const GLsizei * count, GLsizei drawcount, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawArraysIndirect(GLenum mode, const void * indirect, GLsizei drawcount, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawArraysIndirectCount(GLenum mode, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawElements(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawElementsBaseVertex(GLenum mode, const GLsizei * count, GLenum type, const void *const* indices, GLsizei drawcount, const GLint * basevertex, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawElementsIndirect(GLenum mode, GLenum type, const void * indirect, GLsizei drawcount, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _MultiDrawElementsIndirectCount(GLenum mode, GLenum type, const void * indirect, GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1d(GLenum target, GLdouble s, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1f(GLenum target, GLfloat s, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1i(GLenum target, GLint s, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1iv(GLenum target, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1s(GLenum target, GLshort s, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord1sv(GLenum target, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2i(GLenum target, GLint s, GLint t, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2iv(GLenum target, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2s(GLenum target, GLshort s, GLshort t, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord2sv(GLenum target, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3iv(GLenum target, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord3sv(GLenum target, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4dv(GLenum target, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4fv(GLenum target, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4iv(GLenum target, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoord4sv(GLenum target, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP1ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP1uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP2ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP2uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP3ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP3uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP4ui(GLenum texture, GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _MultiTexCoordP4uiv(GLenum texture, GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _NamedBufferData(GLuint buffer, GLsizeiptr size, const void * data, GLenum usage, const SrcLoc& src_loc) const;
+    EXPORT void _NamedBufferStorage(GLuint buffer, GLsizeiptr size, const void * data, GLbitfield flags, const SrcLoc& src_loc) const;
+    EXPORT void _NamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void * data, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferDrawBuffer(GLuint framebuffer, GLenum buf, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferDrawBuffers(GLuint framebuffer, GLsizei n, const GLenum * bufs, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferParameteri(GLuint framebuffer, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferReadBuffer(GLuint framebuffer, GLenum src, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferRenderbuffer(GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferTexture(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level, const SrcLoc& src_loc) const;
+    EXPORT void _NamedFramebufferTextureLayer(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level, GLint layer, const SrcLoc& src_loc) const;
+    EXPORT void _NamedRenderbufferStorage(GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _NamedRenderbufferStorageMultisample(GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _NewList(GLuint list, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3b(GLbyte nx, GLbyte ny, GLbyte nz, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3bv(const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3d(GLdouble nx, GLdouble ny, GLdouble nz, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3f(GLfloat nx, GLfloat ny, GLfloat nz, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3i(GLint nx, GLint ny, GLint nz, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3s(GLshort nx, GLshort ny, GLshort nz, const SrcLoc& src_loc) const;
+    EXPORT void _Normal3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _NormalP3ui(GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _NormalP3uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _NormalPointer(GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _ObjectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar * label, const SrcLoc& src_loc) const;
+    EXPORT void _ObjectPtrLabel(const void * ptr, GLsizei length, const GLchar * label, const SrcLoc& src_loc) const;
+    EXPORT void _Ortho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar, const SrcLoc& src_loc) const;
+    EXPORT void _PassThrough(GLfloat token, const SrcLoc& src_loc) const;
+    EXPORT void _PatchParameterfv(GLenum pname, const GLfloat * values, const SrcLoc& src_loc) const;
+    EXPORT void _PatchParameteri(GLenum pname, GLint value, const SrcLoc& src_loc) const;
+    EXPORT void _PauseTransformFeedback(const SrcLoc& src_loc) const;
+    EXPORT void _PixelMapfv(GLenum map, GLsizei mapsize, const GLfloat * values, const SrcLoc& src_loc) const;
+    EXPORT void _PixelMapuiv(GLenum map, GLsizei mapsize, const GLuint * values, const SrcLoc& src_loc) const;
+    EXPORT void _PixelMapusv(GLenum map, GLsizei mapsize, const GLushort * values, const SrcLoc& src_loc) const;
+    EXPORT void _PixelStoref(GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _PixelStorei(GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _PixelTransferf(GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _PixelTransferi(GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _PixelZoom(GLfloat xfactor, GLfloat yfactor, const SrcLoc& src_loc) const;
+    EXPORT void _PointParameterf(GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _PointParameterfv(GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _PointParameteri(GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _PointParameteriv(GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _PointSize(GLfloat size, const SrcLoc& src_loc) const;
+    EXPORT void _PolygonMode(GLenum face, GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _PolygonOffset(GLfloat factor, GLfloat units, const SrcLoc& src_loc) const;
+    EXPORT void _PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp, const SrcLoc& src_loc) const;
+    EXPORT void _PolygonStipple(const GLubyte * mask, const SrcLoc& src_loc) const;
+    EXPORT void _PopAttrib(const SrcLoc& src_loc) const;
+    EXPORT void _PopClientAttrib(const SrcLoc& src_loc) const;
+    EXPORT void _PopDebugGroup(const SrcLoc& src_loc) const;
+    EXPORT void _PopMatrix(const SrcLoc& src_loc) const;
+    EXPORT void _PopName(const SrcLoc& src_loc) const;
+    EXPORT void _PrimitiveRestartIndex(GLuint index, const SrcLoc& src_loc) const;
+    EXPORT void _PrioritizeTextures(GLsizei n, const GLuint * textures, const GLfloat * priorities, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramBinary(GLuint program, GLenum binaryFormat, const void * binary, GLsizei length, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramParameteri(GLuint program, GLenum pname, GLint value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1d(GLuint program, GLint location, GLdouble v0, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1f(GLuint program, GLint location, GLfloat v0, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1i(GLuint program, GLint location, GLint v0, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1ui(GLuint program, GLint location, GLuint v0, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform1uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2d(GLuint program, GLint location, GLdouble v0, GLdouble v1, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2i(GLuint program, GLint location, GLint v0, GLint v1, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform2uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform3uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4dv(GLuint program, GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4iv(GLuint program, GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniform4uiv(GLuint program, GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2x3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2x3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2x4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix2x4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3x2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3x2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3x4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix3x4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4x2dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4x2fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4x3dv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProgramUniformMatrix4x3fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _ProvokingVertex(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _PushAttrib(GLbitfield mask, const SrcLoc& src_loc) const;
+    EXPORT void _PushClientAttrib(GLbitfield mask, const SrcLoc& src_loc) const;
+    EXPORT void _PushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar * message, const SrcLoc& src_loc) const;
+    EXPORT void _PushMatrix(const SrcLoc& src_loc) const;
+    EXPORT void _PushName(GLuint name, const SrcLoc& src_loc) const;
+    EXPORT void _QueryCounter(GLuint id, GLenum target, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2d(GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2f(GLfloat x, GLfloat y, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2i(GLint x, GLint y, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2s(GLshort x, GLshort y, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos2sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4i(GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc) const;
+    EXPORT void _RasterPos4sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _ReadBuffer(GLenum src, const SrcLoc& src_loc) const;
+    EXPORT void _ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, void * data, const SrcLoc& src_loc) const;
+    EXPORT void _Rectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, const SrcLoc& src_loc) const;
+    EXPORT void _Rectdv(const GLdouble * v1, const GLdouble * v2, const SrcLoc& src_loc) const;
+    EXPORT void _Rectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, const SrcLoc& src_loc) const;
+    EXPORT void _Rectfv(const GLfloat * v1, const GLfloat * v2, const SrcLoc& src_loc) const;
+    EXPORT void _Recti(GLint x1, GLint y1, GLint x2, GLint y2, const SrcLoc& src_loc) const;
+    EXPORT void _Rectiv(const GLint * v1, const GLint * v2, const SrcLoc& src_loc) const;
+    EXPORT void _Rects(GLshort x1, GLshort y1, GLshort x2, GLshort y2, const SrcLoc& src_loc) const;
+    EXPORT void _Rectsv(const GLshort * v1, const GLshort * v2, const SrcLoc& src_loc) const;
+    EXPORT void _ReleaseShaderCompiler(const SrcLoc& src_loc) const;
+    EXPORT GLint _RenderMode(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _RenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _ResumeTransformFeedback(const SrcLoc& src_loc) const;
+    EXPORT void _Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _SampleCoverage(GLfloat value, GLboolean invert, const SrcLoc& src_loc) const;
+    EXPORT void _SampleMaski(GLuint maskNumber, GLbitfield mask, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint * param, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat * param, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameteri(GLuint sampler, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _SamplerParameteriv(GLuint sampler, GLenum pname, const GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _Scaled(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _Scalef(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _Scissor(GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _ScissorArrayv(GLuint first, GLsizei count, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _ScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _ScissorIndexedv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3bv(const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3i(GLint red, GLint green, GLint blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3s(GLshort red, GLshort green, GLshort blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3ubv(const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3ui(GLuint red, GLuint green, GLuint blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3uiv(const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3us(GLushort red, GLushort green, GLushort blue, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColor3usv(const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColorP3ui(GLenum type, GLuint color, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColorP3uiv(GLenum type, const GLuint * color, const SrcLoc& src_loc) const;
+    EXPORT void _SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _SelectBuffer(GLsizei size, GLuint * buffer, const SrcLoc& src_loc) const;
+    EXPORT void _ShadeModel(GLenum mode, const SrcLoc& src_loc) const;
+    EXPORT void _ShaderBinary(GLsizei count, const GLuint * shaders, GLenum binaryFormat, const void * binary, GLsizei length, const SrcLoc& src_loc) const;
+    EXPORT void _ShaderSource(GLuint shader, GLsizei count, const GLchar *const* string, const GLint * length, const SrcLoc& src_loc) const;
+    EXPORT void _ShaderStorageBlockBinding(GLuint program, GLuint storageBlockIndex, GLuint storageBlockBinding, const SrcLoc& src_loc) const;
+    EXPORT void _SpecializeShader(GLuint shader, const GLchar * pEntryPoint, GLuint numSpecializationConstants, const GLuint * pConstantIndex, const GLuint * pConstantValue, const SrcLoc& src_loc) const;
+    EXPORT void _StencilFunc(GLenum func, GLint ref, GLuint mask, const SrcLoc& src_loc) const;
+    EXPORT void _StencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask, const SrcLoc& src_loc) const;
+    EXPORT void _StencilMask(GLuint mask, const SrcLoc& src_loc) const;
+    EXPORT void _StencilMaskSeparate(GLenum face, GLuint mask, const SrcLoc& src_loc) const;
+    EXPORT void _StencilOp(GLenum fail, GLenum zfail, GLenum zpass, const SrcLoc& src_loc) const;
+    EXPORT void _StencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass, const SrcLoc& src_loc) const;
+    EXPORT void _TexBuffer(GLenum target, GLenum internalformat, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _TexBufferRange(GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1d(GLdouble s, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1f(GLfloat s, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1i(GLint s, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1s(GLshort s, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord1sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2d(GLdouble s, GLdouble t, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2f(GLfloat s, GLfloat t, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2i(GLint s, GLint t, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2s(GLshort s, GLshort t, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord2sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3d(GLdouble s, GLdouble t, GLdouble r, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3f(GLfloat s, GLfloat t, GLfloat r, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3i(GLint s, GLint t, GLint r, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3s(GLshort s, GLshort t, GLshort r, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4i(GLint s, GLint t, GLint r, GLint q, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoord4sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP1ui(GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP1uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP2ui(GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP2uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP3ui(GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP3uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP4ui(GLenum type, GLuint coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordP4uiv(GLenum type, const GLuint * coords, const SrcLoc& src_loc) const;
+    EXPORT void _TexCoordPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _TexEnvf(GLenum target, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _TexEnvfv(GLenum target, GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexEnvi(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _TexEnviv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexGend(GLenum coord, GLenum pname, GLdouble param, const SrcLoc& src_loc) const;
+    EXPORT void _TexGendv(GLenum coord, GLenum pname, const GLdouble * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexGenf(GLenum coord, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _TexGenfv(GLenum coord, GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexGeni(GLenum coord, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _TexGeniv(GLenum coord, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameterIiv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameterIuiv(GLenum target, GLenum pname, const GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameterf(GLenum target, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameterfv(GLenum target, GLenum pname, const GLfloat * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameteri(GLenum target, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _TexParameteriv(GLenum target, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, const SrcLoc& src_loc) const;
+    EXPORT void _TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _TexStorage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc) const;
+    EXPORT void _TexStorage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TextureBarrier(const SrcLoc& src_loc) const;
+    EXPORT void _TextureBuffer(GLuint texture, GLenum internalformat, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _TextureBufferRange(GLuint texture, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameterIiv(GLuint texture, GLenum pname, const GLint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameterIuiv(GLuint texture, GLenum pname, const GLuint * params, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameterf(GLuint texture, GLenum pname, GLfloat param, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameterfv(GLuint texture, GLenum pname, const GLfloat * param, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameteri(GLuint texture, GLenum pname, GLint param, const SrcLoc& src_loc) const;
+    EXPORT void _TextureParameteriv(GLuint texture, GLenum pname, const GLint * param, const SrcLoc& src_loc) const;
+    EXPORT void _TextureStorage1D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, const SrcLoc& src_loc) const;
+    EXPORT void _TextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _TextureStorage2DMultisample(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TextureStorage3D(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, const SrcLoc& src_loc) const;
+    EXPORT void _TextureStorage3DMultisample(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations, const SrcLoc& src_loc) const;
+    EXPORT void _TextureSubImage1D(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TextureSubImage2D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TextureSubImage3D(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void * pixels, const SrcLoc& src_loc) const;
+    EXPORT void _TextureView(GLuint texture, GLenum target, GLuint origtexture, GLenum internalformat, GLuint minlevel, GLuint numlevels, GLuint minlayer, GLuint numlayers, const SrcLoc& src_loc) const;
+    EXPORT void _TransformFeedbackBufferBase(GLuint xfb, GLuint index, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _TransformFeedbackBufferRange(GLuint xfb, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size, const SrcLoc& src_loc) const;
+    EXPORT void _TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar *const* varyings, GLenum bufferMode, const SrcLoc& src_loc) const;
+    EXPORT void _Translated(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _Translatef(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1d(GLint location, GLdouble x, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1f(GLint location, GLfloat v0, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1i(GLint location, GLint v0, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1ui(GLint location, GLuint v0, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform1uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2d(GLint location, GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2f(GLint location, GLfloat v0, GLfloat v1, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2i(GLint location, GLint v0, GLint v1, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2ui(GLint location, GLuint v0, GLuint v1, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform2uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3i(GLint location, GLint v0, GLint v1, GLint v2, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform3uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4dv(GLint location, GLsizei count, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4fv(GLint location, GLsizei count, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4i(GLint location, GLint v0, GLint v1, GLint v2, GLint v3, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4iv(GLint location, GLsizei count, const GLint * value, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3, const SrcLoc& src_loc) const;
+    EXPORT void _Uniform4uiv(GLint location, GLsizei count, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3x4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4x2dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4x3dv(GLint location, GLsizei count, GLboolean transpose, const GLdouble * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value, const SrcLoc& src_loc) const;
+    EXPORT void _UniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint * indices, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _UnmapBuffer(GLenum target, const SrcLoc& src_loc) const;
+    EXPORT GLboolean _UnmapNamedBuffer(GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _UseProgram(GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _ValidateProgram(GLuint program, const SrcLoc& src_loc) const;
+    EXPORT void _ValidateProgramPipeline(GLuint pipeline, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2d(GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2f(GLfloat x, GLfloat y, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2i(GLint x, GLint y, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2s(GLshort x, GLshort y, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex2sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex3sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4i(GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4s(GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc) const;
+    EXPORT void _Vertex4sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayAttribBinding(GLuint vaobj, GLuint attribindex, GLuint bindingindex, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayAttribIFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayAttribLFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayElementBuffer(GLuint vaobj, GLuint buffer, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride, const SrcLoc& src_loc) const;
+    EXPORT void _VertexArrayVertexBuffers(GLuint vaobj, GLuint first, GLsizei count, const GLuint * buffers, const GLintptr * offsets, const GLsizei * strides, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1d(GLuint index, GLdouble x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1f(GLuint index, GLfloat x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1s(GLuint index, GLshort x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib1sv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2d(GLuint index, GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2f(GLuint index, GLfloat x, GLfloat y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2s(GLuint index, GLshort x, GLshort y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib2sv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3d(GLuint index, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3s(GLuint index, GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib3sv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nbv(GLuint index, const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Niv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nsv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nub(GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nuiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4Nusv(GLuint index, const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4bv(GLuint index, const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4fv(GLuint index, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4iv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4s(GLuint index, GLshort x, GLshort y, GLshort z, GLshort w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4sv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4ubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttrib4usv(GLuint index, const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribBinding(GLuint attribindex, GLuint bindingindex, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribDivisor(GLuint index, GLuint divisor, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribFormat(GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI1i(GLuint index, GLint x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI1iv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI1ui(GLuint index, GLuint x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI1uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI2i(GLuint index, GLint x, GLint y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI2iv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI2ui(GLuint index, GLuint x, GLuint y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI2uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI3i(GLuint index, GLint x, GLint y, GLint z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI3iv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI3ui(GLuint index, GLuint x, GLuint y, GLuint z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI3uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4bv(GLuint index, const GLbyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4iv(GLuint index, const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4sv(GLuint index, const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4ubv(GLuint index, const GLubyte * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4uiv(GLuint index, const GLuint * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribI4usv(GLuint index, const GLushort * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribIFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL1d(GLuint index, GLdouble x, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL1dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL2d(GLuint index, GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL2dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL3dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribL4dv(GLuint index, const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribLFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP1ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP1uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP2ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP2uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP3ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP3uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP4ui(GLuint index, GLenum type, GLboolean normalized, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribP4uiv(GLuint index, GLenum type, GLboolean normalized, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _VertexBindingDivisor(GLuint bindingindex, GLuint divisor, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP2ui(GLenum type, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP2uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP3ui(GLenum type, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP3uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP4ui(GLenum type, GLuint value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexP4uiv(GLenum type, const GLuint * value, const SrcLoc& src_loc) const;
+    EXPORT void _VertexPointer(GLint size, GLenum type, GLsizei stride, const void * pointer, const SrcLoc& src_loc) const;
+    EXPORT void _Viewport(GLint x, GLint y, GLsizei width, GLsizei height, const SrcLoc& src_loc) const;
+    EXPORT void _ViewportArrayv(GLuint first, GLsizei count, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h, const SrcLoc& src_loc) const;
+    EXPORT void _ViewportIndexedfv(GLuint index, const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2d(GLdouble x, GLdouble y, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2f(GLfloat x, GLfloat y, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2i(GLint x, GLint y, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2s(GLshort x, GLshort y, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos2sv(const GLshort * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3d(GLdouble x, GLdouble y, GLdouble z, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3dv(const GLdouble * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3f(GLfloat x, GLfloat y, GLfloat z, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3fv(const GLfloat * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3i(GLint x, GLint y, GLint z, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3iv(const GLint * v, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3s(GLshort x, GLshort y, GLshort z, const SrcLoc& src_loc) const;
+    EXPORT void _WindowPos3sv(const GLshort * v, const SrcLoc& src_loc) const;
+
+
 };
 
 } // namespace glwpp
