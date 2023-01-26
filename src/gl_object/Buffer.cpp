@@ -3,6 +3,25 @@
 using namespace glwpp;
 using namespace glwpp::GL;
 
+
+Buffer::Buffer(Context& ctx,
+               const SrcLoc& src_loc,
+               const IsCtxTrue& IsCtx) :
+    Handler(ctx, &_Init, &_Free, src_loc, IsCtx){
+}
+
+Buffer::Buffer(Context& ctx,
+               const SrcLoc& src_loc,
+               const IsCtxFalse& IsCtx) :
+    Handler(ctx, &_Init, &_Free, src_loc, IsCtx){
+}
+
+Buffer::Buffer(Context& ctx,
+               const SrcLoc& src_loc,
+               const IsCtxUnknown& IsCtx) :
+    Handler(ctx, &_Init, &_Free, src_loc, IsCtx){
+}
+
 GLuint Buffer::_Init(Context& ctx, const SrcLoc& src_loc){
     GLuint id;
     ctx.gl().CreateBuffers<TState::True>(1, &id, src_loc);
@@ -23,6 +42,10 @@ void Buffer::_clearData(Context& ctx, const GLenum& internalformat, const GLenum
 
 void Buffer::_setStorage(Context& ctx, const GLsizeiptr& size, const void* data, const GLbitfield& flags, const SrcLoc& src_loc){
     ctx.gl().NamedBufferStorage<TState::True>(id().value(), size, data, flags, src_loc);
+}
+
+void* Buffer::_map(Context& ctx, const GLenum& access, const SrcLoc& src_loc){
+    return ctx.gl().MapNamedBuffer<TState::True>(id().value(), access, src_loc);
 }
 
 void Buffer::_bindBase(Context& ctx, const GLenum target, const GLuint index, const SrcLoc src_loc){

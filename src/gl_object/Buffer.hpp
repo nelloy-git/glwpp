@@ -5,36 +5,37 @@
 
 namespace glwpp::GL {
 
-class Buffer : public Handler<Buffer> {
+class Buffer final : public Handler<Buffer> {
 public:
+    template<TState IsCtx = TState::Unknown>
     static Value<Buffer> Make(Valuable<Context&> auto&& ctx,
                               Valuable<const SrcLoc&> auto&& src_loc){
-        return Value<Buffer>::Make(new Buffer(ctx, src_loc));
+        return Value<Buffer>::Make(new Buffer(ctx, src_loc, IsCtxFlag<IsCtx>{}));
     }
-    virtual ~Buffer(){}
+    ~Buffer(){}
 
     template<TState IsCtx>
-    Value<std::future<void>> setData(Valuable<const GLsizeiptr&> auto&& size,
-                                     Valuable<const void*> auto&& data,
-                                     Valuable<const GLenum&> auto&& usage,
-                                     Valuable<const SrcLoc&> auto&& src_loc){
+    auto setData(Valuable<const GLsizeiptr&> auto&& size,
+                 Valuable<const void*> auto&& data,
+                 Valuable<const GLenum&> auto&& usage,
+                 Valuable<const SrcLoc&> auto&& src_loc){
         return callMember<IsCtx, &Buffer::_setData>(size, data, usage, GetValuable(src_loc).add());
     }
 
     template<TState IsCtx>
-    Value<std::future<void>> clearData(Valuable<const GLenum&> auto&& internalformat,
-                                       Valuable<const GLenum&> auto&& format,
-                                       Valuable<const GLenum&> auto&& type,
-                                       Valuable<const void*> auto&& data,
-                                       Valuable<const SrcLoc&> auto&& src_loc){
+    auto clearData(Valuable<const GLenum&> auto&& internalformat,
+                   Valuable<const GLenum&> auto&& format,
+                   Valuable<const GLenum&> auto&& type,
+                   Valuable<const void*> auto&& data,
+                   Valuable<const SrcLoc&> auto&& src_loc){
         return callMember<IsCtx, &Buffer::_clearData>(internalformat, format, type, data, GetValuable(src_loc).add());
     }
 
     template<TState IsCtx>
-    Value<std::future<void>> setStorage(Valuable<const GLsizeiptr&> auto&& size,
-                                        Valuable<const void*> auto&& data,
-                                        Valuable<const GLbitfield&> auto&& flags,
-                                        Valuable<const SrcLoc&> auto&& src_loc){
+    auto setStorage(Valuable<const GLsizeiptr&> auto&& size,
+                    Valuable<const void*> auto&& data,
+                    Valuable<const GLbitfield&> auto&& flags,
+                    Valuable<const SrcLoc&> auto&& src_loc){
         return callMember<IsCtx, &Buffer::_setStorage>(size, data, flags, GetValuable(src_loc).add());
     }
 
@@ -103,11 +104,11 @@ public:
     //     return addCallGl<&GLapi::GetNamedBufferPointerv>(id(), pname, params, GetValuable(src_loc).add());
     // }
 
-    // template<TState IsCtx>
-    // Value<void*> map(Valuable<const GLenum&> auto&& access,
-    //                  Valuable<const SrcLoc&> auto&& src_loc){
-    //     return addCallGl<&GLapi::MapNamedBuffer>(id(), access, GetValuable(src_loc).add());
-    // }
+    template<TState IsCtx>
+    auto map(Valuable<const GLenum&> auto&& access,
+             Valuable<const SrcLoc&> auto&& src_loc){
+        return callMember<IsCtx, &Buffer::_map>(access, src_loc);
+    }
 
     // template<TState IsCtx>
     // Value<void*> mapRange(Valuable<const GLintptr&> auto&& offset,
@@ -150,10 +151,9 @@ public:
     }
 
 private:
-    Buffer(Valuable<Context&> auto&& ctx,
-           Valuable<const SrcLoc&> auto&& src_loc) :
-        Handler(ctx, &_Init, &_Free, src_loc){
-    }
+    Buffer(Context& ctx, const SrcLoc& src_loc, const IsCtxTrue& IsCtx);
+    Buffer(Context& ctx, const SrcLoc& src_loc, const IsCtxFalse& IsCtx);
+    Buffer(Context& ctx, const SrcLoc& src_loc, const IsCtxUnknown& IsCtx);
 
     EXPORT static GLuint _Init(Context& ctx, const SrcLoc& src_loc);
     EXPORT static void _Free(Context& ctx, const GLuint& id, const SrcLoc& src_loc);
@@ -161,6 +161,7 @@ private:
     EXPORT void _setData(Context& ctx, const GLsizeiptr& size, const void* data, const GLenum& usage, const SrcLoc& src_loc);
     EXPORT void _clearData(Context& ctx, const GLenum& internalformat, const GLenum& format, const GLenum& type, const void* data, const SrcLoc& src_loc);
     EXPORT void _setStorage(Context& ctx, const GLsizeiptr& size, const void* data, const GLbitfield& flags, const SrcLoc& src_loc);
+    EXPORT void* _map(Context& ctx, const GLenum& access, const SrcLoc& src_loc);
     EXPORT void _bindBase(Context& ctx, const GLenum target, const GLuint index, const SrcLoc src_loc);
 
     EXPORT GLint _getParameteriv(Context& ctx, const GLenum& pname, const SrcLoc& src_loc) const;

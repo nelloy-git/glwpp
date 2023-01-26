@@ -11,15 +11,6 @@
 
 namespace glwpp {
 
-class GLapi;
-
-class GLapiRef : public CtxObjRef<GLapi> {
-    GLapiRef(Valuable<Context&> auto&& ctx,
-              Valuable<const SrcLoc&> auto&& src_loc) :
-        CtxObjRef(ctx, src_loc){
-    }
-};
-
 class GLapi : public CtxObj<GLapi> {
 private:
     struct GLapiImpl;

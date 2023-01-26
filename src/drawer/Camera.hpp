@@ -13,7 +13,7 @@ public:
     Camera(const Camera& other) = default;
     virtual ~Camera();
 
-    GL::BufferStruct<glm::mat4> buffer;
+    Value<GL::BufferStruct<glm::mat4>> buffer;
 
     void apply();
     void applyLookAt(const glm::vec3& dst);

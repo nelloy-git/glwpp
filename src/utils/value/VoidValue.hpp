@@ -47,6 +47,11 @@ public:
         return _ptr.get();
     }
 
+    template<typename V>
+    Value<V> reinterpret() const {
+        return std::reinterpret_pointer_cast<V>(_ptr);
+    };
+
 protected:
     std::shared_ptr<void> _ptr;
 

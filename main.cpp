@@ -30,13 +30,15 @@ std::string read_file(const std::string& path){
 }
 
 auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
-    // glwpp::DrawerRef drawer(ctx, src_loc);
-    // drawer->on_shader_error = [](auto& drawer, const auto& err){
-    //     std::cout << "Msg: " << err.second.c_str() << std::endl;
-    //     return true;
-    // };
-    // drawer->setShader(glwpp::GLapi::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
-    // drawer->setShader(glwpp::GLapi::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
+    auto drawer = glwpp::Drawer::Make(ctx, src_loc);
+    drawer->on_shader_error.add<[](auto& drawer, const auto& err){
+        std::cout << "Msg: " << err.second.c_str() << std::endl;
+        return true;
+    }>(ctx.PRIORITY_DEFAULT, src_loc);
+    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
+    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
+
+    return drawer;
 }
 
 int main(int argc, char **argv){
@@ -55,7 +57,7 @@ int main(int argc, char **argv){
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
     ctx->gl().setMetricsCategory(gl_metrics);
 
-    // init_drawer(*ctx);
+    auto drawer = init_drawer(*ctx);
 
     // unsigned int id;
     // ctx->gl2().CreateBuffers<glwpp::TState::False>(1, &id, glwpp::SrcLoc{});

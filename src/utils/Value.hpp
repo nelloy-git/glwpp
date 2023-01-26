@@ -71,6 +71,12 @@ public:
     Value(T&& value);
 
     template<typename V>
+    Value(const std::shared_ptr<V>& ptr);
+
+    template<typename V>
+    Value(std::shared_ptr<V>&& ptr);
+
+    template<typename V>
     Value(const Value<V>& other);
 
     template<typename V>
@@ -124,6 +130,20 @@ Value<T>::Value(const T& value) :
 template<typename T>
 Value<T>::Value(T&& value) :
     _ptr(std::make_shared<T>(std::move(value))){
+}
+
+template<typename T>
+template<typename V>
+Value<T>::Value(const std::shared_ptr<V>& ptr) :
+    _ptr(ptr){
+    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
+}
+
+template<typename T>
+template<typename V>
+Value<T>::Value(std::shared_ptr<V>&& ptr) :
+    _ptr(std::move(ptr)){
+    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 template<typename T>
