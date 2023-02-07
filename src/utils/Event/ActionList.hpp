@@ -9,10 +9,10 @@ namespace glwpp::detail {
 template<typename ... Args>
 class EventActionQueue {
 public:
-    using ActionBase = typename EventActionBase<Args...>;
+    using ActionBase = EventActionBase<Args...>;
     template<auto F>
     using ActionConstexpr = EventAction<F, Args...>;
-    using ActionRuntime = typename EventAction<nullptr, Args...>;
+    using ActionRuntime = EventAction<nullptr, Args...>;
     
     using ID = ActionBase::ID;
 

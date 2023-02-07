@@ -181,7 +181,7 @@ void Context::_initGlfwWindow(){
         // {GLFW_VERSION_MAJOR, 3},
         // {GLFW_VERSION_MINOR, 0},
         {GLFW_CONTEXT_VERSION_MAJOR, 4},
-        {GLFW_CONTEXT_VERSION_MINOR, 6},
+        {GLFW_CONTEXT_VERSION_MINOR, 1},
         {GLFW_REFRESH_RATE, _config.fps},
         {GLFW_OPENGL_DEBUG_CONTEXT, true}
     };

@@ -15,7 +15,11 @@
                 "3rdparty/thread_pool",
                 "3rdparty/imgui"
             ],
-            "defines": ["GLWPP_DEBUG"],
+            "defines": [
+                "GLWPP_DEBUG",
+                "GLAD_GL_IMPLEMENTATION",
+                "__STDC_HOSTED__"
+            ],
             "compilerPath": "/usr/bin/g++",
             "cppStandard": "c++20"
         },

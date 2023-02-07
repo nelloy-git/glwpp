@@ -56,7 +56,7 @@ protected:
     std::shared_ptr<void> _ptr;
 
     Value(void* ptr) :
-        _ptr(ptr){};
+        _ptr(static_cast<char*>(ptr)){};
 
 };
 

@@ -3,6 +3,8 @@
 #endif
 
 #include <string>
+#include <sstream>
+#include <iostream>
 #include <fstream>
 #include <streambuf>
 

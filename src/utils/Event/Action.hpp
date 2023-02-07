@@ -1,6 +1,7 @@
 #pragma once
 
-#include "functional"
+#include <functional>
+#include <stdint.h>
 
 #include "utils/SrcLoc.hpp"
 
@@ -9,7 +10,7 @@ namespace glwpp::detail {
 template<typename... Args>
 class EventActionBase {
 public:
-    using ID = typename uint64_t;
+    using ID = uint64_t;
     using Func = std::function<bool(Args...)>;
 
     EventActionBase(const ID& id, const SrcLoc& src_loc) :

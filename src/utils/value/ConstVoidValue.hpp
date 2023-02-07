@@ -55,7 +55,7 @@ protected:
     std::shared_ptr<const void> _ptr;
 
     Value(const void* ptr) :
-        _ptr(ptr){};
+        _ptr(static_cast<const char*>(ptr)){};
 
 };
 

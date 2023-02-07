@@ -68,7 +68,7 @@ template<auto F, bool ignore_lock>
 Event<Args...>::ID Event<Args...>::add(const int& priority, const SrcLoc& src_loc){
     auto id = _getUniqId();
     _emitter.push_back<ignore_lock>([priority, id, src_loc, list = _list](){
-        list->add<F>(priority, id, src_loc);
+        list->template add<F>(priority, id, src_loc);
     });
     return id;
 }

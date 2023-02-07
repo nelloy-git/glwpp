@@ -13,7 +13,7 @@ public:
     using IsCtxFalse = CtxObj<T>::IsCtxFalse;
     using IsCtxUnknown = CtxObj<T>::IsCtxUnknown;
     template<TState IsCtx>
-    using IsCtxFlag = CtxObj<T>::IsCtxFlag<IsCtx>;
+    using IsCtxFlag = typename CtxObj<T>::IsCtxFlag<IsCtx>;
 
     using Init = std::function<GLuint(Context&, const SrcLoc&)>;
     using Free = std::function<void(Context&, const GLuint&, const SrcLoc&)>;
@@ -37,7 +37,7 @@ private:
         static constexpr auto F = [](Context& ctx, GLuint& id, const Init& init, const SrcLoc& src_loc){
             id = init(ctx, src_loc);
         };
-        this->call<IsCtx>(F, _id, init, src_loc);
+        this->template call<IsCtx>(F, _id, init, src_loc);
     }
 
     static constexpr auto _GetDeleter(Context& ctx, const Free& free, const SrcLoc& src_loc){

@@ -130,7 +130,7 @@ inline auto CtxObj<T>::call(F&& func, Args&&... args) const {
         if (std::this_thread::get_id() == _ctx_thread_id){
             std::promise<R> promise;
             _FillPromise(promise, *_p_ctx, std::forward<F>(func), std::forward<Args>(args)...);
-            return Value(std::move(promise.get_future()));
+            return Value<std::future<R>>(std::move(promise.get_future()));
         } else {
             return _callIndirect(std::forward<F>(func), std::forward<Args>(args)...);
         }
@@ -182,7 +182,7 @@ inline auto CtxObj<T>::_callIndirect(F&& func, Args&&... args) const {
         auto promise = std::make_shared<std::promise<R>>();
         auto future = promise->get_future();
         ctx->event_on_run_gl.add(Context::PRIORITY_DEFAULT,
-            [promise, func, ...args = Value(std::forward<Args>(args))](Context& ctx, const Context::time&){
+            [promise, func, ...args = Value<typename GetValuableT<Args>::type>(std::forward<Args>(args))](Context& ctx, const Context::time&){
                 _FillPromise(*promise, ctx, func, GetValuable(args)...);
                 return false;
             }, SrcLoc{}
@@ -193,7 +193,7 @@ inline auto CtxObj<T>::_callIndirect(F&& func, Args&&... args) const {
         auto promise = std::make_shared<std::promise<R>>();
         auto future = promise->get_future();
         ctx->event_on_run_gl.add(Context::PRIORITY_DEFAULT,
-            [promise, func, ...args = Value(std::forward<Args>(args))](Context& ctx, const Context::time&){
+            [promise, func, ...args = Value<typename GetValuableT<Args>::type>(std::forward<Args>(args))](Context& ctx, const Context::time&){
                 _FillPromise(*promise, ctx, func, GetValuable(args)...);
                 return false;
             }, SrcLoc{}

@@ -10,10 +10,10 @@ template<typename T>
 class BufferStruct final : public CtxObj<BufferStruct<T>> {
 public:
     static auto Make(Valuable<Context&> auto&& ctx,
-                                       Valuable<const T&> auto&& initial,
-                                       Valuable<const SrcLoc&> auto&& src_loc){
+                     Valuable<const T&> auto&& initial,
+                     Valuable<const SrcLoc&> auto&& src_loc){
         auto obj = Value<BufferStruct<T>>::Make(new BufferStruct<T>(ctx, src_loc));
-        obj->callMember<TState::Unknown, &BufferStruct<T>::_init>(initial, src_loc);
+        obj->template callMember<TState::Unknown, &BufferStruct<T>::_init>(initial, src_loc);
         return obj;
     }
     ~BufferStruct(){};
@@ -24,12 +24,12 @@ public:
 
     template<TState IsCtx>
     auto getValue() const {
-        return this->callMember<IsCtx, &BufferStruct::_getValue>();
+        return this->template callMember<IsCtx, &BufferStruct::_getValue>();
     }
 
     template<TState IsCtx>
     auto setValue(Valuable<const T&> auto&& value){
-        return this->callMember<IsCtx, &BufferStruct::_setValue>(value);
+        return this->template callMember<IsCtx, &BufferStruct::_setValue>(value);
     }
 
     BufferStruct(Valuable<Context&> auto&& ctx,

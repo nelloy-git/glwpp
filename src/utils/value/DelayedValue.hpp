@@ -86,10 +86,10 @@ public:
         std::get<0>(*_ptr).wait();
     }
 
-    template<typename _Rep, typename _Period = std::ratio<1i64, 1i64>>
+    template<typename _Rep, typename _Period = std::ratio<1, 1>>
     inline std::future_status wait_for(const std::chrono::duration<_Rep, _Period>& timeout) const {
         std::lock_guard lg(*_lock);
-        if (_ptr->index() == 1){return;}
+        if (_ptr->index() == 1){return std::future_status::ready;}
         return std::get<0>(*_ptr).wait_for(timeout);
     }
 

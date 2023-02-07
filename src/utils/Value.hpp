@@ -53,6 +53,49 @@ static inline decltype(auto) GetValuable(T&& val){
 }
 
 template<typename T>
+struct GetValuableT {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<Value<T>> {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<Value<T>&> {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<Value<T>&&> {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<const Value<T>> {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<const Value<T>&> {
+    using type = std::remove_reference_t<T>;
+};
+
+template<typename T>
+struct GetValuableT<const Value<T>&&> {
+    using type = std::remove_reference_t<T>;
+};
+
+using VT = Value<typename GetValuableT<Value<unsigned int>&>::type>;
+
+// template<typename T, std::enable_if_t<detail::is_instance_v<std::remove_reference_t<T>, Value>, bool> = true>
+// using GetValuableT = typename std::remove_reference_t<T>::type;
+
+// template<typename T, std::enable_if_t<!detail::is_instance_v<std::remove_reference_t<T>, Value>, bool> = true>
+// using GetValuableT = typename std::remove_reference_t<T>;
+
+template<typename T>
 class Value {
     template<typename U>
     friend class Value;
@@ -60,12 +103,15 @@ class Value {
     static_assert(!detail::is_value_v<T>, "Value<Value<...>> is not allowed");
 
 public:
-    using type = typename T;
+    using type = T;
 
     static Value<T> Make(T* ptr);
     template<typename D>
     static Value<T> Make(T* ptr, D&& del);
     static Value<T> Make(auto&&... args);
+
+    // Value(T) = delete;
+    // Value(const T) = delete;
 
     Value(const T& value);
     Value(T&& value);

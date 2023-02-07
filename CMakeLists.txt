@@ -13,7 +13,7 @@ add_compile_definitions(IMGUI_IMPL_OPENGL_DEBUG)
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /WX /D_DEBUG /DEBUG:FULL /std:c++latest")
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++23 -fconcepts -pthread")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++23 -fconcepts -pthread -fmax-errors=1")
 endif (WIN32)
 
 include_directories(./src)

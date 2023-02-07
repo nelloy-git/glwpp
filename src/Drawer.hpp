@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "context/CtxObj.hpp"
 
 #include "gl_object/Buffer.hpp"

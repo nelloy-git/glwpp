@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <optional>
 
 #include "Context.hpp"
 #include "model/MeshAttributeContainer.hpp"
@@ -23,16 +24,16 @@ public:
                             Valuable<const aiMesh&> auto&& ai_mesh,
                             Valuable<const SrcLoc&> auto&& src_loc){
         auto mesh = Value<Mesh>::Make(new Mesh(GetValuable(ctx), GetValuable(ai_mesh), GetValuable(src_loc)));
-        mesh->init();
+        mesh->_init(GetValuable(ctx), GetValuable(ai_mesh), GetValuable(src_loc));
         return mesh;
     }
     virtual ~Mesh();
 
     Value<std::optional<const GLuint>> getAttributeBinding() const;
-    template<IsGlThread is_gl = IsGlThread::Unknown>
-    Value<std::future<void>> setAttributeBinding(Valuable<const GLuint&> auto&& binding){
+    // template<IsGlThread is_gl = IsGlThread::Unknown>
+    // Value<std::future<void>> setAttributeBinding(Valuable<const GLuint&> auto&& binding){
 
-    }
+    // }
 
     // Value<const Bindings> getBindings() const {
     //     callMember
