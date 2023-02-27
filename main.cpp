@@ -37,8 +37,10 @@ auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcL
         std::cout << "Msg: " << err.second.c_str() << std::endl;
         return true;
     }>(ctx.PRIORITY_DEFAULT, src_loc);
-    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc);
-    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc);
+    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("/home/nelloy/glwpp/shaders/vertex_3d.vs"), src_loc.add());
+    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("/home/nelloy/glwpp/shaders/vertex_3d.fs"), src_loc.add());
+    // drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc.add());
+    // drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc.add());
 
     return drawer;
 }
@@ -60,13 +62,6 @@ int main(int argc, char **argv){
     ctx->gl().setMetricsCategory(gl_metrics);
 
     auto drawer = init_drawer(*ctx);
-
-    // unsigned int id;
-    // ctx->gl2().CreateBuffers<glwpp::TState::False>(1, &id, glwpp::SrcLoc{});
-
-    // glwpp
-
-    // glwpp::GL::Buffer buffer(*ctx, glwpp::SrcLoc{});
 
 #ifdef WIN32
     glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");

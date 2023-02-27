@@ -1,4 +1,4 @@
-#version 460 core
+#version 420 core
 
 const int vPosN = 0;
 const int vTexN = 1;
