@@ -83,31 +83,33 @@ void Mesh::_initAttributes(Context& ctx, const aiMesh& ai_mesh, const SrcLoc& sr
     if (ai_mesh.HasPositions()){
         _initAttribute(ctx, Type::Position, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mVertices, src_loc), src_loc);
     }
-    if (ai_mesh.HasNormals()){
-        attributes[Type::Normal] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mNormals, src_loc);
-    }
-    if (ai_mesh.HasTangentsAndBitangents()){
-        attributes[Type::Tangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTangents, src_loc);
-        attributes[Type::Bitangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mBitangents, src_loc);
-    }
+    // if (ai_mesh.HasNormals()){
+    //     attributes[Type::Normal] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mNormals, src_loc);
+    // }
+    // if (ai_mesh.HasTangentsAndBitangents()){
+    //     attributes[Type::Tangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTangents, src_loc);
+    //     attributes[Type::Bitangent] = MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mBitangents, src_loc);
+    // }
 
-    for (unsigned int i = 0; i < attributes.textures(); ++i){
-        if (ai_mesh.HasTextureCoords(i)){
-            attributes.setTexture(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTextureCoords[i], src_loc));
-        }
-    }
+    // for (unsigned int i = 0; i < attributes.textures(); ++i){
+    //     if (ai_mesh.HasTextureCoords(i)){
+    //         attributes.setTexture(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mTextureCoords[i], src_loc));
+    //     }
+    // }
 
-    for (unsigned int i = 0; i < attributes.textures(); ++i){
-        if (ai_mesh.HasVertexColors(i)){
-            attributes.setColor(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mColors[i], src_loc));
-        }
-    }
+    // for (unsigned int i = 0; i < attributes.textures(); ++i){
+    //     if (ai_mesh.HasVertexColors(i)){
+    //         attributes.setColor(i, MeshAttribute::Make(ctx, ai_mesh.mNumVertices, ai_mesh.mColors[i], src_loc));
+    //     }
+    // }
 }
 
 void Mesh::_initAttribute(Context& ctx, const MeshAttributeType& type, const Value<MeshAttribute>& attrib, const SrcLoc& src_loc){
     attributes[type] = attrib;
-    vao->setVertexBuffer<TState::Unknown>(INDEX[type], attrib->buffer, 0, attrib->stride, src_loc);
-    vao->setAttribFormat<TState::Unknown>(INDEX[type], attrib->components, static_cast<GLenum>(attrib->type), attrib->normalized, 0, src_loc);
+    vao->setVertexBuffer<TState::Unknown>(INDEX[type], attrib->buffer, 0, attrib->stride, src_loc.add());
+    vao->setAttribBinding<TState::Unknown>(INDEX[type], INDEX[type], src_loc.add());
+    vao->setAttribFormat<TState::Unknown>(INDEX[type], attrib->components, static_cast<GLenum>(attrib->type), attrib->normalized, 0, src_loc.add());
+    vao->enableAttrib<TState::Unknown>(INDEX[type], src_loc.add());
 }
 
 void Mesh::_setBindingsGL(Context& ctx, GL::VertexArray& vao, Bindings& cur_bindings, const Bindings& trg_bindings, const SrcLoc& src_loc){

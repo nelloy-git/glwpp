@@ -184,7 +184,7 @@ void Context::_initGlfwWindow(){
         {GLFW_CONTEXT_VERSION_MINOR, 1},
         {GLFW_REFRESH_RATE, _config.fps},
         {GLFW_OPENGL_DEBUG_CONTEXT, true}
-    };
+};
 
     for (auto& hint : hints){
         glfwWindowHint(hint.first, hint.second);

@@ -8,6 +8,8 @@
 #include <fstream>
 #include <streambuf>
 
+#include <filesystem>
+
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
@@ -31,14 +33,21 @@ std::string read_file(const std::string& path){
     return buffer.str();
 }
 
-auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
+auto init_drawer(glwpp::Context& ctx,
+                 const std::string& vert_path,
+                 const std::string& frag_path,
+                 const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
     auto drawer = glwpp::Drawer::Make(ctx, src_loc);
     drawer->on_shader_error.add<[](auto& drawer, const auto& err){
         std::cout << "Msg: " << err.second.c_str() << std::endl;
         return true;
     }>(ctx.PRIORITY_DEFAULT, src_loc);
-    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("/home/nelloy/glwpp/shaders/vertex_3d.vs"), src_loc.add());
-    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("/home/nelloy/glwpp/shaders/vertex_3d.fs"), src_loc.add());
+    
+    std::cout << "vert: " << vert_path.c_str() << std::endl;
+    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file(vert_path), src_loc.add());
+
+    std::cout << "frag: " << frag_path.c_str() << std::endl;
+    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file(frag_path), src_loc.add());
     // drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc.add());
     // drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc.add());
 
@@ -46,6 +55,29 @@ auto init_drawer(glwpp::Context& ctx, const glwpp::SrcLoc& src_loc = glwpp::SrcL
 }
 
 int main(int argc, char **argv){
+    std::vector<std::string> args;
+    for (int i = 0; i < argc; ++i){
+        std::cout << argv[i] << "...";
+        args.push_back(argv[i]);
+    }
+    std::cout << std::endl;
+
+    std::string vert_path;
+    for (int i = 0; i < argc; ++i){
+        if (args[i] == "-vert"){
+            vert_path = args[i+1];
+            break;
+        }
+    }
+
+    std::string frag_path;
+    for (int i = 0; i < argc; ++i){
+        if (args[i] == "-frag"){
+            frag_path = args[i+1];
+            break;
+        }
+    }
+
     glwpp::Context::Config ctx_params;
     ctx_params.width = 1280;
     ctx_params.height = 1024;
@@ -61,7 +93,7 @@ int main(int argc, char **argv){
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
     ctx->gl().setMetricsCategory(gl_metrics);
 
-    auto drawer = init_drawer(*ctx);
+    auto drawer = init_drawer(*ctx, vert_path, frag_path);
 
 #ifdef WIN32
     glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");

@@ -25,6 +25,9 @@ public:
     GLapi(Context& ctx);
     virtual ~GLapi();
 
+    int VersionMajor() const {return _version_major;};
+    int VersionMinor() const {return _version_minor;};
+
     template<TState IsCtx> inline auto loadGladGLContext(GLADloadfunc load){return callMember<IsCtx, &GLapi::_loadGladGLContext>(load);}
 
     EXPORT const SrcLoc& getLastSrcLoc() const;
@@ -1080,6 +1083,9 @@ public:
     template<TState IsCtx> inline auto WindowPos3sv(const auto&&... args) const {return callMember<IsCtx, &GLapi::_WindowPos3sv>(std::forward<decltype(args)>(args)...);}
 
 private:
+    int _version_major;
+    int _version_minor;
+
     EXPORT int _loadGladGLContext(GLADloadfunc load);
 
     EXPORT void _Accum(GLenum op, GLfloat value, const SrcLoc& src_loc) const;

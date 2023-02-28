@@ -5,7 +5,13 @@ using namespace glwpp::GL;
 
 GLuint VertexArray::_Init(Context& ctx, const SrcLoc& src_loc){
     GLuint id;
-    ctx.gl().CreateVertexArrays<TState::True>(1, &id, src_loc);
+
+    if (ctx.gl().VersionMajor() >= 4 && ctx.gl().VersionMinor() >= 5){
+        ctx.gl().CreateVertexArrays<TState::True>(1, &id, src_loc);
+    } else {
+        ctx.gl().GenVertexArrays<TState::True>(1, &id, src_loc);
+    }
+    
     return id;
 }
 
@@ -20,6 +26,11 @@ void VertexArray::_enableAttrib(Context& ctx, const GLuint& index, const SrcLoc&
 
 void VertexArray::_disableAttrib(Context& ctx, const GLuint& index, const SrcLoc& src_loc){
     ctx.gl().DisableVertexArrayAttrib<TState::True>(*id(), index, src_loc);
+}
+
+void VertexArray::_setVertexAttribPointer(Context& ctx, GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer, const SrcLoc& src_loc){
+    ctx.gl().BindVertexArray<TState::True>(id().value(), src_loc);
+    ctx.gl().VertexAttribPointer<TState::True>(index, size, type, normalized, stride, pointer, src_loc);
 }
 
 void VertexArray::_setAttribBinding(Context& ctx, const GLuint& index, const GLuint& binding, const SrcLoc& src_loc){

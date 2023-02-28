@@ -24,8 +24,14 @@ MeshIndices::MeshIndices(Context& ctx, const unsigned int& mNumFaces, const aiFa
         memcpy(data_ptr, face.mIndices, face_size);
         data_ptr += face_size;
     }
-    auto p = buffer->shared_from_this();
-    buffer->setStorage<TState::Unknown>(buffer_size, data_copy, 0, src_loc.add());
+
+    if (ctx.gl().VersionMajor() >= 4 && ctx.gl().VersionMinor() >= 4){
+        buffer->setStorage<TState::Unknown>(buffer_size, data_copy, 0, src_loc.add());
+    } else {
+        buffer->setData<TState::Unknown>(buffer_size, data_copy, GL_DYNAMIC_DRAW, src_loc.add());
+    }
+
+    
 }    
     
 MeshIndices::~MeshIndices(){

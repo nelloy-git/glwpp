@@ -24,7 +24,13 @@ Buffer::Buffer(Context& ctx,
 
 GLuint Buffer::_Init(Context& ctx, const SrcLoc& src_loc){
     GLuint id;
-    ctx.gl().CreateBuffers<TState::True>(1, &id, src_loc);
+
+    if (ctx.gl().VersionMajor() >= 4 && ctx.gl().VersionMinor() >= 5){
+        ctx.gl().CreateBuffers<TState::True>(1, &id, src_loc);
+    } else {
+        ctx.gl().GenBuffers<TState::True>(1, &id, src_loc);
+    }
+
     return id;
 }
 
@@ -33,7 +39,12 @@ void Buffer::_Free(Context& ctx, const GLuint& id, const SrcLoc& src_loc){
 }
 
 void Buffer::_setData(Context& ctx, const GLsizeiptr& size, const void* data, const GLenum& usage, const SrcLoc& src_loc){
-    ctx.gl().NamedBufferData<TState::True>(id().value(), size, data, usage, src_loc);
+    if (ctx.gl().VersionMajor() >= 4 && ctx.gl().VersionMinor() >= 5){
+        ctx.gl().NamedBufferData<TState::True>(id().value(), size, data, usage, src_loc);
+    } else {
+        ctx.gl().BindBuffer<TState::True>(GL_ARRAY_BUFFER, id().value(), src_loc);
+        ctx.gl().BufferData<TState::True>(GL_ARRAY_BUFFER, size, data, usage, src_loc);
+    }
 }
 
 void Buffer::_clearData(Context& ctx, const GLenum& internalformat, const GLenum& format, const GLenum& type, const void* data, const SrcLoc& src_loc){
@@ -41,7 +52,12 @@ void Buffer::_clearData(Context& ctx, const GLenum& internalformat, const GLenum
 }
 
 void Buffer::_setStorage(Context& ctx, const GLsizeiptr& size, const void* data, const GLbitfield& flags, const SrcLoc& src_loc){
-    ctx.gl().NamedBufferStorage<TState::True>(id().value(), size, data, flags, src_loc);
+    if (ctx.gl().VersionMajor() >= 4 && ctx.gl().VersionMinor() >= 5){
+        ctx.gl().NamedBufferStorage<TState::True>(id().value(), size, data, flags, src_loc);
+    } else {
+        ctx.gl().BindBuffer<TState::True>(GL_ARRAY_BUFFER, id().value(), src_loc);
+        ctx.gl().BufferStorage<TState::True>(GL_ARRAY_BUFFER, size, data, flags, src_loc);
+    }
 }
 
 void* Buffer::_map(Context& ctx, const GLenum& access, const SrcLoc& src_loc){

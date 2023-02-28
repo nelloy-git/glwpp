@@ -21,7 +21,15 @@ auto GLapi::_implCall(const SrcLoc& src_loc, const std::string_view& name, auto&
     //     std::cout << std::endl;
     // }
 
-    return (_impl.get()->*M)(std::forward<decltype(args)>(args)...);
+    if (_impl.get()->*M == nullptr){
+        std::string err(name);
+        err += std::string(": is not available\n") + src_loc.to_string_full() + std::string("\n");
+        
+        std::cout << err.c_str() << std::endl;
+        throw std::runtime_error(err);
+    } else {
+        return (_impl.get()->*M)(std::forward<decltype(args)>(args)...);
+    }    
 }
 
 GLapi::GLapi(Context& ctx) :
@@ -34,7 +42,10 @@ GLapi::~GLapi(){
 }
 
 int GLapi::_loadGladGLContext(GLADloadfunc load){
-    return gladLoadGLContext(_impl.get(), load);
+    auto ver = gladLoadGLContext(_impl.get(), load);
+    _version_major = ver / 10000;
+    _version_minor = ver - _version_major * 10000;
+    return ver;
 }
 
 const SrcLoc& GLapi::getLastSrcLoc() const {

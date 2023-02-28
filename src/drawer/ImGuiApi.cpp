@@ -42,7 +42,7 @@ void ImGuiApi::_End(){
 }
 
 void ImGuiApi::_Text(const std::string& text){
-    ImGui::Text(text.c_str());
+    ImGui::Text("%s", text.c_str());
 }
 
 void ImGuiApi::_InitImguiBackendGL(Context& ctx){
