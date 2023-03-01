@@ -45,6 +45,10 @@ void ImGuiApi::_Text(const std::string& text){
     ImGui::Text("%s", text.c_str());
 }
 
+void ImGuiApi::_ShowDemo(bool* p_open){
+    ImGui::ShowDemoWindow(p_open);
+}
+
 void ImGuiApi::_InitImguiBackendGL(Context& ctx){
     if (_GetInstancesInContext() > 1){  
         return;

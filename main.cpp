@@ -87,39 +87,30 @@ int main(int argc, char **argv){
     auto ctx = glwpp::Context::Make(ctx_params);
     auto imgui = glwpp::ImGuiApi::Make(*ctx);
     glwpp::Value<std::string> name("Metrics");
-    glwpp::Value<bool> opened(true);
+    glwpp::Value<bool*> opened(new bool(true));
     glwpp::Value<int> flags(0);
     
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
     ctx->gl().setMetricsCategory(gl_metrics);
 
-    auto drawer = init_drawer(*ctx, vert_path, frag_path);
-
-#ifdef WIN32
-    glwpp::Model book_model(*ctx, "D:\\projects\\Engine\\3rdparty\\glwpp\\test\\models\\book\\scene.gltf");
-#else
-    glwpp::Model book_model(*ctx, "/home/sbugrov/glwpp/test/models/book/scene.gltf");
-#endif
-
-    if (book_model.loading_error.has_value()){
-        std::cout << book_model.loading_error.value().c_str() << std::endl;
-    }
+    // auto drawer = init_drawer(*ctx, vert_path, frag_path);
 
     bool done = false;
-    size_t i = 0;
-    while(i < 3000){
-        ++i;
+    while(*opened.value()){
         auto run_future = ctx->run();
 
-        if (*opened){
+        if (*opened.value()){
             imgui->NewFrame<glwpp::TState::False>();
-            imgui->Begin<glwpp::TState::False>(name, opened.get(), flags);
+            imgui->Begin<glwpp::TState::False>(name, opened, flags);
             auto all_names = gl_metrics->getAllNames();
             std::sort(all_names.begin(), all_names.end());
             for (auto& name : all_names){
                 imgui->Text<glwpp::TState::False>(name + std::string(": ") + std::to_string((*gl_metrics)[name].getTotal().first));
             }
             imgui->End<glwpp::TState::False>();
+
+            imgui->ShowDemo<glwpp::TState::False>(opened);
+
             imgui->Render<glwpp::TState::False>();
         }
     

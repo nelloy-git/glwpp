@@ -42,6 +42,11 @@ public:
         return callMember<IsCtx, &ImGuiApi::_Text>(text);
     }
 
+    template<TState IsCtx>
+    auto ShowDemo(Valuable<bool*> auto&& p_open){
+        return callMember<IsCtx, &ImGuiApi::_ShowDemo>(p_open);
+    }
+
 private:
     EXPORT ImGuiApi(Context& ctx);
 
@@ -50,6 +55,7 @@ private:
     EXPORT bool _Begin(const std::string& name, bool* p_open, int& flags);
     EXPORT void _End();
     EXPORT void _Text(const std::string& text);
+    EXPORT void _ShowDemo(bool* p_open);
 
     EXPORT static void _InitImguiBackendGL(Context& ctx);
     EXPORT static void _ShutdownImguiBackendGL();
