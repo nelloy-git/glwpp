@@ -4,7 +4,7 @@
 namespace glwpp {
 
 template<typename T>
-class CtxWrapper final : public std::enable_shared_from_this<CtxWrapper<T>> {
+class CtxWrapper final {
 public:
     template<bool IsCtx, typename ... Args>
     static Ref<CtxWrapper<T>> Make(Context& ctx, Args&&... args){
@@ -23,20 +23,20 @@ public:
 
     template<bool IsCtx, auto T::*M, typename... Args>
     auto member(Args&&... args){
-        constexpr auto func = [](Context& ctx, const std::shared_ptr<CtxWrapper<T>>& wrapper, auto&&... args){
+        constexpr auto func = [](Context& ctx, const Ref<CtxWrapper<T>>& wrapper, auto&&... args){
             T* raw_ptr = wrapper->_ptr.get();
             (raw_ptr->*M)(std::forward<decltype(args)>(args)...);
         };
-        _exec.call<IsCtx>(func, this->shared_from_this(), std::forward<Args>(args)...);
+        return _exec.call<IsCtx>(func, _self.lock(), std::forward<Args>(args)...);
     }
 
     template<bool IsCtx, auto T::*M, typename... Args>
     auto memberCtx(Args&&... args){
-        constexpr auto func = [](Context& ctx, const std::shared_ptr<CtxWrapper<T>>& wrapper, auto&&... args){
+        constexpr auto func = [](Context& ctx, const Ref<CtxWrapper<T>>& wrapper, auto&&... args){
             T* raw_ptr = wrapper->_ptr.get();
             (raw_ptr->*M)(ctx, std::forward<decltype(args)>(args)...);
         };
-        _exec.call<IsCtx>(func, this->shared_from_this(), std::forward<Args>(args)...);
+        return _exec.call<IsCtx>(func, _self.lock(), std::forward<Args>(args)...);
     }
 
 protected:

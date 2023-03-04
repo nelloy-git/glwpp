@@ -91,7 +91,7 @@ inline decltype(auto) CtxExec::CallIndirect(Context& ctx, F&& func, Args&&... ar
 
     auto promise = std::make_shared<std::promise<ResT>>();
     ctx.event_on_run_gl.add(Context::PRIORITY_DEFAULT,
-        [promise = std::move(promise), func, ...args = Ref(std::forward<Args>(args))](Context& ctx, const Context::time&){
+        [promise = promise, func, ...args = Ref(std::forward<Args>(args))](Context& ctx, const Context::time&){
             if constexpr (std::is_same_v<ResT, void>){
                 CallDirect(ctx, func, args...);
                 promise->set_value();

@@ -105,10 +105,11 @@ int main(int argc, char **argv){
     auto test_menu = glwpp::test::Menu::Make(*ctx);
 
 
-    const glwpp::Ref<ImGuiFileBrowserFlags> fb_flags(0);
-    auto file_browser = glwpp::CtxWrapper<ImGui::FileBrowser>::Make<false>(*ctx, fb_flags); // = std::make_shared<glwpp::CtxWrapper<ImGui::FileBrowser>>(*ctx);
+    const glwpp::Ref<unsigned int> fb_flags(0);
+    auto file_browser = glwpp::CtxWrapper<ImGui::FileBrowser>::Make<false>(*ctx, fb_flags);
+    auto file_browser2 = file_browser;
     // wrapped->init<false>(fb_flags);
-    file_browser->member<false, &ImGui::FileBrowser::Open>();
+    file_browser2->member<false, &ImGui::FileBrowser::Open>();
     // file_browser->callWrapped<glwpp::TState::False, &ImGui::FileBrowser::Open>();
 
     using t = glwpp::GetValuableT<decltype(fb_flags)>::type;
