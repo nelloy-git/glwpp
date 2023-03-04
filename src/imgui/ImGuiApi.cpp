@@ -1,4 +1,4 @@
-#include "drawer/ImGuiApi.hpp"
+#include "imgui/ImGuiApi.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -22,6 +22,10 @@ ImGuiApi::~ImGuiApi(){
     // call<TState::Unknown>(&_ShutdownImguiBackendGL);
 }
 
+void ImGuiApi::_ShowDemo(bool& p_open){
+    ImGui::ShowDemoWindow(&p_open);
+}
+
 void ImGuiApi::_NewFrame(){
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -33,8 +37,8 @@ void ImGuiApi::_Render(){
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-bool ImGuiApi::_Begin(const std::string& name, bool* p_open, int& flags){
-    return ImGui::Begin(name.c_str(), p_open, flags);
+bool ImGuiApi::_Begin(const std::string& name, bool& p_open, int& flags){
+    return ImGui::Begin(name.c_str(), &p_open, flags);
 }
 
 void ImGuiApi::_End(){
@@ -45,12 +49,24 @@ void ImGuiApi::_Text(const std::string& text){
     ImGui::Text("%s", text.c_str());
 }
 
-void ImGuiApi::_ShowDemo(bool* p_open){
-    ImGui::ShowDemoWindow(p_open);
+bool ImGuiApi::_Button(const std::string& label, const float& w, const float& h){
+    return ImGui::Button(label.c_str(), {w, h});
+}
+
+void ImGuiApi::_SameLine(){
+    ImGui::SameLine();
+}
+
+void ImGuiApi::_PushID(const int& id){
+    ImGui::PushID(id);
+}
+
+void ImGuiApi::_PopID(){
+    ImGui::PopID();
 }
 
 void ImGuiApi::_InitImguiBackendGL(Context& ctx){
-    if (_GetInstancesInContext() > 1){  
+    if (_GetInstancesInContext() >= 1){  
         return;
     }
 

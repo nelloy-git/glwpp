@@ -7,7 +7,7 @@
 #include "gl_object/Buffer.hpp"
 #include "gl_object/Program.hpp"
 
-namespace glwpp {
+namespace glwpp::test {
 
 class Drawer : public CtxObj<Drawer> {
 public:

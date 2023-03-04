@@ -29,6 +29,7 @@ link_directories(./3rdparty/VLD/lib/Win64)
 include_directories(./3rdparty/freetype/include)
 include_directories(3rdparty/imgui)
 include_directories(3rdparty/imgui/backends)
+include_directories(3rdparty/imgui-filebrowser)
 
 enable_testing()
 

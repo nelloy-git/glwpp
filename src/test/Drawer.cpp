@@ -5,6 +5,7 @@
 // #include "utils/value/ContainerPtr.hpp"
 
 using namespace glwpp;
+using namespace glwpp::test;
 
 Drawer::Drawer(Context& ctx, const SrcLoc& src_loc) :
     CtxObj<Drawer>(ctx),

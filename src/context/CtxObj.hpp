@@ -125,14 +125,27 @@ inline auto CtxObj<T>::call(F&& func, Args&&... args) const {
     }
 
     if constexpr (IsCtx == TState::Unknown){
-        using R = ResWithCtx<F, Args...>;
+        constexpr bool need_context = std::is_invocable_v<F, Context&, decltype(GetValuable(std::forward<decltype(args)>(args)))...>;
+        if constexpr (need_context){
+            using R = ResWithCtx<F, Args...>;
 
-        if (std::this_thread::get_id() == _ctx_thread_id){
-            std::promise<R> promise;
-            _FillPromise(promise, *_p_ctx, std::forward<F>(func), std::forward<Args>(args)...);
-            return Value<std::future<R>>(std::move(promise.get_future()));
+            if (std::this_thread::get_id() == _ctx_thread_id){
+                std::promise<R> promise;
+                _FillPromise(promise, *_p_ctx, std::forward<F>(func), std::forward<Args>(args)...);
+                return Value<std::future<R>>(std::move(promise.get_future()));
+            } else {
+                return _callIndirect(std::forward<F>(func), std::forward<Args>(args)...);
+            }
         } else {
-            return _callIndirect(std::forward<F>(func), std::forward<Args>(args)...);
+            using R = ResNoCtx<F, Args...>;
+
+            if (std::this_thread::get_id() == _ctx_thread_id){
+                std::promise<R> promise;
+                _FillPromise(promise, *_p_ctx, std::forward<F>(func), std::forward<Args>(args)...);
+                return Value<std::future<R>>(std::move(promise.get_future()));
+            } else {
+                return _callIndirect(std::forward<F>(func), std::forward<Args>(args)...);
+            }
         }
     }
 }

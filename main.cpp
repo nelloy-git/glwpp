@@ -15,16 +15,23 @@
 
 #include "Context.hpp"
 #include "model/Model.hpp"
-#include "Drawer.hpp"
+// #include "Drawer.hpp"
 
 #include "gl_object/Buffer.hpp"
 #include "gl_object/Program.hpp"
 #include "gl_object/Shader.hpp"
 // #include "gl_object/BufferVector.hpp"
 
-#include "drawer/ImGuiApi.hpp"
+#include "imgui/ImGuiApi.hpp"
+#include "imgui/FileBrowser.hpp"
+
+#include "test/TestMenu.hpp"
 
 #include "GLapi.hpp"
+
+#include "context/CtxWrapper.hpp"
+#include "imgui.h"
+#include "imfilebrowser.h"
 
 std::string read_file(const std::string& path){
     std::ifstream t(path);
@@ -33,26 +40,26 @@ std::string read_file(const std::string& path){
     return buffer.str();
 }
 
-auto init_drawer(glwpp::Context& ctx,
-                 const std::string& vert_path,
-                 const std::string& frag_path,
-                 const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
-    auto drawer = glwpp::Drawer::Make(ctx, src_loc);
-    drawer->on_shader_error.add<[](auto& drawer, const auto& err){
-        std::cout << "Msg: " << err.second.c_str() << std::endl;
-        return true;
-    }>(ctx.PRIORITY_DEFAULT, src_loc);
+// auto init_drawer(glwpp::Context& ctx,
+//                  const std::string& vert_path,
+//                  const std::string& frag_path,
+//                  const glwpp::SrcLoc& src_loc = glwpp::SrcLoc{}){
+//     auto drawer = glwpp::Drawer::Make(ctx, src_loc);
+//     drawer->on_shader_error.add<[](auto& drawer, const auto& err){
+//         std::cout << "Msg: " << err.second.c_str() << std::endl;
+//         return true;
+//     }>(ctx.PRIORITY_DEFAULT, src_loc);
     
-    std::cout << "vert: " << vert_path.c_str() << std::endl;
-    drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file(vert_path), src_loc.add());
+//     std::cout << "vert: " << vert_path.c_str() << std::endl;
+//     drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file(vert_path), src_loc.add());
 
-    std::cout << "frag: " << frag_path.c_str() << std::endl;
-    drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file(frag_path), src_loc.add());
+//     std::cout << "frag: " << frag_path.c_str() << std::endl;
+//     drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file(frag_path), src_loc.add());
     // drawer->setShader(glwpp::GL_VERTEX_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.vs"), src_loc.add());
     // drawer->setShader(glwpp::GL_FRAGMENT_SHADER, read_file("D:\\projects\\Engine\\3rdparty\\glwpp\\shaders\\vertex_3d.fs"), src_loc.add());
 
-    return drawer;
-}
+//     return drawer;
+// }
 
 int main(int argc, char **argv){
     std::vector<std::string> args;
@@ -87,7 +94,7 @@ int main(int argc, char **argv){
     auto ctx = glwpp::Context::Make(ctx_params);
     auto imgui = glwpp::ImGuiApi::Make(*ctx);
     glwpp::Value<std::string> name("Metrics");
-    glwpp::Value<bool*> opened(new bool(true));
+    glwpp::Value<bool> opened(true);
     glwpp::Value<int> flags(0);
     
     auto gl_metrics = std::make_shared<glwpp::Metrics::Category>();
@@ -95,11 +102,22 @@ int main(int argc, char **argv){
 
     // auto drawer = init_drawer(*ctx, vert_path, frag_path);
 
+    auto test_menu = glwpp::test::Menu::Make(*ctx);
+
+
+    const glwpp::Ref<ImGuiFileBrowserFlags> fb_flags(0);
+    auto file_browser = glwpp::CtxWrapper<ImGui::FileBrowser>::Make<false>(*ctx, fb_flags); // = std::make_shared<glwpp::CtxWrapper<ImGui::FileBrowser>>(*ctx);
+    // wrapped->init<false>(fb_flags);
+    file_browser->member<false, &ImGui::FileBrowser::Open>();
+    // file_browser->callWrapped<glwpp::TState::False, &ImGui::FileBrowser::Open>();
+
+    using t = glwpp::GetValuableT<decltype(fb_flags)>::type;
+
     bool done = false;
-    while(*opened.value()){
+    while(opened.value()){
         auto run_future = ctx->run();
 
-        if (*opened.value()){
+        if (opened.value()){
             imgui->NewFrame<glwpp::TState::False>();
             imgui->Begin<glwpp::TState::False>(name, opened, flags);
             auto all_names = gl_metrics->getAllNames();
@@ -109,7 +127,10 @@ int main(int argc, char **argv){
             }
             imgui->End<glwpp::TState::False>();
 
+            file_browser->member<false, &ImGui::FileBrowser::Display>();
+
             imgui->ShowDemo<glwpp::TState::False>(opened);
+            test_menu->draw<glwpp::TState::False>();
 
             imgui->Render<glwpp::TState::False>();
         }
@@ -132,3 +153,5 @@ int main(int argc, char **argv){
         // std::cout << glwpp::Metrics::inst()["ImGui::Render"].getLast().value << std::endl;
     }
 }
+
+// MESA_GL_VERSION_OVERRIDE=4.6 ./glwpp_test -vert ../shaders/vertex_3d.vs -frag ../shaders/vertex_3d.fs

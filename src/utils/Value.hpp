@@ -89,12 +89,6 @@ struct GetValuableT<const Value<T>&&> {
 
 using VT = Value<typename GetValuableT<Value<unsigned int>&>::type>;
 
-// template<typename T, std::enable_if_t<detail::is_instance_v<std::remove_reference_t<T>, Value>, bool> = true>
-// using GetValuableT = typename std::remove_reference_t<T>::type;
-
-// template<typename T, std::enable_if_t<!detail::is_instance_v<std::remove_reference_t<T>, Value>, bool> = true>
-// using GetValuableT = typename std::remove_reference_t<T>;
-
 template<typename T>
 class Value {
     template<typename U>
@@ -105,6 +99,7 @@ class Value {
 public:
     using type = T;
 
+    static Value<T> Make(nullptr_t);
     static Value<T> Make(T* ptr);
     template<typename D>
     static Value<T> Make(T* ptr, D&& del);
@@ -132,6 +127,8 @@ public:
     virtual inline T& operator*() const;
     virtual inline T* get() const;
     virtual inline T* operator->() const;
+    virtual inline std::shared_ptr<T>& shared();
+    virtual inline const std::shared_ptr<T>& shared() const;
 
     template<typename V>
     Value<V> reinterpret();
@@ -151,6 +148,11 @@ protected:
 };
 
 // =============================================
+
+template<typename T>
+Value<T> Value<T>::Make(nullptr_t){
+    return Value<T>(raw_ptr{}, nullptr);
+}
 
 template<typename T>
 Value<T> Value<T>::Make(T* ptr){
@@ -182,14 +184,12 @@ template<typename T>
 template<typename V>
 Value<T>::Value(const std::shared_ptr<V>& ptr) :
     _ptr(ptr){
-    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 template<typename T>
 template<typename V>
 Value<T>::Value(std::shared_ptr<V>&& ptr) :
     _ptr(std::move(ptr)){
-    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 template<typename T>
@@ -206,6 +206,7 @@ Value<T>::Value(Value<V>&& other) :
 
 template<typename T>
 inline T& Value<T>::value() const {
+    if (!_ptr){throw std::logic_error("empty pointers are not allowed");}
     return *_ptr;
 }
 
@@ -225,6 +226,16 @@ T* Value<T>::operator->() const {
 }
 
 template<typename T>
+std::shared_ptr<T>& Value<T>::shared(){
+    return _ptr;
+}
+
+template<typename T>
+const std::shared_ptr<T>& Value<T>::shared() const {
+    return _ptr;
+}
+
+template<typename T>
 template<typename V>
 Value<V> Value<T>::reinterpret(){
     return Value<V>(std::reinterpret_pointer_cast<V>(_ptr));
@@ -238,14 +249,13 @@ Value<T>::Value(const emplace& empty, auto&&... args) :
 template<typename T>
 Value<T>::Value(const raw_ptr& empty, T* ptr) :
     _ptr(ptr){
-    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 template<typename T>
 template<typename D>
 Value<T>::Value(const raw_ptr_del& empty, T* ptr, D&& del) :
     _ptr(ptr, del){
-    if (!ptr){throw std::logic_error("empty pointers are not allowed");}
+    if (!_ptr){throw std::logic_error("empty pointers are not allowed");}
 }
 
 } // namespace glwpp
